@@ -1,0 +1,145 @@
+/* ============================================================
+   Contact — real lead form posting to the n8n webhook.
+   Mirrors HomePage.css discipline: design tokens, no
+   !important, no libraries, responsive.
+   ============================================================ */
+
+.contact-form {
+  margin-top: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  background: var(--paper);
+  border-radius: var(--radius-md);
+  padding: clamp(1.75rem, 4vw, 3rem);
+  --error: #a5433a;
+}
+
+.contact-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.contact-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.contact-optional {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.contact-input,
+.contact-textarea {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.8;
+  color: var(--ink);
+  background: var(--paper-deep);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xs);
+  padding: 0.75rem 1rem;
+  transition: border-color var(--dur-fast) ease,
+    background-color var(--dur-fast) ease;
+}
+
+.contact-input:focus,
+.contact-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--paper);
+}
+
+.contact-textarea {
+  min-height: 10.8rem;
+  resize: vertical;
+}
+
+.contact-fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.contact-legend {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: var(--space-1);
+}
+
+.contact-radio {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.contact-radio input {
+  width: 1.125rem;
+  height: 1.125rem;
+  accent-color: var(--accent);
+}
+
+.contact-submit {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+}
+
+.contact-submit[aria-busy='true'] {
+  cursor: progress;
+}
+
+.contact-error {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--error);
+}
+
+.contact-panel {
+  margin-top: var(--space-8);
+  background: var(--paper);
+  border-radius: var(--radius-md);
+  padding: clamp(1.75rem, 4vw, 3rem);
+}
+
+.contact-panel-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--display-3);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.contact-panel p {
+  margin-top: var(--space-4);
+  font-family: var(--font-sans);
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 46ch;
+}
+
+@media (max-width: 480px) {
+  .contact-form,
+  .contact-panel {
+    padding: 1.5rem;
+  }
+
+  .contact-submit {
+    width: 100%;
+  }
+}

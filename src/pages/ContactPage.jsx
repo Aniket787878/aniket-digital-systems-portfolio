@@ -1,4 +1,5 @@
-import { site } from '../data.js'
+import ContactForm from '../components/ContactForm.jsx'
+import './ContactPage.css'
 
 export default function ContactPage() {
   return (
@@ -9,11 +10,7 @@ export default function ContactPage() {
         If you have a complicated, inefficient or repetitive workflow that needs to
         become a better digital system, get in touch.
       </p>
-      <p className="page-lede" style={{ marginTop: '2rem' }}>
-        <a className="u-link" href={`mailto:${site.email}`}>
-          {site.email}
-        </a>
-      </p>
+      <ContactForm />
     </section>
   )
 }

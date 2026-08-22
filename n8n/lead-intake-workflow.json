@@ -1,0 +1,282 @@
+{
+  "name": "Lead Intake",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "aniket-leads",
+        "responseMode": "lastNode",
+        "responseCode": 200,
+        "authentication": "none",
+        "options": {}
+      },
+      "id": "c3b6e1a4-5f2d-4a9e-b8d7-1e4f5a6b7c8d",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [0, 300],
+      "webhookId": "1f2a7b8c-9d0e-4f1a-bc23-d4e5f6a7b8c9"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "name-not-empty",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            },
+            {
+              "id": "email-not-empty",
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            },
+            {
+              "id": "workflow-not-empty",
+              "leftValue": "={{ $json.workflow_broken }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            },
+            {
+              "id": "email-looks-valid",
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7d4e8f2a-9b3c-4e5f-a1b2-c3d4e5f6a7b8",
+      "name": "Validate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"status\": 400, \"error\": \"missing_required_fields\"}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "2a5f9b3c-4d5e-4f6a-b7c8-d9e0f1a2b3c4",
+      "name": "Reject 400",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [440, 540]
+    },
+    {
+      "parameters": {
+        "authentication": "airtableTokenApi",
+        "resource": "record",
+        "operation": "create",
+        "base": {
+          "mode": "list",
+          "value": "",
+          "cachedResultName": "Prospects",
+          "cachedResultType": "base"
+        },
+        "table": {
+          "mode": "list",
+          "value": "",
+          "cachedResultName": "Leads",
+          "cachedResultType": "table"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "Company": "={{ $json.company }}",
+            "Workflow": "={{ $json.workflow_broken }}",
+            "Budget": "={{ $json.budget_band }}",
+            "Source": "={{ $json.source }}",
+            "Submitted At": "={{ $json.submitted_at }}",
+            "Stage": "Engaged"
+          },
+          "matchingColumns": [],
+          "attemptToConvertTypes": true,
+          "convertFieldsToString": true
+        }
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "airtable_aniket",
+          "name": "airtable_aniket"
+        }
+      },
+      "id": "5b8c3d4e-6f7a-4b8c-9d0e-f1a2b3c4d5e6",
+      "name": "Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "aniket@mindsetwellness.in",
+        "subject": "New lead: {{ $json.name }} — {{ $json.budget_band }}",
+        "emailType": "text",
+        "message": "{{ $json.name }} ({{ $json.email }}) from {{ $json.company || 'no company given' }}\nBudget: {{ $json.budget_band }}\nSource: {{ $json.source }}\n\nWorkflow they want automated:\n---\n{{ $json.workflow_broken }}\n---\n\nReply within 24h. Airtable row created.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gmail_aniket",
+          "name": "gmail_aniket"
+        }
+      },
+      "id": "8c9d4e5f-6a7b-4c8d-9e0f-a1b2c3d4e5f6",
+      "name": "Notify Aniket",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [660, 180],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $json.email }}",
+        "subject": "Got your note — I'll reply within 24h",
+        "emailType": "text",
+        "message": "Hey {{ $json.name.split(' ')[0] }},\n\nGot your message. I'll read it properly and reply within 24 hours.\n\nQuick note: I only take on projects I'm confident I can genuinely help with, so if what you sent me isn't the right fit, I'll say that too — and try to point you somewhere useful.\n\nIn the meantime, if you want to see what I've built before: https://[your-domain]/projects\n\n— Aniket\nDigital Systems Builder",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gmail_aniket",
+          "name": "gmail_aniket"
+        }
+      },
+      "id": "9d0e5f6a-7b8c-4d9e-af01-b2c3d4e5f6a7",
+      "name": "Auto-reply Sender",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [660, 420],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const lead = $node['Airtable'].json;\nconst incoming = $input.all();\n\nconst hasWarning = incoming.some((item) => {\n  const j = item && item.json;\n  return Boolean((j && (j.error || j.errorMessage)) || (item && item.error));\n});\n\nconst response = { status: 'ok', lead_id: lead.id };\nif (hasWarning) {\n  response.warning = 'One or more Gmail notifications failed; lead still recorded.';\n}\n\nreturn [response];"
+      },
+      "id": "0e1f6a7b-8c9d-4eaf-0b12-c3d4e5f6a7b8",
+      "name": "Respond",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [880, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reject 400",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable": {
+      "main": [
+        [
+          {
+            "node": "Notify Aniket",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Auto-reply Sender",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Aniket": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-reply Sender": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "callerPolicy": false,
+    "executionOrder": "v1",
+    "errorWorkflow": "",
+    "timezone": "Asia/Kolkata"
+  },
+  "meta": {
+    "description": "Lead intake webhook for the portfolio contact form. Receives a JSON POST at /webhook/aniket-leads, validates the required fields (name, email, workflow_broken) plus a basic email format check, writes the lead to the Airtable 'Prospects' base / 'Leads' table with Stage 'Engaged', emails Aniket and auto-replies to the sender via Gmail, then responds 200 with { status: 'ok', lead_id }. Invalid payloads respond 400 with { status: 400, error: 'missing_required_fields' }. Airtable failures hard-fail with 500; Gmail failures still return 200 with a warning field."
+  },
+  "pinData": {},
+  "versionId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "id": "lead-intake-workflow",
+  "active": false
+}

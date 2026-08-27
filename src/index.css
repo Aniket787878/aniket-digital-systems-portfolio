@@ -1,25 +1,36 @@
 /* ============================================================
-   Design System — Digital Systems Builder
-   Rebuilt to match the Folioblox reference as a UI specification:
-   heavy grotesque display (Archivo ~ Mluvka), clean sans
-   supporting text (Inter), large rounded containers, generous
-   section rhythm, calm sage/green identity.
+   Design System — Aniket, Digital Systems Builder
+   Dark editorial theme with a single hot-orange accent:
+   near-black ground, heavy grotesque display (Archivo),
+   clean sans supporting text (Inter), rounded cards,
+   full-bleed hero, generous section rhythm.
    ============================================================ */
 
 :root {
-  /* ---------- Color: soft sage / green ---------- */
-  --bg: #dbe3d2;          /* page backdrop — deeper sage */
-  --paper: #f3f6ec;       /* light sage sheet / containers */
-  --paper-deep: #e9eedf;  /* subtle sage tint */
-  --ink: #1e3326;         /* deep green text */
-  --ink-soft: #2f4536;
-  --muted: #67755e;       /* muted green-gray */
-  --line: rgba(30, 51, 38, 0.14);
-  --line-strong: rgba(30, 51, 38, 0.28);
-  --accent: #3f6b4e;      /* stronger green */
-  --accent-hover: #32563f;
-  --accent-ink: #f3f6ec;
-  --selection: rgba(63, 107, 78, 0.18);
+  /* ---------- Color: near-black ground, one hot accent ---------- */
+  --bg: #101010;            /* page ground */
+  --surface: #171717;       /* cards, rows, accordion panels */
+  --surface-2: #1f1f1f;     /* hover / raised card */
+  --surface-3: #272727;     /* image placeholder wells */
+
+  --ink: #ffffff;
+  --ink-soft: #d2d2d2;
+  /* 6.77:1 on --bg, 6.37:1 on --surface — clears WCAG AA for body text */
+  --muted: #9a9a9a;
+
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.18);
+
+  /* 6.15:1 on --bg — safe for accent text at any size */
+  --accent: #ff5c00;
+  --accent-hover: #ff7526;
+  --accent-soft: rgba(255, 92, 0, 0.12);
+  /* White on orange is 3.10:1 — large/bold text only. Small text on an
+     orange fill uses --accent-ink-strong instead. */
+  --accent-ink: #ffffff;
+  --accent-ink-strong: #1a0900;
+
+  --selection: rgba(255, 92, 0, 0.3);
 
   /* ---------- Typography ---------- */
   --font-display: "Archivo", system-ui, -apple-system, "Segoe UI", Roboto,
@@ -29,21 +40,21 @@
   --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas,
     monospace;
 
-  --text-xs: 0.75rem;     /* 12 — micro labels */
-  --text-sm: 0.875rem;    /* 14 — small / meta */
-  --text-base: 1rem;      /* 16 — body */
-  --text-lg: 1.25rem;     /* 20 */
-  --text-xl: 1.5rem;      /* 24 */
-  --text-2xl: 1.875rem;   /* 30 — large supporting */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 1.875rem;
 
-  --display-1: clamp(3.25rem, 7.75vw, 7.5rem);  /* hero statement */
-  --display-2: clamp(2.5rem, 5vw, 3.75rem);     /* section titles (~60) */
-  --display-3: clamp(1.75rem, 3.25vw, 2.5rem);  /* sub titles (~40) */
+  --display-1: clamp(2.75rem, 8vw, 7rem);       /* hero statement */
+  --display-2: clamp(2.25rem, 4.5vw, 3.5rem);   /* section titles */
+  --display-3: clamp(1.5rem, 2.75vw, 2.125rem); /* sub titles */
 
-  /* ---------- Radii (reference: 30px cards / 60px bands / 20px circles / 10px accents) ---------- */
-  --radius-lg: 60px;
-  --radius-md: 30px;
-  --radius-sm: 20px;
+  /* ---------- Radii ---------- */
+  --radius-lg: 40px;   /* big bands */
+  --radius-md: 24px;   /* cards, accordion rows */
+  --radius-sm: 16px;
   --radius-xs: 10px;
 
   /* ---------- Spacing ---------- */
@@ -58,24 +69,40 @@
   --space-9: 6rem;
   --space-10: 8rem;
 
-  /* Section separation — the reference uses 100px gaps between sections */
-  --section-gap: clamp(4.5rem, 9vw, 8rem);
+  /* Vertical breathing room inside each section band */
+  --section-pad: clamp(4.5rem, 9vw, 8.5rem);
 
-  /* ---------- Containers ---------- */
+  /* ---------- Containers ----------
+
+     --container-max is the CONTENT width, not the border box: .container
+     adds the padding on top of it (see below). Written the other way
+     round the two tokens fight each other — a 1400px box with 64px of
+     padding leaves 1272px of content on a 1920px screen, two thirds of
+     the viewport, and the page reads as a narrow column squeezed in from
+     both sides.
+
+     1600 / 40 matches the Folioblox reference measured at 1920, 1440,
+     1280, 810 and 375. */
   --container-max: 1600px;
-  --container-pad: clamp(1.25rem, 3vw, 2.5rem);
-  --measure: 62ch;
+  --container-pad: clamp(1.5rem, 0.75rem + 2vw, 2.5rem);
+  --measure: 60ch;
+
+  /* Fixed header height — subpages offset by this */
+  --nav-h: 5.5rem;
 
   /* ---------- Motion ---------- */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --dur-fast: 150ms;
-  --dur-slow: 450ms;
+  --dur-fast: 160ms;
+  --dur-mid: 300ms;
+  --dur-slow: 550ms;
 
-  /* ---------- Breakpoints (reference: 1200 / 810) ---------- */
+  /* ---------- Breakpoints ---------- */
   --bp-xs: 480px;
   --bp-sm: 640px;
   --bp-md: 810px;
   --bp-lg: 1200px;
+
+  color-scheme: dark;
 }
 
 /* ============================================================
@@ -93,20 +120,23 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  background: var(--bg);
 }
 
 body {
   font-family: var(--font-sans);
   font-size: var(--text-base);
-  line-height: 1.8;
-  color: var(--ink);
+  line-height: 1.7;
+  color: var(--ink-soft);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 ::selection {
   background: var(--selection);
+  color: var(--ink);
 }
 
 img,
@@ -115,20 +145,33 @@ svg {
   max-width: 100%;
 }
 
-/* Large rounded outer page container on the sage backdrop */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 .app {
-  max-width: var(--container-max);
   min-height: 100vh;
-  margin: 0 auto;
-  padding: 0 clamp(1.25rem, 3.5vw, 3rem)
-    clamp(3rem, 7vw, 7rem);
   display: flex;
   flex-direction: column;
+  background: var(--bg);
 }
 
 .main {
   flex: 1;
   width: 100%;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ============================================================
@@ -137,16 +180,36 @@ svg {
 
 .container {
   width: 100%;
-  max-width: var(--container-max);
+  /* Padding on top of the content cap, so --container-max is the width
+     the content actually gets rather than the width it starts from. */
+  max-width: calc(var(--container-max) + var(--container-pad) * 2);
   margin: 0 auto;
   padding-inline: var(--container-pad);
 }
 
-/* Standalone page (projects / contact / detail) */
+/* Standalone page (projects / contact / detail) — clears the fixed header.
+
+   Two jobs in one class: the nav-clearing vertical rhythm, which every
+   subpage wants, and a reading-width cap, which only the prose ones do.
+   .page-wide below opts out of the cap and keeps the rhythm. */
 .page {
-  max-width: 58rem;
+  max-width: 62rem;
   margin: 0 auto;
-  padding-block: clamp(4rem, 8vw, 7rem) var(--space-8);
+  padding-inline: var(--container-pad);
+  padding-block: calc(var(--nav-h) + clamp(3rem, 6vw, 6rem)) var(--space-9);
+}
+
+/* The projects index is a row list, not prose: it takes the full content
+   band so it lines up with the header, the footer and the work grid on
+   the home page. Safe to widen because the text inside each row is
+   already capped at --measure — widening moves the meta rail out to the
+   right edge rather than stretching any line of copy.
+
+   Two classes deliberately: .page-wide alone would only beat .page on
+   source order, and this file's position in the cascade is exactly the
+   thing that broke .cta-band-kicker. */
+.page.page-wide {
+  max-width: calc(var(--container-max) + var(--container-pad) * 2);
 }
 
 /* Editorial section header: kicker + display title */
@@ -155,10 +218,11 @@ svg {
   max-width: var(--measure);
 }
 
-.section-kicker {
+.section-kicker,
+.kicker {
   font-family: var(--font-sans);
   font-size: var(--text-base);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0;
   color: var(--accent);
   margin-bottom: var(--space-4);
@@ -168,8 +232,8 @@ svg {
   font-family: var(--font-display);
   font-size: var(--display-2);
   font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
   color: var(--ink);
 }
 
@@ -191,24 +255,27 @@ h3,
 h4 {
   font-family: var(--font-display);
   font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--ink);
 }
 
 .display-title {
   font-family: var(--font-display);
   font-weight: 800;
   font-size: var(--display-1);
-  line-height: 1em;
-  letter-spacing: -0.02em;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  color: var(--ink);
 }
 
 .page-title {
   font-family: var(--font-display);
   font-weight: 800;
   font-size: var(--display-2);
-  line-height: 1.2em;
-  letter-spacing: -0.02em;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
   margin-bottom: var(--space-5);
 }
 
@@ -222,7 +289,7 @@ h4 {
 .eyebrow {
   font-family: var(--font-sans);
   font-size: var(--text-base);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--accent);
 }
 
@@ -258,7 +325,6 @@ a:hover {
   border-color: var(--accent);
 }
 
-/* Arrow link: editorial "view" affordance */
 .arrow-link {
   display: inline-flex;
   align-items: center;
@@ -279,7 +345,7 @@ a:hover {
 }
 
 /* ============================================================
-   Buttons
+   Buttons — reference style: pill, label left, round icon right
    ============================================================ */
 
 .btn {
@@ -289,8 +355,7 @@ a:hover {
   gap: 0.625rem;
   font-family: var(--font-sans);
   font-size: var(--text-sm);
-  font-weight: 600;
-  letter-spacing: 0;
+  font-weight: 700;
   padding: 1rem 1.75rem;
   border: 1px solid transparent;
   border-radius: 999px;
@@ -300,14 +365,16 @@ a:hover {
     color var(--dur-fast) ease, border-color var(--dur-fast) ease;
 }
 
+/* White pill with dark label. Deliberate: white-on-orange is only 3.1:1,
+   so orange stays an icon or a large-text fill, never a small-label bg. */
 .btn-primary {
-  background: var(--accent);
-  color: var(--accent-ink);
+  background: var(--ink);
+  color: var(--accent-ink-strong);
 }
 
 .btn-primary:hover {
-  background: var(--accent-hover);
-  color: var(--accent-ink);
+  background: var(--accent);
+  color: var(--ink);
 }
 
 .btn-outline {
@@ -317,8 +384,69 @@ a:hover {
 }
 
 .btn-outline:hover {
-  border-color: var(--ink);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Pill + trailing circular icon (header CTA, hero CTA, footer CTA) */
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  height: 52px;
+  padding: 0 6px 0 26px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--accent-ink-strong);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+
+.btn-pill:hover {
+  background: #ffffff;
+  color: var(--accent-ink-strong);
+}
+
+.btn-pill-icon {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--accent);
   color: var(--ink);
+  display: grid;
+  place-items: center;
+  transition: transform var(--dur-mid) var(--ease-out),
+    background-color var(--dur-fast) ease;
+}
+
+.btn-pill:hover .btn-pill-icon {
+  background: var(--accent-hover);
+  transform: translateX(3px);
+}
+
+.btn-pill-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Same pill, inverted: orange body (used on a photographic ground) */
+.btn-pill-accent {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+.btn-pill-accent:hover {
+  background: var(--accent-hover);
+  color: var(--ink);
+}
+
+.btn-pill-accent .btn-pill-icon {
+  background: var(--ink);
+  color: var(--accent-ink-strong);
 }
 
 /* ============================================================
@@ -338,43 +466,124 @@ a:hover {
 }
 
 /* ============================================================
-   Navigation — compact, small scale (reference proportions)
+   Media slot — placeholder until a real image is dropped in.
+   Image paths live in data.js; until one is set, each slot
+   renders a labelled well so the layout stays honest about
+   what belongs there.
+   ============================================================ */
+
+.media {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-3);
+  border-radius: inherit;
+}
+
+.media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.media-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 120px;
+  display: grid;
+  place-content: center;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  text-align: center;
+  background-color: var(--surface-3);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.035) 0 10px,
+    transparent 10px 20px
+  );
+  border: 1px dashed var(--line-strong);
+  border-radius: inherit;
+}
+
+.media-placeholder-icon {
+  justify-self: center;
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+.media-placeholder-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ============================================================
+   Header — fixed overlay, transparent on the hero, solid on scroll
    ============================================================ */
 
 .nav {
-  position: relative;
-  z-index: 20;
-  background: transparent;
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  transition: background-color var(--dur-mid) ease,
+    border-color var(--dur-mid) ease;
+  border-bottom: 1px solid transparent;
+}
+
+.nav-scrolled {
+  background: rgba(16, 16, 16, 0.82);
+  backdrop-filter: blur(14px);
+  border-bottom-color: var(--line);
 }
 
 .nav-inner {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-6);
-  padding-block: 1.375rem;
+  height: var(--nav-h);
+  /* Same maths as .container — the header has to line up with the page
+     under it at every width. */
+  max-width: calc(var(--container-max) + var(--container-pad) * 2);
+  margin: 0 auto;
+  padding-inline: var(--container-pad);
 }
 
 .nav-brand {
   font-family: var(--font-display);
   font-size: 1.375rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   color: var(--ink);
   white-space: nowrap;
+  justify-self: start;
+}
+
+.nav-brand:hover {
+  color: var(--ink);
+}
+
+.nav-brand sup {
+  font-size: 0.5em;
+  font-weight: 700;
+  vertical-align: super;
+  margin-left: 1px;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: clamp(1.75rem, 3vw, 2.75rem);
-  margin-left: auto;
+  gap: clamp(1.5rem, 2.75vw, 2.5rem);
+  justify-self: center;
 }
 
 .nav-links a {
   font-family: var(--font-sans);
   font-size: var(--text-base);
-  font-weight: 400;
+  font-weight: 500;
   color: var(--muted);
   padding-bottom: 3px;
   border-bottom: 1px solid transparent;
@@ -390,51 +599,13 @@ a:hover {
   border-bottom-color: var(--accent);
 }
 
-/* CTA: text + circular accent icon (50px pill, reference style) */
-.nav-cta {
-  display: inline-flex;
+.nav-actions {
+  justify-self: end;
+  display: flex;
   align-items: center;
-  height: 50px;
-  padding: 0 64px 0 28px;
-  position: relative;
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 700;
-  color: var(--ink);
-  transition: color var(--dur-fast) ease, background-color var(--dur-fast) ease;
+  gap: var(--space-4);
 }
 
-.nav-cta:hover {
-  color: var(--accent);
-}
-
-.nav-cta-icon {
-  position: absolute;
-  top: 50%;
-  right: 5px;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: var(--accent-ink);
-  display: grid;
-  place-items: center;
-  transition: background-color var(--dur-fast) ease,
-    transform var(--dur-slow) var(--ease-out);
-}
-
-.nav-cta:hover .nav-cta-icon {
-  background: var(--accent-hover);
-  transform: translateY(-50%) translateX(4px);
-}
-
-.nav-cta-icon svg {
-  width: 16px;
-  height: 16px;
-}
-
-/* Mobile menu */
 .nav-toggle {
   display: none;
   background: none;
@@ -445,40 +616,143 @@ a:hover {
 }
 
 .nav-panel {
-  display: none;
-}
-
-/* ============================================================
-   Footer — compact
-   ============================================================ */
-
-.footer {
-  margin-top: var(--section-gap);
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--container-pad) var(--space-6);
+  background: rgba(16, 16, 16, 0.96);
+  backdrop-filter: blur(14px);
   border-top: 1px solid var(--line);
 }
 
+.nav-panel a {
+  font-family: var(--font-sans);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  color: var(--muted);
+  padding-block: var(--space-3);
+}
+
+.nav-panel a.active {
+  color: var(--ink);
+}
+
+/* `.nav-panel a` would otherwise tint the pill's label muted grey on
+   white — restate the pill's own ink at matching specificity. */
+.nav-panel .nav-panel-cta {
+  margin-top: var(--space-4);
+  width: fit-content;
+  color: var(--accent-ink-strong);
+}
+
+.nav-panel .nav-panel-cta:hover {
+  color: var(--accent-ink-strong);
+}
+
+/* ============================================================
+   Footer — three columns over an oversized wordmark watermark,
+   sitting on its own rounded band.
+   ============================================================ */
+
+.footer {
+  position: relative;
+  overflow: hidden;
+  margin-top: var(--section-pad);
+  padding-block: clamp(3.5rem, 7vw, 6rem) 0;
+  background: var(--surface);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
 .footer-inner {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-4);
-  flex-wrap: wrap;
-  padding-block: var(--space-7);
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 5vw, 5rem);
+  align-items: start;
 }
 
 .footer-brand {
   font-family: var(--font-display);
   font-size: var(--text-xl);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: var(--space-4);
+}
+
+.footer-tagline {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
   font-weight: 700;
+  line-height: 1.3;
   letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: var(--space-4);
+  max-width: 28ch;
+}
+
+.footer-desc {
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 46ch;
+  margin-bottom: var(--space-6);
+}
+
+.footer-copy {
+  margin-top: var(--space-6);
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.footer-col-title {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: var(--space-5);
+}
+
+.footer-list {
+  list-style: none;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.footer-list a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-base);
+  color: var(--muted);
+}
+
+.footer-list a:hover {
   color: var(--ink);
 }
 
-.footer-meta {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--muted);
+.footer-list svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+/* Oversized wordmark bleeding off the bottom edge, barely visible */
+.footer-watermark {
+  position: relative;
+  z-index: 0;
+  margin-top: clamp(2rem, 5vw, 4rem);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(4rem, 17vw, 15rem);
+  line-height: 0.78;
+  letter-spacing: -0.05em;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.035);
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 /* ============================================================
@@ -514,9 +788,9 @@ a:hover {
 .project-list h2 {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.5rem, 3.5vw, 2.5rem);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
 }
 
 .project-list .project-meta {
@@ -550,6 +824,63 @@ a:hover {
 }
 
 /* ============================================================
+   System visual — schematic flow block used on case studies
+   ============================================================ */
+
+.system-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(10rem, 20vw, 15rem);
+  padding: var(--space-6);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.system-visual-grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.6;
+}
+
+.system-visual-flow {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.system-visual-step {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.system-visual-node {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink);
+  padding: 0.5rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.system-visual-edge {
+  color: var(--accent);
+  font-size: var(--text-lg);
+}
+
+/* ============================================================
    Misc utilities
    ============================================================ */
 
@@ -565,7 +896,7 @@ a:hover {
 }
 
 .back-link:hover {
-  color: var(--ink);
+  color: var(--accent);
 }
 
 .error-page {
@@ -584,55 +915,59 @@ a:hover {
    Responsive
    ============================================================ */
 
-@media (max-width: 810px) {
-  .nav-links {
-    display: none;
+@media (max-width: 960px) {
+  .footer-inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 
-  .nav-cta {
+  .footer-intro {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 810px) {
+  :root {
+    --nav-h: 4.5rem;
+  }
+
+  .nav-inner {
+    grid-template-columns: 1fr auto;
+  }
+
+  .nav-links,
+  .nav-actions {
     display: none;
   }
 
   .nav-toggle {
     display: grid;
     place-items: center;
+    justify-self: end;
+    /* 44px minimum tap target */
+    width: 44px;
+    height: 44px;
+    margin-right: -0.5rem;
   }
 
-  .nav-panel {
-    display: grid;
-    gap: var(--space-2);
-    padding: var(--space-3) 0 var(--space-4);
-    border-top: 1px solid var(--line);
-  }
+  /* Same 44px floor for the other two touch surfaces. The brand sat at
+     37px and the footer links at 32px — both fine with a cursor, both
+     under the thumb-target minimum on a phone.
 
-  .nav-panel.open {
-    display: grid;
-  }
-
-  .nav-panel a {
-    font-family: var(--font-sans);
-    font-size: var(--text-lg);
-    font-weight: 500;
-    color: var(--muted);
-    padding-block: var(--space-2);
-  }
-
-  .nav-panel a.active {
-    color: var(--ink);
-  }
-
-  .nav-panel .nav-panel-cta {
+     The footer list gap comes down by the amount the rows grow, so the
+     visual rhythm is unchanged (48px stride before and after) while the
+     hit area goes from 32px to 44px. */
+  .nav-brand {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: var(--space-3);
-    padding: 0.875rem 1.5rem;
-    border-radius: 999px;
-    background: var(--accent);
-    color: var(--accent-ink);
-    font-weight: 600;
-    width: fit-content;
+    min-height: 44px;
+  }
+
+  .footer-list {
+    gap: var(--space-1);
+  }
+
+  .footer-list a {
+    min-height: 44px;
   }
 
   .project-list a {
@@ -642,10 +977,48 @@ a:hover {
 }
 
 @media (max-width: 640px) {
+  .footer {
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+
   .footer-inner {
-    flex-direction: column;
-    gap: var(--space-2);
-    align-items: flex-start;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-7);
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    /* Shorter bar and softer corners so the chrome takes less of a
+       small screen; every offset that reads --nav-h follows. */
+    --nav-h: 4rem;
+    --radius-lg: 28px;
+    --radius-md: 18px;
+    --section-pad: clamp(3.25rem, 13vw, 4.5rem);
+  }
+
+  .page {
+    padding-block: calc(var(--nav-h) + var(--space-7)) var(--space-8);
+  }
+
+  .footer {
+    padding-block: var(--space-7) 0;
+  }
+
+  .footer-list a {
+    /* Roomier rows — these are the only links down here */
+    padding-block: 0.15rem;
+  }
+
+  .btn-pill {
+    height: 48px;
+    padding: 0 5px 0 20px;
+    gap: var(--space-3);
+  }
+
+  .btn-pill-icon {
+    width: 38px;
+    height: 38px;
   }
 }
 
@@ -662,5 +1035,319 @@ a:hover {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+}
+
+/* ============================================================
+   Case study — project detail page + project index rows
+   Appended. All new classes are prefixed `case-`.
+   Tokens only: no new colors, fonts, radii or spacing values.
+   ============================================================ */
+
+/* ---------- Detail: role / timeline / stack spec block ---------- */
+
+.case-meta {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-7);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--line);
+}
+
+.case-meta-item {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: var(--space-2) var(--space-5);
+  align-items: baseline;
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.case-meta-item:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.case-meta-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.case-meta-value {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+/* Tightens the shared .project-stack margin inside the spec block. */
+.case-meta-stack {
+  margin: 0;
+}
+
+/* ---------- Detail: system flow visual ---------- */
+
+.case-visual {
+  margin-top: var(--space-8);
+}
+
+.case-visual .system-visual {
+  min-height: clamp(12rem, 24vw, 18rem);
+}
+
+/* ---------- Detail: body sections ---------- */
+
+.case-section {
+  margin-top: var(--space-8);
+  max-width: var(--measure);
+}
+
+.case-section-title {
+  font-family: var(--font-display);
+  font-size: var(--display-3);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: var(--space-5);
+}
+
+.case-body {
+  font-size: var(--text-base);
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+
+/* Numbered build list */
+
+.case-steps {
+  list-style: none;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.case-steps li {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: baseline;
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.case-steps li:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.case-step-index {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+
+.case-step-text {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+/* Outcome list */
+
+.case-outcome {
+  list-style: none;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.case-outcome li {
+  position: relative;
+  padding-left: var(--space-5);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+.case-outcome li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Directional caveat — recessive, but kept legible on purpose */
+.case-note {
+  margin-top: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  background: var(--paper);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--radius-xs);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/* ---------- Detail: prev / next ---------- */
+
+.case-nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+  margin-top: var(--space-9);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--line);
+}
+
+.case-nav-link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--ink);
+}
+
+/* Keeps "next" on the right even when there is no "previous". */
+.case-nav-next {
+  grid-column: 2;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.case-nav-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.case-nav-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Detail: closing CTA ---------- */
+
+.case-cta {
+  margin-top: var(--space-8);
+  padding: var(--space-7) clamp(1.5rem, 4vw, 3rem);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.case-cta-title {
+  font-family: var(--font-display);
+  font-size: var(--display-3);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  max-width: 20ch;
+  margin-bottom: var(--space-4);
+}
+
+.case-cta-body {
+  font-size: var(--text-base);
+  line-height: 1.8;
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+
+.case-cta-note {
+  margin-top: var(--space-4);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+
+.case-cta .btn {
+  margin-top: var(--space-6);
+}
+
+/* ---------- Projects index rows ---------- */
+
+.case-index-main {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.case-index-summary {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+
+.case-index-role {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+
+.case-index-role-label {
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: var(--space-2);
+}
+
+.case-index-stack {
+  margin-top: var(--space-1);
+}
+
+/* Right rail of a project row: stacked, so three values stay scannable. */
+.project-list .case-index-meta {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-1);
+  text-align: right;
+}
+
+/* ---------- Case study responsive ---------- */
+
+@media (max-width: 810px) {
+  .case-meta-item {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .case-nav {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .case-nav-next {
+    grid-column: 1;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .project-list .case-index-meta {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-4);
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  .case-steps li {
+    grid-template-columns: 1.75rem minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+
+  .case-cta {
+    border-radius: var(--radius-sm);
   }
 }

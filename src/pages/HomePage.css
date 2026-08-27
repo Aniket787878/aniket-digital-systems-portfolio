@@ -1,611 +1,1008 @@
 /* ============================================================
-   Homepage — Digital Systems Builder
-   Composition rebuilt from the Folioblox reference:
-   compact header, large rounded hero band, huge editorial
-   statement, numbered capabilities, large rounded project
-   visuals with varied compositions, editorial statements
-   between project groups, numbered process rows, editorial
-   services list, large rounded CTA.
-   Calm sage/green identity, heavy grotesque display (Archivo),
-   clean sans supporting text (Inter).
+   Home — nine bands, in page order:
+
+   1  Hero (full-bleed)   1b Proof strip (the stack)
+   2  Selected work       2b Capabilities
+   3  Process             4b Pricing
+   5b CTA band            4  FAQ
+   5  Closing gallery CTA
+
+   The "b" numbers are the bands added in the second pass. They keep
+   the original numbering so this file still reads top-to-bottom in
+   the same order the page renders.
    ============================================================ */
 
 .home {
   display: flex;
   flex-direction: column;
-  gap: var(--section-gap);
 }
 
-/* Shared section kicker — sentence case, accent, reference scale */
-.kicker {
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
+/* Shared two-column section header: title left, lede right */
+.split-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.split-title {
+  font-family: var(--font-display);
+  font-size: var(--display-2);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  max-width: 18ch;
+}
+
+.split-lede {
+  font-size: clamp(1.0625rem, 1.5vw, 1.375rem);
   font-weight: 500;
-  color: var(--accent);
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 44ch;
+  align-self: end;
 }
 
 /* ============================================================
-   Hero — large rounded band, huge statement, capabilities
+   1 — Hero
    ============================================================ */
 
 .hero {
-  background: var(--paper);
-  border-radius: var(--radius-lg);
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-end;
+  padding-block: calc(var(--nav-h) + var(--space-6)) clamp(2.5rem, 5vw, 4rem);
   overflow: hidden;
+  /* The hero is a slab, not a background: rounding the bottom edge lets
+     the page ground show through at the corners, which is what separates
+     it from the section beneath. Everything inside is clipped to it. */
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
-.hero-inner {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-  min-height: clamp(38rem, 84vh, 52rem);
-  padding: clamp(3rem, 6vw, 6rem) clamp(1.75rem, 4.5vw, 5rem);
+/* The hero ground. The shader paints over this, but it is also the whole
+   picture when WebGL is unavailable, so it stays a designed ramp in the
+   brand colours rather than a placeholder fill. */
+.hero-ground {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  border-radius: inherit;
+  background: linear-gradient(
+    155deg,
+    #ff6a12 0%,
+    #d94500 28%,
+    #63200a 62%,
+    #150802 100%
+  );
+}
+
+/* The shader ground. Same stacking level as `.hero-ground` and later in
+   the DOM, so it paints over the gradient while staying under the scrim
+   — and when WebGL is unavailable the canvas stays empty and the
+   gradient below is what you see. Never interactive. */
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: hero-canvas-in 900ms ease-out both;
+}
+
+@keyframes hero-canvas-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-canvas {
+    animation: none;
+  }
+}
+
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(
+    to bottom,
+    rgba(16, 16, 16, 0.55) 0%,
+    rgba(16, 16, 16, 0.1) 30%,
+    rgba(16, 16, 16, 0.55) 70%,
+    rgba(16, 16, 16, 0.92) 100%
+  );
+}
+
+.hero-content {
+  width: 100%;
 }
 
 .hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(16rem, 24rem);
-  gap: clamp(2.5rem, 5vw, 6rem);
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 25rem);
+  gap: clamp(2rem, 5vw, 5rem);
   align-items: end;
 }
 
 .hero-eyebrow {
   font-family: var(--font-sans);
-  font-size: var(--text-2xl);
-  font-weight: 700;
-  line-height: 1.4;
-  color: var(--accent);
-  margin-bottom: var(--space-6);
+  font-size: clamp(1rem, 1.6vw, 1.375rem);
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: var(--space-4);
 }
 
 .hero-title {
   font-family: var(--font-display);
-  font-weight: 800;
   font-size: var(--display-1);
-  line-height: 1em;
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+
+.hero-support {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding-bottom: var(--space-3);
+}
+
+.hero-claim {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.625rem);
+  font-weight: 700;
+  line-height: 1.25;
   letter-spacing: -0.02em;
   color: var(--ink);
 }
 
 .hero-lede {
-  font-family: var(--font-sans);
   font-size: var(--text-base);
-  line-height: 1.8;
-  color: var(--muted);
-  max-width: 38ch;
-  padding-bottom: 0.35em;
+  line-height: 1.65;
+  color: var(--ink-soft);
 }
 
-/* ---- Capabilities: # 01 title, anchored to hero bottom ---- */
+.hero-cta {
+  margin-top: var(--space-2);
+}
 
+/* Numbered capability range — the breadth, kept below the promise */
 .capabilities-row {
   list-style: none;
-  margin-top: auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: clamp(1.5rem, 4vw, 4rem);
-  border-top: 1px solid var(--line-strong);
-  padding-top: clamp(2rem, 4vw, 3.5rem);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: clamp(2.5rem, 6vw, 5rem);
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
 }
 
 .capability {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  padding-inline: clamp(1rem, 2.5vw, 2.5rem);
 }
 
-.capability-hash {
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  font-weight: 700;
-  color: var(--accent);
-  margin-right: 0.5rem;
+.capability:first-child {
+  padding-left: 0;
+}
+
+.capability + .capability {
+  border-left: 1px solid rgba(255, 255, 255, 0.22);
 }
 
 .capability-index {
   font-family: var(--font-sans);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   font-weight: 700;
   color: var(--ink);
+}
+
+.capability-hash {
+  color: var(--accent);
+  margin-right: 0.35rem;
 }
 
 .capability-title {
   font-family: var(--font-sans);
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   font-weight: 500;
-  line-height: 1.5;
+  line-height: 1.4;
   color: var(--ink);
 }
 
 /* ============================================================
-   Large featured system
+   2 — Selected work
    ============================================================ */
 
-.featured .kicker {
-  margin-bottom: var(--space-5);
+.work {
+  padding-block: var(--section-pad);
 }
 
-.featured-card {
-  display: block;
-  color: var(--ink);
-}
-
-.featured-card:hover {
-  color: var(--ink);
-}
-
-.featured-visual {
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.featured-visual .system-visual {
-  aspect-ratio: 16 / 9;
-}
-
-.featured-caption {
+.work-grid {
+  list-style: none;
   display: grid;
-  grid-template-columns: 12rem minmax(0, 1fr) auto;
-  gap: var(--space-6);
-  align-items: end;
-  padding-top: var(--space-6);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.5vw, 2rem);
 }
 
-.featured-caption .project-meta {
-  margin-bottom: 0;
-}
-
-.featured-title {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: var(--display-2);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  max-width: 22ch;
-}
-
-.featured-summary {
-  margin-top: var(--space-4);
-  font-family: var(--font-sans);
-  color: var(--muted);
-  max-width: 52ch;
-}
-
-.featured-caption .arrow-link {
-  margin-bottom: 0;
-}
-
-/* ============================================================
-   Editorial statement
-   ============================================================ */
-
-.statement-grid {
-  display: grid;
-  grid-template-columns: minmax(10rem, 16rem) minmax(0, 1fr);
-  gap: clamp(2.5rem, 6vw, 7rem);
-  align-items: start;
-}
-
-.statement-title {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: var(--display-2);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  max-width: 18ch;
-}
-
-.statement-copy {
-  margin-top: var(--space-5);
-  font-family: var(--font-sans);
-  font-size: var(--text-lg);
-  line-height: 1.6;
-  color: var(--muted);
-  max-width: 46ch;
-}
-
-.statement-copy:first-of-type {
-  margin-top: var(--space-6);
-}
-
-/* ============================================================
-   Featured systems — varied compositions
-   ============================================================ */
-
-.projects-head .kicker {
-  margin-bottom: var(--space-4);
-}
-
-.projects-title {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: var(--display-2);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  max-width: 24ch;
-}
-
-.projects-list {
-  margin-top: clamp(3rem, 6vw, 5rem);
+.work-card {
   display: flex;
   flex-direction: column;
-  gap: clamp(4.5rem, 9vw, 8rem);
+  height: 100%;
+  padding: 10px 10px var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  color: var(--ink);
+  transition: background-color var(--dur-mid) ease,
+    border-color var(--dur-mid) ease, transform var(--dur-mid) var(--ease-out);
 }
 
-/* Shared project meta */
-.project-meta {
+.work-card:hover {
+  background: var(--surface-2);
+  border-color: var(--line-strong);
+  transform: translateY(-4px);
+  color: var(--ink);
+}
+
+.media.work-media {
+  aspect-ratio: 16 / 10;
+  border-radius: calc(var(--radius-md) - 10px);
+  flex: none;
+}
+
+.work-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--space-3);
+  padding: var(--space-6) clamp(0.75rem, 1.5vw, 1.25rem) 0;
+}
+
+.work-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4);
-  margin-bottom: var(--space-5);
-}
-
-/* Split composition: visual + integrated caption */
-.project-split {
-  display: grid;
-  grid-template-columns: 7fr 5fr;
-  gap: clamp(2.5rem, 5vw, 5rem);
   align-items: center;
-  color: var(--ink);
+  gap: var(--space-3);
 }
 
-.project-split:hover {
-  color: var(--ink);
-}
-
-.project-split-reverse {
-  grid-template-columns: 5fr 7fr;
-}
-
-.project-split-reverse .project-split-visual {
-  order: 2;
-}
-
-.project-split-visual {
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.project-split:not(.project-split-reverse) .project-split-visual .system-visual {
-  aspect-ratio: 4 / 5;
-}
-
-.project-split-reverse .project-split-visual .system-visual {
-  aspect-ratio: 4 / 3;
-}
-
-.project-split-caption {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.project-split-title {
+.work-index {
   font-family: var(--font-display);
+  font-size: var(--text-sm);
   font-weight: 800;
-  font-size: var(--display-3);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  max-width: 20ch;
+  color: var(--accent);
 }
 
-.project-split-summary {
-  margin-top: var(--space-4);
+.work-tag {
   font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 500;
   color: var(--muted);
-  max-width: 40ch;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
 }
 
-.project-split-caption .arrow-link {
-  margin-top: var(--space-6);
-}
-
-/* Full-width composition */
-.project-full {
-  display: block;
-  color: var(--ink);
-}
-
-.project-full:hover {
-  color: var(--ink);
-}
-
-.project-full-visual {
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.project-full-visual .system-visual {
-  aspect-ratio: 16 / 9;
-}
-
-.project-full-caption {
-  display: grid;
-  grid-template-columns: 12rem minmax(0, 1fr) minmax(0, 24rem) auto;
-  gap: var(--space-6);
-  align-items: end;
-  padding-top: var(--space-6);
-}
-
-.project-full-caption .project-meta {
-  margin-bottom: 0;
-}
-
-.project-full-title {
+.work-title {
   font-family: var(--font-display);
-  font-weight: 800;
   font-size: var(--display-3);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
   color: var(--ink);
 }
 
-.project-full-summary {
-  font-family: var(--font-sans);
+.work-summary {
+  font-size: var(--text-base);
+  line-height: 1.65;
   color: var(--muted);
-  max-width: 44ch;
 }
 
-.project-full-caption .arrow-link {
-  margin-bottom: 0;
+.work-card .arrow-link {
+  margin-top: auto;
+  padding-top: var(--space-5);
+  color: var(--accent);
 }
 
 /* ============================================================
-   Process — large title + numbered rows
+   3 — Process. Hover fills the row and slides its image in.
+   Decorative only: the step text is fully readable without it.
    ============================================================ */
 
-.process-head {
-  display: grid;
-  grid-template-columns: minmax(10rem, 16rem) minmax(0, 1fr);
-  gap: clamp(2.5rem, 6vw, 7rem);
-  align-items: start;
-  margin-bottom: clamp(3rem, 6vw, 5rem);
-}
-
-.process-title {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: var(--display-2);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  max-width: 20ch;
-}
-
-.process-lede {
-  margin-top: var(--space-5);
-  font-family: var(--font-sans);
-  font-size: var(--text-lg);
-  line-height: 1.6;
-  color: var(--muted);
-  max-width: 44ch;
+.process {
+  padding-block: var(--section-pad);
 }
 
 .process-steps {
   list-style: none;
-  border-top: 1px solid var(--line-strong);
+  display: grid;
+  gap: var(--space-3);
 }
 
 .process-step {
+  position: relative;
   display: grid;
-  grid-template-columns: 7rem minmax(0, 1fr) minmax(0, 1.4fr);
-  gap: var(--space-6);
-  align-items: baseline;
-  padding-block: var(--space-6);
-  border-bottom: 1px solid var(--line);
+  grid-template-columns: 3px auto minmax(0, 15rem) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 2.25rem);
+  padding: clamp(1.25rem, 2.2vw, 1.75rem) clamp(1.25rem, 2.5vw, 2rem);
+  border-radius: var(--radius-md);
+  background: transparent;
+  overflow: hidden;
+  transition: background-color var(--dur-mid) ease;
 }
 
-.process-step-index {
+.process-step:nth-child(odd) {
+  background: var(--surface);
+}
+
+.process-step:hover {
+  background: var(--accent);
+}
+
+.process-rule {
+  width: 3px;
+  height: 2.5rem;
+  border-radius: 2px;
+  background: var(--accent);
+  transition: background-color var(--dur-mid) ease;
+}
+
+.process-step:hover .process-rule {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.process-index {
   font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
   font-weight: 800;
-  font-size: var(--display-3);
+  letter-spacing: -0.04em;
+  color: var(--ink);
   line-height: 1;
-  color: var(--accent);
 }
 
-.process-step-title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--display-3);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-
-.process-step-text {
-  font-family: var(--font-sans);
-  color: var(--muted);
-  max-width: 44ch;
-}
-
-/* ============================================================
-   What I build — editorial capability list
-   ============================================================ */
-
-.builds-head .kicker {
-  margin-bottom: var(--space-4);
-}
-
-.builds-title {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: var(--display-2);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-
-.build-list {
-  list-style: none;
-  margin-top: clamp(3rem, 6vw, 5rem);
-  border-top: 1px solid var(--line-strong);
-}
-
-.build-item {
-  display: grid;
-  grid-template-columns: 5rem minmax(0, 1fr) minmax(0, 1.3fr);
-  gap: var(--space-6);
-  align-items: baseline;
-  padding-block: var(--space-6);
-  border-bottom: 1px solid var(--line);
-}
-
-.build-item-index {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--accent);
-}
-
-.build-item-title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--display-3);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-
-.build-item-items {
+.process-title {
   font-family: var(--font-sans);
   font-size: var(--text-lg);
-  line-height: 1.7;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.process-text {
+  /* Pushed to the far edge of the row, which is where the hover image
+     then arrives — the image lands exactly where the text was. */
+  justify-self: end;
+  max-width: 38ch;
+  text-align: right;
+  font-size: var(--text-sm);
+  line-height: 1.6;
   color: var(--muted);
-  max-width: 44ch;
+  transition: opacity var(--dur-mid) ease;
+}
+
+.process-step:hover .process-text {
+  opacity: 0;
+}
+
+.media.process-media {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  right: 8px;
+  width: clamp(9rem, 28%, 24rem);
+  border-radius: calc(var(--radius-md) - 8px);
+  opacity: 0;
+  transform: translateX(18px);
+  pointer-events: none;
+  transition: opacity var(--dur-mid) var(--ease-out),
+    transform var(--dur-mid) var(--ease-out);
+}
+
+.process-step:hover .media.process-media {
+  opacity: 1;
+  transform: none;
 }
 
 /* ============================================================
-   CTA — large rounded accent band
+   4 — FAQ
    ============================================================ */
 
-.cta {
-  background: var(--accent);
-  color: var(--accent-ink);
-  border-radius: var(--radius-lg);
-  padding: clamp(3.5rem, 7vw, 7rem) clamp(1.75rem, 5vw, 5.5rem);
+.faq {
+  padding-block: var(--section-pad);
 }
 
-.cta-kicker {
+.faq-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(2.5rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.faq-intro .split-title {
+  max-width: 14ch;
+}
+
+.faq-lede {
+  margin-top: var(--space-5);
+  font-size: var(--text-base);
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 40ch;
+  margin-bottom: var(--space-6);
+}
+
+.faq-list {
+  list-style: none;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.faq-item {
+  background: var(--surface);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  transition: border-color var(--dur-fast) ease;
+}
+
+.faq-item:hover,
+.faq-item-open {
+  border-color: var(--accent);
+}
+
+.faq-q {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: clamp(1.125rem, 2vw, 1.5rem) clamp(1.25rem, 2.5vw, 1.75rem);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: left;
   font-family: var(--font-sans);
-  font-size: var(--text-2xl);
+  font-size: var(--text-base);
   font-weight: 700;
-  line-height: 1.4;
-  color: var(--accent-ink);
-  margin-bottom: var(--space-7);
+  color: var(--ink);
 }
 
-.cta-title {
+.faq-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  color: var(--muted);
+  transition: transform var(--dur-mid) var(--ease-out),
+    color var(--dur-fast) ease;
+}
+
+.faq-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* The plus becomes a cross when the panel is open */
+.faq-item-open .faq-icon {
+  transform: rotate(45deg);
+  color: var(--accent);
+}
+
+.faq-a {
+  padding: 0 clamp(1.25rem, 2.5vw, 1.75rem) clamp(1.25rem, 2.5vw, 1.75rem);
+  padding-left: calc(clamp(1.25rem, 2.5vw, 1.75rem) + 20px + var(--space-4));
+}
+
+.faq-a p {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 60ch;
+}
+
+/* ============================================================
+   5 — Closing gallery CTA. The fanned strip is decorative;
+   the heading and button carry the meaning.
+   ============================================================ */
+
+.gallery {
+  position: relative;
+  isolation: isolate;
+  padding-block: clamp(5rem, 11vw, 10rem);
+  overflow: hidden;
+}
+
+.gallery-stage {
+  /* Default so the arc is fully formed even if the scroll driver never
+     runs. `useArcOpen` overwrites this on the same element and it
+     inherits down to the cards. */
+  --open: 1;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  display: grid;
+  place-items: center;
+  perspective: 1600px;
+}
+
+/* Scrim so the copy stays legible over whatever lands in the slots */
+.gallery-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Tight enough behind the copy to hold contrast, open enough at the
+     edges that the arc is actually visible — the point of the section is
+     the work, so the scrim protects the headline and nothing more. */
+  background: radial-gradient(
+      ellipse 42% 46% at 50% 42%,
+      rgba(16, 16, 16, 0.92) 0%,
+      rgba(16, 16, 16, 0.68) 45%,
+      rgba(16, 16, 16, 0.12) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      var(--bg) 0%,
+      rgba(16, 16, 16, 0) 20%,
+      rgba(16, 16, 16, 0) 80%,
+      var(--bg) 100%
+    );
+}
+
+.gallery-fan {
+  position: relative;
+  width: 100%;
+  height: clamp(13rem, 26vw, 21rem);
+  transform-style: preserve-3d;
+}
+
+/* Cards are positioned purely by transform, not by flow: each one is
+   parked at the centre and then pushed out along the arc. `--sin` and
+   `--depth` come from the component; `--arc-r` stays here so the arc can
+   tighten on small screens without recomputing anything in JS.
+
+   `--open` (0 → 1, driven by scroll) scales the spread, the depth and the
+   rotation together, so the arc grows out of a flat stack. x keeps a
+   floor of 0.55 so the cards start as a legible cluster rather than an
+   unreadable pile at dead centre. */
+.gallery-slot {
+  --arc-r: clamp(15rem, 42vw, 47rem);
+  /* Scales the rotation only, never the spread — lets narrow screens
+     flatten the cards without collapsing the arc's width. */
+  --arc-tilt: 1;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(6.5rem, 12vw, 14.5rem);
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  transform: translate(-50%, -50%)
+    translate3d(
+      calc(var(--arc-r) * var(--sin) * (0.55 + 0.45 * var(--open))),
+      0,
+      calc(var(--arc-r) * var(--depth) * var(--open))
+    )
+    rotateY(calc(var(--angle) * var(--open) * var(--arc-tilt)));
+}
+
+/* Cheap on the compositor and it keeps the card edges from crawling
+   while the arc opens. */
+.gallery-slot .media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  backface-visibility: hidden;
+}
+
+.gallery-slot .media,
+.gallery-slot .media .media-placeholder {
+  height: 100%;
+  min-height: 0;
+  border-radius: var(--radius-sm);
+}
+
+/* The strip sits behind the headline — keep the empty-slot labels
+   quiet enough that they read as texture, not as content. */
+.gallery-slot .media-placeholder-label,
+.gallery-slot .media-placeholder-icon {
+  opacity: 0.4;
+}
+
+.gallery-content {
+  position: relative;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gallery-title {
   font-family: var(--font-display);
+  font-size: var(--display-2);
   font-weight: 800;
-  font-size: var(--display-1);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: var(--accent-ink);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--ink);
   max-width: 16ch;
 }
 
-.cta-lede {
-  margin-top: var(--space-6);
-  font-family: var(--font-sans);
-  font-size: var(--text-lg);
-  color: var(--accent-ink);
-  opacity: 0.85;
-}
-
-.btn-cta {
-  margin-top: var(--space-8);
-  background: var(--accent-ink);
-  color: var(--accent);
+.gallery-lede {
+  margin-top: var(--space-5);
   font-size: var(--text-base);
-  padding: 1.125rem 2rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  max-width: 52ch;
 }
 
-.btn-cta:hover {
-  background: var(--accent-ink);
-  color: var(--accent-hover);
+.gallery-cta {
+  margin-top: var(--space-6);
+}
+
+
+/* ============================================================
+   1b — Proof strip. The stack, named, directly under the hero.
+
+   Reads as a band rather than a section: it belongs to the hero's
+   claim, so it gets a tight top pad and no display heading.
+   ============================================================ */
+
+.proof {
+  padding-block: clamp(2.75rem, 6vw, 4.5rem) clamp(1rem, 2vw, 2rem);
+}
+
+.proof-intro {
+  font-size: clamp(1.0625rem, 1.5vw, 1.375rem);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 48ch;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.proof-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.proof-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-block: clamp(1.125rem, 2vw, 1.5rem);
+  border-top: 1px solid var(--line-strong);
+}
+
+.proof-name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.proof-note {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 34ch;
 }
 
 /* ============================================================
-   System visual — large rounded abstract flow
+   2b — Capabilities. The hero names the four areas; here they
+   get the blurb and the concrete items behind them.
    ============================================================ */
 
-.system-visual {
-  position: relative;
-  background: var(--paper-deep);
+.caps {
+  padding-block: var(--section-pad);
+}
+
+.caps-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.caps-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  height: 100%;
+  padding: clamp(1.75rem, 3vw, 2.75rem);
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: clamp(1.25rem, 3vw, 2.5rem);
+  transition: background-color var(--dur-mid) ease,
+    border-color var(--dur-mid) ease;
 }
 
-.system-visual-grid {
-  position: absolute;
-  inset: 0;
-  background-image: linear-gradient(
-    to right,
-    var(--line) 1px,
-    transparent 1px
-  );
-  background-size: calc(100% / 6) 100%;
-  opacity: 0.45;
+.caps-card:hover {
+  background: var(--surface-2);
+  border-color: var(--line-strong);
 }
 
-.system-visual-flow {
-  position: relative;
+.caps-index {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.caps-title {
+  font-family: var(--font-display);
+  font-size: var(--display-3);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.caps-blurb {
+  font-size: var(--text-base);
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 46ch;
+}
+
+.caps-tags {
+  list-style: none;
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-4);
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-4);
 }
 
-.system-visual-step {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-}
-
-.system-visual-node {
+.caps-tag {
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: 0.02em;
-  color: var(--ink);
-  background: var(--paper);
+  color: var(--muted);
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius-xs);
-  padding: 0.625rem 1rem;
-  white-space: nowrap;
-}
-
-.system-visual-edge {
-  font-family: var(--font-sans);
-  color: var(--accent);
-  font-size: var(--text-lg);
-  line-height: 1;
-}
-
-.system-visual-step:last-child .system-visual-node {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--accent-ink);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
 }
 
 /* ============================================================
-   Motion
+   4b — Pricing. Three offers, priced.
+   ============================================================ */
+
+.pricing {
+  padding-block: var(--section-pad);
+}
+
+.pricing-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  align-items: stretch;
+}
+
+.pricing-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  height: 100%;
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  transition: border-color var(--dur-mid) ease,
+    background-color var(--dur-mid) ease;
+}
+
+.pricing-card:hover {
+  background: var(--surface-2);
+  border-color: var(--line-strong);
+}
+
+/* The Sprint is the front door — it gets the accent outline so the eye
+   lands there first, not a different price treatment. */
+.pricing-card-featured {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.pricing-card-featured:hover {
+  border-color: var(--accent-hover);
+  background: var(--accent-soft);
+}
+
+.pricing-flag {
+  align-self: flex-start;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--accent-ink-strong);
+  background: var(--accent);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+}
+
+.pricing-name {
+  font-family: var(--font-display);
+  font-size: var(--display-3);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.pricing-price {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+  line-height: 1.1;
+}
+
+.pricing-timeline {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.pricing-for,
+.pricing-deliverable {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.pricing-deliverable {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--line-strong);
+}
+
+.pricing-list {
+  list-style: none;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.pricing-list li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.pricing-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.pricing-cta {
+  margin-top: auto;
+  padding-top: var(--space-5);
+  color: var(--accent);
+}
+
+.pricing-care {
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  padding: clamp(1.25rem, 2.2vw, 1.75rem) clamp(1.25rem, 2.5vw, 2rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.pricing-care strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* ============================================================
+   5b — CTA band. An inset accent slab that breaks the long
+   middle of the page before the FAQ.
+   ============================================================ */
+
+.cta-band {
+  padding-block: clamp(1rem, 2vw, 2rem) var(--section-pad);
+}
+
+.cta-band-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(3rem, 7vw, 6rem) clamp(1.5rem, 5vw, 5rem);
+  border-radius: var(--radius-lg);
+  background: var(--accent);
+  color: var(--accent-ink-strong);
+}
+
+/* .kicker is accent-on-dark by default, which would vanish here.
+
+   The three text colours below are held at or above 0.85 alpha rather
+   than the 0.6–0.7 that would look right on a dark ground: dark ink on
+   this orange only clears 4.5:1 once it stops letting the orange
+   through. At 0.7 the kicker measures 3.9:1 and fails AA outright. */
+.cta-band-kicker {
+  color: var(--accent-ink-strong);
+}
+
+.cta-band-title {
+  font-family: var(--font-display);
+  font-size: var(--display-2);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--accent-ink-strong);
+  max-width: 18ch;
+}
+
+.cta-band-lede {
+  margin-top: var(--space-5);
+  font-size: var(--text-base);
+  line-height: 1.65;
+  color: rgba(26, 9, 0, 0.85);
+  max-width: 52ch;
+}
+
+.cta-band-cta {
+  margin-top: var(--space-6);
+}
+
+/* The pill's icon is accent-on-white — invisible against this slab.
+   Flip it to the dark ink so the arrow still reads. */
+.cta-band-cta .btn-pill-icon {
+  background: var(--accent-ink-strong);
+  color: #ffffff;
+}
+
+.cta-band-cta:hover .btn-pill-icon {
+  background: #2b1000;
+}
+
+.cta-band-availability {
+  margin-top: var(--space-5);
+  font-size: var(--text-sm);
+  color: rgba(26, 9, 0, 0.85);
+  max-width: 46ch;
+}
+
+/* ============================================================
+   Motion — hero copy rises on load
    ============================================================ */
 
 @keyframes hero-rise {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(18px);
   }
   to {
     opacity: 1;
@@ -615,201 +1012,380 @@
 
 .hero-eyebrow,
 .hero-title,
+.hero-claim,
 .hero-lede,
+.hero-cta,
 .capabilities-row {
   animation: hero-rise var(--dur-slow) var(--ease-out) both;
 }
 
 .hero-title {
-  animation-delay: 60ms;
+  animation-delay: 70ms;
+}
+
+.hero-claim {
+  animation-delay: 140ms;
 }
 
 .hero-lede {
-  animation-delay: 120ms;
+  animation-delay: 190ms;
+}
+
+.hero-cta {
+  animation-delay: 240ms;
 }
 
 .capabilities-row {
-  animation-delay: 180ms;
+  animation-delay: 300ms;
 }
 
 /* ============================================================
-   Responsive
+   Responsive — the ladder, widest first.
+
+   Breakpoints are placed where a layout actually breaks rather
+   than at device names: 1280 (support column crowds the headline),
+   1080 (three-across work cards would be too narrow), 960 (two
+   columns stop earning their keep), 810 (nav collapses — kept in
+   step with index.css), 640 (phone), 480 (small phone), 380
+   (narrowest phones still sold).
    ============================================================ */
 
-@media (max-width: 1199px) {
+/* Nothing wider needs help — .container caps at --container-max. */
+
+@media (max-width: 1280px) {
   .hero-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(14rem, 20rem);
-    gap: 3rem;
-  }
-
-  .featured-caption {
-    grid-template-columns: 9rem minmax(0, 1fr);
-  }
-
-  .featured-caption .arrow-link {
-    grid-column: 2;
-  }
-
-  .project-full-caption {
-    grid-template-columns: 9rem minmax(0, 1fr) minmax(0, 20rem);
-  }
-
-  .project-full-caption .arrow-link {
-    grid-column: 3;
-  }
-}
-
-@media (max-width: 810px) {
-  .home {
-    gap: calc(var(--section-gap) * 0.8);
-  }
-
-  .hero-inner {
-    min-height: 0;
-    padding: clamp(2.5rem, 8vw, 4rem);
-  }
-
-  .hero-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-  }
-
-  .hero-lede {
-    max-width: 46ch;
-  }
-
-  .capabilities-row {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-6);
-    margin-top: var(--space-6);
-  }
-
-  .featured-caption {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
-
-  .featured-caption .arrow-link {
-    grid-column: auto;
-  }
-
-  .statement-grid,
-  .process-head {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
-
-  .project-split,
-  .project-split-reverse {
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-  }
-
-  .project-split-reverse .project-split-visual {
-    order: 0;
-  }
-
-  .project-split:not(.project-split-reverse) .project-split-visual .system-visual,
-  .project-split-reverse .project-split-visual .system-visual {
-    aspect-ratio: 4 / 3;
-  }
-
-  .project-full-caption {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
-
-  .project-full-caption .arrow-link {
-    grid-column: auto;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 23rem);
+    gap: clamp(1.5rem, 3.5vw, 3rem);
   }
 
   .process-step {
-    grid-template-columns: 4.5rem minmax(0, 1fr);
-    gap: var(--space-4) var(--space-5);
-  }
-
-  .process-step-text {
-    grid-column: 2;
-  }
-
-  .build-item {
-    grid-template-columns: 3.5rem minmax(0, 1fr);
-    gap: var(--space-4) var(--space-5);
-  }
-
-  .build-item-items {
-    grid-column: 2;
+    grid-template-columns: 3px auto minmax(0, 12rem) minmax(0, 1fr);
   }
 }
 
-@media (max-width: 640px) {
-  .hero-eyebrow,
-  .cta-kicker {
-    font-size: var(--text-xl);
+@media (max-width: 1080px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
   }
 
-  .statement-copy {
-    font-size: var(--text-base);
+  .split-head {
+    gap: clamp(1.5rem, 4vw, 3rem);
   }
 
-  .project-meta {
-    margin-bottom: var(--space-4);
+  .process-step {
+    grid-template-columns: 3px auto minmax(0, 10rem) minmax(0, 1fr);
   }
 
-  .process-step-title,
-  .build-item-title {
-    font-size: var(--display-3);
+  /* Less room beside the text, so the hover image gets narrower */
+  .media.process-media {
+    width: clamp(8rem, 24%, 16rem);
   }
 
-  .build-item-items {
-    font-size: var(--text-base);
+  .faq-grid {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+    gap: clamp(2rem, 4vw, 3rem);
   }
 }
 
-@media (max-width: 480px) {
-  .hero-inner {
-    padding: 2rem 1.5rem;
+/* --- Two columns stop earning their keep --- */
+@media (max-width: 960px) {
+  .split-head,
+  .hero-grid,
+  .faq-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .split-lede {
+    align-self: start;
+    max-width: 52ch;
+  }
+
+  .split-title {
+    max-width: 22ch;
+  }
+
+  .hero-support {
+    gap: var(--space-3);
+    padding-bottom: 0;
+    max-width: 44ch;
+  }
+
+  .work-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .work-card {
+    max-width: 44rem;
+  }
+
+  /* Same call as the work cards: below this the second column is too
+     narrow for a blurb plus its tag row. */
+  .caps-grid,
+  .pricing-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .caps-card,
+  .pricing-card {
+    max-width: 44rem;
+  }
+
+  .faq-intro .split-title {
+    max-width: 20ch;
+  }
+
+  .faq-lede {
+    max-width: 52ch;
+  }
+
+  /* No room to sit an image beside the copy, so the row keeps its
+     text at full width and simply tints on hover. */
+  .media.process-media {
+    display: none;
+  }
+
+  .process-step:hover .process-text {
+    opacity: 1;
+  }
+}
+
+/* --- Nav collapses here too (see index.css) --- */
+@media (max-width: 810px) {
+  .hero {
+    min-height: 88svh;
+    padding-block: calc(var(--nav-h) + clamp(3rem, 9vw, 5rem))
+      clamp(2.5rem, 6vw, 3.5rem);
+  }
+
+  .hero-title {
+    line-height: 1;
+  }
+
+  .proof-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .capabilities-row {
-    gap: var(--space-5);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.25rem, 4vw, 2rem) 0;
+    margin-top: clamp(2rem, 7vw, 3rem);
   }
 
-  .featured-title,
-  .projects-title,
-  .statement-title,
-  .process-title {
-    font-size: clamp(2rem, 10vw, 2.75rem);
+  .capability:nth-child(odd) {
+    padding-left: 0;
+    border-left: 0;
   }
 
-  .featured-summary,
-  .project-split-summary,
-  .project-full-summary,
-  .process-step-text {
+  .process-step {
+    grid-template-columns: 3px auto minmax(0, 1fr);
+    align-items: start;
+    row-gap: var(--space-2);
+    column-gap: var(--space-4);
+  }
+
+  .process-rule {
+    height: 1.75rem;
+    margin-top: 0.25rem;
+  }
+
+  .process-index {
+    line-height: 1.1;
+  }
+
+  .process-text {
+    grid-column: 3;
+    justify-self: start;
+    text-align: left;
+    max-width: none;
+  }
+
+  .faq-a {
+    padding-left: clamp(1.25rem, 2.5vw, 1.75rem);
+  }
+
+  /* Pull the vanishing point closer as the arc shrinks. Radius drives
+     both spread and depth, so a narrower arc loses depth just as fast as
+     it loses width — and once the perspective gain drops below the
+     foreshortening from the rotation, the outer cards start reading
+     *smaller* than the centre ones and the curve turns inside out. */
+  .gallery-stage {
+    perspective: 900px;
+  }
+
+  .gallery-slot {
+    --arc-r: clamp(13rem, 44vw, 26rem);
+    width: clamp(5rem, 15vw, 8.5rem);
+  }
+}
+
+/* --- Phone --- */
+@media (max-width: 640px) {
+  .work-card {
+    padding: 8px 8px var(--space-5);
+    border-radius: var(--radius-sm);
+  }
+
+  .media.work-media {
+    aspect-ratio: 3 / 2;
+    border-radius: calc(var(--radius-sm) - 8px);
+  }
+
+  .work-body {
+    gap: var(--space-2);
+    padding: var(--space-5) var(--space-2) 0;
+  }
+
+  .work-card .arrow-link {
+    padding-top: var(--space-4);
+  }
+
+  .proof-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .proof-note {
+    max-width: none;
+  }
+
+  /* Cards get the smaller radius and tighter padding across the board
+     — at this width the 24px corner eats into the text column. */
+  .caps-card,
+  .pricing-card,
+  .pricing-care {
+    padding: var(--space-5);
+    border-radius: var(--radius-sm);
+  }
+
+  .cta-band-inner {
+    padding: clamp(2.5rem, 9vw, 3.5rem) var(--space-5);
+    border-radius: var(--radius-md);
+  }
+
+  .faq-item {
+    border-radius: var(--radius-sm);
+  }
+
+  .faq-q {
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+    font-size: var(--text-sm);
+    border-radius: var(--radius-sm);
+    align-items: flex-start;
+  }
+
+  .faq-icon {
+    margin-top: 2px;
+  }
+
+  .faq-a {
+    padding: 0 var(--space-5) var(--space-5);
+  }
+
+  /* Flatten the arc — a strong rotation reads as broken on a narrow
+     screen rather than as depth.
+
+     Tune the arc variables rather than re-declaring `transform`: that
+     shorthand also carries the translate(-50%, -50%) that centres each
+     card, so overriding it wholesale drops all eight onto a single
+     point. */
+  .gallery-slot {
+    --arc-r: 12rem;
+    --arc-tilt: 0.6;
+    width: clamp(4.5rem, 22vw, 6.5rem);
+  }
+
+  .gallery-lede {
     font-size: var(--text-sm);
   }
+}
+
+/* --- Small phone --- */
+@media (max-width: 480px) {
+  /* Own the first screen. This was min-height: 0, which left the hero at
+     its content height — 699px on a 844px phone — so the fold landed a
+     third of the way into the proof strip and the hero read as cut off.
+     svh (not vh) is the height with the browser chrome showing, which is
+     the state the page actually loads in.
+
+     Landscape phones are handled separately at the bottom of this file:
+     that rule comes later and still drops the hero to content height, so
+     this does not trap anyone in a 100svh hero on a short screen. */
+  .hero {
+    min-height: 100svh;
+  }
+
+  .hero-eyebrow {
+    margin-bottom: var(--space-3);
+  }
+
+  .hero-cta,
+  .faq-intro .btn-pill,
+  .cta-band-cta,
+  .gallery-cta {
+    width: 100%;
+    max-width: 20rem;
+    justify-content: space-between;
+  }
+
+  .capabilities-row {
+    padding-top: var(--space-5);
+  }
+
+  .capability {
+    gap: var(--space-2);
+    padding-inline: 0 var(--space-4);
+  }
+
+  .capability + .capability {
+    border-left: 0;
+  }
 
   .process-step {
-    grid-template-columns: 1fr;
-    gap: var(--space-2);
-    padding-block: var(--space-5);
+    padding: var(--space-5) var(--space-4);
+    border-radius: var(--radius-sm);
   }
 
-  .process-step-index {
-    margin-bottom: var(--space-2);
+  .process-index {
+    font-size: 1.375rem;
   }
 
-  .build-item {
-    grid-template-columns: 1fr;
-    gap: var(--space-2);
-    padding-block: var(--space-5);
+  .process-title {
+    font-size: var(--text-base);
   }
 
-  .cta {
-    padding: 3rem 1.5rem;
+  .split-title,
+  .gallery-title {
+    max-width: none;
+  }
+}
+
+/* --- Narrowest phones still sold (~320–380px) --- */
+@media (max-width: 380px) {
+  .capabilities-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
   }
 
-  .btn-cta {
-    width: 100%;
+  .capability {
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding-inline: 0;
+  }
+
+  .process-step {
+    column-gap: var(--space-3);
+  }
+
+  .work-tag {
+    font-size: 0.6875rem;
+    padding: 0.2rem 0.55rem;
+  }
+}
+
+/* --- Short landscape (phone on its side, split-screen tablet) --- */
+@media (max-height: 560px) and (max-width: 1080px) {
+  .hero {
+    min-height: 0;
   }
 }

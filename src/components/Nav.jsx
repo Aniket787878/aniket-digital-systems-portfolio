@@ -1,47 +1,69 @@
-import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
-import { site } from '../data.js'
+import { useEffect, useState } from 'react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 
+/*
+  Fixed overlay header: transparent while it sits on the hero, then a
+  blurred dark bar once the page scrolls past ~40px. Brand left,
+  links centred, pill CTA right.
+*/
 export default function Nav() {
   const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const { pathname } = useLocation()
 
-  const close = () => setOpen(false)
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // Close the mobile panel whenever the route changes. Derived during
+  // render rather than in an effect so it lands in the same commit as
+  // the navigation instead of flashing the open panel on the new page.
+  const [lastPath, setLastPath] = useState(pathname)
+  if (pathname !== lastPath) {
+    setLastPath(pathname)
+    setOpen(false)
+  }
+
+  // Sub-pages have no hero behind the header, so they get the solid bar
+  // immediately rather than white-on-white at the top of the scroll.
+  const solid = scrolled || open || pathname !== '/'
 
   return (
-    <header className="nav">
+    <header className={`nav${solid ? ' nav-scrolled' : ''}`}>
       <div className="nav-inner">
-        <Link to="/" className="nav-brand" onClick={close}>
-          {site.name}
+        <Link to="/" className="nav-brand">
+          Aniket<sup aria-hidden="true">&reg;</sup>
         </Link>
-        <nav className="nav-links">
+
+        <nav className="nav-links" aria-label="Primary">
           <NavLink to="/" end>
             Home
           </NavLink>
           <NavLink to="/projects">Projects</NavLink>
+          <NavLink to="/contact">Contact</NavLink>
         </nav>
-        <Link to="/contact" className="nav-cta">
-          Get in touch
-          <span className="nav-cta-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path
-                d="M5 12h14m0 0-6-6m6 6-6 6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </span>
-        </Link>
+
+        <div className="nav-actions">
+          <Link to="/contact" className="btn-pill">
+            Get in touch
+            <span className="btn-pill-icon" aria-hidden="true">
+              <ArrowIcon />
+            </span>
+          </Link>
+        </div>
+
         <button
           type="button"
           className="nav-toggle"
-          aria-label="Toggle menu"
+          aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
           {open ? (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path
                 d="M6 6l12 12M18 6 6 18"
                 stroke="currentColor"
@@ -50,9 +72,9 @@ export default function Nav() {
               />
             </svg>
           ) : (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path
-                d="M4 7h16M4 12h16M4 17h16"
+                d="M4 8h16M4 16h16"
                 stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"
@@ -61,19 +83,36 @@ export default function Nav() {
           )}
         </button>
       </div>
+
       {open && (
-        <nav className="nav-panel open">
-          <NavLink to="/" end onClick={close}>
+        <nav className="nav-panel" aria-label="Mobile">
+          <NavLink to="/" end>
             Home
           </NavLink>
-          <NavLink to="/projects" onClick={close}>
-            Projects
-          </NavLink>
-          <Link to="/contact" className="nav-panel-cta" onClick={close}>
+          <NavLink to="/projects">Projects</NavLink>
+          <NavLink to="/contact">Contact</NavLink>
+          <Link to="/contact" className="btn-pill nav-panel-cta">
             Get in touch
+            <span className="btn-pill-icon" aria-hidden="true">
+              <ArrowIcon />
+            </span>
           </Link>
         </nav>
       )}
     </header>
+  )
+}
+
+function ArrowIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M5 12h14m0 0-6-6m6 6-6 6"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   )
 }

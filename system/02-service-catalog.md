@@ -24,6 +24,17 @@ What you sell. Concrete, priceable, deliverable.
 
 ## Pricing framing (for the site + calls)
 
+**The site now carries a pricing anchor, and it points at Offer A.** It lives in
+`site.pricingAnchor` in `src/data.js`:
+
+> Most engagements start with an Ops Automation Sprint: fixed scope, from ₹40,000,
+> live in two weeks.
+
+`from ₹40,000` is the floor of Offer A's ₹40k-₹80k band, and `two weeks` matches its
+timeline — the anchor opens the range, it does not cap it. Offers B and C are quoted
+on calls, not on the site. If Offer A's band moves, change `site.pricingAnchor` and
+this line together, or the site and the call will disagree.
+
 - Never quote hourly — always fixed-scope
 - Always name a **timeline** (buyers buy speed as much as output)
 - **Discovery call → written 1-page proposal** (never verbal quote)

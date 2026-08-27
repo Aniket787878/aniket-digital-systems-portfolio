@@ -1,263 +1,554 @@
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { projects } from '../data.js'
-import SystemVisual from '../components/SystemVisual.jsx'
+import {
+  projects,
+  capabilities,
+  process,
+  faq,
+  images,
+  site,
+  proofTools,
+  packages,
+  carePlan
+} from '../data.js'
+import Media from '../components/Media.jsx'
+import HeroCanvas from '../components/HeroCanvas.jsx'
 import './HomePage.css'
 
-const capabilities = [
-  { index: '01', title: 'Digital Systems' },
-  { index: '02', title: 'Web & Apps' },
-  { index: '03', title: 'AI & Automation' },
-  { index: '04', title: 'Growth Systems' }
-]
-
-const processSteps = [
-  {
-    index: '01',
-    title: 'Understand',
-    text: 'Understand the people, process and actual problem.'
-  },
-  {
-    index: '02',
-    title: 'Map',
-    text: 'Break the process into workflows, decisions and touchpoints.'
-  },
-  {
-    index: '03',
-    title: 'Design',
-    text: 'Design the experience and the system behind it.'
-  },
-  {
-    index: '04',
-    title: 'Build',
-    text: 'Build the product, integrations and infrastructure required.'
-  },
-  {
-    index: '05',
-    title: 'Automate',
-    text: 'Remove repetitive manual work wherever automation makes sense.'
-  },
-  {
-    index: '06',
-    title: 'Add intelligence',
-    text: 'Use AI where it genuinely improves understanding, decisions or execution.'
-  },
-  {
-    index: '07',
-    title: 'Improve',
-    text: 'Measure, learn and keep improving the system.'
-  }
-]
-
-const buildCategories = [
-  {
-    title: 'Digital Experiences',
-    items: ['Websites', 'Funnels', 'PWAs', 'Apps']
-  },
-  {
-    title: 'Business Systems',
-    items: ['Dashboards', 'Internal tools', 'Portals', 'Workflow systems']
-  },
-  {
-    title: 'Intelligent Systems',
-    items: ['AI assistants', 'Agents', 'Knowledge systems', 'Content systems']
-  },
-  {
-    title: 'Automation',
-    items: ['APIs', 'Integrations', 'Notifications', 'Repetitive workflows']
-  }
-]
-
-function ProjectMeta({ project }) {
+function ArrowIcon() {
   return (
-    <div className="project-meta">
-      <span className="meta">{project.index}</span>
-      {project.private && <span className="meta">Private Client System</span>}
-    </div>
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M5 12h14m0 0-6-6m6 6-6 6"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   )
 }
 
 export default function HomePage() {
-  const featured = projects[0]
-  const rest = projects.slice(1)
-
   return (
     <div className="home">
-      {/* Hero — huge statement + supporting text + numbered capabilities */}
-      <section className="hero">
-        <div className="hero-inner">
-          <div className="hero-grid">
-            <div className="hero-headline">
-              <p className="hero-eyebrow">Hey, I&rsquo;m Aniket.</p>
-              <h1 className="hero-title">
-                I turn complicated workflows into better digital systems.
-              </h1>
-            </div>
-            <p className="hero-lede">
-              I design and build websites, apps, automations and AI-powered
-              systems that make work simpler, faster and more scalable.
-            </p>
-          </div>
-          <ol className="capabilities-row">
-            {capabilities.map((item) => (
-              <li key={item.index} className="capability">
-                <span className="capability-hash">#</span>
-                <span className="capability-index">{item.index}</span>
-                <span className="capability-title">{item.title}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+      <Hero />
+      <ProofStrip />
+      <Work />
+      <Capabilities />
+      <Process />
+      <Pricing />
+      <CtaBand />
+      <Faq />
+      <Gallery />
+    </div>
+  )
+}
 
-      {/* Large featured system */}
-      <section className="featured">
-        <p className="kicker">Featured system</p>
-        <Link
-          to={`/projects/${featured.slug}`}
-          className="featured-card"
-        >
-          <div className="featured-visual">
-            <SystemVisual title={featured.title} flow={featured.flow} />
-          </div>
-          <div className="featured-caption">
-            <ProjectMeta project={featured} />
-            <div>
-              <h2 className="featured-title">{featured.title}</h2>
-              <p className="featured-summary">{featured.summary}</p>
-            </div>
-            <span className="arrow-link">
-              View system <span className="arrow">&rarr;</span>
-            </span>
-          </div>
-        </Link>
-      </section>
+/* ---------------------------------------------------------------
+   1b — Proof strip. The stack, named, straight under the hero.
 
-      {/* Editorial statement */}
-      <section className="statement">
-        <div className="statement-grid">
-          <p className="kicker">Why systems</p>
-          <div>
-            <h2 className="statement-title">
-              I like figuring out how things work.
-            </h2>
-            <p className="statement-copy">
-              I enjoy taking complicated ideas, inefficient processes and
-              repetitive work and turning them into simpler digital systems.
-            </p>
-            <p className="statement-copy">
-              My work sits across product thinking, web, AI and automation.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured systems — varied compositions */}
-      <section className="projects">
-        <div className="projects-head">
-          <p className="kicker">Selected systems</p>
-          <h2 className="projects-title">
-            Problems I&rsquo;ve turned into systems.
-          </h2>
-        </div>
-        <div className="projects-list">
-          {rest.map((project, i) => {
-            const kind = i % 3
-            if (kind === 2) {
-              return (
-                <Link
-                  key={project.slug}
-                  to={`/projects/${project.slug}`}
-                  className="project-full"
-                >
-                  <div className="project-full-visual">
-                    <SystemVisual title={project.title} flow={project.flow} />
-                  </div>
-                  <div className="project-full-caption">
-                    <ProjectMeta project={project} />
-                    <h3 className="project-full-title">{project.title}</h3>
-                    <p className="project-full-summary">{project.summary}</p>
-                    <span className="arrow-link">
-                      View system <span className="arrow">&rarr;</span>
-                    </span>
-                  </div>
-                </Link>
-              )
-            }
-            const reversed = kind === 1
-            return (
-              <Link
-                key={project.slug}
-                to={`/projects/${project.slug}`}
-                className={`project-split${reversed ? ' project-split-reverse' : ''}`}
-              >
-                <div className="project-split-visual">
-                  <SystemVisual title={project.title} flow={project.flow} />
-                </div>
-                <div className="project-split-caption">
-                  <ProjectMeta project={project} />
-                  <h3 className="project-split-title">{project.title}</h3>
-                  <p className="project-split-summary">{project.summary}</p>
-                  <span className="arrow-link">
-                    View system <span className="arrow">&rarr;</span>
-                  </span>
-                </div>
-              </Link>
-            )
-          })}
-        </div>
-      </section>
-
-      {/* Process */}
-      <section className="process">
-        <div className="process-head">
-          <p className="kicker">Process</p>
-          <h2 className="process-title">I don&rsquo;t start with the tool.</h2>
-          <p className="process-lede">
-            I start by understanding how something works today, where the
-            friction exists and what the better system should look like.
-          </p>
-        </div>
-        <ol className="process-steps">
-          {processSteps.map((step) => (
-            <li key={step.index} className="process-step">
-              <span className="process-step-index">{step.index}</span>
-              <h3 className="process-step-title">{step.title}</h3>
-              <p className="process-step-text">{step.text}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      {/* What I build */}
-      <section className="builds">
-        <div className="builds-head">
-          <p className="kicker">What I build</p>
-          <h2 className="builds-title">What I build.</h2>
-        </div>
-        <ul className="build-list">
-          {buildCategories.map((category, i) => (
-            <li key={category.title} className="build-item">
-              <span className="build-item-index">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <h3 className="build-item-title">{category.title}</h3>
-              <p className="build-item-items">{category.items.join(' \u00b7 ')}</p>
+   A tools row is the honest version of the logo wall a template puts
+   here: no client logos to show yet, but "n8n, Claude, Supabase" tells a
+   technical buyer more than six greyed-out wordmarks would. Each tool
+   carries the reason it gets used, so it reads as judgement rather than
+   a skills list.
+   --------------------------------------------------------------- */
+function ProofStrip() {
+  return (
+    <section className="proof">
+      <div className="container">
+        <p className="proof-intro">
+          Built with tools you keep. Self-hosted where it matters, so the
+          system stays yours after I hand it over.
+        </p>
+        <ul className="proof-grid">
+          {proofTools.map((tool) => (
+            <li key={tool.name} className="proof-item">
+              <span className="proof-name">{tool.name}</span>
+              <span className="proof-note">{tool.note}</span>
             </li>
           ))}
         </ul>
-      </section>
+      </div>
+    </section>
+  )
+}
 
-      {/* CTA */}
-      <section className="cta">
-        <p className="cta-kicker">Start a system</p>
-        <h2 className="cta-title">
-          Have something inefficient, complicated or repetitive?
-        </h2>
-        <p className="cta-lede">Let&rsquo;s figure out the system behind it.</p>
-        <Link to="/contact" className="btn btn-cta">
-          Get in touch <span aria-hidden="true">&rarr;</span>
+/* ---------------------------------------------------------------
+   2b — Capabilities. The hero names the four areas; this is where
+   they get said properly, with the blurb and the concrete items that
+   were already sitting unused in data.js.
+   --------------------------------------------------------------- */
+function Capabilities() {
+  return (
+    <section className="caps">
+      <div className="container">
+        <div className="split-head">
+          <div>
+            <p className="kicker">What I can help you with</p>
+            <h2 className="split-title">Four things, done properly</h2>
+          </div>
+          <p className="split-lede">
+            Most engagements touch two or three of these. The point is never
+            the tool &mdash; it is the hour a week that stops being spent on
+            copy-paste.
+          </p>
+        </div>
+
+        <ul className="caps-grid">
+          {capabilities.map((cap) => (
+            <li key={cap.index} className="caps-card">
+              <span className="caps-index">
+                <span className="capability-hash" aria-hidden="true">
+                  #
+                </span>
+                {cap.index}
+              </span>
+              <h3 className="caps-title">{cap.title}</h3>
+              <p className="caps-blurb">{cap.blurb}</p>
+              <ul className="caps-tags">
+                {cap.items.map((item) => (
+                  <li key={item} className="caps-tag">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+/* ---------------------------------------------------------------
+   4b — Pricing. Three productized offers, priced, from the service
+   catalog. Naming the number is the whole point: the catalog's own
+   rule is fixed scope with a stated timeline, never hourly.
+   --------------------------------------------------------------- */
+function Pricing() {
+  return (
+    <section className="pricing">
+      <div className="container">
+        <div className="split-head">
+          <div>
+            <p className="kicker">Pricing</p>
+            <h2 className="split-title">Fixed scope, stated timeline</h2>
+          </div>
+          <p className="split-lede">
+            No hourly billing. Every engagement is a fixed price against a
+            written scope, with a date attached. Half up front, half on
+            delivery.
+          </p>
+        </div>
+
+        <ul className="pricing-grid">
+          {packages.map((pkg) => (
+            <li
+              key={pkg.name}
+              className={`pricing-card${pkg.featured ? ' pricing-card-featured' : ''}`}
+            >
+              {pkg.featured && (
+                <span className="pricing-flag">Most start here</span>
+              )}
+              <h3 className="pricing-name">{pkg.name}</h3>
+              <p className="pricing-price">{pkg.price}</p>
+              <p className="pricing-timeline">{pkg.timeline}</p>
+              <p className="pricing-for">{pkg.forWho}</p>
+              <p className="pricing-deliverable">{pkg.deliverable}</p>
+              <ul className="pricing-list">
+                {pkg.includes.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <Link to="/contact" className="pricing-cta arrow-link">
+                Start here
+                <span className="arrow" aria-hidden="true">
+                  &rarr;
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <p className="pricing-care">
+          <strong>{carePlan.name}</strong> &mdash; {carePlan.price}.{' '}
+          {carePlan.blurb}
+        </p>
+      </div>
+    </section>
+  )
+}
+
+/* ---------------------------------------------------------------
+   5b — CTA band. The reference breaks its long middle with a
+   full-bleed colour block before the FAQ; this does the same job with
+   the availability line, which is the most persuasive sentence on the
+   page and was previously buried at the very bottom.
+   --------------------------------------------------------------- */
+function CtaBand() {
+  return (
+    <section className="cta-band">
+      <div className="container">
+        <div className="cta-band-inner">
+          <p className="kicker cta-band-kicker">Next step</p>
+          <h2 className="cta-band-title">
+            Tell me the part of the week you dread.
+          </h2>
+          <p className="cta-band-lede">{site.pricingAnchor}</p>
+          <Link to="/contact" className="btn-pill cta-band-cta">
+            Get in touch
+            <span className="btn-pill-icon" aria-hidden="true">
+              <ArrowIcon />
+            </span>
+          </Link>
+          {site.availability && (
+            <p className="cta-band-availability">{site.availability}</p>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ---------------------------------------------------------------
+   1 — Hero. Full-bleed image ground, content anchored to the
+   bottom, capability range as a numbered rule beneath it.
+   --------------------------------------------------------------- */
+function Hero() {
+  return (
+    <section className="hero">
+      {/* The hero ground is the shader, not photography. This gradient is
+          what shows when WebGL is unavailable, so it has to stand on its
+          own — hence a designed ramp rather than a flat fill. */}
+      <div className="hero-ground" aria-hidden="true" />
+      <HeroCanvas />
+      <div className="hero-scrim" aria-hidden="true" />
+
+      <div className="container hero-content">
+        <div className="hero-grid">
+          <div>
+            <p className="hero-eyebrow">Hey, I&rsquo;m Aniket &mdash; I build</p>
+            <h1 className="hero-title">Systems that run themselves</h1>
+          </div>
+          <div className="hero-support">
+            <p className="hero-claim">
+              Good systems should feel invisible.
+            </p>
+            <p className="hero-lede">
+              For clinics, studios, agencies and consultancies: bookings,
+              intake and follow-ups in one place instead of across WhatsApp
+              threads and spreadsheets.
+            </p>
+            <Link to="/contact" className="btn-pill btn-pill-accent hero-cta">
+              Get in touch
+              <span className="btn-pill-icon" aria-hidden="true">
+                <ArrowIcon />
+              </span>
+            </Link>
+          </div>
+        </div>
+
+        <ol className="capabilities-row">
+          {capabilities.map((item) => (
+            <li key={item.index} className="capability">
+              <span className="capability-index">
+                <span className="capability-hash" aria-hidden="true">
+                  #
+                </span>
+                {item.index}
+              </span>
+              <span className="capability-title">{item.title}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )
+}
+
+/* ---------------------------------------------------------------
+   2 — Selected work. Real case studies, each with its own image
+   slot; the card is the link.
+   --------------------------------------------------------------- */
+function Work() {
+  return (
+    <section className="work">
+      <div className="container">
+        <div className="split-head">
+          <div>
+            <p className="kicker">Selected Work</p>
+            <h2 className="split-title">Problems, turned into systems</h2>
+          </div>
+          <p className="split-lede">
+            Four builds for service businesses that were running their
+            operations by hand. Each one starts with the process, not the tool.
+          </p>
+        </div>
+
+        <ul className="work-grid">
+          {projects.map((project) => (
+            <li key={project.slug} className="work-item">
+              <Link to={`/projects/${project.slug}`} className="work-card">
+                <Media
+                  className="work-media"
+                  src={images.projects[project.slug]}
+                  label={`Project ${project.index}`}
+                  alt=""
+                />
+                <div className="work-body">
+                  <div className="work-meta">
+                    <span className="work-index">{project.index}</span>
+                    {project.private && (
+                      <span className="work-tag">Private client</span>
+                    )}
+                    <span className="work-tag">{project.timeline}</span>
+                  </div>
+                  <h3 className="work-title">{project.title}</h3>
+                  <p className="work-summary">{project.summary}</p>
+                  <span className="arrow-link">
+                    View system
+                    <span className="arrow" aria-hidden="true">
+                      &rarr;
+                    </span>
+                  </span>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+/* ---------------------------------------------------------------
+   3 — Process. Hovering a row fills it with the accent and slides
+   an image in from the right. The image is decorative: every word
+   of the step is readable without hovering anything.
+   --------------------------------------------------------------- */
+function Process() {
+  return (
+    <section className="process">
+      <div className="container">
+        <div className="split-head">
+          <div>
+            <p className="kicker">Step-by-Step</p>
+            <h2 className="split-title">How a build actually goes</h2>
+          </div>
+          <p className="split-lede">
+            I don&rsquo;t start with the tool. I start with how the work happens
+            today, and where the friction actually is.
+          </p>
+        </div>
+
+        <ol className="process-steps">
+          {process.map((step) => (
+            <li key={step.index} className="process-step">
+              <span className="process-rule" aria-hidden="true" />
+              <span className="process-index">{step.index}</span>
+              <h3 className="process-title">{step.title}</h3>
+              <p className="process-text">{step.text}</p>
+              <Media
+                className="process-media"
+                src={images.process[step.key]}
+                label={step.title}
+                alt=""
+              />
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )
+}
+
+/* ---------------------------------------------------------------
+   4 — FAQ. Real disclosure buttons, one open at a time.
+   --------------------------------------------------------------- */
+function Faq() {
+  const [openIndex, setOpenIndex] = useState(null)
+
+  return (
+    <section className="faq">
+      <div className="container faq-grid">
+        <div className="faq-intro">
+          <p className="kicker">Frequently Asked Questions</p>
+          <h2 className="split-title">Answers to common questions</h2>
+          <p className="faq-lede">
+            Scope, cost, ownership and what I need from you before anything
+            starts.
+          </p>
+          <Link to="/contact" className="btn-pill">
+            Contact me
+            <span className="btn-pill-icon" aria-hidden="true">
+              <ArrowIcon />
+            </span>
+          </Link>
+        </div>
+
+        <ul className="faq-list">
+          {faq.map((item, i) => {
+            const isOpen = openIndex === i
+            return (
+              <li
+                key={item.q}
+                className={`faq-item${isOpen ? ' faq-item-open' : ''}`}
+              >
+                <h3>
+                  <button
+                    type="button"
+                    className="faq-q"
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-a-${i}`}
+                    id={`faq-q-${i}`}
+                    onClick={() => setOpenIndex(isOpen ? null : i)}
+                  >
+                    <span className="faq-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path
+                          d="M12 5v14M5 12h14"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </span>
+                    <span className="faq-q-text">{item.q}</span>
+                  </button>
+                </h3>
+                {isOpen && (
+                  <div
+                    className="faq-a"
+                    id={`faq-a-${i}`}
+                    role="region"
+                    aria-labelledby={`faq-q-${i}`}
+                  >
+                    <p>{item.a}</p>
+                  </div>
+                )}
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+/* ---------------------------------------------------------------
+   5 — Closing CTA over a fanned strip of image slots. The strip is
+   purely decorative; the heading and button carry the meaning.
+   --------------------------------------------------------------- */
+/* Degrees between adjacent cards around the arc. */
+const ARC_STEP = 15
+
+/*
+  Drives `--open` on the stage straight from scroll position: 0 while the
+  section is still below the fold, 1 once it has risen into view. The arc
+  uses it to spread and curve, so the section assembles itself as you
+  arrive at it.
+
+  Written to the DOM node rather than held in React state on purpose — a
+  setState per scroll frame would re-render eight cards continuously for
+  what is a single custom property.
+*/
+function useArcOpen(ref) {
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return undefined
+
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let frame = 0
+
+    const update = () => {
+      frame = 0
+      if (motion.matches) {
+        el.style.setProperty('--open', '1')
+        return
+      }
+      const r = el.getBoundingClientRect()
+      const vh = window.innerHeight || 1
+      // Fully open by the time the top edge has travelled 85% of a
+      // viewport upward — the arc finishes settling before it is centred,
+      // rather than still moving while you are reading the headline.
+      const p = (vh - r.top) / (vh * 0.85)
+      el.style.setProperty('--open', String(Math.min(1, Math.max(0, p))))
+    }
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    motion.addEventListener('change', update)
+
+    return () => {
+      if (frame) cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      motion.removeEventListener('change', update)
+    }
+  }, [ref])
+}
+
+function Gallery() {
+  const slots = images.gallery
+  const mid = (slots.length - 1) / 2
+  const stageRef = useRef(null)
+  useArcOpen(stageRef)
+
+  return (
+    <section className="gallery">
+      <div className="gallery-stage" ref={stageRef} aria-hidden="true">
+        <div className="gallery-fan">
+          {slots.map((src, i) => {
+            /* Lay the cards on a cylinder that curves *towards* the
+               viewer, so the outer ones come forward and read larger —
+               the shape you get standing inside the curve rather than
+               looking at the outside of it.
+
+               sin/cos are resolved here because they only depend on the
+               card's index, never on the radius. That leaves the radius
+               itself free to stay a responsive CSS clamp, instead of
+               being pinned to whatever the viewport was at mount. */
+            const offset = i - mid
+            const rad = (offset * ARC_STEP * Math.PI) / 180
+            const style = {
+              '--sin': Math.sin(rad).toFixed(4),
+              // 1 - cos: depth measured from the arc's nearest point, so
+              // the centre card sits flat on the section plane at z = 0.
+              '--depth': (1 - Math.cos(rad)).toFixed(4),
+              '--angle': `${-offset * ARC_STEP}deg`,
+              // Nearer cards paint over farther ones.
+              zIndex: Math.round(10 - Math.abs(offset) * 2)
+            }
+            return (
+              <div className="gallery-slot" key={i} style={style}>
+                <Media src={src} label={`Slot ${i + 1}`} alt="" />
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      <div className="container gallery-content">
+        <p className="kicker">Behind the systems</p>
+        <h2 className="gallery-title">Curious what else I&rsquo;ve built?</h2>
+        <p className="gallery-lede">
+          The full set of booking flows, intake systems, dashboards and
+          automations &mdash; with the problem each one started from.
+        </p>
+        <Link to="/projects" className="btn-pill gallery-cta">
+          See more projects
+          <span className="btn-pill-icon" aria-hidden="true">
+            <ArrowIcon />
+          </span>
         </Link>
-      </section>
-    </div>
+      </div>
+    </section>
   )
 }

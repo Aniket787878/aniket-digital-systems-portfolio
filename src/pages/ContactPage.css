@@ -4,6 +4,84 @@
    !important, no libraries, responsive.
    ============================================================ */
 
+/* ---------- Availability + "what happens next" ---------- */
+
+.contact-availability {
+  margin-top: var(--space-5);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--accent);
+  max-width: var(--measure);
+}
+
+.contact-next {
+  margin-top: var(--space-7);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--line);
+}
+
+.contact-next-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-xl);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.contact-next-list {
+  list-style: none;
+  margin-top: var(--space-5);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.contact-next-list li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.contact-next-step {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.contact-next-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.contact-next-list p {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* Polite live region for the form's sending / success transitions.
+   Announced, never painted. */
+.contact-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
 .contact-form {
   margin-top: var(--space-8);
   display: flex;
@@ -52,6 +130,18 @@
   outline: none;
   border-color: var(--accent);
   background: var(--paper);
+}
+
+/* Keyboard users get a ring the pointer path does not paint.
+   Declared after the :focus rule above so it wins on equal specificity. */
+.contact-input:focus-visible,
+.contact-textarea:focus-visible,
+.contact-radio input:focus-visible,
+.contact-submit:focus-visible,
+.contact-panel a:focus-visible,
+.contact-error a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 .contact-textarea {
@@ -131,6 +221,13 @@
   line-height: 1.6;
   color: var(--muted);
   max-width: 46ch;
+}
+
+@media (max-width: 810px) {
+  .contact-next-list {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
 }
 
 @media (max-width: 480px) {

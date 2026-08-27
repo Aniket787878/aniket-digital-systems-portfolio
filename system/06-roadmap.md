@@ -2,30 +2,44 @@
 
 Ship the whole loop in 4 weeks. Then iterate.
 
+## Blocked on Aniket — nothing else can close these
+
+Every item below is a real-world input no agent can supply. The site cannot go live
+until the first three are done.
+
+| # | Blocker | Blocks |
+|---|---|---|
+| 1 | **Domain** — buy it | Deploy, real email, OG tags |
+| 2 | **Email address** — replaces the `hello@aniketbuilds.com` placeholder | Contact fallback, footer, outreach |
+| 3 | **n8n webhook URL** — set as `VITE_LEAD_WEBHOOK_URL` in the Vercel project | Lead capture. Until set, no lead is stored |
+| 4 | **Real case study numbers** | Every `outcome` figure is directional until then |
+| 5 | **WhatsApp number** — `site.whatsapp` is `''` | Contact success panel, footer |
+
 ## Week 1 — Website ships + ICP locked
 
 **Website (P0 gaps from `01-website-map.md`)**
-- [ ] Fix `site.email` in `data.js` to real address
-- [ ] Add real meta tags + OG image in `index.html`
-- [ ] Add `public/_redirects` for SPA routing
-- [ ] Build contact form component with fields from `01-website-map.md`
-- [ ] Set up n8n workflow: webhook → Airtable → email notify → auto-reply
-- [ ] Deploy to Cloudflare Pages, connect custom domain
-- [ ] Verify: submit test form, confirm end-to-end
+- [x] Fix `site.email` in `data.js` — placeholder set with TODO; real address blocked on Aniket
+- [ ] Add real meta tags + OG image in `index.html` — in flight; PNG OG image still needed
+- [x] Add SPA routing rewrite — now `vercel.json` (`public/_redirects` was Cloudflare-only, removed)
+- [x] Build contact form component with fields from `01-website-map.md` — webhook POST, budget bands, success/error/fallback states
+- [ ] Set up n8n workflow: webhook → Airtable → email notify → auto-reply — build against the exact payload keys in `01-website-map.md`
+- [ ] Deploy to Vercel, connect custom domain — deploy done, domain blocked on Aniket
+- [ ] Verify: submit test form, confirm end-to-end — blocked on webhook URL
 
 **Positioning**
-- [ ] Read `05-icp-positioning.md`, pick ICP (default: wellness)
-- [ ] Rewrite hero subhead + one CTA line
-- [ ] Rewrite project summaries in ICP language
+- [x] Read `05-icp-positioning.md`, pick ICP — **LOCKED**: sell narrow, deliver broad. Service businesses running on bookings, intake, follow-ups, team coordination. Not wellness-only
+- [x] Rewrite project summaries in ICP language
+- [ ] Rewrite hero subhead + one CTA line — locked line is in `site.tagline`; `HomePage.jsx` wiring in flight
 
 **Definition of done for Week 1:** site is live at custom domain, contact form works, hero names your ICP.
 
 ## Week 2 — Case studies + outbound infra
 
-**Case studies (P1)**
-- [ ] Convert each `data.js` project into full case study: Problem / System / Outcome (with directional numbers)
-- [ ] Add proof strip on home (tools + one testimonial if you have it)
-- [ ] Add pricing anchor sentence
+**Case studies (P1)** — pulled forward into Week 1; data layer landed early
+- [x] Convert each `data.js` project into full case study: Problem / System / Outcome (with directional numbers) — all four scaffolded; `ProjectDetailPage.jsx` render still in flight
+- [x] Add proof strip on home — `proofTools` export ready; page render in flight. No testimonial: none exists and none may be invented
+- [x] Add pricing anchor sentence — `site.pricingAnchor`, points at Offer A
+- [ ] Replace directional numbers with real ones — blocked on Aniket (blocker 4)
 
 **Outbound infra**
 - [ ] Set up Airtable "Prospects" base with pipeline stages from `03-client-landing-engine.md`

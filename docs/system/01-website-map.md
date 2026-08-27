@@ -4,6 +4,9 @@
 working tree on that date; the *In flight* items from the 2026-08-25 pass have been
 resolved to Done or restated with what is actually in the code.
 
+**The site is live.** It deploys to Vercel from `main` on every push — see
+*Deploy* below. What remains is content and a domain, not engineering.
+
 Status vocabulary used below:
 - **Done** — verified present in the code.
 - **In flight** — decided this session, data layer landed, page render not yet confirmed.
@@ -14,7 +17,7 @@ Status vocabulary used below:
 - React 18 + Vite 5, React Router 6
 - Fonts: Inter + Archivo (fontsource)
 - No backend yet
-- Deploy target: **Vercel** + custom domain
+- Deploy: **Vercel**, live, GitHub integration connected. Custom domain still pending.
 
 **The hero shader is raw WebGL 1 — there is no three.js and no 3D library.**
 `src/components/HeroCanvas.jsx` is one fullscreen fragment shader (~300 lines,
@@ -32,11 +35,26 @@ things in there are load-bearing and look like mistakes if you do not know why:
   `gl_FragCoord` by zero, and flattens the whole field to the darkest stop of
   the ramp. It still renders — just wrong — so it does not read as an error.
 
+## Repo layout
+
+Four directories, and nothing else at the root but config:
+
+| Path | Holds |
+|---|---|
+| `src/` | Code — pages, components, `data.js`, the two stylesheets |
+| `public/` | Static assets, copied verbatim into `dist/` |
+| `docs/` | Everything written. This file is `docs/system/01-website-map.md`. |
+| `n8n/` | The importable lead-intake workflow |
+
+`docs/` absorbed the old top-level `system/` and `specs/` folders and the
+misspelled `Refrence files/` (now `docs/reference/folioblox.html`).
+`docs/README.md` indexes it.
+
 ## Routes
 
 | Path | File | Status | Notes |
 |------|------|--------|-------|
-| `/` | `src/pages/HomePage.jsx` | Done | Nine bands — see *Home page composition* below |
+| `/` | `src/pages/HomePage.jsx` + `src/pages/home/` | Done | `HomePage.jsx` is composition only; one file per band — see *Home page composition* below |
 | `/projects` | `src/pages/ProjectsPage.jsx` | Done | Reads `src/data.js` |
 | `/projects/:slug` | `src/pages/ProjectDetailPage.jsx` | Done | Renders `problem`, `system`, `outcome` and `outcomeNote` |
 | `/contact` | `src/pages/ContactPage.jsx` | Done | Renders `ContactForm.jsx` |
@@ -219,19 +237,31 @@ real figures.
 a literal `{whatsapp}`. It reads `site.whatsapp`, accepts either a number or a full
 URL, and hides the line entirely below 8 digits.
 
-## Deploy plan (Vercel)
+## Deploy — live on Vercel
 
-Full runbook: `docs/deploy.md`. In short:
+Full runbook: `docs/deploy.md`.
 
-1. Push repo to GitHub (already done)
-2. vercel.com → Add New → Project → import the repo. **Project name must be
-   lowercase** — `aniket-portfolio`. Capitals are rejected with a 400.
-3. Build settings come from `vercel.json`, not the dashboard
-4. Add custom domain in Project → Settings → Domains
-5. Set env var `VITE_LEAD_WEBHOOK_URL` to the live n8n webhook, then **redeploy** —
-   `VITE_*` values are baked into the bundle at build time, not read at runtime
+**Live at** <https://aniket-portfolio-six-bice.vercel.app> · team `aniket-s1` ·
+project `aniket-portfolio`. The bare `aniket-portfolio.vercel.app` was already
+taken by an unrelated site, which is why the alias carries a suffix.
 
-Pushes to `main` build production; every other branch gets a preview URL only.
+**GitHub integration is connected**, so the deploy model is just git:
+
+- push to `main` → production build
+- push any other branch, or open a PR → preview URL only
+- `vercel --prod` still works, but it uploads your *working directory*, not
+  `origin/main`, which creates deployments outside the Git record. Prefer pushing.
+
+Two things that have already cost time:
+
+- **The project name must be lowercase.** `Aniket-Portfolio` is rejected with a 400.
+- **A stale `.vercel/project.json` silently pins the folder** to whatever project
+  it was last linked to, regardless of who is logged in. Delete the folder to reset.
+
+Still to do here: add the custom domain under Project → Settings → Domains, and
+set `VITE_LEAD_WEBHOOK_URL`, **then redeploy** — `VITE_*` values are baked into
+the bundle at build time, not read at runtime, so saving the variable alone does
+nothing.
 
 **SPA rewrite** — `vercel.json` — **done**, present in repo:
 ```json

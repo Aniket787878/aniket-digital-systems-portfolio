@@ -9,7 +9,7 @@ until the first three are done.
 
 | # | Blocker | Blocks |
 |---|---|---|
-| 1 | **Domain** — buy it | Deploy, real email, OG tags |
+| 1 | **Domain** — buy it | Custom domain on the live Vercel deploy, real email, OG tags |
 | 2 | **Email address** — replaces the `hello@aniketbuilds.com` placeholder | Contact fallback, footer, outreach |
 | 3 | **n8n webhook URL** — set as `VITE_LEAD_WEBHOOK_URL` in the Vercel project | Lead capture. Until set, no lead is stored |
 | 4 | **Real case study numbers** | Every `outcome` figure is directional until then |
@@ -23,7 +23,8 @@ until the first three are done.
 - [x] Add SPA routing rewrite — now `vercel.json` (`public/_redirects` was Cloudflare-only, removed)
 - [x] Build contact form component with fields from `01-website-map.md` — webhook POST, budget bands, success/error/fallback states
 - [ ] Set up n8n workflow: webhook → Airtable → email notify → auto-reply — build against the exact payload keys in `01-website-map.md`
-- [ ] Deploy to Vercel, connect custom domain — deploy done, domain blocked on Aniket
+- [x] Deploy to Vercel — **live**, GitHub integration connected, `main` deploys production
+- [ ] Connect the custom domain — blocked on Aniket buying it
 - [ ] Verify: submit test form, confirm end-to-end — blocked on webhook URL
 
 **Positioning**

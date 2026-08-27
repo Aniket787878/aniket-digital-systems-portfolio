@@ -16,10 +16,21 @@ npm run lint     # eslint, currently clean
 
 ## Stack
 
-React 18 · Vite 5 · React Router 6 · Inter + Archivo (fontsource) · no backend ·
-deploys to **Vercel** (`vercel.json` holds the SPA rewrite — delete it and every
-deep link 404s on refresh). **Five runtime dependencies. Adding one needs a
-reason** — the hero shader is hand-written WebGL precisely to avoid a 3D library.
+React 18 · Vite 5 · React Router 6 · Inter + Archivo (fontsource) · no backend.
+**Five runtime dependencies. Adding one needs a reason** — the hero shader is
+hand-written WebGL precisely to avoid a 3D library.
+
+**Live on Vercel**, deploying from `main` on every push (team `aniket-s1`,
+project `aniket-portfolio`). `vercel.json` holds the SPA rewrite — delete it and
+every deep link 404s on refresh. Runbook: `docs/deploy.md`.
+
+## Layout
+
+    src/      code        public/   static assets
+    docs/     all prose   n8n/      importable workflow
+
+`src/pages/HomePage.jsx` is composition only — nine bands, one file each in
+`src/pages/home/`, named to match the bands in `HomePage.css`.
 
 ## Rules that fail silently
 
@@ -35,8 +46,11 @@ Break any of these and nothing errors — it just renders wrong.
 3. **`HeroCanvas.jsx` must not call `loseContext()` on cleanup**, and `resize()`
    must send `u_res` *unconditionally*. Both look like sloppiness; both are load-
    bearing. Reasons are in the file's comments and `docs/system/01-website-map.md`.
-4. **Never hardcode an email** — import `site.email` from `src/data.js`.
-5. **Every `outcome` number renders with its `outcomeNote`.** They are all
+4. **`HomePage.css` stays one file.** Do not split it per section. Its rules beat
+   `index.css` on source order alone (see 2), and a single import from a single
+   place is what pins that order regardless of component evaluation order.
+5. **Never hardcode an email** — import `site.email` from `src/data.js`.
+6. **Every `outcome` number renders with its `outcomeNote`.** They are all
    directional, not audited.
 
 ## Never invent content
@@ -63,6 +77,13 @@ changing anything.** Guessing has cost a full cycle of work.
 - Comments explain *why*, especially where the code looks wrong but isn't.
 - Verify before claiming. Screenshots may be unavailable — use geometry probes
   (`getBoundingClientRect`), `gl.readPixels`, computed-style diffs.
+- **Two traps in that probe environment.** Both have produced false bug reports:
+  the browser pane runs with `document.hidden === true` even when fronted, so
+  **`requestAnimationFrame` never fires** and anything scroll-driven through it
+  (the gallery arc's `--open`) looks frozen; and a computed-style baseline taken
+  on the *first* load measures fallback font metrics, inventing hundreds of
+  phantom diffs. Check `document.fonts.status === 'loaded'` on both sides, and
+  test rAF-driven code by setting the custom property directly.
 
 ## Deeper docs
 
@@ -81,3 +102,8 @@ changing anything.** Guessing has cost a full cycle of work.
 Domain · real email (`hello@aniketbuilds.com` is a placeholder) ·
 `VITE_LEAD_WEBHOOK_URL` · WhatsApp number · case-study numbers · testimonial ·
 CV PDF (blocks `/about`, which does not exist yet) · real screenshots.
+
+The site itself is built and deployed. Everything left is content or a domain —
+`VITE_LEAD_WEBHOOK_URL` is the costly one: until it is set **no lead is
+captured**, and because `VITE_*` is baked in at build time, setting it needs a
+redeploy.

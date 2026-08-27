@@ -28,7 +28,22 @@ Rewrites run **after** static files are matched, so `/assets/*.js` and
 Note that `buildCommand` / `outputDirectory` / `framework` in `vercel.json`
 override whatever the dashboard shows. Change them here, not there.
 
-## One-time setup — Git (recommended)
+## Current setup — done
+
+- **Live at** <https://aniket-portfolio-six-bice.vercel.app>
+- Team `aniket-s1`, project `aniket-portfolio`
+- **GitHub integration is connected**, so deploying is just `git push`:
+  - push to `main` → production build
+  - push any other branch, or open a PR → preview URL only
+
+The bare `aniket-portfolio.vercel.app` was already taken by an unrelated site,
+which is why the production alias carries a suffix. A custom domain replaces it
+once Aniket buys one.
+
+Nothing below needs doing again — it is kept because it is what to repeat if the
+project is ever recreated.
+
+## Recreating the project from scratch
 
 1. vercel.com → **Add New** → **Project** → **Import Git Repository**.
 2. Pick `Aniket787878/aniket-digital-systems-portfolio`.
@@ -41,9 +56,10 @@ override whatever the dashboard shows. Change them here, not there.
      `docs/specs/n8n-lead-webhook.md`)
 6. **Deploy.**
 
-## One-time setup — CLI (alternative)
+## Deploying from the CLI instead
 
-From the repo root, not from your home folder:
+Only needed if the Git integration is off. From the repo root, not your home
+folder:
 
 ```
 npm i -g vercel
@@ -51,11 +67,16 @@ vercel login
 vercel --prod
 ```
 
-At `? Name?` type `aniket-portfolio` (lowercase). This writes `.vercel/` locally,
-which is gitignored machine-local link state.
+Two traps:
 
-A CLI `--prod` deploy uploads whatever is on your disk right now, including
-uncommitted work. Prefer the Git flow for anything real.
+- A CLI `--prod` uploads **your working directory**, not `origin/main` —
+  including uncommitted work, and whatever branch you happen to be on. It also
+  creates deployments outside the Git record.
+- `.vercel/project.json` silently pins the folder to the project it was last
+  linked to, regardless of which account you are logged in as. Delete the
+  `.vercel` folder to reset, then `vercel link`.
+
+Prefer `git push`.
 
 ## Environment variables
 

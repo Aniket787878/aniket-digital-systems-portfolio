@@ -38,7 +38,7 @@ override whatever the dashboard shows. Change them here, not there.
    the dashboard fields alone.
 5. Environment variables (Production):
    - `VITE_LEAD_WEBHOOK_URL` = the n8n production webhook URL (see
-     `specs/n8n-lead-webhook.md`)
+     `docs/specs/n8n-lead-webhook.md`)
 6. **Deploy.**
 
 ## One-time setup — CLI (alternative)

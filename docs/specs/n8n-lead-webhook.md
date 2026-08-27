@@ -23,7 +23,7 @@ Receive a JSON POST from the portfolio contact form, log the lead, notify Aniket
 - Authentication: none (form is public)
 - Response code: 200
 
-## Expected input (from `specs/contact-form.md`)
+## Expected input (from `docs/specs/contact-form.md`)
 
 ```json
 {

@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
-import { projects, site } from '../data.js'
+import { projects, site, images } from '../data.js'
 import SystemVisual from '../components/SystemVisual.jsx'
+import Media from '../components/Media.jsx'
 
 /* Every field below is optional in data.js — nothing here may assume it exists. */
 const toList = (value) =>
@@ -41,6 +42,7 @@ export default function ProjectDetailPage() {
     .join(' · ')
 
   const hasMeta = Boolean(role || timeline || stack.length)
+  const banner = images.projects[project.slug]
   const prev = position > 0 ? projects[position - 1] : null
   const next = position < projects.length - 1 ? projects[position + 1] : null
 
@@ -53,6 +55,17 @@ export default function ProjectDetailPage() {
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
       <h1 className="page-title">{title}</h1>
       {summary && <p className="page-lede">{summary}</p>}
+
+      {/* Decorative banner, deliberately not captioned as a screenshot:
+          these are stock stand-ins and saying otherwise would be a claim
+          about a system the reader cannot see. The flow diagram below is
+          what actually shows the build. */}
+      <Media
+        className="case-banner"
+        src={banner}
+        label={`Project ${toText(project.index)}`.trim()}
+        alt=""
+      />
 
       {hasMeta && (
         <dl className="case-meta">

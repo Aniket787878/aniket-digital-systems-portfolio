@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
-import { site, footerMenu, social } from '../data.js'
+import { site, footerMenu, social, whatsappPrefill } from '../data.js'
+import WhatsAppCta from './WhatsAppCta.jsx'
+import { hasWhatsApp } from '../whatsapp.js'
 
 /*
   Footer: intro column (brand, promise, one-line description, CTA,
@@ -24,20 +26,36 @@ export default function Footer() {
             bookings, client intake, follow-ups and team coordination, running
             in one place instead of across WhatsApp threads and spreadsheets.
           </p>
-          <Link to="/contact" className="btn-pill">
-            Get in touch
-            <span className="btn-pill-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M5 12h14m0 0-6-6m6 6-6 6"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-          </Link>
+          <div className="footer-actions">
+            <WhatsAppCta
+              message={whatsappPrefill.footer}
+              label="Message me on WhatsApp"
+              className="btn-pill"
+            />
+            {hasWhatsApp ? (
+              <Link to="/contact" className="arrow-link footer-alt-cta">
+                Or send a message
+                <span className="arrow" aria-hidden="true">
+                  &rarr;
+                </span>
+              </Link>
+            ) : (
+              <Link to="/contact" className="btn-pill">
+                Get in touch
+                <span className="btn-pill-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M5 12h14m0 0-6-6m6 6-6 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </Link>
+            )}
+          </div>
           <p className="footer-copy">
             &copy; {year} Aniket. {site.location}
           </p>

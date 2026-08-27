@@ -48,7 +48,7 @@
   --text-2xl: 1.875rem;
 
   --display-1: clamp(2.75rem, 8vw, 7rem);       /* hero statement */
-  --display-2: clamp(2.25rem, 4.5vw, 3.5rem);   /* section titles */
+  --display-2: clamp(2.5rem, 4.5vw, 3.5rem);    /* section titles */
   --display-3: clamp(1.5rem, 2.75vw, 2.125rem); /* sub titles */
 
   /* ---------- Radii ---------- */
@@ -699,6 +699,24 @@ a:hover {
   margin-bottom: var(--space-6);
 }
 
+/* The pill sat here alone before WhatsApp existed; the wrapper keeps the
+   same vertical rhythm and lets the second path sit beside it. */
+.footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+}
+
+.footer-alt-cta {
+  color: var(--muted);
+  transition: color var(--dur-fast) ease;
+}
+
+.footer-alt-cta:hover {
+  color: var(--ink);
+}
+
 .footer-copy {
   margin-top: var(--space-6);
   font-size: var(--text-sm);
@@ -772,13 +790,31 @@ a:hover {
   border-top: 1px solid var(--line);
 }
 
+/* Thumbnail · copy · meta. `start` rather than `baseline` because the
+   image has no baseline to align to — with three columns the row hangs
+   from its top edge instead. */
 .project-list a {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: baseline;
-  gap: var(--space-5);
+  grid-template-columns: minmax(0, clamp(9rem, 16vw, 13rem)) minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--space-5) var(--space-6);
   padding-block: var(--space-6);
   color: var(--ink);
+}
+
+.case-index-thumb {
+  aspect-ratio: 3 / 2;
+  border-radius: var(--radius-sm);
+}
+
+/* The row is the link, so the lift belongs to the whole row, not the
+   image alone — a thumbnail that moves on its own reads as a button. */
+.case-index-thumb .media-img {
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.project-list a:hover .case-index-thumb .media-img {
+  transform: scale(1.04);
 }
 
 .project-list a:hover {
@@ -928,6 +964,17 @@ a:hover {
 @media (max-width: 810px) {
   :root {
     --nav-h: 4.5rem;
+
+    /* The hero statement sat on its 2.75rem floor from 320px all the way to
+       875px — 44px on every phone, against the reference's 60px at 375. Below
+       810 it tracks the viewport instead.
+
+       Both ends are measured, not picked. "themselves" is the longest word in
+       the headline and it overflows a 375px screen at 64px, so the ramp is
+       held near 85% of that at every width (54px at 375, 43px at 320). The
+       4.0625rem ceiling is where this meets the unprefixed token again at
+       811px, so nothing jumps across the breakpoint. */
+    --display-1: clamp(2.625rem, 16vw - 0.5rem, 4.0625rem);
   }
 
   .nav-inner {
@@ -974,6 +1021,12 @@ a:hover {
     grid-template-columns: 1fr;
     gap: var(--space-3);
   }
+
+  /* Full width now, so flatten it to a banner rather than let a 3:2
+     stock photo push the title most of a phone screen down. */
+  .case-index-thumb {
+    aspect-ratio: 2 / 1;
+  }
 }
 
 @media (max-width: 640px) {
@@ -994,7 +1047,11 @@ a:hover {
     --nav-h: 4rem;
     --radius-lg: 28px;
     --radius-md: 18px;
-    --section-pad: clamp(3.25rem, 13vw, 4.5rem);
+    /* Was clamp(3.25rem, 13vw, 4.5rem) — 52px, so 104px between bands where
+       the reference leaves about 140px at this width. 64px closes most of
+       that gap without turning the page into a scroll. It still meets the
+       unprefixed 4.5rem at 480px, so the step across the breakpoint is nil. */
+    --section-pad: clamp(4rem, 15vw, 6rem);
   }
 
   .page {
@@ -1085,6 +1142,17 @@ a:hover {
 /* Tightens the shared .project-stack margin inside the spec block. */
 .case-meta-stack {
   margin: 0;
+}
+
+/* ---------- Detail: banner ---------- */
+
+/* Wide crop rather than a tall one: it sits between the lede and the
+   spec list, and has to hand the reader on to the flow diagram quickly
+   instead of holding the fold on its own. */
+.case-banner {
+  margin-top: var(--space-7);
+  aspect-ratio: 21 / 9;
+  border-radius: var(--radius-md);
 }
 
 /* ---------- Detail: system flow visual ---------- */

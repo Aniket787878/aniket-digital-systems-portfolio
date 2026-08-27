@@ -19,6 +19,18 @@
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    <!-- The hero portrait is the LCP element on every visit. Preloading the
+         same srcset the <img> declares starts the fetch during head parse,
+         before React has mounted anything. -->
+    <link
+      rel="preload"
+      as="image"
+      href="/hero.jpg"
+      imagesrcset="/hero-960.jpg 960w, /hero.jpg 1913w"
+      imagesizes="100vw"
+      fetchpriority="high"
+    />
+
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Aniket — Digital Systems Builder" />

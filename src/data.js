@@ -9,8 +9,10 @@
    instead, so the layout never breaks while the photography is missing.
    ------------------------------------------------------------------ */
 export const images = {
-  // No hero key: the hero ground is the WebGL shader in HeroCanvas.jsx,
-  // with a CSS gradient behind it as the fallback.
+  // No hero key: the hero ground is public/hero.jpg (public/hero-960.jpg on
+  // narrow screens), referenced straight from Hero.jsx and preloaded in
+  // index.html, with a CSS gradient behind it as the fallback. It is the one
+  // real photograph on the site — everything below is still a placeholder.
 
   /* One per process step, revealed on hover. Small, wide crops.
 
@@ -68,12 +70,45 @@ export const site = {
   tagline:
     'I build AI and operations automation for service businesses — clinics, studios, agencies and consultancies — so bookings, client intake, follow-ups and team coordination stop running on WhatsApp threads and manual copy-paste.',
   email: 'hello@aniketbuilds.com', // TODO: confirm domain before launch
-  whatsapp: '',
+  whatsapp: '', // TODO: WhatsApp Business number — every CTA on the site lights up when set
   location: 'India · working with clients worldwide',
   availability:
     'Taking on two new builds a month. Next start slot is usually one to two weeks out.',
   pricingAnchor:
-    'Most engagements start with an Ops Automation Sprint: fixed scope, from ₹40,000, live in two weeks.'
+    'Most engagements start with an Ops Automation Sprint: fixed scope, from ₹40,000, live in two weeks.',
+
+  /* The hero's proof, lifted from project 01 and condensed.
+
+     It lives here rather than in Hero.jsx for one reason: it states a
+     number, and the house rule is that no number appears without the
+     caveat that qualifies it. Keeping claim and note in the same object
+     makes them awkward to separate by accident. If project 01's outcome
+     is ever restated, restate this with it. */
+  heroProof: {
+    claim: 'Two hours of booking admin a day, down to under thirty minutes.',
+    note: 'Measured on a three-practitioner clinic build — directional, from observed process time rather than an audit.',
+    slug: 'intelligent-booking-resource-system',
+    linkLabel: 'See the system'
+  }
+}
+
+/*
+  Prefilled WhatsApp openers, one per placement. Keep them in the buyer's
+  voice — this text lands in *their* chat window, so it has to read like
+  something they would plausibly have typed. The differences between them
+  are deliberate: the opening line is the only way to tell which part of
+  the page did the convincing.
+
+  Unused while `site.whatsapp` is empty — see components/WhatsAppCta.jsx.
+*/
+export const whatsappPrefill = {
+  hero: 'Hi Aniket — I saw your site. Can we talk about the bookings at my clinic?',
+  /* `{offer}` is replaced with the package name by Pricing.jsx. */
+  pricing: 'Hi Aniket — I’d like to know more about the {offer} for my business.',
+  cta: 'Hi Aniket — there’s a part of our week I’d like to stop doing by hand. Can we talk?',
+  contact: 'Hi Aniket — I have a process I’d like to automate. Do you have 20 minutes?',
+  footer: 'Hi Aniket — quick question about the systems you build.',
+  nav: 'Hi Aniket — I’m on your site and would like to talk about a system for my business.'
 }
 
 export const projects = [

@@ -107,8 +107,9 @@ runtime. Two consequences:
 
 After a deploy:
 
-- Root URL renders the homepage, and the WebGL hero animates (a black or flat
-  rectangle means the shader failed — check the browser console).
+- Root URL renders the homepage **and the hero photograph loads** (a plain
+  orange-to-dark gradient means `public/hero.jpg` did not ship — check the
+  network tab for a 404 on `/hero.jpg`).
 - `/projects` renders the index.
 - **Paste `https://<domain>/projects/team-operations-system` into a fresh tab.**
   This is the one that proves the rewrite works; clicking through from the nav

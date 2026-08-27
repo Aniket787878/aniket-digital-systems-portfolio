@@ -17,8 +17,7 @@ npm run lint     # eslint, currently clean
 ## Stack
 
 React 18 · Vite 5 · React Router 6 · Inter + Archivo (fontsource) · no backend.
-**Five runtime dependencies. Adding one needs a reason** — the hero shader is
-hand-written WebGL precisely to avoid a 3D library.
+**Five runtime dependencies. Adding one needs a reason.**
 
 **Live on Vercel**, deploying from `main` on every push (team `aniket-s1`,
 project `aniket-portfolio`). `vercel.json` holds the SPA rewrite — delete it and
@@ -43,9 +42,12 @@ Break any of these and nothing errors — it just renders wrong.
 2. **`index.css` imports before `App.jsx` in `main.jsx`.** Reverse it and every
    page stylesheet loads ahead of the base sheet, so `index.css` wins every
    specificity *tie* — a page override that ties simply does nothing.
-3. **`HeroCanvas.jsx` must not call `loseContext()` on cleanup**, and `resize()`
-   must send `u_res` *unconditionally*. Both look like sloppiness; both are load-
-   bearing. Reasons are in the file's comments and `docs/system/01-website-map.md`.
+3. **The hero ground is a photograph, not a shader.** `public/hero.jpg` (with
+   `hero-960.jpg` for narrow screens) is referenced from `Hero.jsx` as an `<img>`
+   — not a CSS background, so it can carry a `srcset` — and preloaded in
+   `index.html`. Both files must stay in `public/`: nothing imports them, so a
+   bundler will not catch their absence and the hero silently falls back to the
+   CSS gradient. The old WebGL `HeroCanvas.jsx` is deleted.
 4. **`HomePage.css` stays one file.** Do not split it per section. Its rules beat
    `index.css` on source order alone (see 2), and a single import from a single
    place is what pins that order regardless of component evaluation order.

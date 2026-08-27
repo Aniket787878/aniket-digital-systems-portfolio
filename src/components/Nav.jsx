@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
+import WhatsAppCta from './WhatsAppCta.jsx'
+import { hasWhatsApp } from '../whatsapp.js'
+import { whatsappPrefill } from '../data.js'
 
 /*
   Fixed overlay header: transparent while it sits on the hero, then a
@@ -46,13 +49,23 @@ export default function Nav() {
           <NavLink to="/contact">Contact</NavLink>
         </nav>
 
+        {/* The bar is tight, so the label is just "WhatsApp" here rather
+            than the full sentence used further down the page. */}
         <div className="nav-actions">
-          <Link to="/contact" className="btn-pill">
-            Get in touch
-            <span className="btn-pill-icon" aria-hidden="true">
-              <ArrowIcon />
-            </span>
-          </Link>
+          {hasWhatsApp ? (
+            <WhatsAppCta
+              message={whatsappPrefill.nav}
+              label="WhatsApp"
+              className="btn-pill"
+            />
+          ) : (
+            <Link to="/contact" className="btn-pill">
+              Get in touch
+              <span className="btn-pill-icon" aria-hidden="true">
+                <ArrowIcon />
+              </span>
+            </Link>
+          )}
         </div>
 
         <button
@@ -91,6 +104,12 @@ export default function Nav() {
           </NavLink>
           <NavLink to="/projects">Projects</NavLink>
           <NavLink to="/contact">Contact</NavLink>
+          {/* Room to breathe here, so the panel offers both routes. */}
+          <WhatsAppCta
+            message={whatsappPrefill.nav}
+            label="Message me on WhatsApp"
+            className="btn-pill nav-panel-cta"
+          />
           <Link to="/contact" className="btn-pill nav-panel-cta">
             Get in touch
             <span className="btn-pill-icon" aria-hidden="true">

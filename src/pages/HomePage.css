@@ -63,9 +63,10 @@
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
-/* The hero ground. The shader paints over this, but it is also the whole
-   picture when WebGL is unavailable, so it stays a designed ramp in the
-   brand colours rather than a placeholder fill. */
+/* The hero ground. The portrait paints over this, but it is also the whole
+   picture for the moment before the JPEG decodes — and if it never arrives —
+   so it stays a designed ramp in the brand colours rather than a placeholder
+   fill. The stops are sampled off the photograph, so the swap is invisible. */
 .hero-ground {
   position: absolute;
   inset: 0;
@@ -80,23 +81,29 @@
   );
 }
 
-/* The shader ground. Same stacking level as `.hero-ground` and later in
-   the DOM, so it paints over the gradient while staying under the scrim
-   — and when WebGL is unavailable the canvas stays empty and the
-   gradient below is what you see. Never interactive. */
-.hero-canvas {
+/* The portrait. Same stacking level as `.hero-ground` and later in the DOM,
+   so it paints over the gradient while staying under the scrim.
+
+   `object-position: 85%` is measured, not chosen by eye. The subject sits in
+   the right third of a 1913x822 frame and the left half is empty lit ground;
+   anchoring the cover crop right keeps his face in shot at every width and
+   parks that empty half under the copy. It is the reason `.hero-grid` is
+   capped at 38rem below — move one and the other stops making sense. */
+.hero-photo {
   position: absolute;
   inset: 0;
   z-index: -2;
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: 85% center;
   border-radius: inherit;
   pointer-events: none;
-  animation: hero-canvas-in 900ms ease-out both;
+  animation: hero-photo-in 900ms ease-out both;
 }
 
-@keyframes hero-canvas-in {
+@keyframes hero-photo-in {
   from {
     opacity: 0;
   }
@@ -106,34 +113,51 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-canvas {
+  .hero-photo {
     animation: none;
   }
 }
 
+/* Two ramps now, not one. The vertical ramp is the original: nav legible at
+   the top, capability rule legible at the bottom. The horizontal ramp is what
+   the photograph needs — white type on the lit part of that orange measures
+   about 5.2:1, which passes AA but sits close enough to the floor that a
+   brighter frame would fail it. */
 .hero-scrim {
   position: absolute;
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  background: linear-gradient(
-    to bottom,
-    rgba(16, 16, 16, 0.55) 0%,
-    rgba(16, 16, 16, 0.1) 30%,
-    rgba(16, 16, 16, 0.55) 70%,
-    rgba(16, 16, 16, 0.92) 100%
-  );
+  background:
+    linear-gradient(
+      to right,
+      rgba(16, 16, 16, 0.68) 0%,
+      rgba(16, 16, 16, 0.42) 34%,
+      rgba(16, 16, 16, 0) 64%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(16, 16, 16, 0.55) 0%,
+      rgba(16, 16, 16, 0.1) 30%,
+      rgba(16, 16, 16, 0.55) 70%,
+      rgba(16, 16, 16, 0.92) 100%
+    );
 }
 
 .hero-content {
   width: 100%;
 }
 
+/* One column. The right of the frame is the portrait, so the whole block —
+   eyebrow, headline, claim, lede, button — stacks in the empty left half.
+   38rem is the widest the copy can run before it reaches his hair at the
+   narrowest width this two-part composition still holds (1280). */
 .hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 25rem);
-  gap: clamp(2rem, 5vw, 5rem);
-  align-items: end;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.25rem);
+  align-items: start;
+  max-width: min(38rem, 52%);
 }
 
 .hero-eyebrow {
@@ -158,7 +182,6 @@
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-4);
-  padding-bottom: var(--space-3);
 }
 
 .hero-claim {
@@ -176,8 +199,49 @@
   color: var(--ink-soft);
 }
 
-.hero-cta {
+/* The caveat that travels with the number in .hero-claim. Deliberately
+   quiet — it has to be readable without competing with the claim — but
+   never hidden: an unqualified number is the thing this line exists to
+   prevent. */
+.hero-proof-note {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 46ch;
+}
+
+.hero-proof-link {
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+}
+
+.hero-proof-link:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* Holds the primary CTA and, once a WhatsApp number exists, the quiet
+   second path beside it. Spacing and the load animation sit here rather
+   than on the buttons so the pair rises as one object. */
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
   margin-top: var(--space-2);
+}
+
+.hero-alt-cta {
+  color: var(--ink);
+  opacity: 0.82;
+  transition: opacity var(--dur-fast) ease;
+}
+
+.hero-alt-cta:hover {
+  opacity: 1;
 }
 
 /* Numbered capability range — the breadth, kept below the promise */
@@ -973,8 +1037,18 @@
   max-width: 52ch;
 }
 
-.cta-band-cta {
+.cta-band-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3) var(--space-5);
   margin-top: var(--space-6);
+}
+
+/* Dark ink on the orange slab, matching the lede beside it. */
+.cta-band-alt {
+  color: var(--accent-ink-strong);
 }
 
 /* The pill's icon is accent-on-white — invisible against this slab.
@@ -1014,7 +1088,8 @@
 .hero-title,
 .hero-claim,
 .hero-lede,
-.hero-cta,
+.hero-proof-note,
+.hero-actions,
 .capabilities-row {
   animation: hero-rise var(--dur-slow) var(--ease-out) both;
 }
@@ -1031,7 +1106,11 @@
   animation-delay: 190ms;
 }
 
-.hero-cta {
+.hero-proof-note {
+  animation-delay: 215ms;
+}
+
+.hero-actions {
   animation-delay: 240ms;
 }
 
@@ -1053,21 +1132,12 @@
 /* Nothing wider needs help — .container caps at --container-max. */
 
 @media (max-width: 1280px) {
-  .hero-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 23rem);
-    gap: clamp(1.5rem, 3.5vw, 3rem);
-  }
-
   .process-step {
     grid-template-columns: 3px auto minmax(0, 12rem) minmax(0, 1fr);
   }
 }
 
 @media (max-width: 1080px) {
-  .hero-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
-  }
-
   .split-head {
     gap: clamp(1.5rem, 4vw, 3rem);
   }
@@ -1090,9 +1160,25 @@
 /* --- Two columns stop earning their keep --- */
 @media (max-width: 960px) {
   .split-head,
-  .hero-grid,
   .faq-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The cover crop stops leaving an empty half here: at this width the frame
+     is mostly face, so the copy runs full width and the scrim does the
+     contrast work the composition was doing above 960. */
+  .hero-grid {
+    max-width: 100%;
+  }
+
+  .hero-scrim {
+    background: linear-gradient(
+      to bottom,
+      rgba(16, 16, 16, 0.62) 0%,
+      rgba(16, 16, 16, 0.36) 24%,
+      rgba(16, 16, 16, 0.74) 62%,
+      rgba(16, 16, 16, 0.95) 100%
+    );
   }
 
   .split-lede {
@@ -1106,7 +1192,6 @@
 
   .hero-support {
     gap: var(--space-3);
-    padding-bottom: 0;
     max-width: 44ch;
   }
 
@@ -1316,6 +1401,12 @@
 
   .hero-eyebrow {
     margin-bottom: var(--space-3);
+  }
+
+  /* Stack the hero pair: each button claims its own row at 20rem, and
+     the text alternative sits under it rather than beside it. */
+  .hero-actions {
+    width: 100%;
   }
 
   .hero-cta,

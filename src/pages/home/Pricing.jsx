@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { packages, carePlan } from '../../data.js'
+import { packages, carePlan, whatsappPrefill } from '../../data.js'
+import { hasWhatsApp, whatsappHref } from '../../whatsapp.js'
 
 /* ---------------------------------------------------------------
    4b — Pricing. Three productized offers, priced, from the service
@@ -41,12 +42,31 @@ export default function Pricing() {
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-              <Link to="/contact" className="pricing-cta arrow-link">
-                Start here
-                <span className="arrow" aria-hidden="true">
-                  &rarr;
-                </span>
-              </Link>
+              {/* Straight into a chat with the offer already named — the
+                  highest-intent click on the page should not become a
+                  form the buyer has to fill in from scratch. */}
+              {hasWhatsApp ? (
+                <a
+                  href={whatsappHref(
+                    whatsappPrefill.pricing.replace('{offer}', pkg.name)
+                  )}
+                  className="pricing-cta arrow-link"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Start here
+                  <span className="arrow" aria-hidden="true">
+                    &rarr;
+                  </span>
+                </a>
+              ) : (
+                <Link to="/contact" className="pricing-cta arrow-link">
+                  Start here
+                  <span className="arrow" aria-hidden="true">
+                    &rarr;
+                  </span>
+                </Link>
+              )}
             </li>
           ))}
         </ul>

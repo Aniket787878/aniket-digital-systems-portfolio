@@ -1,5 +1,7 @@
 import ContactForm from '../components/ContactForm.jsx'
-import { site } from '../data.js'
+import WhatsAppCta from '../components/WhatsAppCta.jsx'
+import { hasWhatsApp } from '../whatsapp.js'
+import { site, whatsappPrefill } from '../data.js'
 import './ContactPage.css'
 
 const NEXT_STEPS = [
@@ -38,6 +40,22 @@ export default function ContactPage() {
 
       {site.availability && (
         <p className="contact-availability">{site.availability}</p>
+      )}
+
+      {/* Someone who reached this page has already decided to talk. Give
+          them the fast route before asking them to fill anything in. */}
+      {hasWhatsApp && (
+        <div className="contact-direct">
+          <WhatsAppCta
+            message={whatsappPrefill.contact}
+            label="Message me on WhatsApp"
+            className="btn-pill btn-pill-accent"
+          />
+          <p className="contact-direct-note">
+            Usually the quickest way to reach me. The form below works just
+            as well if you would rather write it out.
+          </p>
+        </div>
       )}
 
       <div className="contact-next">

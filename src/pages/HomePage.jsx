@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   projects,
@@ -6,9 +6,13 @@ import {
   process,
   faq,
   images,
-  site
+  site,
+  proofTools,
+  packages,
+  carePlan
 } from '../data.js'
 import Media from '../components/Media.jsx'
+import HeroCanvas from '../components/HeroCanvas.jsx'
 import './HomePage.css'
 
 function ArrowIcon() {
@@ -29,11 +33,182 @@ export default function HomePage() {
   return (
     <div className="home">
       <Hero />
+      <ProofStrip />
       <Work />
+      <Capabilities />
       <Process />
+      <Pricing />
+      <CtaBand />
       <Faq />
       <Gallery />
     </div>
+  )
+}
+
+/* ---------------------------------------------------------------
+   1b — Proof strip. The stack, named, straight under the hero.
+
+   A tools row is the honest version of the logo wall a template puts
+   here: no client logos to show yet, but "n8n, Claude, Supabase" tells a
+   technical buyer more than six greyed-out wordmarks would. Each tool
+   carries the reason it gets used, so it reads as judgement rather than
+   a skills list.
+   --------------------------------------------------------------- */
+function ProofStrip() {
+  return (
+    <section className="proof">
+      <div className="container">
+        <p className="proof-intro">
+          Built with tools you keep. Self-hosted where it matters, so the
+          system stays yours after I hand it over.
+        </p>
+        <ul className="proof-grid">
+          {proofTools.map((tool) => (
+            <li key={tool.name} className="proof-item">
+              <span className="proof-name">{tool.name}</span>
+              <span className="proof-note">{tool.note}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+/* ---------------------------------------------------------------
+   2b — Capabilities. The hero names the four areas; this is where
+   they get said properly, with the blurb and the concrete items that
+   were already sitting unused in data.js.
+   --------------------------------------------------------------- */
+function Capabilities() {
+  return (
+    <section className="caps">
+      <div className="container">
+        <div className="split-head">
+          <div>
+            <p className="kicker">What I can help you with</p>
+            <h2 className="split-title">Four things, done properly</h2>
+          </div>
+          <p className="split-lede">
+            Most engagements touch two or three of these. The point is never
+            the tool &mdash; it is the hour a week that stops being spent on
+            copy-paste.
+          </p>
+        </div>
+
+        <ul className="caps-grid">
+          {capabilities.map((cap) => (
+            <li key={cap.index} className="caps-card">
+              <span className="caps-index">
+                <span className="capability-hash" aria-hidden="true">
+                  #
+                </span>
+                {cap.index}
+              </span>
+              <h3 className="caps-title">{cap.title}</h3>
+              <p className="caps-blurb">{cap.blurb}</p>
+              <ul className="caps-tags">
+                {cap.items.map((item) => (
+                  <li key={item} className="caps-tag">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+/* ---------------------------------------------------------------
+   4b — Pricing. Three productized offers, priced, from the service
+   catalog. Naming the number is the whole point: the catalog's own
+   rule is fixed scope with a stated timeline, never hourly.
+   --------------------------------------------------------------- */
+function Pricing() {
+  return (
+    <section className="pricing">
+      <div className="container">
+        <div className="split-head">
+          <div>
+            <p className="kicker">Pricing</p>
+            <h2 className="split-title">Fixed scope, stated timeline</h2>
+          </div>
+          <p className="split-lede">
+            No hourly billing. Every engagement is a fixed price against a
+            written scope, with a date attached. Half up front, half on
+            delivery.
+          </p>
+        </div>
+
+        <ul className="pricing-grid">
+          {packages.map((pkg) => (
+            <li
+              key={pkg.name}
+              className={`pricing-card${pkg.featured ? ' pricing-card-featured' : ''}`}
+            >
+              {pkg.featured && (
+                <span className="pricing-flag">Most start here</span>
+              )}
+              <h3 className="pricing-name">{pkg.name}</h3>
+              <p className="pricing-price">{pkg.price}</p>
+              <p className="pricing-timeline">{pkg.timeline}</p>
+              <p className="pricing-for">{pkg.forWho}</p>
+              <p className="pricing-deliverable">{pkg.deliverable}</p>
+              <ul className="pricing-list">
+                {pkg.includes.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <Link to="/contact" className="pricing-cta arrow-link">
+                Start here
+                <span className="arrow" aria-hidden="true">
+                  &rarr;
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <p className="pricing-care">
+          <strong>{carePlan.name}</strong> &mdash; {carePlan.price}.{' '}
+          {carePlan.blurb}
+        </p>
+      </div>
+    </section>
+  )
+}
+
+/* ---------------------------------------------------------------
+   5b — CTA band. The reference breaks its long middle with a
+   full-bleed colour block before the FAQ; this does the same job with
+   the availability line, which is the most persuasive sentence on the
+   page and was previously buried at the very bottom.
+   --------------------------------------------------------------- */
+function CtaBand() {
+  return (
+    <section className="cta-band">
+      <div className="container">
+        <div className="cta-band-inner">
+          <p className="kicker cta-band-kicker">Next step</p>
+          <h2 className="cta-band-title">
+            Tell me the part of the week you dread.
+          </h2>
+          <p className="cta-band-lede">{site.pricingAnchor}</p>
+          <Link to="/contact" className="btn-pill cta-band-cta">
+            Get in touch
+            <span className="btn-pill-icon" aria-hidden="true">
+              <ArrowIcon />
+            </span>
+          </Link>
+          {site.availability && (
+            <p className="cta-band-availability">{site.availability}</p>
+          )}
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -44,12 +219,11 @@ export default function HomePage() {
 function Hero() {
   return (
     <section className="hero">
-      <Media
-        className="hero-media"
-        src={images.hero}
-        label="Hero image"
-        alt=""
-      />
+      {/* The hero ground is the shader, not photography. This gradient is
+          what shows when WebGL is unavailable, so it has to stand on its
+          own — hence a designed ramp rather than a flat fill. */}
+      <div className="hero-ground" aria-hidden="true" />
+      <HeroCanvas />
       <div className="hero-scrim" aria-hidden="true" />
 
       <div className="container hero-content">
@@ -267,21 +441,90 @@ function Faq() {
    5 — Closing CTA over a fanned strip of image slots. The strip is
    purely decorative; the heading and button carry the meaning.
    --------------------------------------------------------------- */
+/* Degrees between adjacent cards around the arc. */
+const ARC_STEP = 15
+
+/*
+  Drives `--open` on the stage straight from scroll position: 0 while the
+  section is still below the fold, 1 once it has risen into view. The arc
+  uses it to spread and curve, so the section assembles itself as you
+  arrive at it.
+
+  Written to the DOM node rather than held in React state on purpose — a
+  setState per scroll frame would re-render eight cards continuously for
+  what is a single custom property.
+*/
+function useArcOpen(ref) {
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return undefined
+
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let frame = 0
+
+    const update = () => {
+      frame = 0
+      if (motion.matches) {
+        el.style.setProperty('--open', '1')
+        return
+      }
+      const r = el.getBoundingClientRect()
+      const vh = window.innerHeight || 1
+      // Fully open by the time the top edge has travelled 85% of a
+      // viewport upward — the arc finishes settling before it is centred,
+      // rather than still moving while you are reading the headline.
+      const p = (vh - r.top) / (vh * 0.85)
+      el.style.setProperty('--open', String(Math.min(1, Math.max(0, p))))
+    }
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    motion.addEventListener('change', update)
+
+    return () => {
+      if (frame) cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      motion.removeEventListener('change', update)
+    }
+  }, [ref])
+}
+
 function Gallery() {
   const slots = images.gallery
   const mid = (slots.length - 1) / 2
+  const stageRef = useRef(null)
+  useArcOpen(stageRef)
 
   return (
     <section className="gallery">
-      <div className="gallery-stage" aria-hidden="true">
+      <div className="gallery-stage" ref={stageRef} aria-hidden="true">
         <div className="gallery-fan">
           {slots.map((src, i) => {
-            // Rotate away from the centre so the row reads as an arc.
+            /* Lay the cards on a cylinder that curves *towards* the
+               viewer, so the outer ones come forward and read larger —
+               the shape you get standing inside the curve rather than
+               looking at the outside of it.
+
+               sin/cos are resolved here because they only depend on the
+               card's index, never on the radius. That leaves the radius
+               itself free to stay a responsive CSS clamp, instead of
+               being pinned to whatever the viewport was at mount. */
             const offset = i - mid
+            const rad = (offset * ARC_STEP * Math.PI) / 180
             const style = {
-              '--fan-rotate': `${offset * -9}deg`,
-              '--fan-lift': `${Math.abs(offset) * 14}px`,
-              '--fan-scale': `${1 + Math.abs(offset) * 0.13}`
+              '--sin': Math.sin(rad).toFixed(4),
+              // 1 - cos: depth measured from the arc's nearest point, so
+              // the centre card sits flat on the section plane at z = 0.
+              '--depth': (1 - Math.cos(rad)).toFixed(4),
+              '--angle': `${-offset * ARC_STEP}deg`,
+              // Nearer cards paint over farther ones.
+              zIndex: Math.round(10 - Math.abs(offset) * 2)
             }
             return (
               <div className="gallery-slot" key={i} style={style}>
@@ -305,9 +548,6 @@ function Gallery() {
             <ArrowIcon />
           </span>
         </Link>
-        {site.availability && (
-          <p className="gallery-availability">{site.availability}</p>
-        )}
       </div>
     </section>
   )

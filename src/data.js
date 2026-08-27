@@ -9,27 +9,58 @@
    instead, so the layout never breaks while the photography is missing.
    ------------------------------------------------------------------ */
 export const images = {
-  // Full-bleed hero background. Portrait or environmental shot, dark, tall.
-  hero: '',
+  // No hero key: the hero ground is the WebGL shader in HeroCanvas.jsx,
+  // with a CSS gradient behind it as the fallback.
 
-  // One per process step, revealed on hover. Small, wide crops.
+  /* One per process step, revealed on hover. Small, wide crops.
+
+     PLACEHOLDERS, same caveat as `projects` and `gallery` below. These
+     four are the least important to replace — they are hover decoration
+     on a row that reads fine without them — but an empty grey well on
+     hover looks broken, which is worse than stock. */
   process: {
-    map: '',
-    build: '',
-    automate: '',
-    improve: ''
+    map: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=760&h=520&q=75&auto=format&fit=crop',
+    build: 'https://images.unsplash.com/photo-1587440871875-191322ee64b0?w=760&h=520&q=75&auto=format&fit=crop',
+    automate: 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=760&h=520&q=75&auto=format&fit=crop',
+    improve: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=760&h=520&q=75&auto=format&fit=crop'
   },
 
-  // One per case study, keyed by slug. 4:3 or 3:2 works best.
+  /* One per case study, keyed by slug. 4:3 or 3:2 works best.
+
+     PLACEHOLDERS, same caveat as `gallery` below — these want to be
+     screenshots of the actual booking flow, consent PDF, ops board and
+     intake assistant. A stock photo of an office says nothing a visitor
+     could not have assumed. */
   projects: {
-    'intelligent-booking-resource-system': '',
-    'consent-approval-system': '',
-    'team-operations-system': '',
-    'claude-form-automation-system': ''
+    'intelligent-booking-resource-system':
+      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=900&h=560&q=75&auto=format&fit=crop',
+    'consent-approval-system':
+      'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=900&h=560&q=75&auto=format&fit=crop',
+    'team-operations-system':
+      'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=900&h=560&q=75&auto=format&fit=crop',
+    'claude-form-automation-system':
+      'https://images.unsplash.com/photo-1551434678-e076c223a692?w=900&h=560&q=75&auto=format&fit=crop'
   },
 
-  // The fanned strip in the closing section. Any count; 8 fills the arc.
-  gallery: ['', '', '', '', '', '', '', '']
+  /* The arc in the closing section. Any count works; 8 fills it without
+     the cards crowding each other.
+
+     PLACEHOLDERS — these are Unsplash stock, hotlinked off their CDN, and
+     they are stand-ins for real screenshots of the systems: booking
+     calendars, intake forms, dashboards. Swap each one for the build it
+     belongs to before launch. Stock photos of generic offices are the
+     single most replaceable thing on a portfolio; a screenshot of a real
+     dashboard you shipped is not. */
+  gallery: [
+    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=560&h=760&q=75&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=560&h=760&q=75&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=560&h=760&q=75&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=560&h=760&q=75&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1552664730-d307ca884978?w=560&h=760&q=75&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=560&h=760&q=75&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=560&h=760&q=75&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=560&h=760&q=75&auto=format&fit=crop'
+  ]
 }
 
 export const site = {
@@ -187,6 +218,69 @@ export const proofTools = [
     note: 'Used when a client is already on it and switching would cost more than it saves.'
   }
 ]
+
+/*
+  The three productized offers from system/02-service-catalog.md, in the
+  order they are meant to be sold: the Sprint is the front door, the other
+  two are what a Sprint client buys next.
+
+  Prices here and `site.pricingAnchor` above are the same numbers stated
+  twice — the anchor names Offer A's floor. If a band moves, move both,
+  or the site will disagree with itself. The catalog says B and C are
+  quoted on calls, so they carry ranges rather than a "from".
+*/
+export const packages = [
+  {
+    name: 'Ops Automation Sprint',
+    price: '₹40k – ₹80k',
+    timeline: 'Live in 2 weeks',
+    featured: true,
+    forWho: 'Drowning in manual data entry, form handling and follow-ups.',
+    deliverable:
+      '3–5 automations connecting the tools you already pay for, built in n8n and handed over self-hosted.',
+    includes: [
+      'Lead capture → CRM → auto-reply → team notify',
+      'Consent form → signed PDF → Drive → WhatsApp',
+      'Booking → calendar → reminder → follow-up'
+    ]
+  },
+  {
+    name: 'AI Assistant Build',
+    price: '₹80k – ₹1.5L',
+    timeline: 'Live in 3 weeks',
+    featured: false,
+    forWho: 'A team answering the same questions and lookups over and over.',
+    deliverable:
+      'A Claude-powered assistant on your own material, reachable from Slack, WhatsApp or a simple web UI.',
+    includes: [
+      'Client-intake assistant',
+      'Internal SOP and policy bot',
+      'Sales-quote assistant'
+    ]
+  },
+  {
+    name: 'Internal Tool / Dashboard',
+    price: '₹1.5L – ₹3L',
+    timeline: 'Live in 3–4 weeks',
+    featured: false,
+    forWho: 'Running the business out of a spreadsheet with no source of truth.',
+    deliverable:
+      'A lightweight web app on React and Supabase that replaces the spreadsheet without retraining anyone.',
+    includes: [
+      'Team operations dashboard',
+      'Task and permission portal',
+      'Resource booking system'
+    ]
+  }
+]
+
+/* The retainer layer. Offered after a build ships, never instead of one. */
+export const carePlan = {
+  name: 'Care Plan',
+  price: '₹15k – ₹30k / month',
+  blurb:
+    'Once a system is live: monitoring, broken automations fixed inside 24 hours, a few hours of improvements each month, and first call on new builds.'
+}
 
 export const capabilities = [
   {

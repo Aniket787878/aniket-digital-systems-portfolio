@@ -8,7 +8,7 @@ const toText = (value) => (typeof value === 'string' && value.trim() ? value.tri
 
 export default function ProjectsPage() {
   return (
-    <section className="container page">
+    <section className="container page page-wide">
       <p className="eyebrow">Projects</p>
       <h1 className="page-title">Projects</h1>
       <p className="page-lede">

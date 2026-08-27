@@ -72,9 +72,19 @@
   /* Vertical breathing room inside each section band */
   --section-pad: clamp(4.5rem, 9vw, 8.5rem);
 
-  /* ---------- Containers ---------- */
-  --container-max: 1400px;
-  --container-pad: clamp(1.25rem, 4vw, 4rem);
+  /* ---------- Containers ----------
+
+     --container-max is the CONTENT width, not the border box: .container
+     adds the padding on top of it (see below). Written the other way
+     round the two tokens fight each other — a 1400px box with 64px of
+     padding leaves 1272px of content on a 1920px screen, two thirds of
+     the viewport, and the page reads as a narrow column squeezed in from
+     both sides.
+
+     1600 / 40 matches the Folioblox reference measured at 1920, 1440,
+     1280, 810 and 375. */
+  --container-max: 1600px;
+  --container-pad: clamp(1.5rem, 0.75rem + 2vw, 2.5rem);
   --measure: 60ch;
 
   /* Fixed header height — subpages offset by this */
@@ -170,17 +180,36 @@ svg {
 
 .container {
   width: 100%;
-  max-width: var(--container-max);
+  /* Padding on top of the content cap, so --container-max is the width
+     the content actually gets rather than the width it starts from. */
+  max-width: calc(var(--container-max) + var(--container-pad) * 2);
   margin: 0 auto;
   padding-inline: var(--container-pad);
 }
 
-/* Standalone page (projects / contact / detail) — clears the fixed header */
+/* Standalone page (projects / contact / detail) — clears the fixed header.
+
+   Two jobs in one class: the nav-clearing vertical rhythm, which every
+   subpage wants, and a reading-width cap, which only the prose ones do.
+   .page-wide below opts out of the cap and keeps the rhythm. */
 .page {
   max-width: 62rem;
   margin: 0 auto;
   padding-inline: var(--container-pad);
   padding-block: calc(var(--nav-h) + clamp(3rem, 6vw, 6rem)) var(--space-9);
+}
+
+/* The projects index is a row list, not prose: it takes the full content
+   band so it lines up with the header, the footer and the work grid on
+   the home page. Safe to widen because the text inside each row is
+   already capped at --measure — widening moves the meta rail out to the
+   right edge rather than stretching any line of copy.
+
+   Two classes deliberately: .page-wide alone would only beat .page on
+   source order, and this file's position in the cascade is exactly the
+   thing that broke .cta-band-kicker. */
+.page.page-wide {
+  max-width: calc(var(--container-max) + var(--container-pad) * 2);
 }
 
 /* Editorial section header: kicker + display title */
@@ -516,7 +545,9 @@ a:hover {
   align-items: center;
   gap: var(--space-6);
   height: var(--nav-h);
-  max-width: var(--container-max);
+  /* Same maths as .container — the header has to line up with the page
+     under it at every width. */
+  max-width: calc(var(--container-max) + var(--container-pad) * 2);
   margin: 0 auto;
   padding-inline: var(--container-pad);
 }
@@ -916,6 +947,27 @@ a:hover {
     width: 44px;
     height: 44px;
     margin-right: -0.5rem;
+  }
+
+  /* Same 44px floor for the other two touch surfaces. The brand sat at
+     37px and the footer links at 32px — both fine with a cursor, both
+     under the thumb-target minimum on a phone.
+
+     The footer list gap comes down by the amount the rows grow, so the
+     visual rhythm is unchanged (48px stride before and after) while the
+     hit area goes from 32px to 44px. */
+  .nav-brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .footer-list {
+    gap: var(--space-1);
+  }
+
+  .footer-list a {
+    min-height: 44px;
   }
 
   .project-list a {

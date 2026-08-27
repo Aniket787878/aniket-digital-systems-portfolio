@@ -220,7 +220,7 @@ export const proofTools = [
 ]
 
 /*
-  The three productized offers from system/02-service-catalog.md, in the
+  The three productized offers from docs/system/02-service-catalog.md, in the
   order they are meant to be sold: the Sprint is the front door, the other
   two are what a Sprint client buys next.
 

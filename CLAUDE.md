@@ -34,7 +34,7 @@ Break any of these and nothing errors — it just renders wrong.
    specificity *tie* — a page override that ties simply does nothing.
 3. **`HeroCanvas.jsx` must not call `loseContext()` on cleanup**, and `resize()`
    must send `u_res` *unconditionally*. Both look like sloppiness; both are load-
-   bearing. Reasons are in the file's comments and `system/01-website-map.md`.
+   bearing. Reasons are in the file's comments and `docs/system/01-website-map.md`.
 4. **Never hardcode an email** — import `site.email` from `src/data.js`.
 5. **Every `outcome` number renders with its `outcomeNote`.** They are all
    directional, not audited.
@@ -68,11 +68,13 @@ changing anything.** Guessing has cost a full cycle of work.
 
 | File | Holds |
 |---|---|
-| `system/01-website-map.md` | Routes, `data.js` schema, page composition, gap list. **Keep in sync.** |
-| `system/02-service-catalog.md` | The three offers and their price bands — source of truth for `packages` |
-| `system/05-icp-positioning.md` | Locked positioning line, ICP language |
-| `specs/` | Contact form, n8n webhook |
+| `docs/system/01-website-map.md` | Routes, `data.js` schema, page composition, gap list. **Keep in sync.** |
+| `docs/system/02-service-catalog.md` | The three offers and their price bands — source of truth for `packages` |
+| `docs/system/05-icp-positioning.md` | Locked positioning line, ICP language |
+| `docs/specs/` | Contact form, n8n webhook |
 | `docs/deploy.md` | Vercel runbook — setup, env vars, domain, rollback, health check |
+| `docs/reference/folioblox.html` | Saved copy of the design reference, for offline measuring |
+| `docs/README.md` | Index of the above, plus where each kind of code lives |
 
 ## Blocked on Aniket
 

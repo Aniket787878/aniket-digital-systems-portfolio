@@ -120,22 +120,27 @@ these before launch** — it is the single most replaceable thing on the site.
 
 ## Home page composition
 
-Nine bands, in the order a stranger reads them. Section CSS in
-`src/pages/HomePage.css` is ordered to match, and the `b` suffixes are the bands
-added in the second pass — they keep the original numbering so the stylesheet
-still reads top-to-bottom in page order.
+Nine bands, in the order a stranger reads them. Each band is **one file in
+`src/pages/home/`**; `HomePage.jsx` is composition only. Section CSS stays in
+the single `src/pages/HomePage.css`, ordered to match, and the `b` suffixes are
+the bands added in the second pass — they keep the original numbering so the
+stylesheet still reads top-to-bottom in page order.
 
-| # | Band | Reads from |
-|---|---|---|
-| 1 | Hero (full-bleed, WebGL ground) | `site.tagline`, `capabilities[].index/title` |
-| 1b | Proof strip | `proofTools` |
-| 2 | Selected work | `projects`, `images.projects` |
-| 2b | Capabilities | `capabilities[].blurb/items` |
-| 3 | Process | `process`, `images.process` |
-| 4b | Pricing | `packages`, `carePlan` |
-| 5b | CTA band | `site.pricingAnchor`, `site.availability` |
-| 4 | FAQ | `faq` |
-| 5 | Closing gallery | `images.gallery` |
+The stylesheet is deliberately **not** split per band: several of its rules beat
+`index.css` on source order alone, so one import from one place is what keeps
+that order fixed. The reasoning is repeated in a comment in `HomePage.jsx`.
+
+| # | Band | File in `src/pages/home/` | Reads from |
+|---|---|---|---|
+| 1 | Hero (full-bleed, WebGL ground) | `Hero.jsx` | `site.tagline`, `capabilities[].index/title` |
+| 1b | Proof strip | `ProofStrip.jsx` | `proofTools` |
+| 2 | Selected work | `Work.jsx` | `projects`, `images.projects` |
+| 2b | Capabilities | `Capabilities.jsx` | `capabilities[].blurb/items` |
+| 3 | Process | `Process.jsx` | `process`, `images.process` |
+| 4b | Pricing | `Pricing.jsx` | `packages`, `carePlan` |
+| 5b | CTA band | `CtaBand.jsx` | `site.pricingAnchor`, `site.availability` |
+| 4 | FAQ | `Faq.jsx` | `faq` |
+| 5 | Closing gallery | `Gallery.jsx` | `images.gallery` |
 
 `site.availability` renders **once**, in the CTA band. It used to also close the
 gallery; two copies on one page reads as a templating mistake.

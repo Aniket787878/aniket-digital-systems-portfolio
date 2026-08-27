@@ -17,7 +17,8 @@ npm run lint     # eslint, currently clean
 ## Stack
 
 React 18 · Vite 5 · React Router 6 · Inter + Archivo (fontsource) · no backend ·
-deploys to Cloudflare Pages. **Five runtime dependencies. Adding one needs a
+deploys to **Vercel** (`vercel.json` holds the SPA rewrite — delete it and every
+deep link 404s on refresh). **Five runtime dependencies. Adding one needs a
 reason** — the hero shader is hand-written WebGL precisely to avoid a 3D library.
 
 ## Rules that fail silently
@@ -70,7 +71,8 @@ changing anything.** Guessing has cost a full cycle of work.
 | `system/01-website-map.md` | Routes, `data.js` schema, page composition, gap list. **Keep in sync.** |
 | `system/02-service-catalog.md` | The three offers and their price bands — source of truth for `packages` |
 | `system/05-icp-positioning.md` | Locked positioning line, ICP language |
-| `specs/` | Contact form, n8n webhook, Cloudflare deploy |
+| `specs/` | Contact form, n8n webhook |
+| `docs/deploy.md` | Vercel runbook — setup, env vars, domain, rollback, health check |
 
 ## Blocked on Aniket
 

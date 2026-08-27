@@ -14,7 +14,7 @@ Status vocabulary used below:
 - React 18 + Vite 5, React Router 6
 - Fonts: Inter + Archivo (fontsource)
 - No backend yet
-- Deploy target: **Cloudflare Pages** + custom domain
+- Deploy target: **Vercel** + custom domain
 
 **The hero shader is raw WebGL 1 — there is no three.js and no 3D library.**
 `src/components/HeroCanvas.jsx` is one fullscreen fragment shader (~300 lines,
@@ -188,7 +188,7 @@ real figures.
 
 - [x] **404 page** — `NotFoundPage.jsx` wired to `path="*"`
 - [x] **Sitemap.xml + robots.txt** — both in `public/`
-- [ ] **Analytics** — Plausible or Cloudflare Web Analytics (free, cookieless)
+- [ ] **Analytics** — Plausible or Vercel Web Analytics (cookieless)
 
 ## What genuinely REMAINS
 
@@ -196,7 +196,7 @@ real figures.
 
 - [ ] **Buy the real domain** — everything below waits on it
 - [ ] **Real email address** — replace the `hello@aniketbuilds.com` placeholder
-- [ ] **Live n8n webhook URL** → set `VITE_LEAD_WEBHOOK_URL` in Cloudflare Pages env.
+- [ ] **Live n8n webhook URL** → set `VITE_LEAD_WEBHOOK_URL` in the Vercel project env.
       Until it is set the form logs the payload and shows the fallback panel; no
       lead is captured
 - [ ] **Real case study numbers** — every `outcome` figure is directional
@@ -214,19 +214,26 @@ real figures.
 a literal `{whatsapp}`. It reads `site.whatsapp`, accepts either a number or a full
 URL, and hides the line entirely below 8 digits.
 
-## Deploy plan (Cloudflare Pages)
+## Deploy plan (Vercel)
+
+Full runbook: `docs/deploy.md`. In short:
 
 1. Push repo to GitHub (already done)
-2. Cloudflare dashboard → Workers & Pages → Create → connect repo
-3. Build command: `npm run build` · Output dir: `dist`
-4. Add custom domain (buy on Cloudflare Registrar or point existing DNS)
-5. Set env var `VITE_LEAD_WEBHOOK_URL` to the live n8n webhook
+2. vercel.com → Add New → Project → import the repo. **Project name must be
+   lowercase** — `aniket-portfolio`. Capitals are rejected with a 400.
+3. Build settings come from `vercel.json`, not the dashboard
+4. Add custom domain in Project → Settings → Domains
+5. Set env var `VITE_LEAD_WEBHOOK_URL` to the live n8n webhook, then **redeploy** —
+   `VITE_*` values are baked into the bundle at build time, not read at runtime
 
-**SPA redirect fix** — `public/_redirects` — **done**, present in repo:
+Pushes to `main` build production; every other branch gets a preview URL only.
+
+**SPA rewrite** — `vercel.json` — **done**, present in repo:
+```json
+"rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 ```
-/*  /index.html  200
-```
-Without this, deep links (`/projects/xyz`) 404 on refresh.
+Without this, deep links (`/projects/xyz`) 404 on refresh. Cloudflare's
+`public/_redirects` has been deleted — Vercel ignores that file.
 
 ## Contact form → n8n wiring (shape)
 

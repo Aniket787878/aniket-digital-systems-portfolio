@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
+import ArrowIcon from './ArrowIcon.jsx'
 import WhatsAppCta from './WhatsAppCta.jsx'
 import { hasWhatsApp } from '../whatsapp.js'
 import { whatsappPrefill } from '../data.js'
@@ -38,7 +39,7 @@ export default function Nav() {
     <header className={`nav${solid ? ' nav-scrolled' : ''}`}>
       <div className="nav-inner">
         <Link to="/" className="nav-brand">
-          Aniket<sup aria-hidden="true">&reg;</sup>
+          Aniket<sup aria-hidden="true">&trade;</sup>
         </Link>
 
         <nav className="nav-links" aria-label="Primary">
@@ -119,19 +120,5 @@ export default function Nav() {
         </nav>
       )}
     </header>
-  )
-}
-
-function ArrowIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M5 12h14m0 0-6-6m6 6-6 6"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   )
 }

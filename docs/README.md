@@ -8,6 +8,7 @@ importable n8n workflow is in `n8n/`, and nothing else sits at the repo root.
 | `deploy.md` | Vercel runbook — setup, env vars, custom domain, rollback, health check |
 | `system/` | Strategy and the site's own map. `01-website-map.md` is the one to keep in sync with the code. |
 | `specs/` | Build specs handed to agents — contact form, n8n lead webhook |
+| `review/` | Dated review reports — findings against the working tree, by priority |
 | `reference/folioblox.html` | Saved copy of the Framer template the header and footer are modelled on |
 
 ## The reference copy

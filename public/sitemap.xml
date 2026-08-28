@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- TODO: replace with real domain before launch (every <loc> below uses the placeholder https://aniketbuilds.com) -->
+<!-- TODO: swap the vercel.app origin for the real domain once it is bought (every <loc> below uses the placeholder https://aniket-portfolio-six-bice.vercel.app) -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://aniketbuilds.com/</loc>
+    <loc>https://aniket-portfolio-six-bice.vercel.app/</loc>
     <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://aniketbuilds.com/projects</loc>
+    <loc>https://aniket-portfolio-six-bice.vercel.app/projects</loc>
     <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aniketbuilds.com/contact</loc>
+    <loc>https://aniket-portfolio-six-bice.vercel.app/contact</loc>
     <lastmod>2026-08-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aniketbuilds.com/projects/intelligent-booking-resource-system</loc>
+    <loc>https://aniket-portfolio-six-bice.vercel.app/projects/intelligent-booking-resource-system</loc>
     <lastmod>2026-08-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://aniketbuilds.com/projects/consent-approval-system</loc>
+    <loc>https://aniket-portfolio-six-bice.vercel.app/projects/consent-approval-system</loc>
     <lastmod>2026-08-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://aniketbuilds.com/projects/team-operations-system</loc>
+    <loc>https://aniket-portfolio-six-bice.vercel.app/projects/team-operations-system</loc>
     <lastmod>2026-08-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://aniketbuilds.com/projects/claude-form-automation-system</loc>
+    <loc>https://aniket-portfolio-six-bice.vercel.app/projects/claude-form-automation-system</loc>
     <lastmod>2026-08-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>

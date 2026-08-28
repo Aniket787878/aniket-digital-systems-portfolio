@@ -41,6 +41,9 @@ export default function ContactForm() {
   const [company, setCompany] = useState('')
   const [workflowBroken, setWorkflowBroken] = useState('')
   const [budgetBand, setBudgetBand] = useState('')
+  /* Honeypot. Humans never see the field; bots fill every input they
+     find. A submission with it set is dropped without a request. */
+  const [website, setWebsite] = useState('')
   const [status, setStatus] = useState('idle')
 
   const inFlight = useRef(false)
@@ -89,6 +92,13 @@ export default function ContactForm() {
       trimmed.workflow_broken.length < 20
     ) {
       setStatus('invalid')
+      return
+    }
+
+    /* Show the bot a success panel so it moves on; nothing is sent and
+       nothing reaches the webhook. */
+    if (website) {
+      setStatus('success')
       return
     }
 
@@ -241,6 +251,23 @@ export default function ContactForm() {
             maxLength={1000}
             value={workflowBroken}
             onChange={(event) => setWorkflowBroken(event.target.value)}
+          />
+        </div>
+
+        {/* Honeypot — positioned off screen rather than display:none so
+            naive bots still render and fill it. tabIndex -1 keeps it out
+            of the keyboard order; aria-hidden keeps it out of the
+            accessibility tree. */}
+        <div className="contact-hp" aria-hidden="true">
+          <label htmlFor="contact-website">Leave this field empty</label>
+          <input
+            id="contact-website"
+            name="website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={website}
+            onChange={(event) => setWebsite(event.target.value)}
           />
         </div>
 

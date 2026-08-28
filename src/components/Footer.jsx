@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import ArrowIcon from './ArrowIcon.jsx'
 import { site, footerMenu, social, whatsappPrefill } from '../data.js'
 import WhatsAppCta from './WhatsAppCta.jsx'
 import { hasWhatsApp } from '../whatsapp.js'
@@ -43,15 +44,7 @@ export default function Footer() {
               <Link to="/contact" className="btn-pill">
                 Get in touch
                 <span className="btn-pill-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M5 12h14m0 0-6-6m6 6-6 6"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                  <ArrowIcon />
                 </span>
               </Link>
             )}
@@ -99,7 +92,7 @@ export default function Footer() {
       </div>
 
       <p className="footer-watermark" aria-hidden="true">
-        Aniket&reg;
+        Aniket&trade;
       </p>
     </footer>
   )

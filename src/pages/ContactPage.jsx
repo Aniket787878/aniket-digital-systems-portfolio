@@ -2,6 +2,7 @@ import ContactForm from '../components/ContactForm.jsx'
 import WhatsAppCta from '../components/WhatsAppCta.jsx'
 import { hasWhatsApp } from '../whatsapp.js'
 import { site, whatsappPrefill } from '../data.js'
+import { usePageMeta } from '../seo.js'
 import './ContactPage.css'
 
 const NEXT_STEPS = [
@@ -26,6 +27,13 @@ const NEXT_STEPS = [
 ]
 
 export default function ContactPage() {
+  usePageMeta({
+    title: 'Contact — Aniket',
+    description:
+      'Describe the manual workflow that eats the most time — bookings, client intake, follow-ups or team coordination — and get a reply within 24 hours.',
+    path: '/contact'
+  })
+
   return (
     <section className="container page">
       <p className="eyebrow">Contact</p>

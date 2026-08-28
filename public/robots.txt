@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-# TODO: replace with real domain before launch
-Sitemap: https://aniketbuilds.com/sitemap.xml
+# TODO: swap the vercel.app origin for the real domain once it is bought
+Sitemap: https://aniket-portfolio-six-bice.vercel.app/sitemap.xml

@@ -1,5 +1,5 @@
-/* The pill-button arrow. Shared by the hero, the CTA band, the FAQ and
-   the gallery — four callers, so it lives here rather than in any one
+/* The pill-button arrow. Shared by the nav, footer, hero, CTA band, FAQ
+   and gallery — six callers, so it lives here rather than in any one
    of them. */
 export default function ArrowIcon() {
   return (

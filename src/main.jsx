@@ -9,7 +9,6 @@ import '@fontsource/archivo/latin-500.css'
 import '@fontsource/archivo/latin-600.css'
 import '@fontsource/archivo/latin-700.css'
 import '@fontsource/archivo/latin-800.css'
-import '@fontsource/archivo/latin-900.css'
 /* Base sheet first, page sheets after.
 
    Order matters and it is not obvious: importing App before index.css

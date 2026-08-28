@@ -57,16 +57,17 @@ export default function Faq() {
                     <span className="faq-q-text">{item.q}</span>
                   </button>
                 </h3>
-                {isOpen && (
-                  <div
-                    className="faq-a"
-                    id={`faq-a-${i}`}
-                    role="region"
-                    aria-labelledby={`faq-q-${i}`}
-                  >
-                    <p>{item.a}</p>
-                  </div>
-                )}
+                {/* Rendered hidden rather than unmounted, so the button's
+                    aria-controls always points at a real element. */}
+                <div
+                  className="faq-a"
+                  id={`faq-a-${i}`}
+                  role="region"
+                  aria-labelledby={`faq-q-${i}`}
+                  hidden={!isOpen}
+                >
+                  <p>{item.a}</p>
+                </div>
               </li>
             )
           })}

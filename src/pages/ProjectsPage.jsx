@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { projects, images } from '../data.js'
 import Media from '../components/Media.jsx'
+import { usePageMeta } from '../seo.js'
 
 const toList = (value) =>
   Array.isArray(value) ? value.filter((item) => typeof item === 'string' && item.trim()) : []
@@ -8,6 +9,13 @@ const toList = (value) =>
 const toText = (value) => (typeof value === 'string' && value.trim() ? value.trim() : '')
 
 export default function ProjectsPage() {
+  usePageMeta({
+    title: 'Projects — Aniket',
+    description:
+      'Systems built for service businesses that run on bookings, client intake, follow-ups and team coordination. Each one replaced a manual process.',
+    path: '/projects'
+  })
+
   return (
     <section className="container page page-wide">
       <p className="eyebrow">Projects</p>

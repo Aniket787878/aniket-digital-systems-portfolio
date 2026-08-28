@@ -1,68 +1,43 @@
 /* ------------------------------------------------------------------
-   IMAGES — the one place to touch when you add pictures.
+   REAL SCREENSHOTS — still the largest gap on this site.
 
-   1. Drop the file into  src/assets/
-   2. Import it at the top of this file:   import hero from './assets/hero.jpg'
-   3. Set the slot below:                  hero,
+   Every slot here used to hold an Unsplash photograph: an office, a
+   laptop, people at a desk. None of them said anything about a booking
+   engine, so the site now draws its own schematics instead. They live in
+   components/SystemDiagram.jsx and are keyed off each project's
+   `diagram` field below.
 
-   Any slot left as an empty string renders a labelled placeholder well
-   instead, so the layout never breaks while the photography is missing.
+   A schematic is honest about being a schematic, which a stock photo in
+   a product slot is not. It is still not a substitute for a screenshot
+   of the running booking flow, the generated consent PDF, the ops board
+   or the intake assistant. Those remain the strongest asset this site
+   could gain, and they are blocked on Aniket.
+
+   To add one: drop the file into public/ and set the slug below to its
+   path. The case-study page renders it beneath the diagram. An empty
+   string renders nothing at all — a live page must never show an
+   unfinished placeholder well.
    ------------------------------------------------------------------ */
 export const images = {
-  // No hero key: the hero ground is public/hero.jpg (public/hero-960.jpg on
-  // narrow screens), referenced straight from Hero.jsx and preloaded in
-  // index.html, with a CSS gradient behind it as the fallback. It is the one
-  // real photograph on the site — everything below is still a placeholder.
-
-  /* One per process step, revealed on hover. Small, wide crops.
-
-     PLACEHOLDERS, same caveat as `projects` and `gallery` below. These
-     four are the least important to replace — they are hover decoration
-     on a row that reads fine without them — but an empty grey well on
-     hover looks broken, which is worse than stock. */
+  /* Hover reveal on the four process rows. The slot is a wide, short
+     strip — roughly 4.7:1 at desktop — which is fine for a cropped
+     photograph and useless for a diagram: a schematic scaled into it
+     renders its labels at about five pixels. So this stays a photo slot.
+     Empty means the row simply does not reveal anything on hover, which
+     is why the step text no longer fades out unless a photo is set. */
   process: {
-    map: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=760&h=520&q=75&auto=format&fit=crop',
-    build: 'https://images.unsplash.com/photo-1587440871875-191322ee64b0?w=760&h=520&q=75&auto=format&fit=crop',
-    automate: 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=760&h=520&q=75&auto=format&fit=crop',
-    improve: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=760&h=520&q=75&auto=format&fit=crop'
+    map: '',
+    build: '',
+    automate: '',
+    improve: ''
   },
 
-  /* One per case study, keyed by slug. 4:3 or 3:2 works best.
-
-     PLACEHOLDERS, same caveat as `gallery` below — these want to be
-     screenshots of the actual booking flow, consent PDF, ops board and
-     intake assistant. A stock photo of an office says nothing a visitor
-     could not have assumed. */
   projects: {
-    'intelligent-booking-resource-system':
-      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=900&h=560&q=75&auto=format&fit=crop',
-    'consent-approval-system':
-      'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=900&h=560&q=75&auto=format&fit=crop',
-    'team-operations-system':
-      'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=900&h=560&q=75&auto=format&fit=crop',
-    'claude-form-automation-system':
-      'https://images.unsplash.com/photo-1551434678-e076c223a692?w=900&h=560&q=75&auto=format&fit=crop'
-  },
-
-  /* The arc in the closing section. Any count works; 8 fills it without
-     the cards crowding each other.
-
-     PLACEHOLDERS — these are Unsplash stock, hotlinked off their CDN, and
-     they are stand-ins for real screenshots of the systems: booking
-     calendars, intake forms, dashboards. Swap each one for the build it
-     belongs to before launch. Stock photos of generic offices are the
-     single most replaceable thing on a portfolio; a screenshot of a real
-     dashboard you shipped is not. */
-  gallery: [
-    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=560&h=760&q=75&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=560&h=760&q=75&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=560&h=760&q=75&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=560&h=760&q=75&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1552664730-d307ca884978?w=560&h=760&q=75&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=560&h=760&q=75&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=560&h=760&q=75&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=560&h=760&q=75&auto=format&fit=crop'
-  ]
+    'intelligent-booking-resource-system': '',
+    'consent-approval-system': '',
+    'team-operations-system': '',
+    'claude-form-automation-system': ''
+  }
 }
 
 export const site = {
@@ -115,6 +90,7 @@ export const projects = [
   {
     index: '01',
     slug: 'intelligent-booking-resource-system',
+    diagram: 'booking',
     title: 'Intelligent Booking & Resource System',
     summary:
       'One booking flow for a multi-practitioner clinic — no double-booked slots, no front-desk sheet to reconcile at closing.',
@@ -143,6 +119,7 @@ export const projects = [
   {
     index: '02',
     slug: 'consent-approval-system',
+    diagram: 'approval',
     title: 'Consent & Approval System',
     summary:
       'Client intake and sign-off moved from paper and chasing to a form that produces its own signed PDF and files itself.',
@@ -171,6 +148,7 @@ export const projects = [
   {
     index: '03',
     slug: 'team-operations-system',
+    diagram: 'operations',
     title: 'Team Operations System',
     summary:
       'One place where team tasks, owners and deadlines live — so coordination stopped happening in a WhatsApp group.',
@@ -199,6 +177,7 @@ export const projects = [
   {
     index: '04',
     slug: 'claude-form-automation-system',
+    diagram: 'assistant',
     title: 'Claude Form Automation System',
     summary:
       'An AI intake layer that reads an incoming request, fills the right form and sends the reply — instead of someone rebuilding it each time.',

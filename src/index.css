@@ -860,60 +860,33 @@ a:hover {
 }
 
 /* ============================================================
-   System visual — schematic flow block used on case studies
+   System diagram — the drawn schematics that replaced the stock
+   photography in every image slot.
+
+   The wrapper keeps the `media` class so every aspect-ratio rule
+   already written for the old photo slots (work cards, the projects
+   list, the case banner, the process hover panel) applies unchanged.
+   Only the ground colour differs: `--surface` rather than the darker
+   `--surface-3` placeholder well, so that the letterboxing left by
+   `preserveAspectRatio: meet` is invisible against the panel.
    ============================================================ */
 
-.system-visual {
-  position: relative;
-  display: grid;
-  place-items: center;
-  min-height: clamp(10rem, 20vw, 15rem);
-  padding: var(--space-6);
-  background: var(--surface-2);
+.media.diagram {
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  overflow: hidden;
 }
 
-.system-visual-grid {
-  position: absolute;
-  inset: 0;
-  background-image: linear-gradient(var(--line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line) 1px, transparent 1px);
-  background-size: 40px 40px;
-  opacity: 0.6;
+.diagram-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
-.system-visual-flow {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-3);
-}
-
-.system-visual-step {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.system-visual-node {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--ink);
-  padding: 0.5rem 1rem;
-  background: var(--bg);
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  white-space: nowrap;
-}
-
-.system-visual-edge {
-  color: var(--accent);
-  font-size: var(--text-lg);
+/* The diagram is information, not decoration, so it holds still on
+   hover while the card around it moves. */
+.work-card:hover .media.diagram,
+.project-list a:hover .media.diagram {
+  border-color: var(--line-strong);
 }
 
 /* ============================================================
@@ -1144,27 +1117,63 @@ a:hover {
   margin: 0;
 }
 
+/* The one-line version of the flow, in the spec block where a reader
+   scanning for shape will look first. The diagram above it carries the
+   detail; this carries the shape. */
+.case-meta-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.case-flow-stage {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.case-flow-arrow {
+  color: var(--accent);
+}
+
 /* ---------- Detail: banner ---------- */
 
-/* Wide crop rather than a tall one: it sits between the lede and the
-   spec list, and has to hand the reader on to the flow diagram quickly
-   instead of holding the fold on its own. */
-.case-banner {
+.case-banner-figure {
   margin-top: var(--space-7);
-  aspect-ratio: 21 / 9;
+}
+
+/* 16/9 rather than the old 21/9. The slot used to hold a cropped
+   photograph, where a letterbox strip was the point; it now holds a
+   900x480 schematic, and a ratio near the drawing's own keeps the
+   diagram large instead of pillarboxed inside a wider frame. */
+.case-banner {
+  aspect-ratio: 16 / 9;
   border-radius: var(--radius-md);
 }
 
-/* ---------- Detail: system flow visual ---------- */
+/* Says what the picture is. Load-bearing, not decoration: without it a
+   skimmer can read a detailed diagram as a screenshot of shipped
+   software, which is a claim this site does not get to make yet. */
+.case-caption {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
 
-.case-visual {
+/* ---------- Detail: real screenshot, when one exists ---------- */
+
+.case-shot {
   margin-top: var(--space-8);
 }
 
-.case-visual .system-visual {
-  min-height: clamp(12rem, 24vw, 18rem);
+.case-shot-media {
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-md);
 }
-
 /* ---------- Detail: body sections ---------- */
 
 .case-section {
@@ -1388,6 +1397,24 @@ a:hover {
 @media (max-width: 810px) {
   .case-meta-item {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The banner diagram is the page's main explanation, and squeezed to a
+     phone's width its labels land at about four pixels. So below this
+     breakpoint it stops scaling to fit and scrolls sideways at a legible
+     size instead. The cut-off right edge is the affordance; the diagram
+     is drawn left-heavy so the first screenful is the substantial half. */
+  .media.case-banner {
+    aspect-ratio: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+  }
+
+  .case-banner .diagram-svg {
+    min-width: 40rem;
+    height: auto;
+    aspect-ratio: 900 / 480;
   }
 
   .case-nav {

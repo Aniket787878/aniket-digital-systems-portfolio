@@ -466,7 +466,11 @@
   transition: opacity var(--dur-mid) ease;
 }
 
-.process-step:hover .process-text {
+/* Only clear the text when there is actually something to clear it for.
+   The reveal panel is rendered only when data.js has a photograph for
+   the step, so without `:has()` an empty slot would blank the row on
+   hover and put nothing in its place. */
+.process-step:has(.process-media):hover .process-text {
   opacity: 0;
 }
 
@@ -616,14 +620,16 @@
   content: "";
   position: absolute;
   inset: 0;
-  /* Tight enough behind the copy to hold contrast, open enough at the
-     edges that the arc is actually visible — the point of the section is
-     the work, so the scrim protects the headline and nothing more. */
+  /* Wider and heavier than it was for the photographs. The slots hold
+     project titles now, and text behind text competes in a way a blurred
+     photograph never did: at the old 42%/0.92 the middle two cards were
+     legible straight through the headline. The edges stay open so the
+     outer cards still read — the point of the section is the work. */
   background: radial-gradient(
-      ellipse 42% 46% at 50% 42%,
-      rgba(16, 16, 16, 0.92) 0%,
-      rgba(16, 16, 16, 0.68) 45%,
-      rgba(16, 16, 16, 0.12) 100%
+      ellipse 54% 58% at 50% 44%,
+      rgba(16, 16, 16, 0.97) 0%,
+      rgba(16, 16, 16, 0.9) 40%,
+      rgba(16, 16, 16, 0.14) 100%
     ),
     linear-gradient(
       to bottom,
@@ -673,27 +679,45 @@
     rotateY(calc(var(--angle) * var(--open) * var(--arc-tilt)));
 }
 
-/* Cheap on the compositor and it keeps the card edges from crawling
-   while the arc opens. */
-.gallery-slot .media-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+/* The cards hold text now, not photographs, so they need their own
+   ground and padding. Kept dark and low-contrast on purpose: this strip
+   sits behind the closing headline, and a reader should take it in as
+   texture first and read it only if they lean in. */
+.gallery-slot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: clamp(0.75rem, 1.4vw, 1.35rem);
+  background: linear-gradient(160deg, var(--surface-2), var(--surface));
+  /* Cheap on the compositor, and it stops the card edges crawling
+     while the arc opens. */
   backface-visibility: hidden;
 }
 
-.gallery-slot .media,
-.gallery-slot .media .media-placeholder {
-  height: 100%;
-  min-height: 0;
-  border-radius: var(--radius-sm);
+.gallery-card-index {
+  font-family: var(--font-display);
+  font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--accent);
 }
 
-/* The strip sits behind the headline — keep the empty-slot labels
-   quiet enough that they read as texture, not as content. */
-.gallery-slot .media-placeholder-label,
-.gallery-slot .media-placeholder-icon {
-  opacity: 0.4;
+.gallery-card-title {
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 1.25vw, 1.1rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+/* Pushed to the foot of the card so the titles align on a baseline
+   across the fan regardless of how many lines each one runs to. */
+.gallery-card-stack {
+  margin-top: auto;
+  font-size: clamp(0.6rem, 0.85vw, 0.75rem);
+  line-height: 1.5;
+  color: var(--muted);
 }
 
 .gallery-content {

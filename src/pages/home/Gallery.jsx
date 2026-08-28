@@ -1,15 +1,25 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { images } from '../../data.js'
-import Media from '../../components/Media.jsx'
+import { projects } from '../../data.js'
 import ArrowIcon from '../../components/ArrowIcon.jsx'
 
 /* ---------------------------------------------------------------
-   5 — Closing CTA over a fanned strip of image slots. The strip is
-   purely decorative; the heading and button carry the meaning.
+   5 — Closing CTA over a fanned arc of the real case studies.
+
+   The arc used to hold eight stock photographs of offices. It is the
+   last thing on the page, so it was eight images of nothing standing
+   between a reader and the only button that matters. It now fans the
+   four builds themselves — index, title and stack, all of it real
+   copy already on the site — so the decoration carries the same
+   argument as the section it sits behind.
+
+   Still decorative, in the sense that the heading and button read
+   fine on their own; the cards are `aria-hidden` because every one of
+   them is stated again in the Selected Work band above.
    --------------------------------------------------------------- */
-/* Degrees between adjacent cards around the arc. */
-const ARC_STEP = 15
+/* Degrees between adjacent cards around the arc. Wider than the old
+   eight-card fan: four cards need more angle to read as a curve. */
+const ARC_STEP = 26
 
 /*
   Drives `--open` on the stage straight from scroll position: 0 while the
@@ -63,7 +73,7 @@ function useArcOpen(ref) {
 }
 
 export default function Gallery() {
-  const slots = images.gallery
+  const slots = projects
   const mid = (slots.length - 1) / 2
   const stageRef = useRef(null)
   useArcOpen(stageRef)
@@ -72,7 +82,7 @@ export default function Gallery() {
     <section className="gallery">
       <div className="gallery-stage" ref={stageRef} aria-hidden="true">
         <div className="gallery-fan">
-          {slots.map((src, i) => {
+          {slots.map((project, i) => {
             /* Lay the cards on a cylinder that curves *towards* the
                viewer, so the outer ones come forward and read larger —
                the shape you get standing inside the curve rather than
@@ -94,8 +104,12 @@ export default function Gallery() {
               zIndex: Math.round(10 - Math.abs(offset) * 2)
             }
             return (
-              <div className="gallery-slot" key={i} style={style}>
-                <Media src={src} label={`Slot ${i + 1}`} alt="" />
+              <div className="gallery-slot" key={project.slug} style={style}>
+                <span className="gallery-card-index">{project.index}</span>
+                <span className="gallery-card-title">{project.title}</span>
+                <span className="gallery-card-stack">
+                  {project.stack.slice(0, 3).join(' · ')}
+                </span>
               </div>
             )
           })}

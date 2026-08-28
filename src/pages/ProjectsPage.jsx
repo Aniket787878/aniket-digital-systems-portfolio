@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { projects, images } from '../data.js'
-import Media from '../components/Media.jsx'
+import { projects } from '../data.js'
+import SystemDiagram from '../components/SystemDiagram.jsx'
 
 const toList = (value) =>
   Array.isArray(value) ? value.filter((item) => typeof item === 'string' && item.trim()) : []
@@ -27,15 +27,10 @@ export default function ProjectsPage() {
           return (
             <li key={project.slug}>
               <Link to={`/projects/${project.slug}`}>
-                {/* Decorative, exactly as on the home page: these are stock
-                    stand-ins, so they carry no alt text claiming to show
-                    the system. The row reads fine without them. */}
-                <Media
-                  className="case-index-thumb"
-                  src={images.projects[project.slug]}
-                  label={index ? `Project ${index}` : 'Project'}
-                  alt=""
-                />
+                {/* The schematic carries its own description in the SVG's
+                    aria-label, so the row is legible to a screen reader
+                    without the heading repeating it. */}
+                <SystemDiagram className="case-index-thumb" variant={project.diagram} />
                 <div className="case-index-main">
                   <h2>{toText(project.title) || 'Untitled project'}</h2>
                   {summary && <p className="case-index-summary">{summary}</p>}

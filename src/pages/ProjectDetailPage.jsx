@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
 import { projects, site, images } from '../data.js'
-import SystemVisual from '../components/SystemVisual.jsx'
+import SystemDiagram from '../components/SystemDiagram.jsx'
 import Media from '../components/Media.jsx'
 
 /* Every field below is optional in data.js — nothing here may assume it exists. */
@@ -56,16 +56,16 @@ export default function ProjectDetailPage() {
       <h1 className="page-title">{title}</h1>
       {summary && <p className="page-lede">{summary}</p>}
 
-      {/* Decorative banner, deliberately not captioned as a screenshot:
-          these are stock stand-ins and saying otherwise would be a claim
-          about a system the reader cannot see. The flow diagram below is
-          what actually shows the build. */}
-      <Media
-        className="case-banner"
-        src={banner}
-        label={`Project ${toText(project.index)}`.trim()}
-        alt=""
-      />
+      {/* The system, drawn. Captioned as a schematic on purpose: it is a
+          diagram of the architecture, not a picture of the running
+          software, and the caption is what keeps that distinction
+          honest to a reader who only skims the visuals. */}
+      <figure className="case-banner-figure">
+        <SystemDiagram className="case-banner" variant={project.diagram} />
+        <figcaption className="case-caption">
+          Schematic of the system as built. Not a screenshot.
+        </figcaption>
+      </figure>
 
       {hasMeta && (
         <dl className="case-meta">
@@ -79,6 +79,23 @@ export default function ProjectDetailPage() {
             <div className="case-meta-item">
               <dt className="case-meta-label">Timeline</dt>
               <dd className="case-meta-value">{timeline}</dd>
+            </div>
+          )}
+          {flow.length > 0 && (
+            <div className="case-meta-item">
+              <dt className="case-meta-label">Flow</dt>
+              <dd className="case-meta-value case-meta-flow">
+                {flow.map((stage, i) => (
+                  <span key={stage} className="case-flow-stage">
+                    {stage}
+                    {i < flow.length - 1 && (
+                      <span className="case-flow-arrow" aria-hidden="true">
+                        &rarr;
+                      </span>
+                    )}
+                  </span>
+                ))}
+              </dd>
             </div>
           )}
           {stack.length > 0 && (
@@ -96,12 +113,6 @@ export default function ProjectDetailPage() {
             </div>
           )}
         </dl>
-      )}
-
-      {flow.length > 0 && (
-        <figure className="case-visual">
-          <SystemVisual title={title} flow={flow} />
-        </figure>
       )}
 
       {problem && (
@@ -125,6 +136,22 @@ export default function ProjectDetailPage() {
             ))}
           </ol>
         </section>
+      )}
+
+      {/* The one slot on the site where a real screenshot belongs. It
+          renders only once images.projects[slug] is set in data.js:
+          an empty slot shows nothing at all, because a dashed
+          placeholder well on a live page reads as a broken build
+          rather than as an honest gap. */}
+      {banner && (
+        <figure className="case-shot">
+          <Media
+            className="case-shot-media"
+            src={banner}
+            label="Screenshot"
+            alt={`Screenshot from ${title}`}
+          />
+        </figure>
       )}
 
       {outcome.length > 0 && (

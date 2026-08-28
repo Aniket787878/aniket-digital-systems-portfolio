@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
-import { projects, images } from '../../data.js'
-import Media from '../../components/Media.jsx'
+import { projects } from '../../data.js'
+import SystemDiagram from '../../components/SystemDiagram.jsx'
 
 /* ---------------------------------------------------------------
-   2 — Selected work. Real case studies, each with its own image
-   slot; the card is the link.
+   2 — Selected work. Real case studies, each headed by a schematic
+   of the system it describes; the card is the link.
    --------------------------------------------------------------- */
 export default function Work() {
   return (
@@ -25,12 +25,7 @@ export default function Work() {
           {projects.map((project) => (
             <li key={project.slug} className="work-item">
               <Link to={`/projects/${project.slug}`} className="work-card">
-                <Media
-                  className="work-media"
-                  src={images.projects[project.slug]}
-                  label={`Project ${project.index}`}
-                  alt=""
-                />
+                <SystemDiagram className="work-media" variant={project.diagram} />
                 <div className="work-body">
                   <div className="work-meta">
                     <span className="work-index">{project.index}</span>

@@ -1,3 +1,4 @@
+import { usePageMeta } from '../seo.js'
 import Hero from './home/Hero.jsx'
 import ProofStrip from './home/ProofStrip.jsx'
 import Work from './home/Work.jsx'
@@ -20,6 +21,15 @@ import './HomePage.css'
 /* Nine bands, in render order. Each is one file in ./home, and each maps
    to the band of the same name in HomePage.css. */
 export default function HomePage() {
+  /* Same strings as the static tags in index.html — this restores them
+     after navigating back from a sub-page. */
+  usePageMeta({
+    title: 'AI and Operations Automation for Service Businesses — Aniket',
+    description:
+      'AI and operations automation for service businesses in India — clinics, studios, agencies. Bookings, client intake, follow-ups and team coordination, rebuilt.',
+    path: '/'
+  })
+
   return (
     <div className="home">
       <Hero />

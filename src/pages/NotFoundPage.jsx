@@ -1,6 +1,17 @@
 import { Link } from 'react-router-dom'
+import { usePageMeta } from '../seo.js'
 
 export default function NotFoundPage() {
+  /* The SPA rewrite serves this with HTTP 200, so noindex is what stops
+     bad URLs from entering the index as soft-404s. Canonical points home:
+     a URL that does not exist has no address of its own. */
+  usePageMeta({
+    title: 'Page not found — Aniket',
+    description: 'This page does not exist. The rest of the site is one click away.',
+    path: '/',
+    noindex: true
+  })
+
   return (
     <section className="container error-page">
       <p className="eyebrow">404</p>

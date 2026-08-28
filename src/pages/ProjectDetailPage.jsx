@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom'
 import { projects, site, images } from '../data.js'
 import SystemVisual from '../components/SystemVisual.jsx'
 import Media from '../components/Media.jsx'
+import { usePageMeta } from '../seo.js'
 
 /* Every field below is optional in data.js — nothing here may assume it exists. */
 const toList = (value) =>
@@ -13,6 +14,25 @@ export default function ProjectDetailPage() {
   const { slug } = useParams()
   const position = projects.findIndex((item) => item.slug === slug)
   const project = position === -1 ? null : projects[position]
+
+  /* Before the early return — hooks must run unconditionally. An unknown
+     slug is a 404 in content terms, so it gets noindex like the real one. */
+  usePageMeta(
+    project
+      ? {
+          title: `${toText(project.title) || 'Project'} — Aniket`,
+          description:
+            toText(project.summary) ||
+            'A system built for a service business, from process mapping to handover.',
+          path: `/projects/${project.slug}`
+        }
+      : {
+          title: 'Project not found — Aniket',
+          description: 'The project you are looking for does not exist.',
+          path: '/projects',
+          noindex: true
+        }
+  )
 
   if (!project) {
     return (

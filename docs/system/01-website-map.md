@@ -1,8 +1,9 @@
 # 01 — Website Map
 
-**Code state verified: 2026-08-27.** Every claim below was re-checked against the
-working tree on that date; the *In flight* items from the 2026-08-25 pass have been
-resolved to Done or restated with what is actually in the code.
+**Code state verified: 2026-08-28.** Every claim below was re-checked against the
+working tree on that date, alongside the review in
+`docs/review/2026-08-28-website-review.md`; the buildable review findings were
+closed the same day and are reflected below.
 
 **The site is live.** It deploys to Vercel from `main` on every push — see
 *Deploy* below. What remains is content and a domain, not engineering.
@@ -19,21 +20,13 @@ Status vocabulary used below:
 - No backend yet
 - Deploy: **Vercel**, live, GitHub integration connected. Custom domain still pending.
 
-**The hero shader is raw WebGL 1 — there is no three.js and no 3D library.**
-`src/components/HeroCanvas.jsx` is one fullscreen fragment shader (~300 lines,
-zero new dependencies). Do not add a library to change it; edit the GLSL. Two
-things in there are load-bearing and look like mistakes if you do not know why:
-
-- Cleanup deliberately does **not** call `WEBGL_lose_context.loseContext()`.
-  Losing the context is permanent for that canvas, and a later `getContext()`
-  hands back the same dead one — which silently kills the shader under
-  StrictMode's double-mount in dev, and on any real remount (navigate off home
-  and back).
-- `resize()` re-sends the viewport and `u_res` **unconditionally**. A remount
-  links a new program whose uniforms all start at zero, so skipping the update
-  when the size happens to be unchanged leaves `u_res` at `(0,0)`, divides
-  `gl_FragCoord` by zero, and flattens the whole field to the darkest stop of
-  the ramp. It still renders — just wrong — so it does not read as an error.
+**The hero ground is a photograph — the WebGL shader is gone.** Commit
+`5f041a8` deleted `HeroCanvas.jsx`; `public/hero.jpg` (with `hero-960.jpg` for
+narrow screens) is referenced from `Hero.jsx` as an `<img>` — not a CSS
+background, so it can carry a `srcset` — and preloaded in `index.html` with
+`fetchpriority="high"`. A CSS gradient ramp sits behind it as the fallback.
+Both files must stay in `public/`: nothing imports them, so a bundler will not
+catch their absence and the hero silently falls back to the gradient.
 
 ## Repo layout
 
@@ -117,15 +110,18 @@ always import `site.email`.
 | `carePlan` | `{ name, price, blurb }` | Retainer line under the pricing grid |
 | `images` | `{ process{}, projects{}, gallery[] }` | **All placeholders.** See *Images* below |
 
-**Price duplication:** `packages[0].price` and `site.pricingAnchor` state the same
-number twice — the anchor names Offer A's floor. Move both or the site disagrees
-with itself.
+**Price duplication:** the sprint's ₹40,000 floor is stated in **three** places —
+`site.pricingAnchor`, `packages[0].price`, and the FAQ answer "What does it
+cost?" in `faq`. If the band moves, move all three or the site disagrees with
+itself. (This list used to say two; the FAQ was the copy that would have been
+missed.)
 
 ### Images — all placeholders
 
 `images` holds 16 hotlinked Unsplash URLs across three keys, and every one is a
-stand-in. There is no `images.hero`: the hero ground is the WebGL shader, with a
-CSS gradient behind it as the fallback.
+stand-in. There is no `images.hero`: the hero ground is `public/hero.jpg` —
+the one real photograph on the site — with a CSS gradient behind it as the
+fallback (see *Stack* above).
 
 | Key | Count | Wants to be |
 |---|---|---|
@@ -150,7 +146,7 @@ that order fixed. The reasoning is repeated in a comment in `HomePage.jsx`.
 
 | # | Band | File in `src/pages/home/` | Reads from |
 |---|---|---|---|
-| 1 | Hero (full-bleed, WebGL ground) | `Hero.jsx` | `site.tagline`, `capabilities[].index/title` |
+| 1 | Hero (full-bleed photo ground) | `Hero.jsx` | `site.heroProof`, `capabilities[].index/title` |
 | 1b | Proof strip | `ProofStrip.jsx` | `proofTools` |
 | 2 | Selected work | `Work.jsx` | `projects`, `images.projects` |
 | 2b | Capabilities | `Capabilities.jsx` | `capabilities[].blurb/items` |
@@ -194,14 +190,14 @@ real figures.
 |---|---|---|
 | 1 | Fix `site.email` in `data.js` | **Done (placeholder)** — `hello@aniketbuilds.com` set with a TODO. Real address blocked on Aniket |
 | 2 | Contact page → real form with n8n webhook capture | **Done** — form built. Live webhook URL blocked on Aniket |
-| 3 | Meta tags (title, description, OG image) in `index.html` | **Done** — title, description, robots, full `og:*` and `twitter:*` set. `og:image` points at `og.svg`; see the PNG item below |
-| 4 | Favicon | **Open** — `public/favicon.svg` is a **sage green** mark (`#3f6b4e`, `#dbe3d2`, `#f3f6ec`). The site accent is now orange (`--accent: #ff5c00`), so the tab icon does not match the site. An earlier version of this doc told you to redraw it *in* the sage palette — that instruction is stale and backwards |
+| 3 | Meta tags (title, description, OG image) in `index.html` | **Done** — title, description, robots, full `og:*` and `twitter:*` set. `og:image` points at `og.png` (1200×630, exported from `og.svg`) |
+| 4 | Favicon | **Done** — redrawn in the orange accent (`#ff5c00` tile, `#1a0900` glyph), matching the site. `og.svg` was recoloured the same day |
 
 ### P1 — conversion critical
 
 | # | Item | Status |
 |---|---|---|
-| 5 | Hero offer clarity — name *who* + *what outcome* | **Done** — rendered from `site.tagline` |
+| 5 | Hero offer clarity — name *who* + *what outcome* | **Done** — the hero leads with `site.heroProof` (a checked, caveated result) and an ICP lede naming clinics, studios, agencies and consultancies |
 | 6 | Rewrite each project as a case study (Problem → System → Outcome) | **Done** — all four scaffolded in data and rendered by `ProjectDetailPage.jsx`. Numbers are still directional |
 | 7 | Proof strip on home | **Done** — `proofTools` renders as band 1b. **No testimonial band:** Aniket says one or two exist but has not supplied them, and none may be invented |
 | 8 | Pricing anchor | **Done** — `site.pricingAnchor` in the CTA band, and `packages` renders the full grid |
@@ -227,11 +223,24 @@ real figures.
 
 **Buildable, still open:**
 
-- [ ] **PNG OG image** — social scrapers do not reliably render SVG; a real PNG is
-      required, plus the `og:image` / `twitter:card` tags that point at it
-- [ ] **Analytics** — pick one, add the snippet
-- [ ] **Favicon** — redraw in the orange accent, not the sage green currently in
-      `public/favicon.svg`
+- [ ] **Analytics** — Vercel Web Analytics needs the toggle flipped in the
+      dashboard (Project → Analytics) *before* the snippet is added; adding the
+      snippet first just 404s in the console. Blocked on dashboard access.
+
+**Closed by the 2026-08-28 review pass** (`docs/review/2026-08-28-website-review.md`):
+
+- [x] **PNG OG image** — `public/og.png`, 1200×630, exported from the recoloured
+      `og.svg` (which carries the re-export note). All `og:image` /
+      `twitter:image` / JSON-LD references point at the PNG
+- [x] **Favicon** — redrawn in the orange accent
+- [x] **Per-route titles, descriptions and canonicals** — `src/seo.js`, a
+      dependency-free hook every page calls. The 404 page and unknown project
+      slugs carry `noindex` (the SPA rewrite serves them with HTTP 200)
+- [x] **Canonical/sitemap/robots origin** — all static URLs now use the live
+      Vercel origin instead of the unpurchased `aniketbuilds.com`; `src/seo.js`
+      lists every place to change when the real domain lands
+- [x] **Form honeypot** — a hidden `website` field; submissions carrying it show
+      the success panel without sending anything
 
 **Fixed since the last pass** — the `ContactForm.jsx` success panel no longer prints
 a literal `{whatsapp}`. It reads `site.whatsapp`, accepts either a number or a full
@@ -292,3 +301,8 @@ Payload the form actually sends (build the n8n side against these exact keys):
 | `budget_band` | required radio: `<50k` / `50k-2L` / `2L+` / `not_sure` |
 | `source` | `document.referrer` or `'direct'` |
 | `submitted_at` | ISO timestamp |
+
+The form also renders a hidden `website` honeypot field. It is **never sent**:
+a submission with it filled is dropped client-side (the bot sees the success
+panel), so the n8n side needs no filter for it and the payload above is
+unchanged.

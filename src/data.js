@@ -259,10 +259,11 @@ export const proofTools = [
   order they are meant to be sold: the Sprint is the front door, the other
   two are what a Sprint client buys next.
 
-  Prices here and `site.pricingAnchor` above are the same numbers stated
-  twice — the anchor names Offer A's floor. If a band moves, move both,
-  or the site will disagree with itself. The catalog says B and C are
-  quoted on calls, so they carry ranges rather than a "from".
+  The sprint's ₹40,000 floor is stated in THREE places: `site.pricingAnchor`
+  above, `packages[0].price` below, and the "What does it cost?" answer in
+  `faq`. If the band moves, move all three, or the site will disagree with
+  itself. The catalog says B and C are quoted on calls, so they carry
+  ranges rather than a "from".
 */
 export const packages = [
   {

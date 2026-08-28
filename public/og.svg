@@ -2,45 +2,49 @@
   <title id="ogTitle">Aniket — AI and operations automation for service businesses</title>
   <desc id="ogDesc">Bookings, client intake, follow-ups and team coordination, built once so they stop running on WhatsApp and copy-paste.</desc>
 
-  <!-- Sage backdrop: the site bg token -->
-  <rect width="1200" height="630" fill="#dbe3d2"/>
+  <!-- Source of truth for public/og.png. Scrapers do not render SVG og:images,
+       so after editing this file re-export the PNG: inline this markup into an
+       HTML page that @font-face-loads Archivo and Inter, then screenshot at
+       1200x630. The palette is the site's tokens from index.css. -->
 
-  <!-- Paper sheet, 56px radius echoing the large radius token -->
-  <rect x="40" y="40" width="1120" height="550" rx="56" fill="#f3f6ec" stroke="#1e3326" stroke-opacity="0.14" stroke-width="1"/>
+  <!-- Near-black page ground -->
+  <rect width="1200" height="630" fill="#101010"/>
+
+  <!-- Surface card, 56px radius echoing the large radius token -->
+  <rect x="40" y="40" width="1120" height="550" rx="56" fill="#171717" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1"/>
 
   <!-- Mark: same glyph as favicon.svg, scaled from the 32px grid -->
   <g transform="translate(104,88) scale(1.75)">
-    <rect width="32" height="32" rx="7" fill="#3f6b4e"/>
-    <rect x="6" y="6" width="9" height="9" rx="2.5" fill="#f3f6ec"/>
-    <path d="M15 10.5 H21.5 V17" fill="none" stroke="#f3f6ec" stroke-width="3.5" stroke-linejoin="miter"/>
-    <rect x="17" y="17" width="9" height="9" rx="2.5" fill="#dbe3d2"/>
+    <rect width="32" height="32" rx="7" fill="#ff5c00"/>
+    <rect x="6" y="6" width="9" height="9" rx="2.5" fill="#1a0900"/>
+    <path d="M15 10.5 H21.5 V17" fill="none" stroke="#1a0900" stroke-width="3.5" stroke-linejoin="miter"/>
+    <rect x="17" y="17" width="9" height="9" rx="2.5" fill="#ffe1d1"/>
   </g>
 
   <text x="182" y="125"
-        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
-        font-size="22" font-weight="700" letter-spacing="3" fill="#3f6b4e">ANIKET · DIGITAL SYSTEMS BUILDER</text>
+        font-family="Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="22" font-weight="700" letter-spacing="3" fill="#ff5c00">ANIKET · DIGITAL SYSTEMS BUILDER</text>
 
   <text x="104" y="276"
-        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
-        font-size="58" font-weight="700" letter-spacing="-0.5" fill="#1e3326">AI and operations automation</text>
+        font-family="Archivo, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="58" font-weight="800" letter-spacing="-0.5" fill="#ffffff">AI and operations automation</text>
   <text x="104" y="356"
-        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
-        font-size="58" font-weight="700" letter-spacing="-0.5" fill="#1e3326">for service businesses.</text>
+        font-family="Archivo, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="58" font-weight="800" letter-spacing="-0.5" fill="#ffffff">for service businesses.</text>
 
   <text x="104" y="424"
-        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
-        font-size="27" font-weight="400" fill="#67755e">Bookings, client intake, follow-ups and team coordination —</text>
+        font-family="Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="27" font-weight="400" fill="#9a9a9a">Bookings, client intake, follow-ups and team coordination —</text>
   <text x="104" y="462"
-        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
-        font-size="27" font-weight="400" fill="#67755e">built once, so they stop running on WhatsApp and copy-paste.</text>
+        font-family="Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="27" font-weight="400" fill="#9a9a9a">built once, so they stop running on WhatsApp and copy-paste.</text>
 
-  <line x1="104" y1="506" x2="1096" y2="506" stroke="#1e3326" stroke-opacity="0.14" stroke-width="1"/>
+  <line x1="104" y1="506" x2="1096" y2="506" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1"/>
 
   <text x="104" y="550"
-        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
-        font-size="24" font-weight="400" fill="#67755e">India · working with clients worldwide</text>
-  <!-- TODO: replace with real domain before launch (this string is baked into the image) -->
-  <text x="1096" y="550" text-anchor="end"
-        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
-        font-size="24" font-weight="700" fill="#3f6b4e">aniketbuilds.com</text>
+        font-family="Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="24" font-weight="400" fill="#9a9a9a">India · working with clients worldwide</text>
+  <!-- TODO: when the real domain is bought, add it bottom-right (text-anchor="end",
+       x=1096 y=550, fill #ff5c00) and re-export the PNG. Deliberately absent until
+       then — a placeholder domain baked into a shared image cannot be hotfixed. -->
 </svg>

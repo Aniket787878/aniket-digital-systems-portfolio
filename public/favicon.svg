@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <title>Aniket — Digital Systems Builder</title>
-  <rect width="32" height="32" rx="7" fill="#3f6b4e"/>
-  <rect x="6" y="6" width="9" height="9" rx="2.5" fill="#f3f6ec"/>
-  <path d="M15 10.5 H21.5 V17" fill="none" stroke="#f3f6ec" stroke-width="3.5" stroke-linejoin="miter"/>
-  <rect x="17" y="17" width="9" height="9" rx="2.5" fill="#dbe3d2"/>
+  <rect width="32" height="32" rx="7" fill="#ff5c00"/>
+  <rect x="6" y="6" width="9" height="9" rx="2.5" fill="#1a0900"/>
+  <path d="M15 10.5 H21.5 V17" fill="none" stroke="#1a0900" stroke-width="3.5" stroke-linejoin="miter"/>
+  <rect x="17" y="17" width="9" height="9" rx="2.5" fill="#ffe1d1"/>
 </svg>

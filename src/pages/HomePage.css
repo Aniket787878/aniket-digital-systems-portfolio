@@ -1331,6 +1331,20 @@
     --arc-r: clamp(13rem, 44vw, 26rem);
     width: clamp(5rem, 15vw, 8.5rem);
   }
+
+  /* Below this the cards are about 90px wide, and a project title set in
+     them wraps to five or six lines of still-legible text sitting
+     directly behind the lede. Two pieces of copy competing for the same
+     pixels is worse than no copy: the fan keeps its index numbers and
+     goes back to being texture, which is all it can be at this size. */
+  .gallery-card-title,
+  .gallery-card-stack {
+    display: none;
+  }
+
+  .gallery-card-index {
+    font-size: 0.8rem;
+  }
 }
 
 /* --- Phone --- */
@@ -1403,10 +1417,17 @@
      shorthand also carries the translate(-50%, -50%) that centres each
      card, so overriding it wholesale drops all eight onto a single
      point. */
+  /* Wider radius and narrower cards than the eight-photo fan needed. Four
+     cards at the old 12rem sat edge to edge and merged into one slab
+     behind the copy — a photograph fan reads as separate cards because
+     the pictures differ, four identical dark panels do not. Spreading
+     them puts real ground between the cards so the arc reads as an arc,
+     and the outermost pair running past the viewport edge is fine: this
+     is atmosphere, and the section is clipped. */
   .gallery-slot {
-    --arc-r: 12rem;
+    --arc-r: 15.5rem;
     --arc-tilt: 0.6;
-    width: clamp(4.5rem, 22vw, 6.5rem);
+    width: clamp(4rem, 19vw, 6rem);
   }
 
   .gallery-lede {

@@ -97,7 +97,8 @@ always import `site.email`.
 | `title` | string | |
 | `summary` | string | One-line outcome, ICP language |
 | `description` | string | Narrative paragraph |
-| `flow` | string[] | Step labels for `SystemVisual` |
+| `flow` | string[] | Step labels. Renders as the one-line `Flow` row in the case-study spec block |
+| `diagram` | string | Key into `components/SystemDiagram.jsx` — `booking`, `approval`, `operations`, `assistant` |
 | `private` | boolean | Optional. Renders "Private Client System", suppresses client identity |
 | `role` | string | What Aniket personally did |
 | `timeline` | string | e.g. `'4 weeks'` |
@@ -115,26 +116,41 @@ always import `site.email`.
 | `capabilities` | `{ index, title, blurb, items[] }[]` | Two consumers: the hero renders `index` + `title` only as a numbered range; the Capabilities band renders `blurb` + `items`. The hero must **never** carry the blurb — see `05-icp-positioning.md` |
 | `packages` | `{ name, price, timeline, featured, forWho, deliverable, includes[] }[]` | The three offers from `02-service-catalog.md`, in selling order. Sprint is `featured` |
 | `carePlan` | `{ name, price, blurb }` | Retainer line under the pricing grid |
-| `images` | `{ process{}, projects{}, gallery[] }` | **All placeholders.** See *Images* below |
+| `images` | `{ process{}, projects{} }` | **All empty.** See *Images* below |
 
 **Price duplication:** `packages[0].price` and `site.pricingAnchor` state the same
 number twice — the anchor names Offer A's floor. Move both or the site disagrees
 with itself.
 
-### Images — all placeholders
+### Images — all empty, and that is deliberate
 
-`images` holds 16 hotlinked Unsplash URLs across three keys, and every one is a
-stand-in. There is no `images.hero`: the hero ground is the WebGL shader, with a
-CSS gradient behind it as the fallback.
+`images` used to hold 16 hotlinked Unsplash URLs across three keys. All 16 are
+gone. A stock photo of an office said nothing a visitor could not have assumed,
+and sixteen of them made the site read as a template.
+
+There is no `images.hero`: the hero ground is `public/hero.jpg`, referenced as an
+`<img>` from `Hero.jsx` with a CSS gradient behind it as the fallback.
+
+What replaced them:
+
+| Was | Now |
+|---|---|
+| `projects` (4) — work cards, projects list, case banner | `components/SystemDiagram.jsx`, one drawn schematic per case study, selected by the project's `diagram` key |
+| `gallery` (8) — the closing arc | The four case studies themselves, as text cards built from `projects` |
+| `process` (4) — hover decoration | Nothing. The slot survives but stays empty |
+
+Two slots remain, and both render **only when set** — an empty string renders no
+element at all, because a dashed placeholder well on a live page reads as a
+broken build rather than as an honest gap:
 
 | Key | Count | Wants to be |
 |---|---|---|
-| `process` | 4 | Hover decoration on the process rows. Lowest priority |
-| `projects` | 4 | Screenshots of the booking flow, consent PDF, ops board, intake assistant |
-| `gallery` | 8 | The closing arc — real booking calendars, intake forms, dashboards |
+| `projects` | 4 | Real screenshots of the booking flow, consent PDF, ops board and intake assistant. Renders under the diagram on the case-study page |
+| `process` | 4 | Hover decoration on the process rows. Must be a **photograph**: the slot is about 4.7:1, and a diagram scaled into it renders its labels at five pixels. Lowest priority |
 
-A stock photo of an office says nothing a visitor could not have assumed. **Swap
-these before launch** — it is the single most replaceable thing on the site.
+Real screenshots are still the single strongest thing this site could gain. The
+diagrams are honest about being diagrams, and they are captioned as such — they
+are not a substitute for showing the software running.
 
 ## Home page composition
 
@@ -150,15 +166,15 @@ that order fixed. The reasoning is repeated in a comment in `HomePage.jsx`.
 
 | # | Band | File in `src/pages/home/` | Reads from |
 |---|---|---|---|
-| 1 | Hero (full-bleed, WebGL ground) | `Hero.jsx` | `site.tagline`, `capabilities[].index/title` |
+| 1 | Hero (full-bleed, photographic ground) | `Hero.jsx` | `site.tagline`, `capabilities[].index/title` |
 | 1b | Proof strip | `ProofStrip.jsx` | `proofTools` |
-| 2 | Selected work | `Work.jsx` | `projects`, `images.projects` |
+| 2 | Selected work | `Work.jsx` | `projects` (incl. `diagram`) |
 | 2b | Capabilities | `Capabilities.jsx` | `capabilities[].blurb/items` |
-| 3 | Process | `Process.jsx` | `process`, `images.process` |
+| 3 | Process | `Process.jsx` | `process`, `images.process` (usually empty) |
 | 4b | Pricing | `Pricing.jsx` | `packages`, `carePlan` |
 | 5b | CTA band | `CtaBand.jsx` | `site.pricingAnchor`, `site.availability` |
 | 4 | FAQ | `Faq.jsx` | `faq` |
-| 5 | Closing gallery | `Gallery.jsx` | `images.gallery` |
+| 5 | Closing gallery | `Gallery.jsx` | `projects` — the arc fans the four case studies |
 
 `site.availability` renders **once**, in the CTA band. It used to also close the
 gallery; two copies on one page reads as a templating mistake.

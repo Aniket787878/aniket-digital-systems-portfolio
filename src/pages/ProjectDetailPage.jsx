@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
-import { projects, site, images } from '../data.js'
+import { projects, site, images, proofTools } from '../data.js'
 import SystemDiagram from '../components/SystemDiagram.jsx'
 import Media from '../components/Media.jsx'
 
@@ -8,6 +8,30 @@ const toList = (value) =>
   Array.isArray(value) ? value.filter((item) => typeof item === 'string' && item.trim()) : []
 
 const toText = (value) => (typeof value === 'string' && value.trim() ? value.trim() : '')
+
+/*
+  The reason a tool is on the list, where Aniket has already written one.
+
+  These notes are not authored here — they are the same sentences the
+  proof strip shows under the hero, which is the point: a buyer reading
+  a case study and a buyer skimming the home page get the same answer to
+  "why this and not something else", and there is only one place to edit
+  when the answer changes.
+
+  Matching is exact first, then prefix, which covers the one place the
+  two lists disagree: `stack` says "Claude API" where `proofTools` says
+  "Claude". Anything unmatched returns nothing and renders as a plain
+  chip — half the entries (Google Calendar, PDF generation, Drive) have
+  no stated rationale, and inventing one here would be worse than the
+  gap.
+*/
+const toolNote = (tool) => {
+  const name = tool.toLowerCase()
+  const hit =
+    proofTools.find((t) => t.name.toLowerCase() === name) ||
+    proofTools.find((t) => name.startsWith(`${t.name.toLowerCase()} `))
+  return hit ? hit.note : ''
+}
 
 export default function ProjectDetailPage() {
   const { slug } = useParams()
@@ -41,7 +65,7 @@ export default function ProjectDetailPage() {
     .filter(Boolean)
     .join(' · ')
 
-  const hasMeta = Boolean(role || timeline || stack.length)
+  const hasMeta = Boolean(role || timeline || flow.length)
   const banner = images.projects[project.slug]
   const prev = position > 0 ? projects[position - 1] : null
   const next = position < projects.length - 1 ? projects[position + 1] : null
@@ -98,20 +122,6 @@ export default function ProjectDetailPage() {
               </dd>
             </div>
           )}
-          {stack.length > 0 && (
-            <div className="case-meta-item">
-              <dt className="case-meta-label">Stack</dt>
-              <dd className="case-meta-value">
-                <div className="project-stack case-meta-stack">
-                  {stack.map((tool) => (
-                    <span className="chip" key={tool}>
-                      {tool}
-                    </span>
-                  ))}
-                </div>
-              </dd>
-            </div>
-          )}
         </dl>
       )}
 
@@ -135,6 +145,29 @@ export default function ProjectDetailPage() {
               </li>
             ))}
           </ol>
+        </section>
+      )}
+
+      {/* Stack with the reasoning attached, rather than a row of chips.
+          A logo-ish list of tools is the part of a case study everyone
+          writes and nobody reads; the reason a tool was chosen over the
+          obvious alternative is the part a technical reader is actually
+          scanning for, and the part a client uses to decide whether
+          they are buying judgement or a preference. */}
+      {stack.length > 0 && (
+        <section className="case-section">
+          <h2 className="case-section-title">The stack, and why</h2>
+          <dl className="case-stack">
+            {stack.map((tool) => {
+              const note = toolNote(tool)
+              return (
+                <div className="case-stack-item" key={tool}>
+                  <dt className="case-stack-name">{tool}</dt>
+                  {note && <dd className="case-stack-note">{note}</dd>}
+                </div>
+              )
+            })}
+          </dl>
         </section>
       )}
 

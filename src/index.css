@@ -1112,9 +1112,38 @@ a:hover {
   color: var(--ink-soft);
 }
 
-/* Tightens the shared .project-stack margin inside the spec block. */
-.case-meta-stack {
+/* ---------- Detail: the stack, with its reasoning ---------- */
+
+.case-stack {
+  display: grid;
+  gap: 0;
+}
+
+.case-stack-item {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 11rem) minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: baseline;
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.case-stack-item:first-child {
+  border-top: 1px solid var(--line);
+}
+
+.case-stack-name {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.case-stack-note {
   margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  color: var(--muted);
 }
 
 /* The one-line version of the flow, in the spec block where a reader
@@ -1397,6 +1426,11 @@ a:hover {
 @media (max-width: 810px) {
   .case-meta-item {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .case-stack-item {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
   }
 
   /* The banner diagram is the page's main explanation, and squeezed to a

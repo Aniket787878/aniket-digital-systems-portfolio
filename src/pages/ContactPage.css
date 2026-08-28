@@ -258,3 +258,13 @@
     width: 100%;
   }
 }
+
+/* Honeypot — off screen, not display:none, so naive bots still render
+   and fill it. The input is also tabIndex -1 and aria-hidden in JSX. */
+.contact-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

@@ -37,9 +37,9 @@ Append one line per section as it lands. Keep it terse; the diff is the detail.
    `outcome` slots **empty** until a real deployment produces numbers.
 3. Never hardcode an email — import `site.email` from `src/data.js`. Copy lives
    in `src/data.js` wherever a data slot exists, not in components.
-4. `HomePage.css` stays one file. `--container-max` is content width. Don't
-   touch `HeroCanvas` cleanup/resize semantics. The WebGL hero is **finished** —
-   no redesign, no new animation work anywhere.
+4. `HomePage.css` stays one file. `--container-max` is content width. The hero
+   photograph and its `srcset` are **finished** — no redesign, no new animation
+   work anywhere. (The WebGL `HeroCanvas` this rule used to guard is deleted.)
 5. Five runtime dependencies. Adding one needs a written reason; default is no.
 6. `npm run build` and `npm run lint` must pass before any commit. Match each
    file's existing CRLF/LF line endings.

@@ -100,7 +100,13 @@
   object-position: 85% center;
   border-radius: inherit;
   pointer-events: none;
-  animation: hero-photo-in 900ms ease-out both;
+  /* Deliberately not `both`. A backwards fill holds the photo at the
+     keyframe's opacity: 0 until the animation actually runs, which makes an
+     entrance flourish load-bearing for the hero being visible at all --
+     anything that stops it starting (a tab opened in the background, a
+     paused-animation environment) leaves a bare gradient. Without the fill
+     the resting state is the visible one and the fade is purely additive. */
+  animation: hero-photo-in 900ms ease-out;
 }
 
 @keyframes hero-photo-in {

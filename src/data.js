@@ -187,6 +187,10 @@ export const testimonials = []
 */
 export const whatsappPrefill = {
   hero: 'Hi Aniket — I saw your site. Can we talk about the bookings at my clinic?',
+  /* The free-audit entry point (docs/research/06, gap G5) — highest-intent
+     top-of-funnel opener, in the buyer's voice. */
+  audit:
+    'Hi Aniket — I’d like to book the free 20-minute automation audit. The part of our week that eats the most time is:',
   /* `{offer}` is replaced with the package name by Pricing.jsx. */
   pricing: 'Hi Aniket — I’d like to know more about the {offer} for my business.',
   cta: 'Hi Aniket — there’s a part of our week I’d like to stop doing by hand. Can we talk?',

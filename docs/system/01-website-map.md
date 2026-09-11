@@ -201,7 +201,7 @@ real figures.
 | 1 | Fix `site.email` in `data.js` | **Done** — real address `aniket.html@gmail.com` set (2026-09-11) |
 | 2 | Contact page → real form with n8n webhook capture | **Done** — form built. Live webhook URL blocked on Aniket |
 | 3 | Meta tags (title, description, OG image) in `index.html` | **Done** — title, description, robots, full `og:*` and `twitter:*` set. `og:image` points at `og.svg`; see the PNG item below |
-| 4 | Favicon | **Open** — `public/favicon.svg` is a **sage green** mark (`#3f6b4e`, `#dbe3d2`, `#f3f6ec`). The site accent is now orange (`--accent: #ff5c00`), so the tab icon does not match the site. An earlier version of this doc told you to redraw it *in* the sage palette — that instruction is stale and backwards |
+| 4 | Favicon | **Done (2026-09-11)** — `public/favicon.svg` redrawn in the orange accent (`#ff5c00` connector + block on a `#101010` ground, white first block), keeping the linked-blocks systems motif. `index.html` `theme-color`/`color-scheme` also corrected from stale sage/light to `#101010` / `dark` |
 
 ### P1 — conversion critical
 

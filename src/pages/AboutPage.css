@@ -1,0 +1,177 @@
+/* ============================================================
+   About page — puts the solo builder on the site.
+   Tokens only: no new colors, fonts, radii or spacing values.
+   All classes prefixed `about-`.
+   ============================================================ */
+
+/* Photo + quick facts, side by side under the lede. */
+.about-top {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+  margin-top: var(--space-8);
+}
+
+.about-photo {
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius-md);
+}
+
+.about-facts {
+  display: grid;
+  gap: 0;
+}
+
+.about-fact {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: var(--space-2) var(--space-5);
+  align-items: baseline;
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.about-fact:first-child {
+  padding-top: 0;
+}
+
+.about-fact:last-child {
+  border-bottom: 0;
+}
+
+.about-fact dt {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.about-fact dd {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/* Section heading shared by story / principles. */
+.about-h2 {
+  font-family: var(--font-display);
+  font-size: var(--display-3);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: var(--space-5);
+}
+
+.about-story,
+.about-principles {
+  margin-top: var(--space-9);
+}
+
+.about-story-body {
+  font-size: var(--text-base);
+  line-height: 1.8;
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+
+/* Honest empty slot for the not-yet-written story — recessive, dashed,
+   clearly a placeholder rather than copy. */
+.about-story-slot {
+  max-width: var(--measure);
+  padding: var(--space-5) var(--space-6);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.about-principle-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.about-principle {
+  padding: clamp(1.5rem, 3vw, 2rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.about-principle-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: var(--space-3);
+}
+
+.about-principle-text {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+/* Closing CTA — mirrors the case-study closing slab. */
+.about-cta {
+  margin-top: var(--space-9);
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 3rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.about-cta-title {
+  font-family: var(--font-display);
+  font-size: var(--display-3);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  max-width: 20ch;
+}
+
+.about-cta-body {
+  margin-top: var(--space-4);
+  font-size: var(--text-base);
+  line-height: 1.8;
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+
+.about-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  margin-top: var(--space-6);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 640px) {
+  .about-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .about-photo {
+    /* Portrait would eat a phone screen; flatten toward a banner crop. */
+    aspect-ratio: 3 / 2;
+    max-width: 20rem;
+  }
+
+  .about-fact {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+  }
+
+  .about-principle-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

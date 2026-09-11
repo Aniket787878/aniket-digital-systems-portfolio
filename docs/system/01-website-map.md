@@ -57,11 +57,14 @@ misspelled `Refrence files/` (now `docs/reference/folioblox.html`).
 | `/` | `src/pages/HomePage.jsx` + `src/pages/home/` | Done | `HomePage.jsx` is composition only; one file per band — see *Home page composition* below |
 | `/projects` | `src/pages/ProjectsPage.jsx` | Done | Reads `src/data.js` |
 | `/projects/:slug` | `src/pages/ProjectDetailPage.jsx` | Done | Renders `problem`, `system`, `outcome` and `outcomeNote` |
+| `/about` | `src/pages/AboutPage.jsx` | Done | The solo-specialist identity layer (see `docs/research/06`). Renders from `founder`; photo and story are honest empty slots until Aniket supplies them |
 | `/contact` | `src/pages/ContactPage.jsx` | Done | Renders `ContactForm.jsx` |
 | `*` | `src/pages/NotFoundPage.jsx` | Done | Real 404 with a CTA, wired to `path="*"` in `App.jsx` |
 
-There is **no `/about` route.** It is the main gap on the jobs side of the
-"both, client-leaning" positioning, and it needs a CV PDF that does not exist yet.
+The `/about` route now **exists** (added 2026-09-11) as the identity layer the
+solo-specialist model needs. It is content-complete from what the site already
+backs; a CV PDF and a real headshot remain blocked on Aniket, but neither blocks
+the page — it renders labelled slots in their place.
 
 **Correction:** this table previously said `/contact` was *"Skeleton — mailto only —
 no form, no capture, no notify."* That is **false and has been removed.**
@@ -115,6 +118,8 @@ always import `site.email`.
 | `capabilities` | `{ index, title, blurb, items[] }[]` | Two consumers: the hero renders `index` + `title` only as a numbered range; the Capabilities band renders `blurb` + `items`. The hero must **never** carry the blurb — see `05-icp-positioning.md` |
 | `packages` | `{ name, price, timeline, featured, forWho, deliverable, includes[] }[]` | The three offers from `02-service-catalog.md`, in selling order. Sprint is `featured` |
 | `carePlan` | `{ name, price, blurb }` | Retainer line under the pricing grid |
+| `founder` | `{ name, role, intro, story, photo, basedIn, principles[], quickFacts[] }` | The `/about` identity layer. `story` and `photo` are **empty slots** — the page renders labelled placeholders until Aniket fills them. Nothing invented |
+| `testimonials` | `{ quote, name, role, business }[]` | **Empty on purpose** — the Testimonials band (3b) renders an honest "references on request" state until a real, attributed quote lands. No placeholder quotes (CLAUDE.md) |
 | `images` | `{ process{}, projects{}, gallery[] }` | **All placeholders.** See *Images* below |
 
 **Price duplication:** `packages[0].price` and `site.pricingAnchor` state the same
@@ -138,7 +143,7 @@ these before launch** — it is the single most replaceable thing on the site.
 
 ## Home page composition
 
-Nine bands, in the order a stranger reads them. Each band is **one file in
+Ten bands, in the order a stranger reads them. Each band is **one file in
 `src/pages/home/`**; `HomePage.jsx` is composition only. Section CSS stays in
 the single `src/pages/HomePage.css`, ordered to match, and the `b` suffixes are
 the bands added in the second pass — they keep the original numbering so the
@@ -150,9 +155,10 @@ that order fixed. The reasoning is repeated in a comment in `HomePage.jsx`.
 
 | # | Band | File in `src/pages/home/` | Reads from |
 |---|---|---|---|
-| 1 | Hero (full-bleed, WebGL ground) | `Hero.jsx` | `site.tagline`, `capabilities[].index/title` |
+| 1 | Hero (full-bleed photo ground) | `Hero.jsx` | `capabilities[].index/title`, `site.heroProof.stat/note` |
 | 1b | Proof strip | `ProofStrip.jsx` | `proofTools` |
 | 2 | Selected work | `Work.jsx` | `projects`, `images.projects` |
+| 3b | Testimonials | `Testimonials.jsx` | `testimonials` (empty → honest slot), `social` (GitHub) |
 | 2b | Capabilities | `Capabilities.jsx` | `capabilities[].blurb/items` |
 | 3 | Process | `Process.jsx` | `process`, `images.process` |
 | 4b | Pricing | `Pricing.jsx` | `packages`, `carePlan` |
@@ -192,10 +198,10 @@ real figures.
 
 | # | Item | Status |
 |---|---|---|
-| 1 | Fix `site.email` in `data.js` | **Done (placeholder)** — `hello@aniketbuilds.com` set with a TODO. Real address blocked on Aniket |
+| 1 | Fix `site.email` in `data.js` | **Done** — real address `aniket.html@gmail.com` set (2026-09-11) |
 | 2 | Contact page → real form with n8n webhook capture | **Done** — form built. Live webhook URL blocked on Aniket |
 | 3 | Meta tags (title, description, OG image) in `index.html` | **Done** — title, description, robots, full `og:*` and `twitter:*` set. `og:image` points at `og.svg`; see the PNG item below |
-| 4 | Favicon | **Open** — `public/favicon.svg` is a **sage green** mark (`#3f6b4e`, `#dbe3d2`, `#f3f6ec`). The site accent is now orange (`--accent: #ff5c00`), so the tab icon does not match the site. An earlier version of this doc told you to redraw it *in* the sage palette — that instruction is stale and backwards |
+| 4 | Favicon | **Done (2026-09-11)** — `public/favicon.svg` redrawn in the orange accent (`#ff5c00` connector + block on a `#101010` ground, white first block), keeping the linked-blocks systems motif. `index.html` `theme-color`/`color-scheme` also corrected from stale sage/light to `#101010` / `dark` |
 
 ### P1 — conversion critical
 
@@ -203,9 +209,9 @@ real figures.
 |---|---|---|
 | 5 | Hero offer clarity — name *who* + *what outcome* | **Done** — rendered from `site.tagline` |
 | 6 | Rewrite each project as a case study (Problem → System → Outcome) | **Done** — all four scaffolded in data and rendered by `ProjectDetailPage.jsx`. Numbers are still directional |
-| 7 | Proof strip on home | **Done** — `proofTools` renders as band 1b. **No testimonial band:** Aniket says one or two exist but has not supplied them, and none may be invented |
+| 7 | Proof strip on home | **Done** — `proofTools` renders as band 1b. Testimonial band (3b) now exists too, as an **empty slot**: it renders an honest "references on request" state until Aniket supplies a real attributed quote. None invented |
 | 8 | Pricing anchor | **Done** — `site.pricingAnchor` in the CTA band, and `packages` renders the full grid |
-| 9 | `/about` page + CV download | **Open** — the jobs half of the positioning. Route does not exist; blocked on a CV PDF |
+| 9 | `/about` page + CV download | **Page done (2026-09-11)** — `/about` renders the solo-specialist identity layer from `founder`. CV PDF and a real headshot still blocked on Aniket, but the page renders labelled slots for both rather than waiting on them |
 
 ### P2 — polish
 
@@ -217,13 +223,13 @@ real figures.
 
 **Blocked on Aniket** — no agent can close these:
 
-- [ ] **Buy the real domain** — everything below waits on it
-- [ ] **Real email address** — replace the `hello@aniketbuilds.com` placeholder
+- [ ] **Buy the real domain** — the gmail address works now, but a branded domain is still the launch goal
+- [x] **Real email address** — `aniket.html@gmail.com` set 2026-09-11
 - [ ] **Live n8n webhook URL** → set `VITE_LEAD_WEBHOOK_URL` in the Vercel project env.
       Until it is set the form logs the payload and shows the fallback panel; no
-      lead is captured
+      lead is captured. **This is now the only dead lead path** — WhatsApp is live
 - [ ] **Real case study numbers** — every `outcome` figure is directional
-- [ ] **WhatsApp number** — `site.whatsapp` is `''`
+- [x] **WhatsApp number** — `+91 9136582842` set 2026-09-11; every WhatsApp CTA is now live
 
 **Buildable, still open:**
 

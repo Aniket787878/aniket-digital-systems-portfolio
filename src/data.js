@@ -69,8 +69,8 @@ export const site = {
   name: 'Digital Systems Builder',
   tagline:
     'I build AI and operations automation for service businesses — clinics, studios, agencies and consultancies — so bookings, client intake, follow-ups and team coordination stop running on WhatsApp threads and manual copy-paste.',
-  email: 'hello@aniketbuilds.com', // TODO: confirm domain before launch
-  whatsapp: '', // TODO: WhatsApp Business number — every CTA on the site lights up when set
+  email: 'aniket.html@gmail.com',
+  whatsapp: '+91 9136582842', // digits are stripped in whatsapp.js for the wa.me link
   location: 'India · working with clients worldwide',
   availability:
     'Taking on two new builds a month. Next start slot is usually one to two weeks out.',
@@ -86,11 +86,95 @@ export const site = {
      is ever restated, restate this with it. */
   heroProof: {
     claim: 'Two hours of booking admin a day, down to under thirty minutes.',
+    /* The same measured result as `claim`, split so the hero can lead with
+       the before→after as a scannable figure instead of a sentence (see
+       docs/research/06 — "outcome-led hero, quantified"). `label` carries
+       the context the number needs; `note` below carries the caveat. If
+       project 01's outcome is restated, restate all three together. */
+    stat: {
+      from: '2 hrs/day',
+      to: 'under 30 min',
+      label: 'Front-desk booking admin, one clinic'
+    },
     note: 'Measured on a three-practitioner clinic build — directional, from observed process time rather than an audit.',
     slug: 'intelligent-booking-resource-system',
     linkLabel: 'See the system'
   }
 }
+
+/*
+  Identity layer — the site sells a solo specialist, so the person has to
+  be on it (docs/research/06, gap G2). Everything here is either true and
+  already backed by the rest of the site, or a clearly-empty slot for
+  Aniket to fill. Same rule as `images` and `testimonials`: no invented
+  bio and no stock headshot. `photo` stays '' until a real file lands in
+  public/ (the <Media> well renders in its place), and anything only
+  Aniket can vouch for — the personal story, a years count, named clients
+  — is left as a slot rather than written for him.
+*/
+export const founder = {
+  name: 'Aniket',
+  role: 'Automation & systems builder',
+
+  /* One honest paragraph. Asserts only what the case studies, pricing and
+     process on the rest of the site already stand behind. */
+  intro:
+    'I build the operations software service businesses actually run on — booking, intake, follow-ups and team coordination — so the work stops living in WhatsApp threads and spreadsheets. It started with the systems a multi-practitioner wellness practice needed to stop drowning in admin, and it is the same shape of problem in a studio, an agency or a consultancy. You work with the person who builds it, and you own what ships.',
+
+  /* Aniket's own story — how he got here, what he did before — is his to
+     write. Left empty on purpose rather than invented; the About page
+     renders a labelled slot when it is blank. */
+  story: '',
+
+  /* Real headshot → drop it in public/ (e.g. public/aniket.jpg) and set the
+     path here. Until then the About page shows the honest placeholder well. */
+  photo: '',
+
+  basedIn: 'India · working with clients worldwide',
+
+  /* What a buyer actually gets from a solo builder rather than an agency —
+     the real edge behind the model decision in docs/research/06. Each line
+     is already promised elsewhere on the site (FAQ, pricing, handover). */
+  principles: [
+    {
+      title: 'One person, start to finish',
+      text: 'You talk to the builder, not an account manager. Nothing is lost in a handoff between the person who scoped it and the person who ships it.'
+    },
+    {
+      title: 'You own the system',
+      text: 'Automations run on your own accounts, the code sits in your repository, and handover includes a walkthrough so your team can change the obvious things without me.'
+    },
+    {
+      title: 'Fixed scope, fixed price, a live date',
+      text: 'A one-page proposal in writing before anything starts. No hourly billing, no verbal quotes, no scope that quietly grows.'
+    },
+    {
+      title: 'Built on the tools you already pay for',
+      text: 'I pick the stack to fit your team — n8n, Claude, Airtable, Supabase, React — and build on what already works instead of charging you to migrate.'
+    }
+  ],
+
+  /* Verified facts only. Anything needing a number Aniket has not supplied
+     stays out. */
+  quickFacts: [
+    { label: 'Based', value: 'India · remote worldwide' },
+    { label: 'Focus', value: 'Bookings, intake, follow-ups, team ops' },
+    { label: 'Core stack', value: 'n8n · Claude · React · Supabase' },
+    { label: 'Availability', value: 'Two new builds a month' }
+  ]
+}
+
+/*
+  Social proof slot — the market's #1 trust lever (docs/research/06, gap
+  G3), deliberately EMPTY. No invented quotes: CLAUDE.md forbids
+  placeholder testimonials, so the Testimonials band renders an honest
+  "references on request" state until a real, attributed quote lands here.
+
+  Shape of a real entry:
+    { quote, name, role, business }
+  Only add one you can attribute to a named client who has agreed to it.
+*/
+export const testimonials = []
 
 /*
   Prefilled WhatsApp openers, one per placement. Keep them in the buyer's
@@ -103,6 +187,10 @@ export const site = {
 */
 export const whatsappPrefill = {
   hero: 'Hi Aniket — I saw your site. Can we talk about the bookings at my clinic?',
+  /* The free-audit entry point (docs/research/06, gap G5) — highest-intent
+     top-of-funnel opener, in the buyer's voice. */
+  audit:
+    'Hi Aniket — I’d like to book the free 20-minute automation audit. The part of our week that eats the most time is:',
   /* `{offer}` is replaced with the package name by Pricing.jsx. */
   pricing: 'Hi Aniket — I’d like to know more about the {offer} for my business.',
   cta: 'Hi Aniket — there’s a part of our week I’d like to stop doing by hand. Can we talk?',
@@ -406,6 +494,7 @@ export const faq = [
 export const footerMenu = [
   { label: 'Home', to: '/' },
   { label: 'Projects', to: '/projects' },
+  { label: 'About', to: '/about' },
   { label: 'Get in touch', to: '/contact' }
 ]
 

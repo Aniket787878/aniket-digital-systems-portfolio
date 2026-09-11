@@ -198,7 +198,7 @@ real figures.
 
 | # | Item | Status |
 |---|---|---|
-| 1 | Fix `site.email` in `data.js` | **Done (placeholder)** — `hello@aniketbuilds.com` set with a TODO. Real address blocked on Aniket |
+| 1 | Fix `site.email` in `data.js` | **Done** — real address `aniket.html@gmail.com` set (2026-09-11) |
 | 2 | Contact page → real form with n8n webhook capture | **Done** — form built. Live webhook URL blocked on Aniket |
 | 3 | Meta tags (title, description, OG image) in `index.html` | **Done** — title, description, robots, full `og:*` and `twitter:*` set. `og:image` points at `og.svg`; see the PNG item below |
 | 4 | Favicon | **Open** — `public/favicon.svg` is a **sage green** mark (`#3f6b4e`, `#dbe3d2`, `#f3f6ec`). The site accent is now orange (`--accent: #ff5c00`), so the tab icon does not match the site. An earlier version of this doc told you to redraw it *in* the sage palette — that instruction is stale and backwards |
@@ -223,13 +223,13 @@ real figures.
 
 **Blocked on Aniket** — no agent can close these:
 
-- [ ] **Buy the real domain** — everything below waits on it
-- [ ] **Real email address** — replace the `hello@aniketbuilds.com` placeholder
+- [ ] **Buy the real domain** — the gmail address works now, but a branded domain is still the launch goal
+- [x] **Real email address** — `aniket.html@gmail.com` set 2026-09-11
 - [ ] **Live n8n webhook URL** → set `VITE_LEAD_WEBHOOK_URL` in the Vercel project env.
       Until it is set the form logs the payload and shows the fallback panel; no
-      lead is captured
+      lead is captured. **This is now the only dead lead path** — WhatsApp is live
 - [ ] **Real case study numbers** — every `outcome` figure is directional
-- [ ] **WhatsApp number** — `site.whatsapp` is `''`
+- [x] **WhatsApp number** — `+91 9136582842` set 2026-09-11; every WhatsApp CTA is now live
 
 **Buildable, still open:**
 

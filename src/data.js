@@ -69,8 +69,8 @@ export const site = {
   name: 'Digital Systems Builder',
   tagline:
     'I build AI and operations automation for service businesses — clinics, studios, agencies and consultancies — so bookings, client intake, follow-ups and team coordination stop running on WhatsApp threads and manual copy-paste.',
-  email: 'hello@aniketbuilds.com', // TODO: confirm domain before launch
-  whatsapp: '', // TODO: WhatsApp Business number — every CTA on the site lights up when set
+  email: 'aniket.html@gmail.com',
+  whatsapp: '+91 9136582842', // digits are stripped in whatsapp.js for the wa.me link
   location: 'India · working with clients worldwide',
   availability:
     'Taking on two new builds a month. Next start slot is usually one to two weeks out.',

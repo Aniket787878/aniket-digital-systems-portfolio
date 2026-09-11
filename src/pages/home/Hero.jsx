@@ -38,11 +38,23 @@ export default function Hero() {
             <h1 className="hero-title">Systems that run themselves</h1>
           </div>
           <div className="hero-support">
-            {/* A result, not a slogan. "Good systems should feel
-                invisible" said nothing a visitor could check; the number
-                below is the same length and does the persuading. The
-                sentiment still opens the footer. */}
-            <p className="hero-claim">{site.heroProof.claim}</p>
+            {/* A result, not a slogan. The before→after is the first thing
+                the eye lands on in this column — a figure a visitor can
+                check, not "good systems feel invisible" (which said nothing
+                and now only opens the footer). The caveat travels with it in
+                .hero-proof-note; the two never separate. */}
+            <p className="hero-stat">
+              <span className="hero-stat-figures">
+                <span className="hero-stat-from">{site.heroProof.stat.from}</span>
+                <span className="hero-stat-arrow" aria-hidden="true">
+                  &rarr;
+                </span>
+                <span className="hero-stat-to">{site.heroProof.stat.to}</span>
+              </span>
+              <span className="hero-stat-label">
+                {site.heroProof.stat.label}
+              </span>
+            </p>
             <p className="hero-lede">
               For clinics, studios, agencies and consultancies: bookings,
               intake and follow-ups in one place instead of across WhatsApp

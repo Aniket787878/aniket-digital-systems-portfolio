@@ -190,13 +190,52 @@
   gap: var(--space-4);
 }
 
-.hero-claim {
+/* The quantified lead of the support column: two figures with an arrow
+   between them, and a quiet label for the context the number needs. The
+   caveat that qualifies it is .hero-proof-note, two lines down. */
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.hero-stat-figures {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
   font-family: var(--font-display);
-  font-size: clamp(1.25rem, 2vw, 1.625rem);
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
   color: var(--ink);
+}
+
+/* The "before" figure is the pain — kept present but recessive so the eye
+   settles on the "after". */
+.hero-stat-from {
+  color: var(--ink-soft);
+  text-decoration: line-through;
+  text-decoration-color: var(--line-strong);
+  text-decoration-thickness: 2px;
+}
+
+.hero-stat-arrow {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.hero-stat-to {
+  color: var(--ink);
+}
+
+.hero-stat-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
 }
 
 .hero-lede {
@@ -205,7 +244,7 @@
   color: var(--ink-soft);
 }
 
-/* The caveat that travels with the number in .hero-claim. Deliberately
+/* The caveat that travels with the number in .hero-stat. Deliberately
    quiet — it has to be readable without competing with the claim — but
    never hidden: an unqualified number is the thing this line exists to
    prevent. */
@@ -1076,6 +1115,98 @@
 }
 
 /* ============================================================
+   3b — Testimonials. A slot, not a fake logo wall. Empty state is
+   an honest panel; once data.js carries a real quote it becomes a
+   card grid. Both read on the dark ground.
+   ============================================================ */
+
+.voices {
+  padding-block: var(--section-pad);
+}
+
+.voices .kicker {
+  margin-bottom: var(--space-6);
+}
+
+.voices-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: var(--space-5);
+}
+
+.voice-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.voice-quote {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.voice-attr {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: auto;
+}
+
+.voice-name {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.voice-role {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+/* Empty state — one panel, honest about what is and isn't here yet. */
+.voices-empty {
+  max-width: 52ch;
+  padding: clamp(1.75rem, 4vw, 3rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--radius-md);
+}
+
+.voices-empty-lead {
+  font-family: var(--font-display);
+  font-size: var(--display-3);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.voices-empty-body {
+  margin-top: var(--space-4);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+.voices-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-6);
+  margin-top: var(--space-6);
+}
+
+/* ============================================================
    Motion — hero copy rises on load
    ============================================================ */
 
@@ -1092,7 +1223,7 @@
 
 .hero-eyebrow,
 .hero-title,
-.hero-claim,
+.hero-stat,
 .hero-lede,
 .hero-proof-note,
 .hero-actions,
@@ -1104,7 +1235,7 @@
   animation-delay: 70ms;
 }
 
-.hero-claim {
+.hero-stat {
   animation-delay: 140ms;
 }
 

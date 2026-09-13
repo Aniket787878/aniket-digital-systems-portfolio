@@ -480,7 +480,11 @@
 }
 
 .faq-intro .split-title {
-  max-width: 14ch;
+  /* 14ch forced "Answers to / common / questions" onto three lines. The
+     left column is far wider than that; let the title use it and balance
+     the wrap to two lines. */
+  max-width: 20ch;
+  text-wrap: balance;
 }
 
 .faq-lede {
@@ -569,8 +573,16 @@
 .gallery {
   position: relative;
   isolation: isolate;
-  padding-block: clamp(5rem, 11vw, 10rem);
+  /* The tall padding existed to give the fanned arc room to spread behind
+     the CTA. With too few projects the arc doesn't render (see Gallery.jsx),
+     so that height would just be dead space — fall back to the standard
+     section rhythm, and only reclaim the extra room when the arc is there. */
+  padding-block: var(--section-pad);
   overflow: hidden;
+}
+
+.gallery:has(.gallery-stage) {
+  padding-block: clamp(5rem, 11vw, 10rem);
 }
 
 .gallery-stage {
@@ -733,6 +745,17 @@
   padding-block: clamp(2.75rem, 6vw, 4.5rem) clamp(1rem, 2vw, 2rem);
 }
 
+/* Who-it's-for on the left, how-it's-built on the right — the two read as
+   a pair and together span the band, so the stack grid below doesn't sit
+   under a lopsided left-hugging column. Stacks on narrow screens. */
+.proof-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
 /* The "who this is for" line, moved down out of the hero. It is the
    loudest thing in this band on purpose: it qualifies the reader before
    the stack list asks them to care what it is built from. */
@@ -743,8 +766,7 @@
   line-height: 1.4;
   letter-spacing: -0.015em;
   color: var(--ink);
-  max-width: 46ch;
-  margin-bottom: var(--space-5);
+  max-width: 30ch;
 }
 
 .proof-intro {
@@ -752,8 +774,19 @@
   font-weight: 500;
   line-height: 1.5;
   color: var(--ink-soft);
-  max-width: 48ch;
-  margin-bottom: clamp(2rem, 4vw, 3rem);
+  max-width: 40ch;
+}
+
+@media (max-width: 760px) {
+  .proof-head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+    align-items: start;
+  }
+
+  .proof-lede {
+    max-width: 46ch;
+  }
 }
 
 .proof-grid {
@@ -1095,6 +1128,14 @@
   letter-spacing: -0.03em;
   color: var(--accent-ink-strong);
   max-width: 18ch;
+  /* Even out the two lines instead of leaving a long first line over a
+     short orphan; supported browsers only, harmless where it isn't. */
+  text-wrap: balance;
+}
+
+/* Keeps a hyphenated compound ("20-minute") from breaking at its hyphen. */
+.cta-band-title .nowrap {
+  white-space: nowrap;
 }
 
 .cta-band-lede {
@@ -1103,6 +1144,7 @@
   line-height: 1.65;
   color: rgba(26, 9, 0, 0.85);
   max-width: 52ch;
+  text-wrap: balance;
 }
 
 .cta-band-actions {

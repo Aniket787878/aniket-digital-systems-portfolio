@@ -19,15 +19,20 @@ export default function ProofStrip() {
   return (
     <section className="proof">
       <div className="container">
-        <p className="proof-lede">
-          For clinics, studios, agencies and consultancies: bookings, intake
-          and follow-ups in one place instead of across WhatsApp threads and
-          spreadsheets.
-        </p>
-        <p className="proof-intro">
-          Built with tools you keep. Self-hosted where it matters, so the
-          system stays yours after I hand it over.
-        </p>
+        {/* Two columns so the band fills the width rather than stacking two
+            narrow paragraphs against an empty right half: who it's for on the
+            left, how it's built on the right. */}
+        <div className="proof-head">
+          <p className="proof-lede">
+            For clinics, studios, agencies and consultancies: bookings, intake
+            and follow-ups in one place instead of across WhatsApp threads and
+            spreadsheets.
+          </p>
+          <p className="proof-intro">
+            Built with tools you keep. Self-hosted where it matters, so the
+            system stays yours after I hand it over.
+          </p>
+        </div>
         <ul className="proof-grid">
           {proofTools.map((tool) => (
             <li key={tool.name} className="proof-item">

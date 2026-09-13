@@ -16,8 +16,12 @@ export default function CtaBand() {
       <div className="container">
         <div className="cta-band-inner">
           <p className="kicker cta-band-kicker">Free automation audit</p>
+          {/* "20-minute" is one word — nowrap keeps the browser from
+              breaking the line at its hyphen, which reads as a botched
+              hyphenation ("…free 20-" / "minute audit."). */}
           <h2 className="cta-band-title">
-            Start with a free 20-minute audit.
+            Start with a free{' '}
+            <span className="nowrap">20-minute</span> audit.
           </h2>
           {/* A no-risk top-of-funnel offer (docs/research/06, gap G5): the
               audit gives them something useful whether or not they hire me,

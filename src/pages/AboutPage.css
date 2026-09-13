@@ -4,13 +4,54 @@
    All classes prefixed `about-`.
    ============================================================ */
 
-/* Photo + quick facts, side by side under the lede. */
-.about-top {
+/* Header: title on the left, intro on the right, aligned along the
+   baseline. Fills the band the same way the home bands do. */
+.about-head {
   display: grid;
-  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
-  gap: clamp(1.5rem, 4vw, 3rem);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+}
+
+.about-head-lead {
+  min-width: 0;
+}
+
+.about-head .eyebrow {
+  display: block;
+  margin-bottom: var(--space-3);
+}
+
+.about-head .page-title {
+  margin-bottom: 0;
+}
+
+.about-head .page-lede {
+  margin: 0;
+  max-width: 54ch;
+}
+
+/* Body: wide reading column + a narrow meta rail. The rail is DOM-first
+   (leads on a phone) but pinned to the right column on wide screens. */
+.about-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 19rem);
+  gap: clamp(2rem, 5vw, 5rem);
   align-items: start;
-  margin-top: var(--space-8);
+  margin-top: var(--space-9);
+}
+
+.about-main {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+}
+
+.about-side {
+  grid-column: 2;
+  grid-row: 1;
+  display: grid;
+  gap: var(--space-6);
 }
 
 .about-photo {
@@ -23,11 +64,11 @@
   gap: 0;
 }
 
+/* Stacked label-over-value: reads cleanly in the narrow rail and keeps
+   the long "Core stack" value from being crushed into a 1fr sliver. */
 .about-fact {
   display: grid;
-  grid-template-columns: 8rem minmax(0, 1fr);
-  gap: var(--space-2) var(--space-5);
-  align-items: baseline;
+  gap: var(--space-1);
   padding-block: var(--space-4);
   border-bottom: 1px solid var(--line);
 }
@@ -65,9 +106,13 @@
   margin-bottom: var(--space-5);
 }
 
-.about-story,
 .about-principles {
   margin-top: var(--space-9);
+}
+
+/* Story leads the main column; the body wrapper already sets the top gap. */
+.about-main > .about-story {
+  margin-top: 0;
 }
 
 .about-story-body {
@@ -155,8 +200,42 @@
 
 /* ---------- Responsive ---------- */
 
+/* Body rail drops under the reading column before it gets too pinched. */
+@media (max-width: 900px) {
+  .about-body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-7);
+  }
+
+  .about-main,
+  .about-side {
+    grid-column: 1;
+  }
+
+  .about-main {
+    grid-row: 2;
+  }
+
+  .about-side {
+    grid-row: 1;
+    /* Photo + facts read as a row again when they have the full width. */
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(1.5rem, 4vw, 3rem);
+  }
+}
+
+/* Header stacks; title over intro. */
+@media (max-width: 760px) {
+  .about-head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+    align-items: start;
+  }
+}
+
 @media (max-width: 640px) {
-  .about-top {
+  .about-side {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -164,11 +243,6 @@
     /* Portrait would eat a phone screen; flatten toward a banner crop. */
     aspect-ratio: 3 / 2;
     max-width: 20rem;
-  }
-
-  .about-fact {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-1);
   }
 
   .about-principle-list {

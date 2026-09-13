@@ -4,10 +4,62 @@
    !important, no libraries, responsive.
    ============================================================ */
 
+/* ---------- Layout: header + two-column body ---------- */
+
+/* Title left, intro right — spans the band like the home bands do. */
+.contact-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+}
+
+.contact-head-lead {
+  min-width: 0;
+}
+
+.contact-head .eyebrow {
+  display: block;
+  margin-bottom: var(--space-3);
+}
+
+.contact-head .page-title {
+  margin-bottom: 0;
+}
+
+.contact-head .page-lede {
+  margin: 0;
+  max-width: 58ch;
+}
+
+/* Context on the left, the form sized to a comfortable reading width on
+   the right, so the two together fill the band. */
+.contact-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 40rem);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  margin-top: var(--space-9);
+}
+
+.contact-context {
+  min-width: 0;
+}
+
+.contact-main {
+  min-width: 0;
+}
+
+/* The form/panel no longer stacks under a column, it sits beside one. */
+.contact-main .contact-form,
+.contact-main .contact-panel {
+  margin-top: 0;
+}
+
 /* ---------- Availability + "what happens next" ---------- */
 
 .contact-availability {
-  margin-top: var(--space-5);
+  margin-top: 0;
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   font-weight: 500;
@@ -53,7 +105,9 @@
   list-style: none;
   margin-top: var(--space-5);
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* Wraps to the space the context column actually has, rather than being
+     pinned to three columns that get crushed when it narrows. */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
   gap: var(--space-5);
 }
 
@@ -239,6 +293,23 @@
   line-height: 1.6;
   color: var(--muted);
   max-width: 46ch;
+}
+
+/* Below this the form can't keep a comfortable width beside the context,
+   so the two stack: context first (it leads the pitch), then the form. */
+@media (max-width: 1024px) {
+  .contact-body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-8);
+  }
+}
+
+@media (max-width: 760px) {
+  .contact-head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+    align-items: start;
+  }
 }
 
 @media (max-width: 810px) {

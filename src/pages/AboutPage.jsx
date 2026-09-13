@@ -21,53 +21,69 @@ export default function AboutPage() {
   const hasStory = founder.story.trim().length > 0
 
   return (
-    <section className="container page about">
-      <p className="eyebrow">About</p>
-      <h1 className="page-title">The person you&rsquo;ll actually work with</h1>
-      <p className="page-lede">{founder.intro}</p>
-
-      <div className="about-top">
-        <Media
-          src={founder.photo}
-          alt={founder.photo ? founder.name : ''}
-          label="Photo of Aniket"
-          className="about-photo"
-        />
-
-        <dl className="about-facts">
-          {founder.quickFacts.map((fact) => (
-            <div key={fact.label} className="about-fact">
-              <dt>{fact.label}</dt>
-              <dd>{fact.value}</dd>
-            </div>
-          ))}
-        </dl>
+    <section className="container page page-wide about">
+      {/* Two-column header so the title and intro span the band instead of
+          stacking in a left column against an empty right half. */}
+      <div className="about-head">
+        <div className="about-head-lead">
+          <p className="eyebrow">About</p>
+          <h1 className="page-title">
+            The person you&rsquo;ll actually work with
+          </h1>
+        </div>
+        <p className="page-lede">{founder.intro}</p>
       </div>
 
-      <div className="about-story">
-        <h2 className="about-h2">How I got here</h2>
-        {hasStory ? (
-          <p className="about-story-body">{founder.story}</p>
-        ) : (
-          /* Empty slot, said out loud rather than papered over with
-             invented biography. */
-          <p className="about-story-slot">
-            The longer version &mdash; the practice this grew out of, and the
-            builds since &mdash; is going here shortly.
-          </p>
-        )}
-      </div>
+      {/* Body as content + meta rail, so the page fills the band with
+          balanced gutters instead of a single left-hugging column. The
+          rail is DOM-first so it leads on a phone (photo, then facts),
+          but sits on the right on wide screens. */}
+      <div className="about-body">
+        <aside className="about-side">
+          <Media
+            src={founder.photo}
+            alt={founder.photo ? founder.name : ''}
+            label="Photo of Aniket"
+            className="about-photo"
+          />
 
-      <div className="about-principles">
-        <h2 className="about-h2">What working with me is like</h2>
-        <ul className="about-principle-list">
-          {founder.principles.map((p) => (
-            <li key={p.title} className="about-principle">
-              <h3 className="about-principle-title">{p.title}</h3>
-              <p className="about-principle-text">{p.text}</p>
-            </li>
-          ))}
-        </ul>
+          <dl className="about-facts">
+            {founder.quickFacts.map((fact) => (
+              <div key={fact.label} className="about-fact">
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </aside>
+
+        <div className="about-main">
+          <div className="about-story">
+            <h2 className="about-h2">How I got here</h2>
+            {hasStory ? (
+              <p className="about-story-body">{founder.story}</p>
+            ) : (
+              /* Empty slot, said out loud rather than papered over with
+                 invented biography. */
+              <p className="about-story-slot">
+                The longer version &mdash; the practice this grew out of, and
+                the builds since &mdash; is going here shortly.
+              </p>
+            )}
+          </div>
+
+          <div className="about-principles">
+            <h2 className="about-h2">What working with me is like</h2>
+            <ul className="about-principle-list">
+              {founder.principles.map((p) => (
+                <li key={p.title} className="about-principle">
+                  <h3 className="about-principle-title">{p.title}</h3>
+                  <p className="about-principle-text">{p.text}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
 
       <div className="about-cta">

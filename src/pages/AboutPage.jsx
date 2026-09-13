@@ -3,6 +3,7 @@ import Media from '../components/Media.jsx'
 import WhatsAppCta from '../components/WhatsAppCta.jsx'
 import { hasWhatsApp } from '../whatsapp.js'
 import { founder, site, whatsappPrefill } from '../data.js'
+import { useDocumentTitle } from '../useDocumentTitle.js'
 import './AboutPage.css'
 
 /*
@@ -16,6 +17,7 @@ import './AboutPage.css'
   placeholders elsewhere on the site. Nothing here is invented.
 */
 export default function AboutPage() {
+  useDocumentTitle('About — Aniket')
   const hasStory = founder.story.trim().length > 0
 
   return (

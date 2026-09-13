@@ -17,10 +17,12 @@ import Gallery from './home/Gallery.jsx'
    *tie*. One import from one place keeps that order fixed no matter what
    order the section components above happen to be evaluated in. */
 import './HomePage.css'
+import { useDocumentTitle } from '../useDocumentTitle.js'
 
 /* Ten bands, in render order. Each is one file in ./home, and each maps
    to the band of the same name in HomePage.css. */
 export default function HomePage() {
+  useDocumentTitle('Aniket — Digital Systems Builder')
   return (
     <div className="home">
       <Hero />

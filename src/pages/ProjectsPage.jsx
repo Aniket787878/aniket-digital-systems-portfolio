@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { projects } from '../data.js'
 import SystemDiagram from '../components/SystemDiagram.jsx'
+import { useDocumentTitle } from '../useDocumentTitle.js'
 
 const toList = (value) =>
   Array.isArray(value) ? value.filter((item) => typeof item === 'string' && item.trim()) : []
@@ -8,6 +9,7 @@ const toList = (value) =>
 const toText = (value) => (typeof value === 'string' && value.trim() ? value.trim() : '')
 
 export default function ProjectsPage() {
+  useDocumentTitle('Projects — Aniket')
   return (
     <section className="container page page-wide">
       <p className="eyebrow">Projects</p>

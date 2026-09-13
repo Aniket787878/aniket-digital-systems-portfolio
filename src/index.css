@@ -1202,6 +1202,22 @@ a:hover {
   color: var(--muted);
 }
 
+/* Scroll affordance for the banner diagram. Only shown where the diagram
+   actually scrolls (see the .case-banner @media block at 810px); above it
+   the whole schematic is visible and the hint would be a lie. */
+.case-scroll-hint {
+  display: none;
+}
+
+@media (max-width: 810px) {
+  .case-scroll-hint {
+    display: block;
+    margin-top: var(--space-2);
+    color: var(--accent);
+    font-weight: 600;
+  }
+}
+
 /* ---------- Detail: real screenshot, when one exists ---------- */
 
 .case-shot {
@@ -1302,7 +1318,7 @@ a:hover {
 .case-note {
   margin-top: var(--space-5);
   padding: var(--space-4) var(--space-5);
-  background: var(--paper);
+  background: var(--surface);
   border-left: 2px solid var(--accent);
   border-radius: var(--radius-xs);
   font-size: var(--text-sm);
@@ -1555,7 +1571,7 @@ a:hover {
 .case-cta {
   margin-top: var(--space-8);
   padding: var(--space-7) clamp(1.5rem, 4vw, 3rem);
-  background: var(--paper);
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
 }

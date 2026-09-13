@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom'
 import { projects, site, images, proofTools } from '../data.js'
 import SystemDiagram from '../components/SystemDiagram.jsx'
 import Media from '../components/Media.jsx'
+import { useDocumentTitle } from '../useDocumentTitle.js'
 
 /* Every field below is optional in data.js — nothing here may assume it exists. */
 const toList = (value) =>
@@ -37,6 +38,8 @@ export default function ProjectDetailPage() {
   const { slug } = useParams()
   const position = projects.findIndex((item) => item.slug === slug)
   const project = position === -1 ? null : projects[position]
+
+  useDocumentTitle(project ? `${project.title} — Aniket` : 'Project not found — Aniket')
 
   if (!project) {
     return (
@@ -119,6 +122,14 @@ export default function ProjectDetailPage() {
         <SystemDiagram className="case-banner" variant={project.diagram} />
         <figcaption className="case-caption">
           Schematic of the system as built. Not a screenshot.
+          {/* Below 810px the diagram stops shrinking (its labels would hit
+              ~4px) and scrolls sideways at a legible size instead. Without
+              this line the cut-off right edge reads as a broken image rather
+              than "there is more this way". Hidden on wide screens where the
+              whole diagram is already visible. */}
+          <span className="case-scroll-hint" aria-hidden="true">
+            Scroll the diagram to see the full system &rarr;
+          </span>
         </figcaption>
       </figure>
 

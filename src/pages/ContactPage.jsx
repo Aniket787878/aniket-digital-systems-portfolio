@@ -2,6 +2,7 @@ import ContactForm from '../components/ContactForm.jsx'
 import WhatsAppCta from '../components/WhatsAppCta.jsx'
 import { hasWhatsApp } from '../whatsapp.js'
 import { site, whatsappPrefill } from '../data.js'
+import { useDocumentTitle } from '../useDocumentTitle.js'
 import './ContactPage.css'
 
 const NEXT_STEPS = [
@@ -26,6 +27,7 @@ const NEXT_STEPS = [
 ]
 
 export default function ContactPage() {
+  useDocumentTitle('Contact — Aniket')
   return (
     <section className="container page">
       <p className="eyebrow">Contact</p>

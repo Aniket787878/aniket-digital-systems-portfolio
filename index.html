@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#dbe3d2" />
+    <meta name="theme-color" content="#101010" />
     <meta name="color-scheme" content="light" />
 
     <title>AI and Operations Automation for Service Businesses — Aniket</title>
@@ -20,11 +20,24 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- The hero portrait is the LCP element on every visit. Preloading the
-         same srcset the <img> declares starts the fetch during head parse,
-         before React has mounted anything. -->
+         same sources the <picture> declares starts the fetch during head
+         parse, before React has mounted anything.
+
+         Two entries now, and their media queries must stay identical to the
+         one on the <source> in Hero.jsx. A preload that does not match what
+         the <picture> finally selects is worse than none: the browser
+         fetches both frames and the phone pays for the one it discards. -->
     <link
       rel="preload"
       as="image"
+      media="(max-width: 600px)"
+      href="/hero-portrait.jpg"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      media="(min-width: 601px)"
       href="/hero.jpg"
       imagesrcset="/hero-960.jpg 960w, /hero.jpg 1913w"
       imagesizes="100vw"

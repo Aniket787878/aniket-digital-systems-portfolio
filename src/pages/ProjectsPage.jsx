@@ -13,8 +13,9 @@ export default function ProjectsPage() {
       <p className="eyebrow">Projects</p>
       <h1 className="page-title">Projects</h1>
       <p className="page-lede">
-        Systems built for service businesses that run on bookings, client intake,
-        follow-ups and team coordination. Each one replaced a manual process.
+        Two complete production systems, each designed, built and shipped end to
+        end by one person — the app, the backend, the payments, the AI and the
+        infrastructure. Real software, in daily use.
       </p>
       <ul className="project-list">
         {projects.map((project) => {

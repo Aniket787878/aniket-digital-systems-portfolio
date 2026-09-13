@@ -42,12 +42,17 @@ Break any of these and nothing errors — it just renders wrong.
 2. **`index.css` imports before `App.jsx` in `main.jsx`.** Reverse it and every
    page stylesheet loads ahead of the base sheet, so `index.css` wins every
    specificity *tie* — a page override that ties simply does nothing.
-3. **The hero ground is a photograph, not a shader.** `public/hero.jpg` (with
-   `hero-960.jpg` for narrow screens) is referenced from `Hero.jsx` as an `<img>`
-   — not a CSS background, so it can carry a `srcset` — and preloaded in
-   `index.html`. Both files must stay in `public/`: nothing imports them, so a
-   bundler will not catch their absence and the hero silently falls back to the
-   CSS gradient. The old WebGL `HeroCanvas.jsx` is deleted.
+3. **The hero ground is a photograph, not a shader.** Three files, all in
+   `public/`: `hero.jpg` and `hero-960.jpg` are the landscape frame, and
+   `hero-portrait.jpg` is the same shot cropped to 4:5 for phones. They are
+   referenced from `Hero.jsx` as a `<picture>` — not a CSS background, so it
+   can carry a `srcset` and a `<source>` — and preloaded in `index.html`.
+   **The `600px` in that `<source>` and the two `media` attributes on the
+   preloads must stay identical.** Mismatch them and the phone downloads both
+   frames and shows one. All three files must stay in `public/`: nothing
+   imports them, so a bundler will not catch their absence and the hero
+   silently falls back to the CSS gradient. The old WebGL `HeroCanvas.jsx` is
+   deleted.
 4. **`HomePage.css` stays one file.** Do not split it per section. Its rules beat
    `index.css` on source order alone (see 2), and a single import from a single
    place is what pins that order regardless of component evaluation order.
@@ -102,7 +107,7 @@ changing anything.** Guessing has cost a full cycle of work.
 ## Blocked on Aniket
 
 Domain · real email (`hello@aniketbuilds.com` is a placeholder) ·
-`VITE_LEAD_WEBHOOK_URL` · WhatsApp number · case-study numbers · testimonial ·
+`VITE_LEAD_WEBHOOK_URL` · WhatsApp number · case-study numbers for 02–04 · testimonial ·
 CV PDF (blocks `/about`, which does not exist yet) · real screenshots.
 
 The site itself is built and deployed. Everything left is content or a domain —

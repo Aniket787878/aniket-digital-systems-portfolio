@@ -24,6 +24,11 @@ export default function Nav() {
   // Close the mobile panel whenever the route changes. Derived during
   // render rather than in an effect so it lands in the same commit as
   // the navigation instead of flashing the open panel on the new page.
+  //
+  // This alone is not enough: tapping the link for the page you are
+  // already on leaves pathname untouched, so the panel just sat there and
+  // the tap read as broken. The panel also closes on any click inside it
+  // — see the handler on .nav-panel below.
   const [lastPath, setLastPath] = useState(pathname)
   if (pathname !== lastPath) {
     setLastPath(pathname)
@@ -98,7 +103,11 @@ export default function Nav() {
       </div>
 
       {open && (
-        <nav className="nav-panel" aria-label="Mobile">
+        <nav
+          className="nav-panel"
+          aria-label="Mobile"
+          onClick={() => setOpen(false)}
+        >
           <NavLink to="/" end>
             Home
           </NavLink>

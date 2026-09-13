@@ -33,17 +33,15 @@ export const images = {
   },
 
   projects: {
-    'intelligent-booking-resource-system': '',
-    'consent-approval-system': '',
-    'team-operations-system': '',
-    'claude-form-automation-system': ''
+    'mindset-workspace': '',
+    udaan: ''
   }
 }
 
 export const site = {
   name: 'Digital Systems Builder',
   tagline:
-    'I build AI and operations automation for service businesses — clinics, studios, agencies and consultancies — so bookings, client intake, follow-ups and team coordination stop running on WhatsApp threads and manual copy-paste.',
+    'I build complete production systems end to end — the site, the app, the payments, the backend, the AI and the infrastructure — for founders who need the whole thing built and shipped by one person, not a team to manage.',
   email: 'hello@aniketbuilds.com', // TODO: confirm domain before launch
   whatsapp: '', // TODO: WhatsApp Business number — every CTA on the site lights up when set
   location: 'India · working with clients worldwide',
@@ -60,9 +58,9 @@ export const site = {
      makes them awkward to separate by accident. If project 01's outcome
      is ever restated, restate this with it. */
   heroProof: {
-    claim: 'Two hours of booking admin a day, down to under thirty minutes.',
-    note: 'Measured on a three-practitioner clinic build — directional, from observed process time rather than an audit.',
-    slug: 'intelligent-booking-resource-system',
+    claim: 'Seven hundred and fifty clients, eleven therapists, one app the whole clinic runs on.',
+    note: 'From a live practice-management platform — the client and therapist counts are row counts from its production database, not an estimate.',
+    slug: 'mindset-workspace',
     linkLabel: 'See the system'
   }
 }
@@ -89,120 +87,199 @@ export const whatsappPrefill = {
 export const projects = [
   {
     index: '01',
-    slug: 'intelligent-booking-resource-system',
-    diagram: 'booking',
-    title: 'Intelligent Booking & Resource System',
+    slug: 'mindset-workspace',
+    diagram: 'platform',
+    title: 'Mindset Workspace PWA App',
     summary:
-      'One booking flow for a multi-practitioner clinic — no double-booked slots, no front-desk sheet to reconcile at closing.',
-    description:
-      'The clinic ran on three practitioners, one shared room calendar and a booking sheet that only the front desk understood. I mapped how a booking actually moved through the day — enquiry, slot check, practitioner match, confirmation, reminder — and rebuilt it as a single flow. Slot availability is now calculated from practitioner and room together, returning clients are recognised on entry instead of being re-typed, and every confirmed booking pushes its own reminder without anyone remembering to send it.',
-    flow: ['Therapist', 'Date', 'Slots', 'Client', 'Booking'],
-    role: 'Process mapping, system design and full build — from staff interviews to the live booking flow and handover.',
-    timeline: '4 weeks',
-    stack: ['React', 'Supabase', 'n8n', 'Google Calendar', 'WhatsApp Cloud API'],
+      'A full practice-management app for a multi-therapist mental-health clinic — the one place a client is booked, seen, recorded, documented, billed and followed up. It installs like a phone app, works offline, and records each session on the device.',
+    metrics: [
+      { n: '750+', label: 'clients imported and in daily use' },
+      { n: '11', label: 'therapists working out of one system' },
+      { n: '4', label: 'clean layers every feature passes through' },
+      { n: '1', label: 'person designed, built and ships it' }
+    ],
+    role:
+      'Sole designer and engineer — the app, the offline layer, the serverless API, the self-hosted backend, every automation and the payment integration.',
+    flow: ['Book', 'See', 'Record', 'Document', 'Bill', 'Follow up'],
+    stack: [
+      'React',
+      'TypeScript',
+      'Tailwind CSS',
+      'PWA — offline + on-device recording',
+      'Vercel serverless',
+      'Oracle Cloud VPS (Docker + Postgres)',
+      'n8n',
+      'Google Calendar API',
+      'MSG91 (WhatsApp / SMS)',
+      'HDFC SmartGateway (UPI)',
+      'Anthropic API'
+    ],
     problem:
-      'Bookings arrived by WhatsApp, phone and walk-in, and the front desk copied every one into a shared sheet by hand. Two people could promise the same practitioner the same slot and nobody found out until the client was standing at the desk. Rescheduling meant checking the sheet, the calendar and the practitioner personally.',
+      'A busy clinic was running on a pile of disconnected tools — a calendar here, a spreadsheet of clients there, session notes typed up from memory after hours, payments chased by hand. Nothing talked to anything else, so the same client could be double-booked, a note could go missing, and nobody could see the whole picture in one place. What the practice needed was a single system that carried a client all the way through — from the first booking to the follow-up — without anyone re-keying the same details five times.',
     system: [
-      'Availability engine that checks practitioner, room and buffer time together before a slot is offered',
-      'Client lookup on phone number, so returning clients are recognised instead of re-entered',
-      'Single booking screen the front desk uses for phone, WhatsApp and walk-in enquiries',
-      'Automatic confirmation and day-before reminder on WhatsApp, with the reschedule link attached',
-      'Daily practitioner view showing the day, the room and any gaps worth filling'
+      'One installable app the whole clinic runs on — it works offline and records the session right on the device, so a dropped connection never costs a note',
+      'A booking engine with real-time availability, custom and forced times, and three session modes (in person, telephonic, online), kept in step with each therapist’s Google Calendar',
+      'A client record that is hard to mess up — several contacts per person, soft-delete instead of real delete, and duplicate detection that spots the same phone number and offers to merge',
+      'A recording-to-note pipeline: the session is captured, broken into chunks, transcribed, and turned into a structured clinical note for the therapist to check — the writing-up that used to eat the evening',
+      'A per-person permission system that decides exactly what each role can do — who can edit a client, force a booking, see the whole client book — enforced on the server, not just hidden in the screen',
+      'Calendar and messaging kept in visual workflows, and payments taken over a bank gateway with every message signed and verified end to end'
+    ],
+    features: [
+      {
+        title: 'Booking & availability',
+        text: 'Real-time slots, custom and forced times, and three session modes, all reconciled against each therapist’s Google Calendar.'
+      },
+      {
+        title: 'Client management',
+        text: 'Add, edit and soft-delete; several contacts per client; duplicate detection and merge by phone number; and a bulk import that brought 750+ existing clients in at once.'
+      },
+      {
+        title: 'Session recording → clinical note',
+        text: 'Records in the app on the device, transcribes it, and drafts a structured clinical note for the therapist to review — instead of writing every note from memory.'
+      },
+      {
+        title: 'The front desk, and everything around it',
+        text: 'A day register, task management with owners and email alerts, group sessions, public enquiry / screening / consent forms, a WhatsApp helper bot, and role-scoped onboarding for new therapists.'
+      }
+    ],
+    decisions: [
+      {
+        title: 'Record on the device, not in the cloud first',
+        text: 'Sessions are captured on the device and keep working offline, so a weak clinic connection never loses a recording or a note mid-session.'
+      },
+      {
+        title: 'Permissions live on the server',
+        text: 'Who can do what is checked on the server, not just hidden in the screen — so a hidden button is genuinely locked, not merely out of sight.'
+      },
+      {
+        title: 'Stay inside the free tier, on purpose',
+        text: 'The serverless API was deliberately kept under the host’s handler limit by grouping actions instead of one file per endpoint, and the backend runs on a single self-hosted box — no Kubernetes — because the practice needs neither the bill nor the complexity.'
+      },
+      {
+        title: 'Change the database like it is production, because it is',
+        text: 'Schema changes are rehearsed inside a transaction before they land, shipping is checked through the real screens and endpoints rather than a passing query, and the codebase carries a living map updated in the same commit as the change.'
+      }
     ],
     outcome: [
-      'Front-desk time on booking admin dropped from roughly two hours a day to under thirty minutes',
-      'Double-bookings went from a weekly occurrence to none observed after launch',
-      'No-shows down noticeably once automatic day-before reminders went live'
+      'The whole practice — booking, clients, notes, tasks, billing, follow-up — runs from one app instead of a scatter of tools',
+      '750+ clients across 11 therapists moved in and are managed day to day',
+      'Writing up a session went from a from-memory chore to checking a draft the app already prepared',
+      'One person can keep the entire system running because every feature is built the same way and documented as it ships'
     ],
-    outcomeNote: 'Directional — based on observed process time, not audited.'
+    outcomeNote:
+      'The client and therapist counts are row counts from the live system. The rest describes the change from the clinic’s side — directional, not an audited metric.'
   },
   {
     index: '02',
-    slug: 'consent-approval-system',
-    diagram: 'approval',
-    title: 'Consent & Approval System',
+    slug: 'udaan',
+    diagram: 'journey',
+    title: 'Udaan — Online Recovery-Care Platform',
     summary:
-      'Client intake and sign-off moved from paper and chasing to a form that produces its own signed PDF and files itself.',
-    description:
-      'Intake needed a consent form, a supervisor sign-off and a filed copy before work could start — three people, three steps, and no way to see where a case was stuck. I replaced the paper trail with a digital form that routes itself: the client signs, the approver gets a link, and the moment it is approved the system generates the signed PDF, files it in the right client folder and notifies both sides. The status of every pending case is visible on one screen instead of living in an inbox.',
-    flow: ['Client', 'Consent', 'Approval', 'Confirmation', 'PDF'],
-    role: 'Workflow design, form and document build, and the approval routing behind it.',
-    timeline: '3 weeks',
-    stack: ['n8n', 'Airtable', 'Google Drive', 'PDF generation', 'WhatsApp Cloud API'],
+      'A 12-week online recovery program that runs three things at once: a self-paced course that teaches, live one-to-one and group therapy that treats, and an always-on safety layer that never switches off — all behind a private, gated portal. Built for a clinical provider.',
+    metrics: [
+      { n: '12', label: 'week program, from intake to graduation' },
+      { n: '10', label: 'stages in the client journey, each a real screen' },
+      { n: '4', label: 'separate role-scoped views on one platform' },
+      { n: '5', label: 'clinical gates that pause the course for care' }
+    ],
+    role:
+      'Sole designer and engineer — the client journey, the course engine, all four portals, the private data model, every integration and the infrastructure.',
+    flow: ['Discover', 'Triage', 'Screen', 'Assess', 'Pay', 'Enrol'],
+    stack: [
+      'Next.js',
+      'React',
+      'TypeScript',
+      'Tailwind CSS',
+      'PostgreSQL (Drizzle ORM)',
+      'Better-Auth',
+      'Cloudflare Workers',
+      'Cloudflare R2',
+      'n8n',
+      'Cal.com',
+      'Razorpay',
+      'Tailscale'
+    ],
     problem:
-      'Consent forms were printed, signed, scanned and emailed around until someone approved them. Half the time a form sat in an inbox for days and nobody knew whose turn it was. Finding an old signed copy meant searching three drives and asking two people.',
+      'Recovery care is not a video course, and it is not only therapy — it is both at once, with a safety net underneath. The hard part is holding all three together honestly. A course that lets someone race ahead without ever speaking to a therapist is just content; therapy with no structure between sessions loses people in the gaps; and a platform handling this kind of health data cannot let the wrong person see the wrong thing, ever. The job was to build one platform where the course, the live care and the safety layer run together — and where the clinical rules are actually enforced, not just printed in a handbook.',
     system: [
-      'Mobile-friendly consent form the client completes and signs on their own phone',
-      'Approval routing that sends the case to the right approver and chases it if it goes quiet',
-      'Automatic signed PDF generated on approval, named and filed by client and date',
-      'Confirmation to the client and the team the moment sign-off lands',
-      'Status board showing every case that is still waiting and who it is waiting on'
+      'A ten-stage journey from stranger to enrolled client: someone discovers the site, fills a triage form (which creates a lead, not yet an account), a coordinator books a screening call, the person is assessed, pays, and only then is given a portal account — each stage a real working screen with its own data and admin tools',
+      'A course engine of 12 modules across four movements — Understand, Regulate, Rebuild, Become — that unlocks by doing the work, never by a score',
+      'Clinical gates that pause the course until a required therapist session actually happens — and the rule is enforced in one place, so even a hand-made link hits the same lock as a button on the screen',
+      'Course video and audio served through short-lived signed links that check enrolment, order and the gates before anything plays',
+      'A privacy boundary built into the data itself: a family member sees the shape of the program but never the client’s journal, check-ins or notes, and a flagged journal entry sends the alert, never the words',
+      'Booking, intake payment, email and media all wired in and verified, running on free tiers and a single self-hosted box by choice'
+    ],
+    surfaces: [
+      {
+        role: 'Client',
+        title: 'The portal they live in',
+        text: 'A calm home, the modules, a private journal, their schedule, one-tap crisis help, and a “toolkit” rebuilt from their own written work.'
+      },
+      {
+        role: 'Family',
+        title: 'A window, not a door',
+        text: 'A relative sees the shape of the program and how it is going — never the journal, the check-ins or the notes. The boundary is enforced in the data, not just the design.'
+      },
+      {
+        role: 'Therapist',
+        title: 'A scoped caseload',
+        text: 'Only their own clients, with mood tracking, client-visible notes and a shared cohort room.'
+      },
+      {
+        role: 'Admin',
+        title: 'The whole operation',
+        text: 'Lead pipeline, roster, cohort scheduling, attendance, a cohort-wide progress grid, the gate queue and safety-event review.'
+      }
+    ],
+    stages: [
+      {
+        title: 'Understand',
+        text: 'The first movement — seeing the problem clearly, with the safety layer already on.'
+      },
+      {
+        title: 'Regulate',
+        text: 'Building the day-to-day tools, paced by real therapist sessions rather than a progress bar.'
+      },
+      {
+        title: 'Rebuild',
+        text: 'The longer middle, where the course and the live care do the most work together.'
+      },
+      {
+        title: 'Become',
+        text: 'Consolidating into something that holds after the program ends.'
+      },
+      {
+        title: 'Get Help — always on',
+        text: 'A crisis button on every screen, backed by an escalation protocol, running under all four movements from day one.',
+        safety: true
+      }
+    ],
+    decisions: [
+      {
+        title: 'One place for the clinical rules',
+        text: 'Every gate and permission is decided in a single source of truth that both the screen and the media links ask — so there is no back door where a rule quietly does not apply.'
+      },
+      {
+        title: 'Treat every client row as sensitive',
+        text: 'This is real health data, so access is controlled at the data layer: the sensitive things need an explicit escalation flag before any clinician can read them, and even then the flag travels without the private text.'
+      },
+      {
+        title: 'Manual-first where the tools cannot be trusted',
+        text: 'The video tiers in use do not reliably report who attended, so attendance is taken by hand and topped up by a signed webhook — an honest default beats a number that looks precise and is wrong.'
+      },
+      {
+        title: 'Cost-constrained by choice',
+        text: 'Free tiers and one small self-hosted server, reached over a private tunnel — no Kubernetes, no managed sprawl, because the program does not need the bill.'
+      }
     ],
     outcome: [
-      'Time from form sent to signed-and-filed dropped from a few days to same day in most cases',
-      'Roughly an hour a day of printing, scanning and chasing removed from the admin role',
-      'Every signed copy now sits in one predictable place instead of across drives and inboxes'
+      'The course, the live care and the safety layer run as one program instead of three disconnected things',
+      'The clinical rules are enforced by the system, not left to memory — a locked lesson is genuinely locked, everywhere',
+      'A hard privacy wall between family and client is guaranteed by the data model, not by people being careful',
+      'Live on staging, built and run end to end by one person'
     ],
-    outcomeNote: 'Directional — based on observed process time, not audited.'
-  },
-  {
-    index: '03',
-    slug: 'team-operations-system',
-    diagram: 'operations',
-    title: 'Team Operations System',
-    summary:
-      'One place where team tasks, owners and deadlines live — so coordination stopped happening in a WhatsApp group.',
-    description:
-      'Work was assigned in a group chat, tracked in two spreadsheets and remembered by one person. I built a single operations layer: tasks have an owner and a due date, permissions decide who sees what, and the notifications go to the person responsible rather than to everyone. Managers get one dashboard for what is open, what is late and where the load is sitting, which turned the daily catch-up call into a two-minute glance.',
-    flow: ['Task', 'Assignee', 'Team', 'Notification', 'Dashboard'],
-    role: 'System architecture, permissions model, dashboard build and team rollout.',
-    timeline: '5 weeks',
-    stack: ['React', 'Supabase', 'n8n', 'WhatsApp Cloud API', 'Google Sheets'],
-    problem:
-      'Tasks were handed out in a WhatsApp group and tracked in whichever sheet the person opened first. Nothing had a clear owner, so the same job got done twice or not at all. The only person who knew the real status of the week was the founder, and they were answering status questions all day.',
-    system: [
-      'Task records with a single named owner, a due date and a visible status',
-      'Role-based access so each team only sees the work that belongs to them',
-      'Notifications routed to the owner on assignment, on change and before the deadline',
-      'Manager dashboard for open work, overdue work and load per person',
-      'Weekly summary pushed automatically instead of assembled by hand'
-    ],
-    outcome: [
-      'Status-chasing messages dropped sharply once ownership and due dates were visible',
-      'The weekly review went from an hour of assembling updates to reading one dashboard',
-      'Missed handovers reduced noticeably after deadline reminders went to owners directly'
-    ],
-    outcomeNote: 'Directional — based on observed process time, not audited.'
-  },
-  {
-    index: '04',
-    slug: 'claude-form-automation-system',
-    diagram: 'assistant',
-    title: 'Claude Form Automation System',
-    summary:
-      'An AI intake layer that reads an incoming request, fills the right form and sends the reply — instead of someone rebuilding it each time.',
-    description:
-      'This client received the same kinds of request over and over, and each one meant opening a template, re-entering details already sitting in the message, and writing a reply from scratch. I built a Claude-powered layer that holds persistent context about the client, their services and their standard language. An incoming request is read, matched to the right form, populated with what is already known, and returned as a draft reply on WhatsApp or email for a human to approve before it goes out. Nothing sends without that approval step.',
-    flow: ['Request', 'Claude', 'Context', 'Form', 'WhatsApp / Email'],
-    private: true,
-    role: 'Automation design, prompt and context engineering, and the human approval step around it.',
-    timeline: '3 weeks',
-    stack: ['Claude API', 'n8n', 'Airtable', 'Make', 'WhatsApp Cloud API'],
-    problem:
-      'Every incoming request meant rebuilding the same setup by hand — the right form, the right details, the right wording. The information needed was usually already in the message or in an old thread, but someone had to go find it. Volume was low enough to survive and high enough to eat the morning.',
-    system: [
-      'Persistent project context so the assistant knows the services, terms and standard wording',
-      'Request classifier that matches an incoming message to the correct form and template',
-      'Auto-populated draft built from what is already known about the client',
-      'Human approval step before anything is sent — nothing goes out unreviewed',
-      'Delivery on WhatsApp or email, with the record written back to the client sheet'
-    ],
-    outcome: [
-      'Setup time per request fell from roughly twenty minutes to a two-minute review',
-      'Fewer copy-paste errors, since details are pulled from the record rather than retyped',
-      'The same person now handles the same volume without it filling the morning'
-    ],
-    outcomeNote: 'Directional — based on observed process time, not audited.'
+    outcomeNote:
+      'Module, session, stage and gate counts are real counts from the build. Everything else describes the platform’s design from the builder’s seat — directional, not an audited outcome.'
   }
 ]
 

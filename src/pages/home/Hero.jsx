@@ -1,12 +1,18 @@
 import { Link } from 'react-router-dom'
-import { capabilities, site, whatsappPrefill } from '../../data.js'
+import { site, whatsappPrefill } from '../../data.js'
 import ArrowIcon from '../../components/ArrowIcon.jsx'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
 import { hasWhatsApp } from '../../whatsapp.js'
 
 /* ---------------------------------------------------------------
    1 — Hero. Full-bleed portrait ground, content anchored to the
-   bottom, capability range as a numbered rule beneath it.
+   bottom.
+
+   Four things speak here and no more: who, what, the one result
+   worth checking, and the way to start. The numbered capability
+   range that used to close this section has moved out entirely —
+   it repeated section 2b word for word three bands later, and it
+   was 179px of the reason the hero did not fit a 900px laptop.
    --------------------------------------------------------------- */
 export default function Hero() {
   return (
@@ -18,36 +24,57 @@ export default function Hero() {
       {/* An <img> rather than a CSS background, for the two things a
           background cannot do: hand the browser a srcset to choose from,
           and start the fetch from the markup instead of from the stylesheet.
-          index.html preloads the same pair, so it is in flight before this
-          element exists. */}
-      <img
-        className="hero-photo"
-        src="/hero.jpg"
-        srcSet="/hero-960.jpg 960w, /hero.jpg 1913w"
-        sizes="100vw"
-        width="1913"
-        height="822"
-        alt="Aniket, with an n8n AI Agent workflow reflected in his glasses"
-      />
+          index.html preloads the same set, so it is in flight before this
+          element exists.
+
+          The <source> is not an optimisation, it is a different photograph.
+          The landscape frame is 2.33:1 and his face occupies the right
+          quarter of it; a phone asks that frame to fill a box nearer 0.45:1,
+          so a cover fit threw away four fifths of the width and what
+          survived was an unreadable slice of one lens. hero-portrait.jpg is
+          the same shot cropped to 4:5 around him, which is the only version
+          of this picture that still reads as a person on a phone.
+
+          600px, not the 810px where the layout changes. Between the two the
+          band is wider than it is tall, and a 4:5 crop poured into a 1.4:1
+          box comes back out as an extreme close-up with the top of his head
+          and his chin both gone. A tablet is better served by the landscape
+          frame the band was cut from. */}
+      <picture>
+        <source
+          media="(max-width: 600px)"
+          srcSet="/hero-portrait.jpg"
+          width="720"
+          height="900"
+        />
+        <img
+          className="hero-photo"
+          src="/hero.jpg"
+          srcSet="/hero-960.jpg 960w, /hero.jpg 1913w"
+          sizes="100vw"
+          width="1913"
+          height="822"
+          alt="Aniket, with an n8n AI Agent workflow reflected in his glasses"
+        />
+      </picture>
       <div className="hero-scrim" aria-hidden="true" />
 
       <div className="container hero-content">
         <div className="hero-grid">
           <div>
             <p className="hero-eyebrow">Hey, I&rsquo;m Aniket &mdash; I build</p>
-            <h1 className="hero-title">Systems that run themselves</h1>
+            <h1 className="hero-title">Complete systems, end to end</h1>
           </div>
           <div className="hero-support">
             {/* A result, not a slogan. "Good systems should feel
                 invisible" said nothing a visitor could check; the number
                 below is the same length and does the persuading. The
-                sentiment still opens the footer. */}
+                sentiment still opens the footer.
+
+                The claim and its note are one object, not two lines of
+                copy: an unqualified number is exactly what the note exists
+                to prevent, so nothing may separate them. */}
             <p className="hero-claim">{site.heroProof.claim}</p>
-            <p className="hero-lede">
-              For clinics, studios, agencies and consultancies: bookings,
-              intake and follow-ups in one place instead of across WhatsApp
-              threads and spreadsheets.
-            </p>
             <p className="hero-proof-note">
               {site.heroProof.note}{' '}
               <Link
@@ -90,20 +117,6 @@ export default function Hero() {
             </div>
           </div>
         </div>
-
-        <ol className="capabilities-row">
-          {capabilities.map((item) => (
-            <li key={item.index} className="capability">
-              <span className="capability-index">
-                <span className="capability-hash" aria-hidden="true">
-                  #
-                </span>
-                {item.index}
-              </span>
-              <span className="capability-title">{item.title}</span>
-            </li>
-          ))}
-        </ol>
       </div>
     </section>
   )

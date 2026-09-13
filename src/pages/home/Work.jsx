@@ -16,8 +16,9 @@ export default function Work() {
             <h2 className="split-title">Problems, turned into systems</h2>
           </div>
           <p className="split-lede">
-            Four builds for service businesses that were running their
-            operations by hand. Each one starts with the process, not the tool.
+            Two production systems, each built and shipped end to end by one
+            person — the app, the backend, the payments, the AI and the
+            infrastructure. Not demos. Real software people use every day.
           </p>
         </div>
 
@@ -32,7 +33,12 @@ export default function Work() {
                     {project.private && (
                       <span className="work-tag">Private client</span>
                     )}
-                    <span className="work-tag">{project.timeline}</span>
+                    {/* Optional, like every other field in data.js — an entry with
+                        no stated timeline rendered an empty pill here. ProjectsPage
+                        already guarded it; this did not. */}
+                    {project.timeline && (
+                      <span className="work-tag">{project.timeline}</span>
+                    )}
                   </div>
                   <h3 className="work-title">{project.title}</h3>
                   <p className="work-summary">{project.summary}</p>

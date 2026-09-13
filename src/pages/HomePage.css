@@ -55,7 +55,10 @@
   min-height: 100svh;
   display: flex;
   align-items: flex-end;
-  padding-block: calc(var(--nav-h) + var(--space-6)) clamp(2.5rem, 5vw, 4rem);
+  /* Top padding is the nav plus a hair, not the nav plus a band. This was
+     --space-6 on top of a 5.5rem nav, a 120px ceiling on a hero that
+     already stood 1065px tall in a 900px laptop viewport. */
+  padding-block: calc(var(--nav-h) + var(--space-3)) clamp(2.5rem, 5vw, 4rem);
   overflow: hidden;
   /* The hero is a slab, not a background: rounding the bottom edge lets
      the page ground show through at the corners, which is what separates
@@ -124,8 +127,8 @@
   }
 }
 
-/* Two ramps now, not one. The vertical ramp is the original: nav legible at
-   the top, capability rule legible at the bottom. The horizontal ramp is what
+/* Two ramps, not one. The vertical ramp is the original: nav legible at the
+   top, copy legible at the bottom. The horizontal ramp is what
    the photograph needs — white type on the lit part of that orange measures
    about 5.2:1, which passes AA but sits close enough to the floor that a
    brighter frame would fail it. */
@@ -174,9 +177,16 @@
   margin-bottom: var(--space-4);
 }
 
+/* Not --display-1. That token tops out at 7rem, and at 7rem the phrase
+   "run themselves" measures 798px against a 608px column, so this headline
+   broke to three lines at every width above 960 — and to three again at
+   390. The cap below is the largest size whose longest line still fits the
+   column this composition allows: 798 x (84/112) = 599px against 608. The
+   floor is picked the same way against a 327px phone column. Change the
+   headline copy and both need re-measuring, not re-guessing. */
 .hero-title {
   font-family: var(--font-display);
-  font-size: var(--display-1);
+  font-size: clamp(2.5rem, 5.8vw, 5.25rem);
   font-weight: 800;
   line-height: 0.95;
   letter-spacing: -0.04em;
@@ -197,12 +207,6 @@
   line-height: 1.25;
   letter-spacing: -0.02em;
   color: var(--ink);
-}
-
-.hero-lede {
-  font-size: var(--text-base);
-  line-height: 1.65;
-  color: var(--ink-soft);
 }
 
 /* The caveat that travels with the number in .hero-claim. Deliberately
@@ -250,49 +254,13 @@
   opacity: 1;
 }
 
-/* Numbered capability range — the breadth, kept below the promise */
-.capabilities-row {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-top: clamp(2.5rem, 6vw, 5rem);
-  padding-top: clamp(1.5rem, 3vw, 2.5rem);
-  border-top: 1px solid rgba(255, 255, 255, 0.28);
-}
-
-.capability {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding-inline: clamp(1rem, 2.5vw, 2.5rem);
-}
-
-.capability:first-child {
-  padding-left: 0;
-}
-
-.capability + .capability {
-  border-left: 1px solid rgba(255, 255, 255, 0.22);
-}
-
-.capability-index {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 700;
-  color: var(--ink);
-}
-
+/* The one survivor of the hero's numbered capability range, kept because
+   section 2b prints the same hashed index in its cards. The range itself
+   is gone: it repeated 2b word for word three bands later, and a four-item
+   feature list is not what a first screen is for. */
 .capability-hash {
   color: var(--accent);
   margin-right: 0.35rem;
-}
-
-.capability-title {
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  font-weight: 500;
-  line-height: 1.4;
-  color: var(--ink);
 }
 
 /* ============================================================
@@ -762,6 +730,20 @@
   padding-block: clamp(2.75rem, 6vw, 4.5rem) clamp(1rem, 2vw, 2rem);
 }
 
+/* The "who this is for" line, moved down out of the hero. It is the
+   loudest thing in this band on purpose: it qualifies the reader before
+   the stack list asks them to care what it is built from. */
+.proof-lede {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  max-width: 46ch;
+  margin-bottom: var(--space-5);
+}
+
 .proof-intro {
   font-size: clamp(1.0625rem, 1.5vw, 1.375rem);
   font-weight: 500;
@@ -1117,10 +1099,8 @@
 .hero-eyebrow,
 .hero-title,
 .hero-claim,
-.hero-lede,
 .hero-proof-note,
-.hero-actions,
-.capabilities-row {
+.hero-actions {
   animation: hero-rise var(--dur-slow) var(--ease-out) both;
 }
 
@@ -1132,20 +1112,12 @@
   animation-delay: 140ms;
 }
 
-.hero-lede {
-  animation-delay: 190ms;
-}
-
 .hero-proof-note {
   animation-delay: 215ms;
 }
 
 .hero-actions {
   animation-delay: 240ms;
-}
-
-.capabilities-row {
-  animation-delay: 300ms;
 }
 
 /* ============================================================
@@ -1266,10 +1238,64 @@
 
 /* --- Nav collapses here too (see index.css) --- */
 @media (max-width: 810px) {
+  /* Own the screen. The copy is bottom-anchored, so every pixel the hero
+     does not spend on text is headroom the portrait gets to use. */
   .hero {
-    min-height: 88svh;
-    padding-block: calc(var(--nav-h) + clamp(3rem, 9vw, 5rem))
+    min-height: 100svh;
+    padding-block: calc(var(--nav-h) + var(--space-3))
       clamp(2.5rem, 6vw, 3.5rem);
+  }
+
+  /* Below this width the photograph stops being a full-bleed ground and
+     becomes a band across the top. Note the band starts here at 810 but the
+     portrait crop only arrives at 600 (see Hero.jsx): between the two, the
+     band is landscape and so is the frame that fills it.
+
+     Stretched to the full height it could not win: the box is about
+     0.45:1 and even the 4:5 crop the <source> hands a phone is 0.8, so
+     a cover fit still ate a third of the width and put his face directly
+     behind the headline. Given its own 54% of the height the box lands
+     near 0.86:1, the crop very nearly fits it whole, and the copy gets
+     the bottom half to itself. The mask is what keeps the seam from
+     reading as an edge: the picture dissolves into the ground rather
+     than stopping on a line. */
+  .hero-photo {
+    /* 54% of a tall phone, but never more than the copy can spare. The
+       second term reserves 24rem for eyebrow, headline, claim, note and
+       button; without it a 640px-tall phone gave the picture 346px and
+       the headline started 161px inside it, on his face. Short screens
+       hand the room back to the words, which is the right priority. */
+    height: min(54%, 100% - 24rem);
+    bottom: auto;
+    object-position: center 22%;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 58%,
+      rgba(0, 0, 0, 0.55) 82%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 58%,
+      rgba(0, 0, 0, 0.55) 82%,
+      transparent 100%
+    );
+  }
+
+  /* The horizontal ramp was for a composition with an empty left half.
+     There is no empty half here, so the scrim is purely vertical: light
+     over the face, solid under the copy. */
+  .hero-scrim {
+    background: linear-gradient(
+      to bottom,
+      rgba(16, 16, 16, 0.58) 0%,
+      rgba(16, 16, 16, 0.18) 26%,
+      rgba(16, 16, 16, 0.62) 52%,
+      rgba(16, 16, 16, 0.94) 74%,
+      rgba(16, 16, 16, 0.97) 100%
+    );
   }
 
   .hero-title {
@@ -1278,17 +1304,6 @@
 
   .proof-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .capabilities-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(1.25rem, 4vw, 2rem) 0;
-    margin-top: clamp(2rem, 7vw, 3rem);
-  }
-
-  .capability:nth-child(odd) {
-    padding-left: 0;
-    border-left: 0;
   }
 
   .process-step {
@@ -1469,19 +1484,6 @@
     justify-content: space-between;
   }
 
-  .capabilities-row {
-    padding-top: var(--space-5);
-  }
-
-  .capability {
-    gap: var(--space-2);
-    padding-inline: 0 var(--space-4);
-  }
-
-  .capability + .capability {
-    border-left: 0;
-  }
-
   .process-step {
     padding: var(--space-5) var(--space-4);
     border-radius: var(--radius-sm);
@@ -1503,20 +1505,14 @@
 
 /* --- Narrowest phones still sold (~320–380px) --- */
 @media (max-width: 380px) {
-  .capabilities-row {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-4);
-  }
-
-  .capability {
-    flex-direction: row;
-    align-items: baseline;
-    gap: var(--space-3);
-    padding-inline: 0;
-  }
-
   .process-step {
     column-gap: var(--space-3);
+  }
+
+  /* 272px of column at 320px wide. "run themselves" needs 798 x (fs/112),
+     so anything above 38px wraps to a third line. */
+  .hero-title {
+    font-size: 2.125rem;
   }
 
   .work-tag {
@@ -1529,5 +1525,14 @@
 @media (max-height: 560px) and (max-width: 1080px) {
   .hero {
     min-height: 0;
+  }
+
+  /* A phone on its side is about 2.6:1. There is no band worth cutting out
+     of that, so the photograph goes back to being a full-bleed ground and
+     the scrim carries the contrast, exactly as it does above 810. */
+  .hero-photo {
+    height: 100%;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 }

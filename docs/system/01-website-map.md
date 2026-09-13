@@ -60,6 +60,17 @@ misspelled `Refrence files/` (now `docs/reference/folioblox.html`).
 | `/contact` | `src/pages/ContactPage.jsx` | Done | Renders `ContactForm.jsx` |
 | `*` | `src/pages/NotFoundPage.jsx` | Done | Real 404 with a CTA, wired to `path="*"` in `App.jsx` |
 
+**Every route resets the scroll offset — `src/components/ScrollToTop.jsx`.**
+`BrowserRouter` does not do this on its own; only the data routers get
+`<ScrollRestoration>`. Without it React swapped the markup and left
+`window.scrollY` untouched, so "View system" from a work card 1867px down the
+home page landed 1867px down the case study, and every "Get in touch" landed on
+the *footer* of `/contact` because that page is shorter and the offset clamped
+to the bottom. Forward navigation goes to the top; back and forward restore the
+offset from an in-memory map keyed on `location.key`. It must stay in memory —
+persisting it would restore a stale offset onto an unrelated page after a
+reload, since every freshly loaded document keys its first entry `default`.
+
 There is **no `/about` route.** It is the main gap on the jobs side of the
 "both, client-leaning" positioning, and it needs a CV PDF that does not exist yet.
 
@@ -96,16 +107,16 @@ always import `site.email`.
 | `slug` | string | Route param for `/projects/:slug` |
 | `title` | string | |
 | `summary` | string | One-line outcome, ICP language |
-| `description` | string | Narrative paragraph |
+| `description` | string | Optional. Narrative paragraph, used only as the fallback when `problem` is unset. Project 01 no longer carries one |
 | `flow` | string[] | Step labels. Renders as the one-line `Flow` row in the case-study spec block |
 | `diagram` | string | Key into `components/SystemDiagram.jsx` — `booking`, `approval`, `operations`, `assistant` |
 | `private` | boolean | Optional. Renders "Private Client System", suppresses client identity |
 | `role` | string | What Aniket personally did |
-| `timeline` | string | e.g. `'4 weeks'` |
+| `timeline` | string | Optional. e.g. `'4 weeks'`. Project 01 has none — both consumers guard it |
 | `stack` | string[] | Tools used |
 | `problem` | string | Before state |
 | `system` | string[] | What was built, one bullet per component |
-| `outcome` | string[] | Results — **directional only** |
+| `outcome` | string[] | Results. Either verifiable (row counts, arithmetic from a stated rule) or **directional** — never an unaudited business claim |
 | `outcomeNote` | string | Directional-metrics disclaimer. Render it wherever `outcome` renders |
 
 ### Other exports
@@ -113,7 +124,7 @@ always import `site.email`.
 | Export | Shape | Purpose |
 |---|---|---|
 | `proofTools` | `{ name, note }[]` | Home proof strip — 6 tools + why each is used |
-| `capabilities` | `{ index, title, blurb, items[] }[]` | Two consumers: the hero renders `index` + `title` only as a numbered range; the Capabilities band renders `blurb` + `items`. The hero must **never** carry the blurb — see `05-icp-positioning.md` |
+| `capabilities` | `{ index, title, blurb, items[] }[]` | One consumer now: the Capabilities band (2b), which renders all four fields. The hero used to repeat `index` + `title` as a numbered range; that duplicated 2b word for word and cost the hero 179px it did not have, so it is gone |
 | `packages` | `{ name, price, timeline, featured, forWho, deliverable, includes[] }[]` | The three offers from `02-service-catalog.md`, in selling order. Sprint is `featured` |
 | `carePlan` | `{ name, price, blurb }` | Retainer line under the pricing grid |
 | `images` | `{ process{}, projects{} }` | **All empty.** See *Images* below |
@@ -128,8 +139,14 @@ with itself.
 gone. A stock photo of an office said nothing a visitor could not have assumed,
 and sixteen of them made the site read as a template.
 
-There is no `images.hero`: the hero ground is `public/hero.jpg`, referenced as an
-`<img>` from `Hero.jsx` with a CSS gradient behind it as the fallback.
+There is no `images.hero`: the hero ground is a `<picture>` in `Hero.jsx` over a
+CSS gradient fallback. `public/hero.jpg` (with `hero-960.jpg`) is the landscape
+frame; `public/hero-portrait.jpg` is the same photograph cropped to 4:5 and is
+served at `max-width: 600px`, because the landscape frame is 2.33:1 and a phone
+asks for something near 0.45:1 — `cover` threw away four fifths of the width and
+left an unreadable slice of one lens. Below 810px the picture also stops being a
+full-bleed ground and becomes a band across the top of the hero, so the copy sits
+on solid ground instead of on his face.
 
 What replaced them:
 
@@ -152,6 +169,33 @@ Real screenshots are still the single strongest thing this site could gain. The
 diagrams are honest about being diagrams, and they are captioned as such — they
 are not a substitute for showing the software running.
 
+### Project 01 is drawn from the real system
+
+The booking case study and its `booking` schematic were rewritten from the
+production system ("The Slot Engine", Mindset Wellness) rather than from an
+approximation. Three things had been wrong and are worth not reintroducing:
+
+- **There is no room.** The old copy and the old drawing both showed a
+  second-room constraint gating availability. The system has no concept of a
+  room. What actually gates a slot is the therapist's gap, their Google
+  Calendar, their blocked dates and their mode (weekly grid *or* listed dates,
+  never both).
+- **The database is PostgreSQL, not Supabase.** `proofTools` still lists
+  Supabase, correctly — it is a tool Aniket uses. It is not this project's.
+- **The scale is fourteen therapists**, 1,226 client records and 1,325
+  bookings, not three practitioners.
+
+The diagram now draws the turnaround rule, which is the part a reader cannot
+infer from the words "booking system": a calendar booking is padded by the gap
+on both sides before the overlap test, and a blocked candidate resumes one gap
+after the blocking event ends rather than a whole session later. Every block in
+it is placed by clock arithmetic from constants at the top of the drawing, so
+the picture cannot drift out of agreement with the prose beside it.
+
+`site.heroProof` quotes this project and was restated with it. Its previous
+claim — two hours of booking admin down to thirty minutes — was an unaudited
+business number and is gone.
+
 ## Home page composition
 
 Nine bands, in the order a stranger reads them. Each band is **one file in
@@ -166,8 +210,8 @@ that order fixed. The reasoning is repeated in a comment in `HomePage.jsx`.
 
 | # | Band | File in `src/pages/home/` | Reads from |
 |---|---|---|---|
-| 1 | Hero (full-bleed, photographic ground) | `Hero.jsx` | `site.tagline`, `capabilities[].index/title` |
-| 1b | Proof strip | `ProofStrip.jsx` | `proofTools` |
+| 1 | Hero (photographic ground; a top band below 810px) | `Hero.jsx` | `site.heroProof`, `whatsappPrefill.hero` |
+| 1b | Proof strip — who it is for, then the stack | `ProofStrip.jsx` | `proofTools`. The `.proof-lede` ICP line is hardcoded here; it was the hero lede until the hero was cut to four elements |
 | 2 | Selected work | `Work.jsx` | `projects` (incl. `diagram`) |
 | 2b | Capabilities | `Capabilities.jsx` | `capabilities[].blurb/items` |
 | 3 | Process | `Process.jsx` | `process`, `images.process` (usually empty) |
@@ -211,7 +255,7 @@ real figures.
 | 1 | Fix `site.email` in `data.js` | **Done (placeholder)** — `hello@aniketbuilds.com` set with a TODO. Real address blocked on Aniket |
 | 2 | Contact page → real form with n8n webhook capture | **Done** — form built. Live webhook URL blocked on Aniket |
 | 3 | Meta tags (title, description, OG image) in `index.html` | **Done** — title, description, robots, full `og:*` and `twitter:*` set. `og:image` points at `og.svg`; see the PNG item below |
-| 4 | Favicon | **Open** — `public/favicon.svg` is a **sage green** mark (`#3f6b4e`, `#dbe3d2`, `#f3f6ec`). The site accent is now orange (`--accent: #ff5c00`), so the tab icon does not match the site. An earlier version of this doc told you to redraw it *in* the sage palette — that instruction is stale and backwards |
+| 4 | Favicon | **Done** — `public/favicon.svg` recolored to match the site: near-black ground (`#101010`) with a saffron node (`#f5871e`) and a white node (`#ededed`). The site accent is now **bhagwa / saffron** (`--accent: #f5871e`), replacing the old orange (`#ff5c00`); the browser `theme-color` in `index.html` is the near-black ground `#101010`, not the old sage `#dbe3d2` |
 
 ### P1 — conversion critical
 

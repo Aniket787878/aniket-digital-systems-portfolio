@@ -1,7 +1,13 @@
 import { proofTools } from '../../data.js'
 
 /* ---------------------------------------------------------------
-   1b — Proof strip. The stack, named, straight under the hero.
+   1b — Proof strip. Who it is for, then the stack, straight under
+   the hero.
+
+   The "who" line was the hero's lede until the hero was cut to four
+   elements. It reads better here than it did up there: the hero
+   makes a claim, and the first thing under it says who the claim is
+   meant for, immediately followed by what it is built out of.
 
    A tools row is the honest version of the logo wall a template puts
    here: no client logos to show yet, but "n8n, Claude, Supabase" tells a
@@ -13,6 +19,11 @@ export default function ProofStrip() {
   return (
     <section className="proof">
       <div className="container">
+        <p className="proof-lede">
+          For clinics, studios, agencies and consultancies: bookings, intake
+          and follow-ups in one place instead of across WhatsApp threads and
+          spreadsheets.
+        </p>
         <p className="proof-intro">
           Built with tools you keep. Self-hosted where it matters, so the
           system stays yours after I hand it over.

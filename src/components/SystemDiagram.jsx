@@ -38,8 +38,8 @@ const C = {
   strokeSoft: '#282828',
   ink: '#ededed',
   muted: '#8f8f8f',
-  accent: '#ff5c00',
-  accentDim: 'rgba(255, 92, 0, 0.16)',
+  accent: '#f5871e',
+  accentDim: 'rgba(245, 135, 30, 0.16)',
   /* Booked and free slots in the availability grid. Pulled further
      apart than the panel greys because at card size — the work grid
      renders this about 380px wide — a two-step difference collapses
@@ -167,101 +167,195 @@ function Line({ x, y, w, o = 0.5 }) {
    --------------------------------------------------------------- */
 
 /* 01 — Intelligent Booking & Resource System.
-   The point of the drawing is the constraint: a slot is only offered
-   when therapist, room and buffer are all clear at once. That is the
-   part a reader cannot infer from the words "booking system". */
+   The point of the drawing is the turnaround rule, because that is the
+   part a reader cannot infer from the words "booking system". Every
+   therapist sets a gap that has to hold between *every* adjacent pair of
+   sessions — including the ones already sitting in their personal Google
+   Calendar, which the engine does not control and cannot move.
+
+   The third row is the behaviour this replaced. It stays in the picture
+   because the fix only reads as a fix beside it: holding the original
+   stride cost two bookable hours on any day with a mid-afternoon
+   appointment in it.
+
+   Every block is placed from real arithmetic — a 13:00–21:00 day,
+   60-minute sessions, a 15-minute gap, one calendar booking at 14:30 —
+   so the drawing cannot drift out of agreement with the prose beside it.
+
+   An earlier version of this diagram showed a second-room constraint.
+   The system has no concept of a room; that rule never existed. */
+
+const DAY_START = 13
+const DAY_HOURS = 8
+const DAY_X = 56
+const DAY_W = 476
+const SESSION = 1
+const GAP = 0.25
+const BOOKED_FROM = 14.5
+const BOOKED_TO = 15.5
+const TRACK_H = 26
+
+/* Clock time to pixels. Every block in the drawing goes through these
+   two, which is what keeps the padded region exactly one gap wider than
+   the booking on each side rather than approximately so. */
+const hx = (h) => DAY_X + ((h - DAY_START) / DAY_HOURS) * DAY_W
+const hw = (hours) => (hours / DAY_HOURS) * DAY_W
+const clock = (h) => `${Math.floor(h)}:${String(Math.round((h - Math.floor(h)) * 60)).padStart(2, '0')}`
+
+const trackY = (i) => 156 + i * 60
+
+/* The empty day. Drawn under every row so the offered blocks read as
+   things placed into a span, not as a bar chart. */
+function Track({ y }) {
+  return (
+    <rect
+      x={DAY_X}
+      y={y}
+      width={DAY_W}
+      height={TRACK_H}
+      rx={6}
+      fill={C.slotFree}
+      stroke={C.strokeSoft}
+      strokeWidth="1.5"
+    />
+  )
+}
+
+/* One offered session, labelled with the start time it is actually
+   offered at — 15:45 rather than a tidy 15:30, because the resumed
+   cursor inherits the booking's minutes and rounding that away would
+   throw bookable time out. */
+function Slot({ h, y }) {
+  return (
+    <g>
+      <rect x={hx(h)} y={y} width={hw(SESSION)} height={TRACK_H} rx={5} fill={C.accent} />
+      <T x={hx(h) + hw(SESSION) / 2} y={y + 17} size={10.5} fill={C.ground} anchor="middle" weight={600}>
+        {clock(h)}
+      </T>
+    </g>
+  )
+}
+
+/* The event the engine found in the therapist's own calendar. */
+function Booked({ y }) {
+  const w = hw(BOOKED_TO - BOOKED_FROM)
+  return (
+    <g>
+      <rect
+        x={hx(BOOKED_FROM)}
+        y={y}
+        width={w}
+        height={TRACK_H}
+        rx={5}
+        fill={C.slotBusy}
+        stroke={C.stroke}
+        strokeWidth="1.5"
+      />
+      <T x={hx(BOOKED_FROM) + w / 2} y={y + 17} size={10.5} fill={C.ink} anchor="middle" weight={600}>
+        {clock(BOOKED_FROM)}
+      </T>
+    </g>
+  )
+}
+
 function Booking() {
-  const cols = ['09', '10', '11', '12', '13', '14', '15', '16']
-  const rows = ['Therapist 1', 'Therapist 2', 'Therapist 3']
-  /* Which cells are already taken, per row, and which single cell is on
-     offer. These are consistent with each other on purpose: the offered
-     cell must be free in its row AND outside the held-room span below,
-     or the drawing argues against its own caption. */
-  const busy = [[0, 1, 4, 6], [2, 3, 7], [0, 5, 6, 7]]
-  const offered = { row: 1, col: 5 }
-  /* Columns the second room is already committed to. Deliberately clear
-     of `offered.col` — it covers 12 and 13, which is why therapist 2's
-     free cells there are not the ones being offered. */
-  const roomHeld = [3, 4]
-  const colX = (i) => 152 + i * 48
-  const rowY = (i) => 120 + i * 52
+  /* Row 1: nothing in the way, so the cursor advances by duration + gap.
+     Row 2: the booking padded by the gap on both sides, and the cursor
+     resuming one gap after it ends. Row 3: the same day under the old
+     stride, which stepped on by a whole session instead. */
+  const clearDay = [13, 14.25, 15.5, 16.75, 18, 19.25]
+  const fixed = [13, 15.75, 17, 18.25, 19.5]
+  const stale = [13, 16.75, 18, 19.25]
 
   return (
     <g>
       <Panel x={32} y={56} w={524} h={392} />
       <T x={52} y={84} caps>Availability</T>
+      <T x={52} y={104} size={11.5} fill={C.muted} weight={400}>
+        One therapist · 60-minute sessions · 15-minute turnaround
+      </T>
 
-      {cols.map((c, i) => (
-        <T key={c} x={colX(i) + 21} y={106} size={10.5} fill={C.muted} anchor="middle" weight={600}>
-          {c}
+      {[13, 15, 17, 19, 21].map((h) => (
+        <T key={h} x={hx(h)} y={128} size={10.5} fill={C.muted} anchor="middle" weight={600}>
+          {clock(h)}
         </T>
       ))}
 
-      {rows.map((r, ri) => (
-        <g key={r}>
-          <T x={52} y={rowY(ri) + 26} size={12} fill={C.ink}>{r}</T>
-          {cols.map((c, ci) => {
-            const isOffered = ri === offered.row && ci === offered.col
-            const isBusy = busy[ri].includes(ci)
-            return (
-              <rect
-                key={c}
-                x={colX(ci)}
-                y={rowY(ri)}
-                width={42}
-                height={40}
-                rx={6}
-                fill={isOffered ? C.accent : isBusy ? C.slotBusy : C.slotFree}
-                stroke={isOffered ? C.accent : C.strokeSoft}
-                strokeWidth="1.5"
-              />
-            )
-          })}
-        </g>
+      {/* Row 1 — a clear day. */}
+      <T x={52} y={trackY(0) - 8} size={11.5} fill={C.ink}>Clear day</T>
+      <Track y={trackY(0)} />
+      {clearDay.map((h) => (
+        <Slot key={h} h={h} y={trackY(0)} />
       ))}
 
-      {/* The room constraint, drawn across the columns it blocks — this
-          is why the free cells at 12 and 13 are not on offer. */}
+      {/* Row 2 — the rule doing its work. The padding is drawn before the
+          booking so the booking sits on top of it: the dashed region is
+          what the overlap test actually sees, not a second event. */}
+      <T x={52} y={trackY(1) - 8} size={11.5} fill={C.ink}>
+        With one 14:30 booking already in the calendar
+      </T>
+      <Track y={trackY(1)} />
+      {/* Filled, not merely outlined: the padding is the whole point of
+          this row, and as a hairline it was the least visible thing in a
+          drawing built to explain it. */}
       <rect
-        x={colX(roomHeld[0]) - 4}
-        y={284}
-        width={48 * (roomHeld.length - 1) + 50}
-        height={26}
-        rx={6}
-        fill="none"
+        x={hx(BOOKED_FROM - GAP)}
+        y={trackY(1) - 4}
+        width={hw(BOOKED_TO - BOOKED_FROM + GAP * 2)}
+        height={TRACK_H + 8}
+        rx={7}
+        fill={C.panelHi}
         stroke={C.stroke}
         strokeWidth="1.5"
         strokeDasharray="4 4"
       />
-      <T
-        x={colX(roomHeld[0]) + (48 * (roomHeld.length - 1) + 42) / 2}
-        y={301}
-        size={10.5}
-        fill={C.muted}
-        anchor="middle"
-        weight={600}
-      >
-        Room 2 held
-      </T>
+      <Booked y={trackY(1)} />
+      {fixed.map((h) => (
+        <Slot key={h} h={h} y={trackY(1)} />
+      ))}
 
-      <line x1={52} y1={340} x2={536} y2={340} stroke={C.strokeSoft} strokeWidth="1.5" />
+      {/* Row 3 — the bug, held at low contrast so it reads as history. */}
+      <T x={52} y={trackY(2) - 8} size={11.5} fill={C.muted} weight={400}>
+        What it replaced — 14:15 and 15:30 both lost
+      </T>
+      <g opacity="0.45">
+        <Track y={trackY(2)} />
+        <Booked y={trackY(2)} />
+        {stale.map((h) => (
+          <Slot key={h} h={h} y={trackY(2)} />
+        ))}
+      </g>
+
+      <line x1={52} y1={330} x2={536} y2={330} stroke={C.strokeSoft} strokeWidth="1.5" />
 
       {[
-        ['Booked', C.slotBusy, C.strokeSoft],
-        ['Free', C.slotFree, C.strokeSoft],
-        ['Offered', C.accent, C.accent]
-      ].map(([label, fill, stroke], i) => (
-        <g key={label}>
-          <rect x={52 + i * 116} y={362} width={14} height={14} rx={4} fill={fill} stroke={stroke} strokeWidth="1.5" />
-          <T x={74 + i * 116} y={374} size={11.5} fill={C.muted} weight={400}>{label}</T>
+        { text: 'Offered', fill: C.accent, stroke: C.accent },
+        { text: 'In the calendar', fill: C.slotBusy, stroke: C.stroke },
+        { text: 'Gap applied to the block', fill: 'none', stroke: C.stroke, dashed: true }
+      ].map((item, i) => (
+        <g key={item.text}>
+          <rect
+            x={52 + i * 150}
+            y={350}
+            width={14}
+            height={14}
+            rx={4}
+            fill={item.fill}
+            stroke={item.stroke}
+            strokeWidth="1.5"
+            strokeDasharray={item.dashed ? '3 3' : undefined}
+          />
+          <T x={74 + i * 150} y={362} size={11} fill={C.muted} weight={400}>
+            {item.text}
+          </T>
         </g>
       ))}
 
-      <T x={52} y={414} size={12} fill={C.muted} weight={400}>
-        A slot is offered only when therapist, room
+      <T x={52} y={398} size={12} fill={C.muted} weight={400}>
+        A blocked candidate resumes one gap after the thing
       </T>
-      <T x={52} y={432} size={12} fill={C.muted} weight={400}>
-        and buffer are clear together.
+      <T x={52} y={416} size={12} fill={C.muted} weight={400}>
+        that blocked it ends — not a whole session later.
       </T>
 
       <ArrowR x={562} y={252} len={22} />
@@ -269,18 +363,31 @@ function Booking() {
       <Panel x={596} y={56} w={272} h={392} />
       <T x={616} y={84} caps>On confirm</T>
       {[
-        { label: 'Client lookup', sub: 'matched on phone number' },
-        { label: 'Booking written', sub: 'practitioner + room' },
-        { label: 'Confirmation sent', sub: 'WhatsApp Cloud API' },
-        { label: 'Reminder at T−24h', sub: 'with reschedule link', accent: true }
-      ].map((n, i) => (
-        <g key={n.label}>
-          <Node x={616} y={104 + i * 84} w={232} h={52} label={n.label} sub={n.sub} accent={n.accent} />
+        { label: 'Slot re-checked', sub: 'against Google free/busy' },
+        { label: 'Client upserted', sub: 'keyed on last 10 phone digits' },
+        { label: 'Booking row written', sub: 'then the calendar event' },
+        { label: 'Confirmation + reminders', sub: 'WhatsApp and email', accent: true }
+      ].map((node, i) => (
+        <g key={node.label}>
+          <Node
+            x={616}
+            y={104 + i * 84}
+            w={232}
+            h={52}
+            label={node.label}
+            sub={node.sub}
+            accent={node.accent}
+          />
           {i < 3 && <ArrowD x={732} y={158 + i * 84} len={24} />}
         </g>
       ))}
-      <T x={616} y={430} size={11.5} fill={C.muted} weight={400}>
-        No one has to remember to send it.
+      {/* The last node box ends at 408, so these two baselines are the
+          only room left in the panel. A third line would collide. */}
+      <T x={616} y={426} size={11.5} fill={C.muted} weight={400}>
+        The row is the booking —
+      </T>
+      <T x={616} y={442} size={11.5} fill={C.muted} weight={400}>
+        everything after it is best-effort.
       </T>
     </g>
   )
@@ -493,6 +600,173 @@ function Assistant() {
   )
 }
 
+/* 05 — Mindset Workspace. The point is the path every feature takes —
+   four clean layers from the screen down to the data — and the capability
+   check that gates who is allowed to do what. The bottom row is where the
+   server layer actually reaches: calendar, messaging, payments, and the
+   record-to-note pipeline. Nothing here is arithmetic-placed; it is a
+   fixed grid, so it cannot drift out of step with the prose. */
+function Platform() {
+  const layers = [
+    { label: 'Page', sub: 'what a person taps' },
+    { label: 'Typed query hook', sub: 'one per feature' },
+    { label: 'Serverless action', sub: 'under the handler cap', accent: true },
+    { label: 'Server route / n8n', sub: 'data service or workflow' }
+  ]
+  const NODE_W = 180
+  const STEP = 218 // node width + arrow gap
+
+  const reach = [
+    { label: 'Google Calendar', sub: 'booking, via n8n' },
+    { label: 'WhatsApp & SMS', sub: 'MSG91 templates' },
+    { label: 'Payments', sub: 'bank gateway, UPI' },
+    { label: 'Session → note', sub: 'on-device, then AI' }
+  ]
+  const PANEL_W = 195
+  const PSTEP = 213
+
+  return (
+    <g>
+      <T x={52} y={88} caps>One request, four layers</T>
+      {layers.map((l, i) => {
+        const x = 32 + i * STEP
+        return (
+          <g key={l.label}>
+            <Node x={x} y={104} w={NODE_W} h={64} label={l.label} sub={l.sub} accent={l.accent} />
+            {i < layers.length - 1 && <ArrowR x={x + NODE_W} y={136} len={38} />}
+          </g>
+        )
+      })}
+      {/* The capability check sits on the flow into the server layer — the
+          one place who-can-do-what is decided, drawn as the accent step. */}
+      <Chip x={498} y={186} w={124} label="capability check" accent />
+      <T x={560} y={220} size={11} anchor="middle" fill={C.muted} weight={400}>
+        who may edit, force-book, see the whole client book
+      </T>
+
+      <line x1={52} y1={252} x2={848} y2={252} stroke={C.strokeSoft} strokeWidth="1.5" />
+      <T x={52} y={286} caps>Where the server layer reaches</T>
+      {reach.map((r, i) => {
+        const x = 32 + i * PSTEP
+        return (
+          <g key={r.label}>
+            <Panel x={x} y={304} w={PANEL_W} h={112} r={8} fill={C.panelHi} />
+            <T x={x + 16} y={340} size={13} fill={C.ink} weight={600}>
+              {r.label}
+            </T>
+            <T x={x + 16} y={362} size={11.5} fill={C.muted} weight={400}>
+              {r.sub}
+            </T>
+          </g>
+        )
+      })}
+      <T x={52} y={452} size={12} fill={C.muted} weight={400}>
+        Installable app — works offline, records the session on the device.
+      </T>
+    </g>
+  )
+}
+
+/* 06 — Udaan. Three layers run at once: a self-paced course that teaches,
+   live care that treats, and a safety layer that never switches off. The
+   dashed accent link is the part that makes it clinical rather than a
+   course site — the course pauses at a gate until a required therapist
+   session actually happens. */
+function Journey() {
+  const movements = ['Understand', 'Regulate', 'Rebuild', 'Become']
+  const M_W = 132
+  const M_STEP = 170
+  const M_X0 = 196
+  /* Gate lives in the gap between movement 2 and movement 3. */
+  const gateCx = M_X0 + 2 * M_STEP - 20 // gap centre
+
+  return (
+    <g>
+      {/* Lane 1 — the course. */}
+      <Panel x={32} y={72} w={836} h={116} />
+      <T x={52} y={100} caps>The course teaches</T>
+      <T x={52} y={122} size={11} fill={C.muted} weight={400}>
+        12 modules
+      </T>
+      <T x={52} y={140} size={11} fill={C.muted} weight={400}>
+        4 movements
+      </T>
+      {movements.map((m, i) => (
+        <Node key={m} x={M_X0 + i * M_STEP} y={112} w={M_W} h={48} label={`${i + 1}. ${m}`} />
+      ))}
+      {/* The clinical gate. */}
+      <rect
+        x={gateCx - 18}
+        y={116}
+        width={36}
+        height={40}
+        rx={8}
+        fill={C.accentDim}
+        stroke={C.accent}
+        strokeWidth="1.5"
+        strokeDasharray="4 4"
+      />
+      <T x={gateCx} y={142} size={16} anchor="middle" fill={C.accent} weight={700}>
+        ✳
+      </T>
+
+      {/* Lane 2 — live care. */}
+      <Panel x={32} y={212} w={836} h={92} />
+      <T x={52} y={240} caps>The live care treats</T>
+      {[
+        { label: '12 individual', x: 196 },
+        { label: '12 group', x: 400 },
+        { label: '3 family', x: 604 }
+      ].map((s) => (
+        <Node key={s.label} x={s.x} y={244} w={180} h={44} label={s.label} />
+      ))}
+      {/* Dashed accent link: the gate drops into the live-care lane. */}
+      <line
+        x1={gateCx}
+        y1={156}
+        x2={gateCx}
+        y2={212}
+        stroke={C.accent}
+        strokeWidth="1.5"
+        strokeDasharray="5 5"
+        opacity="0.7"
+      />
+      <T x={gateCx + 16} y={192} size={11} fill={C.muted} weight={400}>
+        a required session must happen before the course continues
+      </T>
+
+      {/* Lane 3 — safety, always on, spanning everything. */}
+      <rect
+        x={32}
+        y={324}
+        width={836}
+        height={56}
+        rx={10}
+        fill="none"
+        stroke={C.accent}
+        strokeWidth="1.5"
+        strokeDasharray="6 5"
+      />
+      <T x={52} y={350} size={13} fill={C.accent} weight={700}>
+        Get Help
+      </T>
+      <T x={140} y={350} size={12} fill={C.ink} weight={400}>
+        on every screen, backed by a crisis-escalation protocol
+      </T>
+      <T x={52} y={372} size={11} fill={C.muted} weight={400}>
+        The safety layer stays on
+      </T>
+
+      <T x={52} y={420} size={12} fill={C.muted} weight={400}>
+        Gated portal — an account exists only after triage, a screening call and payment.
+      </T>
+      <T x={52} y={442} size={12} fill={C.muted} weight={400}>
+        Four role-scoped views: client, family, therapist, admin — family sees program shape only.
+      </T>
+    </g>
+  )
+}
+
 /* ---------------------------------------------------------------
    Registry. Keys are referenced from data.js, so a diagram can be
    swapped for a real screenshot later by changing one string.
@@ -500,7 +774,9 @@ function Assistant() {
 const WIDE = '0 0 900 480'
 
 const VARIANTS = {
-  booking: { vb: WIDE, draw: Booking, label: 'Schematic: an availability grid where a slot is offered only when practitioner, room and buffer are free together, feeding confirmation and a reminder 24 hours out.' },
+  platform: { vb: WIDE, draw: Platform, label: 'Schematic: a practice-management app where every feature crosses four layers — page, typed query hook, serverless action gated by a capability check, and a server route or n8n workflow — reaching Google Calendar, messaging, payments and an on-device session-to-note pipeline.' },
+  journey: { vb: WIDE, draw: Journey, label: 'Schematic: an online recovery platform running three layers at once — a self-paced course of 12 modules across four movements, live individual, group and family care, and an always-on Get Help safety layer — with a clinical gate that pauses the course until a required therapist session happens.' },
+  booking: { vb: WIDE, draw: Booking, label: 'Schematic: one therapist’s day, showing a 15-minute turnaround padding an existing calendar booking on both sides, and the next slot resuming one gap after that booking ends rather than a whole session later.' },
   approval: { vb: WIDE, draw: Approval, label: 'Schematic: a consent form signed on the client’s phone, routed for supervisor approval, producing a signed PDF filed automatically.' },
   operations: { vb: WIDE, draw: Operations, label: 'Schematic: a task board with a named owner and due date on every card, over a bar chart of workload per person.' },
   assistant: { vb: WIDE, draw: Assistant, label: 'Schematic: an incoming request classified and drafted by Claude against stored project context, held at a human approval gate before sending.' }

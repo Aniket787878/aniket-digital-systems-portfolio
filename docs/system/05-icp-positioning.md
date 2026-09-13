@@ -1,5 +1,70 @@
 # 05 — ICP & Positioning
 
+**Status: REPOSITIONED (2026-09-13).** Supersedes the 2026-08-25 "sell narrow to
+service businesses" lock, which is kept below under *History*. The trigger was not
+the scheduled 60-day review — it was reweighting two flagship builds the old
+decision undervalued.
+
+## Decision (current — 2026-09-13)
+
+**Sell the proof: complete production systems, built solo.**
+
+**Headline promise**
+> I build complete production systems end to end — site, app, payments, backend, AI,
+> infrastructure — for founders who need the whole thing built by one person, not a
+> team to manage.
+
+**Buyer:** a founder or business that needs a real system built and does not want to
+hire and manage a team of four to get it. Client work *and* jobs are served by the
+same story — "ships production full-stack systems solo" is exactly what a hiring
+manager wants to read too.
+
+**Breadth is still shown as capability range lower on the page, never as the
+headline** — the rule from the old decision survives. What changes is that the
+headline is now the builder identity backed by proof, not a service niche.
+
+### Why this supersedes "sell narrow"
+
+The old decision optimized for the warmest, easiest buyer (wellness clinics Aniket
+already knew) and framed him as booking/intake automation for service businesses. It
+was made before weighting what he has actually shipped:
+
+- **Udaan** — a full online clinical care platform (12-week IOP): ten-stage patient
+  journey, gated curriculum engine, signed-URL video, four role-scoped portals, a
+  query-layer privacy boundary, Razorpay + Cal.com + n8n, deployed to Cloudflare
+  Workers over a Tailscale tunnel to self-hosted Postgres. Next.js 16 / React 19 /
+  Drizzle / Better-Auth.
+- **Mindset practice-management PWA** — a clinic's entire operational loop: offline
+  PWA, session recording → transcription → AI clinical notes, HMAC-verified
+  payments, a per-person capability system, 750+ clients across 11 therapists.
+
+Two shipped, hard, full-stack systems is not a service list — it is proof. That
+flips "I build everything" from the generalist trap (weak, competes on price against
+a global pool) to a rare capability (one person ships the whole stack to
+production). Aniket also explicitly does **not** want to be positioned as
+clinic/studio-adjacent, and finds the booking/automation framing too small for what
+he builds.
+
+**What the old logic still gets right:** don't lead with a generic service list —
+that genuinely does lose on price. The escape hatch is proof. Lead with the two
+platforms; let the capability range (automation, dashboards, portals, growth) sit
+under it.
+
+### Open follow-through from this reposition
+
+- [ ] Rebuild `heroProof` + the `projects` array around Udaan and the Mindset
+      platform once client confidentiality is cleared (see below).
+- [ ] Reconcile the rest of the page (capabilities blurbs, package framing, FAQ)
+      so it stops reading as "automation freelancer for small service businesses."
+- [ ] Confidentiality: Udaan is a branded product for a paying client; the Mindset
+      platform holds real PHI. Public case studies describe architecture and
+      capabilities only — no real client names, no live URLs/credentials, no
+      screenshots of client records.
+
+---
+
+## History — the 2026-08-25 decision (superseded)
+
 **Status: DECIDED (locked 2026-08-25).** Review on **2026-10-24** (60 days).
 Previous status was "OPEN QUESTION" — the decision below replaces it.
 

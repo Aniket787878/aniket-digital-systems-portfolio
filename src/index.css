@@ -1,13 +1,13 @@
 /* ============================================================
    Design System — Aniket, Digital Systems Builder
-   Dark editorial theme with a single hot-orange accent:
+   Dark editorial theme with a single saffron (bhagwa) accent:
    near-black ground, heavy grotesque display (Archivo),
    clean sans supporting text (Inter), rounded cards,
    full-bleed hero, generous section rhythm.
    ============================================================ */
 
 :root {
-  /* ---------- Color: near-black ground, one hot accent ---------- */
+  /* ---------- Color: near-black ground, one saffron (bhagwa) accent ---------- */
   --bg: #101010;            /* page ground */
   --surface: #171717;       /* cards, rows, accordion panels */
   --surface-2: #1f1f1f;     /* hover / raised card */
@@ -21,16 +21,20 @@
   --line: rgba(255, 255, 255, 0.08);
   --line-strong: rgba(255, 255, 255, 0.18);
 
-  /* 6.15:1 on --bg — safe for accent text at any size */
-  --accent: #ff5c00;
-  --accent-hover: #ff7526;
-  --accent-soft: rgba(255, 92, 0, 0.12);
-  /* White on orange is 3.10:1 — large/bold text only. Small text on an
-     orange fill uses --accent-ink-strong instead. */
+  /* Bhagwa / deep saffron. 7.5:1 on --bg — clears WCAG AAA for accent
+     text at any size. Deliberately golden-saffron, not the flag's brighter
+     kesari and not the old red-leaning orange, so it reads as the intended
+     Hindu saffron. */
+  --accent: #f5871e;
+  --accent-hover: #ff9e45;
+  --accent-soft: rgba(245, 135, 30, 0.12);
+  /* White on saffron is only 2.5:1 — large/bold text at most, so it is not
+     used for copy. Anything sitting ON a saffron fill uses the warm near-black
+     --accent-ink-strong instead (7.7:1 on the fill). */
   --accent-ink: #ffffff;
   --accent-ink-strong: #1a0900;
 
-  --selection: rgba(255, 92, 0, 0.3);
+  --selection: rgba(245, 135, 30, 0.3);
 
   /* ---------- Typography ---------- */
   --font-display: "Archivo", system-ui, -apple-system, "Segoe UI", Roboto,
@@ -535,6 +539,10 @@ a:hover {
 
 .nav-scrolled {
   background: rgba(16, 16, 16, 0.82);
+  /* iOS Safari only blurs with the -webkit- prefix. Without it the bar is
+     just 82%-opaque dark over the hero photo and the text underneath shows
+     through sharply — which is why the header looked broken on iPhone. */
+  -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   border-bottom-color: var(--line);
 }
@@ -620,6 +628,7 @@ a:hover {
   gap: var(--space-1);
   padding: var(--space-4) var(--container-pad) var(--space-6);
   background: rgba(16, 16, 16, 0.96);
+  -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   border-top: 1px solid var(--line);
 }
@@ -1298,6 +1307,206 @@ a:hover {
   border-radius: var(--radius-xs);
   font-size: var(--text-sm);
   line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/* ---------- Detail: richer optional blocks ---------- */
+
+/* Grid sections breathe wider than the 60ch reading measure. */
+.case-section-wide {
+  max-width: 64rem;
+}
+
+/* Outcome-first stat band */
+.case-metrics {
+  margin-top: var(--space-7);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.case-metric {
+  background: var(--surface);
+  padding: var(--space-5) var(--space-5) var(--space-6);
+}
+
+.case-metric-n {
+  font-family: var(--font-display);
+  font-size: var(--display-2);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.case-metric-label {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+@media (max-width: 810px) {
+  .case-metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .case-metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Feature / surface cards */
+.case-features {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 680px) {
+  .case-features {
+    grid-template-columns: 1fr;
+  }
+}
+
+.case-feature {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: var(--space-5) var(--space-5) var(--space-6);
+}
+
+.case-feature-role {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--space-3);
+}
+
+.case-feature-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.case-feature-text {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.case-feature-list {
+  margin-top: var(--space-3);
+  list-style: none;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.case-feature-list li {
+  position: relative;
+  padding-left: var(--space-4);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.case-feature-list li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+/* Journey timeline */
+.case-journey {
+  list-style: none;
+  display: grid;
+  gap: 0;
+  max-width: var(--measure);
+}
+
+.case-stage {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: var(--space-4);
+  padding-bottom: var(--space-5);
+}
+
+.case-stage:last-child {
+  padding-bottom: 0;
+}
+
+.case-stage-n {
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.case-stage-safety .case-stage-n {
+  border-style: dashed;
+}
+
+.case-stage-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.case-stage-text {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/* Key decisions */
+.case-decisions {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.case-decision {
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.case-decision:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.case-decision-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: var(--space-2);
+}
+
+.case-decision-text {
+  font-size: var(--text-base);
+  line-height: 1.7;
   color: var(--ink-soft);
 }
 

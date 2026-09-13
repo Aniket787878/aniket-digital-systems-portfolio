@@ -113,7 +113,7 @@ export const founder = {
     },
     {
       title: 'Built on the tools you already pay for',
-      text: 'I pick the stack to fit your team — n8n, Claude, Airtable, Supabase, React — and build on what already works instead of charging you to migrate.'
+      text: 'I pick the stack to fit the build — React, TypeScript, Postgres, n8n, Claude — and where your team already runs on something that works, I build on it instead of charging you to migrate.'
     }
   ],
 
@@ -122,7 +122,7 @@ export const founder = {
   quickFacts: [
     { label: 'Based', value: 'India · remote worldwide' },
     { label: 'Focus', value: 'Bookings, intake, follow-ups, team ops' },
-    { label: 'Core stack', value: 'n8n · Claude · React · Supabase' },
+    { label: 'Core stack', value: 'React · TypeScript · Node · Postgres · n8n · Claude' },
     { label: 'Availability', value: 'Two new builds a month' }
   ]
 }
@@ -371,20 +371,20 @@ export const proofTools = [
     note: 'For the judgement steps — reading messy input, drafting replies, summarising.'
   },
   {
-    name: 'Airtable',
-    note: 'Fastest way to give a team a structured record they can still edit by hand.'
+    name: 'Postgres',
+    note: 'The system of record: real relations, constraints and room to grow — not a spreadsheet pretending to be a database.'
   },
   {
-    name: 'Supabase',
-    note: 'When the data needs real auth, permissions and room to grow.'
+    name: 'React & Next.js',
+    note: 'The screens people use every day — dashboards, portals, booking flows — server-rendered where the project needs it.'
   },
   {
-    name: 'React',
-    note: 'For the screens people use daily — dashboards, portals, booking flows.'
+    name: 'TypeScript',
+    note: 'Types across the whole stack, so a change to the data cannot quietly break a screen three files away.'
   },
   {
-    name: 'Make',
-    note: 'Used when a client is already on it and switching would cost more than it saves.'
+    name: 'Node & serverless',
+    note: 'The backend and APIs on Vercel or Cloudflare Workers — nothing to babysit, and it scales to zero when idle.'
   }
 ]
 
@@ -434,7 +434,7 @@ export const packages = [
     featured: false,
     forWho: 'Running the business out of a spreadsheet with no source of truth.',
     deliverable:
-      'A lightweight web app on React and Supabase that replaces the spreadsheet without retraining anyone.',
+      'A lightweight web app on React and Postgres that replaces the spreadsheet without retraining anyone.',
     includes: [
       'Team operations dashboard',
       'Task and permission portal',

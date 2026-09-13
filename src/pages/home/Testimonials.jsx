@@ -40,7 +40,7 @@ export default function Testimonials() {
         ) : (
           <div className="voices-empty">
             <p className="voices-empty-lead">
-              The four systems above are real builds, not mockups.
+              Every system above is a real build, not a mockup.
             </p>
             <p className="voices-empty-body">
               Named client quotes are going up here as each one signs off on

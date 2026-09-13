@@ -193,25 +193,34 @@ svg {
 
 /* Standalone page (projects / contact / detail) — clears the fixed header.
 
-   Two jobs in one class: the nav-clearing vertical rhythm, which every
-   subpage wants, and a reading-width cap, which only the prose ones do.
-   .page-wide below opts out of the cap and keeps the rhythm. */
+   The frame itself spans the SAME content band as .container, .nav-inner
+   and the footer, so a subpage's left edge lines up with the logo, the
+   home hero and the footer instead of floating in from a centred column.
+   That alignment is the whole point: before this, the prose pages capped
+   the *frame* at a reading width and centred it, which pushed their text
+   ~350px to the right of everything else on a wide screen — the "gutters
+   don't match" bug. The reading-width cap now lives on the children. */
 .page {
-  max-width: 62rem;
-  margin: 0 auto;
+  max-width: calc(var(--container-max) + var(--container-pad) * 2);
+  margin-inline: auto;
   padding-inline: var(--container-pad);
   padding-block: calc(var(--nav-h) + clamp(3rem, 6vw, 6rem)) var(--space-9);
 }
 
+/* Prose pages read as a single left-aligned column, capped for line
+   length and pinned to the site gutter — not centred in the band. Excludes
+   .page-wide, whose children (the projects row list) take the full width.
+   A child that wants to break wider sets its own max-width after this. */
+.page:not(.page-wide) > * {
+  max-width: 62rem;
+}
+
 /* The projects index is a row list, not prose: it takes the full content
    band so it lines up with the header, the footer and the work grid on
-   the home page. Safe to widen because the text inside each row is
-   already capped at --measure — widening moves the meta rail out to the
-   right edge rather than stretching any line of copy.
-
-   Two classes deliberately: .page-wide alone would only beat .page on
-   source order, and this file's position in the cascade is exactly the
-   thing that broke .cta-band-kicker. */
+   the home page. The base .page already spans that band now, so this class
+   only needs to keep its children from being capped — which the selector
+   above already does by excluding .page-wide. Retained as the explicit,
+   source-order-proof marker of intent. */
 .page.page-wide {
   max-width: calc(var(--container-max) + var(--container-pad) * 2);
 }

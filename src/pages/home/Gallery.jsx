@@ -4,22 +4,27 @@ import { projects } from '../../data.js'
 import ArrowIcon from '../../components/ArrowIcon.jsx'
 
 /* ---------------------------------------------------------------
-   5 — Closing CTA over a fanned arc of the real case studies.
+   5 — Closing CTA, optionally over a fanned arc of the real case studies.
 
-   The arc used to hold eight stock photographs of offices. It is the
-   last thing on the page, so it was eight images of nothing standing
-   between a reader and the only button that matters. It now fans the
-   four builds themselves — index, title and stack, all of it real
-   copy already on the site — so the decoration carries the same
-   argument as the section it sits behind.
+   The arc fans the real builds themselves — index, title and stack, all
+   of it real copy already on the site — so the decoration carries the
+   same argument as the section it sits behind.
 
-   Still decorative, in the sense that the heading and button read
-   fine on their own; the cards are `aria-hidden` because every one of
-   them is stated again in the Selected Work band above.
+   It only renders when there are enough builds to read as a curve (see
+   ARC_MIN). With fewer, a "fan" of one or two cards reads as a broken or
+   ghosted layout rather than a flourish, so the section falls back to the
+   clean closing CTA — which, being the point of the section, stands fine
+   on its own. The cards are `aria-hidden` because every one of them is
+   stated again in the Selected Work band above.
    --------------------------------------------------------------- */
-/* Degrees between adjacent cards around the arc. Wider than the old
-   eight-card fan: four cards need more angle to read as a curve. */
+/* Degrees between adjacent cards around the arc. Tuned so a small
+   handful of cards still spread into a legible curve. */
 const ARC_STEP = 26
+
+/* An arc needs at least this many cards to read as a curve. Below it,
+   the fan collapses into a sparse cluster behind the headline, so the
+   stage is dropped entirely and only the CTA renders. */
+const ARC_MIN = 3
 
 /*
   Drives `--open` on the stage straight from scroll position: 0 while the
@@ -28,7 +33,7 @@ const ARC_STEP = 26
   arrive at it.
 
   Written to the DOM node rather than held in React state on purpose — a
-  setState per scroll frame would re-render eight cards continuously for
+  setState per scroll frame would re-render every card continuously for
   what is a single custom property.
 */
 function useArcOpen(ref) {
@@ -74,12 +79,16 @@ function useArcOpen(ref) {
 
 export default function Gallery() {
   const slots = projects
+  const showArc = slots.length >= ARC_MIN
   const mid = (slots.length - 1) / 2
   const stageRef = useRef(null)
+  // Safe to call unconditionally: with the stage unrendered the ref is
+  // null and the hook no-ops.
   useArcOpen(stageRef)
 
   return (
     <section className="gallery">
+      {showArc && (
       <div className="gallery-stage" ref={stageRef} aria-hidden="true">
         <div className="gallery-fan">
           {slots.map((project, i) => {
@@ -115,6 +124,7 @@ export default function Gallery() {
           })}
         </div>
       </div>
+      )}
 
       <div className="container gallery-content">
         <p className="kicker">Behind the systems</p>

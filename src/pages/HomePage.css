@@ -1206,9 +1206,15 @@
   color: var(--muted);
 }
 
-/* Empty state — one panel, honest about what is and isn't here yet. */
+/* Empty state — one panel, honest about what is and isn't here yet.
+
+   It fills the whole content band rather than sitting as a small card
+   floating against a wide void: a two-column editorial split, the lead
+   statement on the left and the supporting note + actions on the right.
+   Below the split breakpoint it stacks into a single readable column. */
 .voices-empty {
-  max-width: 52ch;
+  display: grid;
+  gap: var(--space-5) clamp(2rem, 5vw, 5rem);
   padding: clamp(1.75rem, 4vw, 3rem);
   background: var(--surface);
   border: 1px solid var(--line);
@@ -1223,20 +1229,46 @@
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: var(--ink);
+  margin: 0;
 }
 
 .voices-empty-body {
-  margin-top: var(--space-4);
   font-size: var(--text-base);
   line-height: 1.7;
   color: var(--ink-soft);
+  /* Kept readable even when the column is wide. */
+  max-width: 46ch;
 }
 
 .voices-empty-actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-4) var(--space-6);
-  margin-top: var(--space-6);
+}
+
+/* Two columns once there is room; the lead spans both rows on the left
+   so the note and its actions stack tidily on the right. */
+@media (min-width: 48rem) {
+  .voices-empty {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .voices-empty-lead {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .voices-empty-body {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .voices-empty-actions {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: end;
+  }
 }
 
 /* ============================================================

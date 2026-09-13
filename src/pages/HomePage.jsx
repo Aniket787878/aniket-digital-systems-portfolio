@@ -1,6 +1,7 @@
 import Hero from './home/Hero.jsx'
 import ProofStrip from './home/ProofStrip.jsx'
 import Work from './home/Work.jsx'
+import Testimonials from './home/Testimonials.jsx'
 import Capabilities from './home/Capabilities.jsx'
 import Process from './home/Process.jsx'
 import Pricing from './home/Pricing.jsx'
@@ -17,7 +18,7 @@ import Gallery from './home/Gallery.jsx'
    order the section components above happen to be evaluated in. */
 import './HomePage.css'
 
-/* Nine bands, in render order. Each is one file in ./home, and each maps
+/* Ten bands, in render order. Each is one file in ./home, and each maps
    to the band of the same name in HomePage.css. */
 export default function HomePage() {
   return (
@@ -25,6 +26,7 @@ export default function HomePage() {
       <Hero />
       <ProofStrip />
       <Work />
+      <Testimonials />
       <Capabilities />
       <Process />
       <Pricing />

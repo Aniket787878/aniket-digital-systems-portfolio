@@ -51,6 +51,7 @@ export default function Nav() {
             Home
           </NavLink>
           <NavLink to="/projects">Projects</NavLink>
+          <NavLink to="/about">About</NavLink>
           <NavLink to="/contact">Contact</NavLink>
         </nav>
 
@@ -112,6 +113,7 @@ export default function Nav() {
             Home
           </NavLink>
           <NavLink to="/projects">Projects</NavLink>
+          <NavLink to="/about">About</NavLink>
           <NavLink to="/contact">Contact</NavLink>
           {/* Room to breathe here, so the panel offers both routes. */}
           <WhatsAppCta

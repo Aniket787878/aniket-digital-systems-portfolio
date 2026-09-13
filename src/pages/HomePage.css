@@ -200,12 +200,25 @@
   gap: var(--space-4);
 }
 
-.hero-claim {
+/* The quantified lead of the support column: two figures with an arrow
+   between them, and a quiet label for the context the number needs. The
+   caveat that qualifies it is .hero-proof-note, two lines down. */
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.hero-stat-figures {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
   font-family: var(--font-display);
-  font-size: clamp(1.25rem, 2vw, 1.625rem);
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
   color: var(--ink);
 }
 
@@ -1001,6 +1014,59 @@
   font-weight: 700;
 }
 
+/* Guarantee strip (gap G8) — promises already made elsewhere, surfaced
+   where the buyer decides. Three columns of check + title + line. */
+.pricing-guarantees {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding-top: clamp(1.75rem, 3.5vw, 2.5rem);
+  border-top: 1px solid var(--line-strong);
+}
+
+.pricing-guarantee {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: 'check title' '. text';
+  column-gap: var(--space-3);
+  row-gap: var(--space-2);
+  align-items: center;
+}
+
+.pricing-guarantee-check {
+  grid-area: check;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: grid;
+  place-items: center;
+}
+
+.pricing-guarantee-check svg {
+  width: 14px;
+  height: 14px;
+}
+
+.pricing-guarantee-title {
+  grid-area: title;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.pricing-guarantee-text {
+  grid-area: text;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--muted);
+}
+
 /* ============================================================
    5b — CTA band. An inset accent slab that breaks the long
    middle of the page before the FAQ.
@@ -1074,11 +1140,113 @@
   background: #2b1000;
 }
 
+/* The price anchor, demoted under the free-audit offer. Same dark-ink
+   treatment as the lede so it clears AA on the orange slab. */
+.cta-band-anchor {
+  margin-top: var(--space-6);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--accent-ink-strong);
+  max-width: 52ch;
+}
+
 .cta-band-availability {
-  margin-top: var(--space-5);
+  margin-top: var(--space-3);
   font-size: var(--text-sm);
   color: rgba(26, 9, 0, 0.85);
   max-width: 46ch;
+}
+
+/* ============================================================
+   3b — Testimonials. A slot, not a fake logo wall. Empty state is
+   an honest panel; once data.js carries a real quote it becomes a
+   card grid. Both read on the dark ground.
+   ============================================================ */
+
+.voices {
+  padding-block: var(--section-pad);
+}
+
+.voices .kicker {
+  margin-bottom: var(--space-6);
+}
+
+.voices-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: var(--space-5);
+}
+
+.voice-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.voice-quote {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.voice-attr {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: auto;
+}
+
+.voice-name {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.voice-role {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+/* Empty state — one panel, honest about what is and isn't here yet. */
+.voices-empty {
+  max-width: 52ch;
+  padding: clamp(1.75rem, 4vw, 3rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--radius-md);
+}
+
+.voices-empty-lead {
+  font-family: var(--font-display);
+  font-size: var(--display-3);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.voices-empty-body {
+  margin-top: var(--space-4);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+.voices-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-6);
+  margin-top: var(--space-6);
 }
 
 /* ============================================================
@@ -1108,7 +1276,7 @@
   animation-delay: 70ms;
 }
 
-.hero-claim {
+.hero-stat {
   animation-delay: 140ms;
 }
 
@@ -1398,6 +1566,11 @@
   .pricing-care {
     padding: var(--space-5);
     border-radius: var(--radius-sm);
+  }
+
+  .pricing-guarantees {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
   }
 
   .cta-band-inner {

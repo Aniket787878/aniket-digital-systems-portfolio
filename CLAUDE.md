@@ -106,11 +106,16 @@ changing anything.** Guessing has cost a full cycle of work.
 
 ## Blocked on Aniket
 
-Domain · real email (`hello@aniketbuilds.com` is a placeholder) ·
-`VITE_LEAD_WEBHOOK_URL` · WhatsApp number · case-study numbers for 02–04 · testimonial ·
-CV PDF (blocks `/about`, which does not exist yet) · real screenshots.
+Branded domain (email is `aniket.html@gmail.com` for now, working but not
+branded) · `VITE_LEAD_WEBHOOK_URL` · case-study numbers · testimonial · CV PDF
+and a real headshot (the `/about` page now exists and renders labelled slots for
+both) · real screenshots.
 
-The site itself is built and deployed. Everything left is content or a domain —
-`VITE_LEAD_WEBHOOK_URL` is the costly one: until it is set **no lead is
-captured**, and because `VITE_*` is baked in at build time, setting it needs a
-redeploy.
+Resolved 2026-09-11: real email (`aniket.html@gmail.com`) and WhatsApp number
+(`+91 9136582842`) are set, so every WhatsApp CTA is live.
+
+The site itself is built and deployed. Of what's left, `VITE_LEAD_WEBHOOK_URL` is
+the costly one: it is now the **only** dead lead path (WhatsApp works), and
+until it is set the contact form logs the payload and shows the fallback panel —
+no form lead is captured. Because `VITE_*` is baked in at build time, setting it
+needs a redeploy.

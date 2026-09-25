@@ -35,11 +35,13 @@ export const images = {
   projects: {
     'mindset-workspace': '',
     udaan: '',
-    /* The first real screenshot on the site — Signet is a self-built tool,
-       so unlike the two client systems its running UI can actually be
-       shown. The completed document view: the audit trail and SHA-256
-       seal, captured from the live app. */
-    signet: '/signet-sealed.png'
+    /* The first real screenshots on the site — Signet and Relay are
+       self-built tools, so unlike the two client systems their running UI
+       can actually be shown. Signet: the sealed document with its audit
+       trail. Relay: a live inbox thread with the contact and pipeline
+       alongside. Both captured from the running apps. */
+    signet: '/signet-sealed.png',
+    relay: '/relay-inbox.png'
   }
 }
 
@@ -444,6 +446,82 @@ export const projects = [
     ],
     outcomeNote:
       'Signet is a self-initiated working demo, not a client deployment — so there are no usage numbers here, because there are no users yet. The counts above describe what was built. The screenshots are of the running app.'
+  },
+  {
+    index: '04',
+    slug: 'relay',
+    diagram: 'relay',
+    title: 'Relay — Shared Inbox & CRM',
+    summary:
+      'A self-built shared client inbox and lightweight CRM for service businesses: every enquiry — WhatsApp, email, web form — in one thread view, tied to a contact record that moves through the pipeline, so a lead stops living in one person’s phone.',
+    metrics: [
+      { n: '3', label: 'channels — WhatsApp, email, web form — in one inbox' },
+      { n: '5', label: 'pipeline stages from first enquiry to won' },
+      { n: '1', label: 'record for the enquiry and the client — not two' },
+      { n: '0', label: 'per-seat inbox subscriptions — it is one small app' }
+    ],
+    role:
+      'Self-initiated build — the inbox, the thread and triage model, the CRM pipeline, the data model and the seed.',
+    flow: ['Arrive', 'Triage', 'Reply', 'Advance', 'Win'],
+    stack: [
+      'Next.js',
+      'React',
+      'TypeScript',
+      'Tailwind CSS',
+      'Drizzle ORM',
+      'libSQL / SQLite (Turso in production)',
+      'React Server Components',
+      'Vercel'
+    ],
+    problem:
+      'A service business runs on first conversations — a WhatsApp from a referral, an email asking about fees, a web-form enquiry at midnight — and almost none of them are set up to hold those conversations well. The enquiry lands in someone’s personal phone; the client record, if it exists at all, lives in a separate spreadsheet; and the moment an enquiry becomes a client, the context of how they got there is gone. I wanted to build the smallest honest version of the thing the big support desks and CRMs each do half of: one place where the message and the person are the same record, so replying to a client and moving a deal forward happen in the same motion.',
+    system: [
+      'A shared inbox that collapses WhatsApp, email and web-form conversations into one list, each thread marked with the channel it arrived on so you always know how to reply',
+      'A thread view with the two things a team actually needs beside the messages: the contact’s details and pipeline stage, and internal notes the client never sees',
+      'Triage built for more than one person: assign a conversation, and set it open, pending or closed — where sending a reply moves it to pending on its own',
+      'A CRM that is the same data seen differently: every conversation is attached to a contact that moves lead → qualified → active → won or lost, shown as a pipeline board and a per-contact history',
+      'Server-rendered throughout, so the triage controls are real forms that work without JavaScript — only the composer and the inbox filter are client-side',
+      'A demo seeded with a believable morning of enquiries, and a control that fabricates an inbound reply so the live-inbox behaviour can be seen without a real messaging integration'
+    ],
+    features: [
+      {
+        title: 'One inbox, every channel',
+        text: 'WhatsApp, email and web-form threads in a single list, filterable by open, unread, pending and closed, each badged with its source.'
+      },
+      {
+        title: 'Reply and note in one place',
+        text: 'Answer the client or leave a note only the team can see, with the contact and their pipeline stage always in view beside the thread.'
+      },
+      {
+        title: 'Triage like a team',
+        text: 'Assign a conversation and move it through open, pending and closed — sending a reply advances it automatically.'
+      },
+      {
+        title: 'The pipeline is built in',
+        text: 'A board of every contact by stage, and a contact page that ties their whole conversation history to where they are in the pipeline.'
+      }
+    ],
+    decisions: [
+      {
+        title: 'The enquiry and the client are one record',
+        text: 'Rather than an inbox bolted to a separate CRM, a conversation belongs to a contact from the first message. Moving a deal and replying to a client act on the same row — which is the whole reason the tool exists.'
+      },
+      {
+        title: 'Server-rendered, so triage works without JavaScript',
+        text: 'Status, assignment and stage changes are plain forms backed by server actions. Only the composer and the inbox filter need the client, so the core of the app is robust and fast by default.'
+      },
+      {
+        title: 'Simulate the inbound rather than fake the integration',
+        text: 'Real WhatsApp and email webhooks were out of scope for a demo, so instead of pretending they exist, there is an honest "simulate a client reply" control — and the README says exactly where a real provider would plug in.'
+      }
+    ],
+    outcome: [
+      'The daily loop works end to end: open a thread, reply, triage, and advance the contact down the pipeline — on one record',
+      'The inbox and the CRM genuinely share data — a stage change on the contact page shows on the thread, and a reply shows on the pipeline',
+      'Seeded with realistic enquiries so the demo behaves like a real morning of client work, not an empty shell'
+    ],
+    outcomeNote:
+      'Relay is a self-initiated working demo, not a client deployment. Inbound channels are simulated, so the counts above describe what was built, not real message volumes. The screenshots are of the running app.'
   }
 ]
 

@@ -840,6 +840,58 @@ function Signature() {
   )
 }
 
+/* Relay — a self-built shared inbox and CRM. The top lane collapses three
+   channels into one thread and its triage; the bottom lane is the pipeline
+   the same contact moves along. The whole point of the drawing is the join
+   between them: the inbox and the CRM are one record, not two systems. Like
+   Signet, this project has real screenshots, which sit below the schematic. */
+function Relay() {
+  const channels = ['WhatsApp', 'Email', 'Web form']
+
+  return (
+    <g>
+      <T x={52} y={72} caps>Many channels, one thread</T>
+
+      {/* Channel sources feeding the inbox. */}
+      {channels.map((c, i) => {
+        const y = 92 + i * 48
+        return (
+          <g key={c}>
+            <Node x={32} y={y} w={150} h={40} label={c} />
+            <ArrowR x={182} y={y + 20} len={62} />
+          </g>
+        )
+      })}
+
+      {/* Inbox → thread → contact. */}
+      <Node x={244} y={92} w={168} h={136} label="Shared inbox" sub="one list, every source" />
+      <ArrowR x={412} y={160} len={38} />
+      <Node x={450} y={120} w={190} h={80} label="Thread + triage" sub="reply · note · assign" />
+      <ArrowR x={640} y={160} len={38} />
+      <Node x={678} y={120} w={190} h={80} label="Contact record" sub="the same person" accent />
+
+      {/* The pipeline, built in. */}
+      <line x1={52} y1={272} x2={848} y2={272} stroke={C.strokeSoft} strokeWidth="1.5" />
+      <T x={52} y={304} caps>One pipeline, built in</T>
+      {[
+        { label: 'Lead', x: 32 },
+        { label: 'Qualified', x: 196 },
+        { label: 'Active', x: 360 },
+        { label: 'Won', x: 524, accent: true },
+        { label: 'Lost', x: 688 }
+      ].map((s, i, arr) => (
+        <g key={s.label}>
+          <Node x={s.x} y={324} w={150} h={44} label={s.label} accent={s.accent} />
+          {i < arr.length - 1 && <ArrowR x={s.x + 150} y={346} len={14} />}
+        </g>
+      ))}
+      <T x={52} y={410} size={12} fill={C.muted} weight={400}>
+        The inbox and the CRM are the same record — reply to a message and move the deal on the same contact.
+      </T>
+    </g>
+  )
+}
+
 /* ---------------------------------------------------------------
    Registry. Keys are referenced from data.js, so a diagram can be
    swapped for a real screenshot later by changing one string.
@@ -853,7 +905,8 @@ const VARIANTS = {
   approval: { vb: WIDE, draw: Approval, label: 'Schematic: a consent form signed on the client’s phone, routed for supervisor approval, producing a signed PDF filed automatically.' },
   operations: { vb: WIDE, draw: Operations, label: 'Schematic: a task board with a named owner and due date on every card, over a bar chart of workload per person.' },
   assistant: { vb: WIDE, draw: Assistant, label: 'Schematic: an incoming request classified and drafted by Claude against stored project context, held at a human approval gate before sending.' },
-  signature: { vb: WIDE, draw: Signature, label: 'Schematic: a consent-and-contract signing tool — compose from a template, sign by drawing or typing with consent, seal the document with a SHA-256 hash over its text and every signature, and verify it on a public page that recomputes the seal. An append-only audit trail of created, viewed, signed and completed events is printed onto the certificate page of the sealed PDF.' }
+  signature: { vb: WIDE, draw: Signature, label: 'Schematic: a consent-and-contract signing tool — compose from a template, sign by drawing or typing with consent, seal the document with a SHA-256 hash over its text and every signature, and verify it on a public page that recomputes the seal. An append-only audit trail of created, viewed, signed and completed events is printed onto the certificate page of the sealed PDF.' },
+  relay: { vb: WIDE, draw: Relay, label: 'Schematic: a shared client inbox and CRM — WhatsApp, email and web-form conversations collapse into one thread with reply, internal-note, assign and status triage, tied to a contact record that moves along a lead, qualified, active, won or lost pipeline. The inbox and the CRM are the same record.' }
 }
 
 export default function SystemDiagram({ variant, className = '' }) {

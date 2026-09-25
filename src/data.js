@@ -35,13 +35,15 @@ export const images = {
   projects: {
     'mindset-workspace': '',
     udaan: '',
-    /* The first real screenshots on the site — Signet and Relay are
-       self-built tools, so unlike the two client systems their running UI
-       can actually be shown. Signet: the sealed document with its audit
+    /* The first real screenshots on the site — Signet, Relay and Prospector
+       are self-built tools, so unlike the two client systems their running
+       UI can actually be shown. Signet: the sealed document with its audit
        trail. Relay: a live inbox thread with the contact and pipeline
-       alongside. Both captured from the running apps. */
+       alongside. Prospector: the lead workspace after a live scrape. All
+       captured from the running apps. */
     signet: '/signet-sealed.png',
-    relay: '/relay-inbox.png'
+    relay: '/relay-inbox.png',
+    prospector: '/prospector-workspace.png'
   }
 }
 
@@ -522,6 +524,82 @@ export const projects = [
     ],
     outcomeNote:
       'Relay is a self-initiated working demo, not a client deployment. Inbound channels are simulated, so the counts above describe what was built, not real message volumes. The screenshots are of the running app.'
+  },
+  {
+    index: '05',
+    slug: 'prospector',
+    diagram: 'prospect',
+    title: 'Prospector — Lead-Research Scraper',
+    summary:
+      'A self-built lead-research tool: paste a business website and Prospector reads its public pages and pulls the name, contact details, location and socials into one clean, scored, exportable list — for the studio or agency doing its own outreach.',
+    metrics: [
+      { n: '5', label: 'signals read per page — JSON-LD, OG, email, phone, socials' },
+      { n: '0–100', label: 'completeness score, weighted to contact details' },
+      { n: '0', label: 'third-party scraping APIs — the extractor is in the repo' },
+      { n: 'CSV', label: 'the whole list exports in one click' }
+    ],
+    role:
+      'Self-initiated build — the extractor, the scoring, the workspace, the data model and the CSV export.',
+    flow: ['Paste', 'Fetch', 'Extract', 'Score', 'Export'],
+    stack: [
+      'Next.js',
+      'React',
+      'TypeScript',
+      'Tailwind CSS',
+      'node-html-parser',
+      'Drizzle ORM',
+      'libSQL / SQLite (Turso in production)',
+      'Vercel'
+    ],
+    problem:
+      'A studio or agency doing its own outreach doesn’t need a sales platform with a per-seat licence and a CRM bolted on — it needs a short, clean list of businesses it could actually contact. Building that list by hand means opening twenty tabs and copying a name, an email and an Instagram handle off each one. The job here was the smallest honest version of that: paste the URLs, and let the tool do the reading — while being straight about the fact that real web pages are messy and half of them won’t give up an email.',
+    system: [
+      'A server-side extractor that fetches a page and reads the business behind it in priority order: JSON-LD structured data first, then Open Graph and meta tags, then the page itself for mailto and tel links and social profiles',
+      'A completeness score from 0 to 100, weighted toward contact details, so the businesses you can actually reach rise to the top of the list',
+      'A workspace that takes a batch of URLs at once, scrapes them with a little concurrency, and drops each result into a filterable, searchable table',
+      'A per-lead view showing every extracted field — and marking the ones that were not found as not found, rather than inventing them',
+      'A pipeline of its own — new, shortlisted, contacted, archived — plus a one-click CSV export of the whole list',
+      'No headless browser and no scraping API: the extractor is about a hundred readable lines built on a lightweight HTML parser'
+    ],
+    features: [
+      {
+        title: 'It actually reads the page',
+        text: 'Structured data, Open Graph, and the page’s own mailto / tel and social links — parsed into fields server-side, not scraped blindly or run through a paid API.'
+      },
+      {
+        title: 'Scored by what you can act on',
+        text: 'Each lead gets a completeness score weighted toward contact details, so a business with an email and a phone outranks one with only a name.'
+      },
+      {
+        title: 'Honest about the gaps',
+        text: 'Web pages are inconsistent. A missing email is shown as “Not found”, never guessed — the score simply reflects how much was there.'
+      },
+      {
+        title: 'Filter, shortlist, export',
+        text: 'Filter by status or “has email”, search the list, move leads through your own pipeline, and export everything to CSV in one click.'
+      }
+    ],
+    decisions: [
+      {
+        title: 'Structured data first, then fall back',
+        text: 'Sites that ship JSON-LD get read cleanly; the rest fall back to Open Graph, meta tags and links on the page. Reading the good signal first and degrading gracefully is what makes the output trustworthy.'
+      },
+      {
+        title: 'No headless browser, on purpose',
+        text: 'A real Chromium would read JavaScript-rendered sites but cost speed, memory and complexity. A lightweight HTML parser covers most real business pages and keeps the whole tool small — the README names the trade-off.'
+      },
+      {
+        title: 'Record what was found, score the rest',
+        text: 'The tool never fabricates a missing field to look complete. Honesty is the feature: a lead you can trust is worth more than a full-looking row you can’t.'
+      }
+    ],
+    outcome: [
+      'The extraction is real — pasting a live URL fetches and parses it on the spot, and the seeded rows are genuine extractions from real public pages',
+      'Leads sort by how reachable they are, so the list is useful the moment it is built',
+      'The whole list exports to CSV, which is the actual job of a research tool'
+    ],
+    outcomeNote:
+      'Prospector is a self-initiated working demo, not a client deployment. It reads only public pages and is best pointed at sites that publish structured data; the counts describe what was built. The screenshots are of the running app.'
   }
 ]
 

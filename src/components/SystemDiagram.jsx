@@ -892,6 +892,72 @@ function Relay() {
   )
 }
 
+/* Prospector — a self-built lead-research tool. A URL goes in; the page is
+   fetched and read for the business behind it. The accent step is the
+   extraction, because reading a real page honestly — structured data first,
+   then falling back — is the whole craft. The left panel is what it reads,
+   the right is how a lead is scored. Like the other two tools, this one has
+   real screenshots, which sit below the schematic. */
+function Prospect() {
+  const steps = [
+    { label: 'Paste URL', sub: 'one or many' },
+    { label: 'Fetch page', sub: 'server-side' },
+    { label: 'Extract', sub: 'the business behind it', accent: true },
+    { label: 'Scored lead', sub: 'ranked by reach' }
+  ]
+  const NODE_W = 180
+  const STEP = 218
+
+  return (
+    <g>
+      <T x={52} y={72} caps>From a URL to a lead</T>
+      {steps.map((s, i) => {
+        const x = 32 + i * STEP
+        return (
+          <g key={s.label}>
+            <Node x={x} y={92} w={NODE_W} h={60} label={s.label} sub={s.sub} accent={s.accent} />
+            {i < steps.length - 1 && <ArrowR x={x + NODE_W} y={122} len={38} />}
+          </g>
+        )
+      })}
+
+      {/* Left — what the extractor reads, in priority order. */}
+      <Panel x={32} y={196} w={430} h={120} />
+      <T x={52} y={224} caps>What it reads, in order</T>
+      <T x={52} y={250} size={12} fill={C.muted} weight={400}>
+        JSON-LD structured data
+      </T>
+      <T x={52} y={272} size={12} fill={C.muted} weight={400}>
+        Open Graph &amp; meta tags
+      </T>
+      <T x={52} y={294} size={12} fill={C.muted} weight={400}>
+        mailto / tel links, social profiles
+      </T>
+
+      {/* Right — scoring. */}
+      <Panel x={478} y={196} w={390} h={120} fill={C.panelHi} />
+      <T x={498} y={224} caps>Scored by contactability</T>
+      <rect x={498} y={244} width={250} height={8} rx={4} fill={C.ground} />
+      <rect x={498} y={244} width={158} height={8} rx={4} fill={C.accent} />
+      <T x={760} y={252} size={11} fill={C.muted} weight={400}>
+        63 / 100
+      </T>
+      <Chip x={498} y={274} w={64} label="new" accent />
+      <Chip x={572} y={274} w={92} label="shortlisted" />
+      <Chip x={674} y={274} w={86} label="contacted" />
+
+      {/* Bottom — the honesty rule + export. */}
+      <line x1={52} y1={344} x2={848} y2={344} stroke={C.strokeSoft} strokeWidth="1.5" />
+      <T x={52} y={378} size={12} fill={C.muted} weight={400}>
+        A field that isn&rsquo;t found is left blank, never invented — the score reflects what was actually there.
+      </T>
+      <T x={52} y={400} size={12} fill={C.muted} weight={400}>
+        Filter, shortlist, and export the whole list as CSV.
+      </T>
+    </g>
+  )
+}
+
 /* ---------------------------------------------------------------
    Registry. Keys are referenced from data.js, so a diagram can be
    swapped for a real screenshot later by changing one string.
@@ -906,7 +972,8 @@ const VARIANTS = {
   operations: { vb: WIDE, draw: Operations, label: 'Schematic: a task board with a named owner and due date on every card, over a bar chart of workload per person.' },
   assistant: { vb: WIDE, draw: Assistant, label: 'Schematic: an incoming request classified and drafted by Claude against stored project context, held at a human approval gate before sending.' },
   signature: { vb: WIDE, draw: Signature, label: 'Schematic: a consent-and-contract signing tool — compose from a template, sign by drawing or typing with consent, seal the document with a SHA-256 hash over its text and every signature, and verify it on a public page that recomputes the seal. An append-only audit trail of created, viewed, signed and completed events is printed onto the certificate page of the sealed PDF.' },
-  relay: { vb: WIDE, draw: Relay, label: 'Schematic: a shared client inbox and CRM — WhatsApp, email and web-form conversations collapse into one thread with reply, internal-note, assign and status triage, tied to a contact record that moves along a lead, qualified, active, won or lost pipeline. The inbox and the CRM are the same record.' }
+  relay: { vb: WIDE, draw: Relay, label: 'Schematic: a shared client inbox and CRM — WhatsApp, email and web-form conversations collapse into one thread with reply, internal-note, assign and status triage, tied to a contact record that moves along a lead, qualified, active, won or lost pipeline. The inbox and the CRM are the same record.' },
+  prospect: { vb: WIDE, draw: Prospect, label: 'Schematic: a lead-research tool — paste one or more business URLs, fetch each page server-side, and extract the business behind it from JSON-LD structured data, Open Graph and meta tags, and mailto, tel and social links. Each lead is scored by contactability and moves through new, shortlisted and contacted; a field that is not found is left blank, and the list exports as CSV.' }
 }
 
 export default function SystemDiagram({ variant, className = '' }) {

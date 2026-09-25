@@ -18,8 +18,8 @@ export default function Work() {
           <p className="split-lede">
             Production systems built and shipped end to end by one person — the
             app, the backend, the payments, the AI and the infrastructure. The
-            client systems run real businesses every day; Signet and Relay are
-            tools I built to work the same ideas in the open.
+            client systems run real businesses every day; Signet, Relay and
+            Prospector are tools I built to work the same ideas in the open.
           </p>
         </div>
 

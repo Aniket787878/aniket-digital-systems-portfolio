@@ -17,8 +17,8 @@ export default function ProjectsPage() {
       <p className="page-lede">
         Complete systems, each designed, built and shipped end to end by one
         person — the app, the backend, the payments, the AI and the
-        infrastructure. Two run real businesses every day; Signet and Relay are
-        tools I built to work the same ideas in the open.
+        infrastructure. Two run real businesses every day; Signet, Relay and
+        Prospector are tools I built to work the same ideas in the open.
       </p>
       <ul className="project-list">
         {projects.map((project) => {

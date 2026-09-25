@@ -178,6 +178,39 @@ svg {
   border: 0;
 }
 
+/* Skip link — off-screen until it takes focus, then it drops in over the
+   fixed header as the first tab stop. Uses the white pill so it reads as a
+   real control rather than a system default, and sits above --nav (z 100).
+   --main, when focused, gets no outline of its own (see :focus-visible
+   override below): landing the focus there is the whole point, but a box
+   drawn around the entire page content would be noise. */
+.skip-link {
+  position: fixed;
+  top: var(--space-4);
+  left: var(--container-pad);
+  z-index: 200;
+  transform: translateY(calc(-100% - var(--space-6)));
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--accent-ink-strong);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+/* Reveals on any focus, not only :focus-visible: a skip link is useful
+   however focus reached it, and it is the very first tab stop. */
+.skip-link:focus {
+  transform: translateY(0);
+  color: var(--accent-ink-strong);
+}
+
+.main:focus {
+  outline: none;
+}
+
 /* ============================================================
    Containers & rhythm
    ============================================================ */

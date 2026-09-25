@@ -767,6 +767,79 @@ function Journey() {
   )
 }
 
+/* Signet — a self-built e-signature tool. The flow runs left to right —
+   compose, sign, seal, verify — with the seal as the accent step because
+   it is the one that turns a signed form into a defensible record. The
+   bottom lane is the audit trail, the thing that makes the seal mean
+   something: an append-only log recomputed and checked on the verify
+   page. Unlike the other five diagrams, this project has real
+   screenshots, which sit in the screenshot slot below the schematic. */
+function Signature() {
+  const steps = [
+    { label: 'Compose', sub: 'template + signers' },
+    { label: 'Sign', sub: 'draw / type + consent' },
+    { label: 'Seal', sub: 'SHA-256 over the record', accent: true },
+    { label: 'Verify', sub: 'public, live check' }
+  ]
+  const NODE_W = 180
+  const STEP = 218
+
+  return (
+    <g>
+      <T x={52} y={76} caps>Consent to a sealed record</T>
+      {steps.map((s, i) => {
+        const x = 32 + i * STEP
+        return (
+          <g key={s.label}>
+            <Node x={x} y={92} w={NODE_W} h={60} label={s.label} sub={s.sub} accent={s.accent} />
+            {i < steps.length - 1 && <ArrowR x={x + NODE_W} y={122} len={38} />}
+          </g>
+        )
+      })}
+
+      {/* Left — what the hash is computed over. */}
+      <Panel x={32} y={196} w={516} h={112} />
+      <T x={52} y={224} caps>What the seal covers</T>
+      <T x={52} y={252} size={12} fill={C.muted} weight={400}>
+        Full document text
+      </T>
+      <T x={52} y={274} size={12} fill={C.muted} weight={400}>
+        Every signature — drawn or typed
+      </T>
+      <T x={52} y={296} size={12} fill={C.muted} weight={400}>
+        Each signer, timestamp and IP
+      </T>
+
+      {/* Right — verification: recompute and compare. */}
+      <Panel x={568} y={196} w={300} h={112} fill={C.panelHi} />
+      <T x={588} y={224} caps>Verify, anytime</T>
+      <T x={588} y={250} size={11.5} fill={C.muted} weight={400}>
+        Recompute the seal, compare.
+      </T>
+      <Chip x={588} y={264} w={128} label="match = authentic" accent />
+      <Chip x={726} y={264} w={124} label="mismatch = tampered" />
+
+      {/* Bottom — the audit trail. */}
+      <line x1={52} y1={340} x2={848} y2={340} stroke={C.strokeSoft} strokeWidth="1.5" />
+      <T x={52} y={372} caps>Audit trail — every event logged</T>
+      {[
+        { label: 'created', x: 32, w: 78 },
+        { label: 'viewed', x: 128, w: 74 },
+        { label: 'signed', x: 220, w: 74 },
+        { label: 'completed', x: 312, w: 98 }
+      ].map((c, i, arr) => (
+        <g key={c.label}>
+          <Chip x={c.x} y={388} w={c.w} label={c.label} />
+          {i < arr.length - 1 && <ArrowR x={c.x + c.w + 3} y={398} len={13} />}
+        </g>
+      ))}
+      <T x={430} y={402} size={12} fill={C.muted} weight={400}>
+        printed onto the certificate page of the sealed PDF
+      </T>
+    </g>
+  )
+}
+
 /* ---------------------------------------------------------------
    Registry. Keys are referenced from data.js, so a diagram can be
    swapped for a real screenshot later by changing one string.
@@ -779,7 +852,8 @@ const VARIANTS = {
   booking: { vb: WIDE, draw: Booking, label: 'Schematic: one therapist’s day, showing a 15-minute turnaround padding an existing calendar booking on both sides, and the next slot resuming one gap after that booking ends rather than a whole session later.' },
   approval: { vb: WIDE, draw: Approval, label: 'Schematic: a consent form signed on the client’s phone, routed for supervisor approval, producing a signed PDF filed automatically.' },
   operations: { vb: WIDE, draw: Operations, label: 'Schematic: a task board with a named owner and due date on every card, over a bar chart of workload per person.' },
-  assistant: { vb: WIDE, draw: Assistant, label: 'Schematic: an incoming request classified and drafted by Claude against stored project context, held at a human approval gate before sending.' }
+  assistant: { vb: WIDE, draw: Assistant, label: 'Schematic: an incoming request classified and drafted by Claude against stored project context, held at a human approval gate before sending.' },
+  signature: { vb: WIDE, draw: Signature, label: 'Schematic: a consent-and-contract signing tool — compose from a template, sign by drawing or typing with consent, seal the document with a SHA-256 hash over its text and every signature, and verify it on a public page that recomputes the seal. An append-only audit trail of created, viewed, signed and completed events is printed onto the certificate page of the sealed PDF.' }
 }
 
 export default function SystemDiagram({ variant, className = '' }) {

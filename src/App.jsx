@@ -15,8 +15,14 @@ export default function App() {
       {/* Renders nothing. Resets the scroll offset that BrowserRouter
           carries across navigations. */}
       <ScrollToTop />
+      {/* First focusable element on the page: lets keyboard and screen-reader
+          users jump the fixed header straight to the content. Hidden until
+          focused (see .skip-link). */}
+      <a href="#main" className="skip-link">
+        Skip to content
+      </a>
       <Nav />
-      <main className="main">
+      <main className="main" id="main" tabIndex={-1}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/projects" element={<ProjectsPage />} />

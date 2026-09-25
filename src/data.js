@@ -34,7 +34,12 @@ export const images = {
 
   projects: {
     'mindset-workspace': '',
-    udaan: ''
+    udaan: '',
+    /* The first real screenshot on the site — Signet is a self-built tool,
+       so unlike the two client systems its running UI can actually be
+       shown. The completed document view: the audit trail and SHA-256
+       seal, captured from the live app. */
+    signet: '/signet-sealed.png'
   }
 }
 
@@ -358,6 +363,87 @@ export const projects = [
     ],
     outcomeNote:
       'Module, session, stage and gate counts are real counts from the build. Everything else describes the platform’s design from the builder’s seat — directional, not an audited outcome.'
+  },
+  {
+    index: '03',
+    slug: 'signet',
+    diagram: 'signature',
+    title: 'Signet — Consent & Contract Signing',
+    summary:
+      'A self-built e-signature tool for service businesses: send a consent form or contract, collect a signature that carries a real audit trail, and get back a sealed, tamper-evident PDF — without an enterprise contract or a login for the person signing.',
+    metrics: [
+      { n: '3', label: 'signer-ready templates — clinic, studio, agency' },
+      { n: 'SHA-256', label: 'seal recomputed and checked on a public page' },
+      { n: '0', label: 'third-party e-signature services — the sealing and PDF are mine' },
+      { n: '1', label: 'person: design, engineering and the cryptography' }
+    ],
+    role:
+      'Self-initiated build — the product, the signature capture, the tamper-evident sealing, the certificate PDF and the verification flow.',
+    flow: ['Compose', 'Send', 'Sign', 'Seal', 'Verify'],
+    stack: [
+      'Next.js',
+      'React',
+      'TypeScript',
+      'Tailwind CSS',
+      'Drizzle ORM',
+      'libSQL / SQLite (Turso in production)',
+      'pdf-lib',
+      'Web Crypto — SHA-256',
+      'Vercel'
+    ],
+    problem:
+      'The businesses that most need a signed consent form or contract on file — a clinic taking informed consent, a studio taking a waiver, an agency getting a statement of work signed off — are the ones e-signature tools serve worst. The serious products are priced and shaped for enterprises, make the person signing create an account, and hide what "signed" actually means behind a black box. I wanted to see how small an honest version could be: send a link, collect a signature with a real audit trail, and hand back a document whose authenticity anyone can check — without a signing API doing the part that matters.',
+    system: [
+      'A composer that starts from a realistic clinic, studio or agency template — or blank — and takes the people who need to sign, each getting their own unguessable signing link with no account to create',
+      'A signing page that works on a phone: the signer reads the document, draws or types a signature, and consents, with their timestamp, IP and device recorded as they do',
+      'A tamper-evident seal — a SHA-256 computed over the document’s full text and every signature — set the moment the last signer is done, so the record is sealed rather than merely stored',
+      'A certificate PDF generated with pdf-lib: the document, each signature embedded, and a certificate page carrying the seal and the full event log',
+      'A public verification page that recomputes the seal over the current stored record and says plainly whether it still matches — the check, not a claim of it',
+      'An append-only audit trail behind all of it: created, sent, viewed, signed, completed — every state change writes a row before it touches the document'
+    ],
+    features: [
+      {
+        title: 'Compose & send in one step',
+        text: 'Pick a template, edit the wording, add signers, and every signer gets a private link. No outbox, no account for them to make.'
+      },
+      {
+        title: 'Sign on any device',
+        text: 'Draw a signature on a phone or type it; consent is explicit and recorded; the signer’s time, IP and user-agent are captured at the moment they sign.'
+      },
+      {
+        title: 'A seal, not just storage',
+        text: 'The finished document is hashed over its text and every signature. Change one character afterwards and the seal no longer matches — and the verify page catches it.'
+      },
+      {
+        title: 'Verification anyone can run',
+        text: 'A public page recomputes the seal live against the stored record and shows authentic or tampered — no account, no trust required, just the check.'
+      }
+    ],
+    decisions: [
+      {
+        title: 'A seal you can reproduce, not a black box',
+        text: 'The seal is a plain SHA-256 over a canonical view of the record. Anyone can read how it is built and recompute it themselves, rather than take a signing vendor’s word that a document is intact.'
+      },
+      {
+        title: 'One database that scales from a file to a URL',
+        text: 'libSQL is a local SQLite file in development and a hosted Turso database in production by changing two environment variables — the same "runs on a free tier, deploys without drama" posture as the client systems.'
+      },
+      {
+        title: 'No signing API doing the important part',
+        text: 'The signature capture, the hashing and the PDF are all in the repo. The point of the exercise was to build the mechanism, not to wire up someone else’s.'
+      },
+      {
+        title: 'Name the cut corners out loud',
+        text: 'As a demo it has no sender-side accounts and shows signing links to copy rather than emailing them. The README says so plainly — the limitations are stated, not hidden.'
+      }
+    ],
+    outcome: [
+      'The full loop works end to end: compose, sign on a phone, seal, and verify — demonstrated, not described',
+      'Tamper detection is proven — altering a sealed document flips the public verification page from authentic to a seal mismatch',
+      'It is the first project on this site with real product screenshots rather than a schematic standing in for one'
+    ],
+    outcomeNote:
+      'Signet is a self-initiated working demo, not a client deployment — so there are no usage numbers here, because there are no users yet. The counts above describe what was built. The screenshots are of the running app.'
   }
 ]
 

@@ -16,9 +16,10 @@ export default function Work() {
             <h2 className="split-title">Problems, turned into systems</h2>
           </div>
           <p className="split-lede">
-            Two production systems, each built and shipped end to end by one
-            person — the app, the backend, the payments, the AI and the
-            infrastructure. Not demos. Real software people use every day.
+            Production systems built and shipped end to end by one person — the
+            app, the backend, the payments, the AI and the infrastructure. The
+            client systems run real businesses every day; Signet is a tool I
+            built to work the same ideas in the open.
           </p>
         </div>
 

@@ -90,9 +90,6 @@ export default function Hero() {
       </picture>
       <div className="hero-scrim" aria-hidden="true" />
 
-      {/* Soft saffron blob low in the frame — warmth behind the copy. */}
-      <div className="hero-blob" aria-hidden="true" />
-
       {/* Pointer-reactive network, above the scrim and behind the copy.
           Suspense fallback is null — the photograph is already the ground,
           so there is nothing to show while the chunk loads. */}

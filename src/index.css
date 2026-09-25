@@ -1120,6 +1120,86 @@ a:hover {
 }
 
 /* ============================================================
+   Premium interactions — cursor spotlight + marquee.
+   Both are progressive enhancements: off on touch and under reduced
+   motion, and the content reads the same without them.
+   ============================================================ */
+
+/* A soft accent glow that tracks the cursor across a card. The pointer
+   position is written to --mx/--my by spotlightMove() in motion/interactions.
+   Kept faint so text over it stays legible. */
+.spotlight {
+  position: relative;
+}
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(245, 135, 30, 0.12),
+    transparent 68%
+  );
+  opacity: 0;
+  transition: opacity var(--dur-mid) ease;
+  pointer-events: none;
+}
+.spotlight:hover::after {
+  opacity: 1;
+}
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .spotlight::after {
+    display: none;
+  }
+}
+
+/* Seamless auto-scrolling strip (two identical groups, shift by half). */
+.marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 7%,
+    #000 93%,
+    transparent
+  );
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll var(--marquee-duration, 32s) linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+.marquee-group {
+  display: flex;
+  flex: none;
+}
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+    overflow: visible;
+  }
+  .marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .marquee-group:last-child {
+    display: none;
+  }
+}
+
+/* ============================================================
    Case study — project detail page + project index rows
    Appended. All new classes are prefixed `case-`.
    Tokens only: no new colors, fonts, radii or spacing values.

@@ -2,7 +2,8 @@ import { useRef } from 'react'
 import { m, useScroll, useTransform, useReducedMotion } from 'motion/react'
 import { process, images } from '../../data.js'
 import Media from '../../components/Media.jsx'
-import { fadeLeft, reveal, revealStagger } from '../../motion/variants.js'
+import { fadeLeft, fadeUp, stagger, revealStagger } from '../../motion/variants.js'
+import SplitText from '../../motion/SplitText.jsx'
 
 /* ---------------------------------------------------------------
    3 — Process. The "plan" showcase, built as a timeline.
@@ -59,15 +60,20 @@ export default function Process() {
   return (
     <section className="process">
       <div className="container">
-        <m.div className="split-head" {...reveal}>
-          <div>
-            <p className="kicker">Step-by-Step</p>
-            <h2 className="split-title">How a build actually goes</h2>
-          </div>
-          <p className="split-lede">
+        <m.div className="split-head" {...revealStagger}>
+          <m.div variants={stagger}>
+            <m.p className="kicker" variants={fadeUp}>Step-by-Step</m.p>
+            <SplitText
+              as="h2"
+              className="split-title"
+              text="How a build actually goes"
+              standalone={false}
+            />
+          </m.div>
+          <m.p className="split-lede" variants={fadeUp}>
             I don&rsquo;t start with the tool. I start with how the work happens
             today, and where the friction actually is.
-          </p>
+          </m.p>
         </m.div>
 
         <div className="process-steps-wrap" ref={listRef}>

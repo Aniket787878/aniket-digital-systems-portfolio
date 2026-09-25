@@ -3,6 +3,7 @@ import { m } from 'motion/react'
 import { site, whatsappPrefill } from '../../data.js'
 import ArrowIcon from '../../components/ArrowIcon.jsx'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
+import Magnetic from '../../motion/Magnetic.jsx'
 import { hasWhatsApp } from '../../whatsapp.js'
 import { reveal } from '../../motion/variants.js'
 
@@ -17,6 +18,7 @@ export default function CtaBand() {
     <section className="cta-band">
       <div className="container">
         <m.div className="cta-band-inner" {...reveal}>
+          <div className="cta-band-aurora" aria-hidden="true" />
           <p className="kicker cta-band-kicker">Free automation audit</p>
           {/* "20-minute" is one word — nowrap keeps the browser from
               breaking the line at its hyphen, which reads as a botched
@@ -35,11 +37,13 @@ export default function CtaBand() {
             it is even worth doing &mdash; yours to keep, no obligation.
           </p>
           <div className="cta-band-actions">
-            <WhatsAppCta
-              message={whatsappPrefill.audit}
-              label="Book a free audit"
-              className="btn-pill cta-band-cta"
-            />
+            <Magnetic>
+              <WhatsAppCta
+                message={whatsappPrefill.audit}
+                label="Book a free audit"
+                className="btn-pill cta-band-cta"
+              />
+            </Magnetic>
             {hasWhatsApp ? (
               <Link to="/contact" className="arrow-link cta-band-alt">
                 Or send a message

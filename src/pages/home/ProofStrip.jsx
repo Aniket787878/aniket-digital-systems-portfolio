@@ -1,6 +1,7 @@
 import { m } from 'motion/react'
 import { proofTools } from '../../data.js'
-import { fadeUp, reveal, revealStagger } from '../../motion/variants.js'
+import { reveal } from '../../motion/variants.js'
+import Marquee from '../../components/Marquee.jsx'
 
 /* ---------------------------------------------------------------
    1b — Proof strip. Who it is for, then the stack, straight under
@@ -35,14 +36,17 @@ export default function ProofStrip() {
             system stays yours after I hand it over.
           </p>
         </m.div>
-        <m.ul className="proof-grid" {...revealStagger}>
+        {/* The tool stack as a slow, seamless ticker — a live logo-wall
+            equivalent. Pauses on hover; static and wrapped under reduced
+            motion (see .marquee). */}
+        <Marquee seconds={40}>
           {proofTools.map((tool) => (
-            <m.li key={tool.name} className="proof-item" variants={fadeUp}>
+            <span key={tool.name} className="proof-marquee-item">
               <span className="proof-name">{tool.name}</span>
               <span className="proof-note">{tool.note}</span>
-            </m.li>
+            </span>
           ))}
-        </m.ul>
+        </Marquee>
       </div>
     </section>
   )

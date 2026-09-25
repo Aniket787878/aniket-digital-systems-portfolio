@@ -1213,6 +1213,8 @@
 }
 
 .cta-band-inner {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1221,6 +1223,64 @@
   border-radius: var(--radius-lg);
   background: var(--accent);
   color: var(--accent-ink-strong);
+}
+
+/* Aurora — slow drifting light over the saffron block, giving the one
+   full-colour band on the page some depth instead of a flat fill. It is
+   orange-on-orange and low-contrast on purpose, so the dark copy stays
+   perfectly readable; it holds still under reduced motion. */
+.cta-band-aurora {
+  position: absolute;
+  inset: -25%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(38% 48% at 22% 30%, rgba(255, 190, 105, 0.6), transparent 62%),
+    radial-gradient(34% 44% at 80% 24%, rgba(255, 120, 20, 0.5), transparent 60%),
+    radial-gradient(46% 56% at 62% 82%, rgba(255, 210, 140, 0.45), transparent 62%);
+  filter: blur(24px);
+  animation: cta-aurora 16s ease-in-out infinite alternate;
+}
+
+.cta-band-inner > :not(.cta-band-aurora) {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes cta-aurora {
+  from {
+    transform: translate3d(-4%, -2%, 0) scale(1.05) rotate(-2deg);
+  }
+  to {
+    transform: translate3d(4%, 3%, 0) scale(1.16) rotate(2deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-band-aurora {
+    animation: none;
+  }
+}
+
+/* Compact tool item for the proof-strip marquee. */
+.proof-marquee-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: 0 clamp(1.25rem, 3vw, 2.5rem);
+  border-right: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.proof-marquee-item .proof-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  color: var(--ink);
+}
+
+.proof-marquee-item .proof-note {
+  font-size: var(--text-sm);
+  color: var(--muted);
 }
 
 /* .kicker is accent-on-dark by default, which would vanish here.

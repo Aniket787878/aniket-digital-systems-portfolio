@@ -2,7 +2,9 @@ import { Link } from 'react-router-dom'
 import { m } from 'motion/react'
 import { projects } from '../../data.js'
 import SystemDiagram from '../../components/SystemDiagram.jsx'
-import { fadeUp, reveal, revealStagger } from '../../motion/variants.js'
+import { fadeUp, stagger, revealStagger } from '../../motion/variants.js'
+import { spotlightMove } from '../../motion/interactions.js'
+import SplitText from '../../motion/SplitText.jsx'
 
 /* ---------------------------------------------------------------
    2 — Selected work. Real case studies, each headed by a schematic
@@ -12,17 +14,22 @@ export default function Work() {
   return (
     <section className="work">
       <div className="container">
-        <m.div className="split-head" {...reveal}>
-          <div>
-            <p className="kicker">Selected Work</p>
-            <h2 className="split-title">Problems, turned into systems</h2>
-          </div>
-          <p className="split-lede">
+        <m.div className="split-head" {...revealStagger}>
+          <m.div variants={stagger}>
+            <m.p className="kicker" variants={fadeUp}>Selected Work</m.p>
+            <SplitText
+              as="h2"
+              className="split-title"
+              text="Problems, turned into systems"
+              standalone={false}
+            />
+          </m.div>
+          <m.p className="split-lede" variants={fadeUp}>
             Production systems built and shipped end to end by one person — the
             app, the backend, the payments, the AI and the infrastructure. The
             client systems run real businesses every day; Signet, Relay and
             Prospector are tools I built to work the same ideas in the open.
-          </p>
+          </m.p>
         </m.div>
 
         {/* The first card is featured full-width in a horizontal split, which
@@ -40,7 +47,8 @@ export default function Work() {
               >
                 <Link
                   to={`/projects/${project.slug}`}
-                  className={`work-card${featured ? ' work-card-featured' : ''}`}
+                  className={`work-card spotlight${featured ? ' work-card-featured' : ''}`}
+                  onPointerMove={spotlightMove}
                 >
                   <SystemDiagram className="work-media" variant={project.diagram} />
                   <div className="work-body">

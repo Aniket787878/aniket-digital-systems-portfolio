@@ -1998,37 +1998,6 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-/* Hero warmth — a soft organic saffron blob low in the frame, adding warmth
-   behind the copy without crossing the portrait. Drifts slowly; holds still
-   under reduced motion. */
-.hero-blob {
-  position: absolute;
-  z-index: -1;
-  left: -8%;
-  bottom: -4%;
-  width: min(46vw, 640px);
-  aspect-ratio: 1.35 / 1;
-  border-radius: 50%;
-  background: radial-gradient(
-    closest-side,
-    rgba(245, 135, 30, 0.3),
-    rgba(245, 135, 30, 0.09) 55%,
-    transparent 72%
-  );
-  filter: blur(34px);
-  pointer-events: none;
-  animation: hero-blob-drift 18s ease-in-out infinite alternate;
-}
-
-@keyframes hero-blob-drift {
-  from {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  to {
-    transform: translate3d(5%, -6%, 0) scale(1.14);
-  }
-}
-
 /* Honest credential/availability badge — a glass pill with a live pulse. */
 .hero-badge {
   display: inline-flex;

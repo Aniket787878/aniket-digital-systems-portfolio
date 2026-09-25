@@ -1958,3 +1958,148 @@
     mask-image: none;
   }
 }
+
+/* ============================================================
+   Warm-glass pass — glassmorphism + soft depth + hero warmth,
+   in the site's own dark/saffron system (inspired by, not cloned).
+   ============================================================ */
+
+/* Glass cards: a top-lit translucent panel with a light-edge highlight and a
+   soft shadow for depth. No backdrop-filter — the page ground is flat, so a
+   blur would cost GPU for nothing; the translucency + highlight carry it. */
+.work-card,
+.caps-card,
+.pricing-card {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.022)
+  );
+  box-shadow: 0 22px 45px -30px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.work-card:hover,
+.caps-card:hover,
+.pricing-card:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.09),
+    rgba(255, 255, 255, 0.035)
+  );
+  box-shadow: 0 30px 55px -28px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.11);
+}
+
+/* The featured card gets a warmer, saffron-tinted glow to set it apart. */
+.pricing-card-featured,
+.work-card-featured {
+  box-shadow: 0 26px 55px -28px rgba(245, 135, 30, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Hero warmth — a soft organic saffron blob low in the frame, adding warmth
+   behind the copy without crossing the portrait. Drifts slowly; holds still
+   under reduced motion. */
+.hero-blob {
+  position: absolute;
+  z-index: -1;
+  left: -8%;
+  bottom: -4%;
+  width: min(46vw, 640px);
+  aspect-ratio: 1.35 / 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(245, 135, 30, 0.3),
+    rgba(245, 135, 30, 0.09) 55%,
+    transparent 72%
+  );
+  filter: blur(34px);
+  pointer-events: none;
+  animation: hero-blob-drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes hero-blob-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(5%, -6%, 0) scale(1.14);
+  }
+}
+
+/* Honest credential/availability badge — a glass pill with a live pulse. */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: fit-content;
+  margin-bottom: var(--space-4);
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--ink-soft);
+  background: rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.hero-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34d399;
+  animation: badge-pulse 2.6s ease-out infinite;
+}
+
+@keyframes badge-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 9px rgba(52, 211, 153, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+  }
+}
+
+/* Hand-drawn annotation near the primary CTA — personality, desktop only. */
+.hero-annotation {
+  position: absolute;
+  left: calc(100% + 1.25rem);
+  top: 50%;
+  transform: translateY(-50%) rotate(-6deg);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 600;
+  font-style: italic;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.hero-annotation svg {
+  width: 46px;
+  height: 30px;
+  color: var(--accent);
+}
+
+@media (max-width: 1080px) {
+  .hero-annotation {
+    display: none;
+  }
+}
+
+/* Anchor the hand-drawn annotation to the actions row. */
+.hero-actions {
+  position: relative;
+}

@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { m } from 'motion/react'
-import { site, whatsappPrefill } from '../../data.js'
+import { whatsappPrefill } from '../../data.js'
 import ArrowIcon from '../../components/ArrowIcon.jsx'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
 import SafeMount from '../../components/SafeMount.jsx'
@@ -124,29 +124,6 @@ export default function Hero() {
             />
           </m.div>
           <m.div className="hero-support" variants={heroContainer}>
-            {/* A result, not a slogan. "Good systems should feel
-                invisible" said nothing a visitor could check; the number
-                below is the same length and does the persuading. The
-                sentiment still opens the footer.
-
-                The claim and its note are one object, not two lines of
-                copy: an unqualified number is exactly what the note exists
-                to prevent, so nothing may separate them. */}
-            <m.p className="hero-claim" variants={heroItem}>
-              {site.heroProof.claim}
-            </m.p>
-            <m.p className="hero-proof-note" variants={heroItem}>
-              {site.heroProof.note}{' '}
-              <Link
-                to={`/projects/${site.heroProof.slug}`}
-                className="hero-proof-link"
-              >
-                {site.heroProof.linkLabel}
-                <span className="arrow" aria-hidden="true">
-                  &nbsp;&rarr;
-                </span>
-              </Link>
-            </m.p>
             {/* WhatsApp leads when it exists, because the buyer already
                 lives there; the form drops to a quiet second path. With no
                 number set, the form is the only route and keeps the fill. */}

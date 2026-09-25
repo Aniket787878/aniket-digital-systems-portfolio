@@ -1874,6 +1874,28 @@
 }
 
 /* --- Small phone --- */
+/* --- Portrait phones (the 4:5 crop) --- */
+@media (max-width: 600px) {
+  /* With the proof lines removed, hand the top of the hero to the portrait:
+     a tall photo band, and the whole header dropped below it, so the face
+     reads first and the copy follows underneath rather than sitting over it. */
+  .hero {
+    --hero-photo-h: min(56vh, 116vw);
+  }
+
+  .hero-photo {
+    height: var(--hero-photo-h);
+    object-position: center top;
+  }
+
+  /* Push the header to just below the photo. The photo starts ~1.5rem above
+     the content's normal top (nav offset minus the band's top nudge), so
+     that much is subtracted to butt the header against the faded photo edge. */
+  .hero-content {
+    padding-top: calc(var(--hero-photo-h) - 1.5rem);
+  }
+}
+
 @media (max-width: 480px) {
   /* Own the first screen. This was min-height: 0, which left the hero at
      its content height — 699px on a 844px phone — so the fold landed a

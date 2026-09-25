@@ -580,13 +580,17 @@ a:hover {
 }
 
 .nav-scrolled {
-  background: rgba(16, 16, 16, 0.82);
+  /* Frosted glass: more translucent than before, with a stronger blur and a
+     touch of saturation, so the hero photo and sections read *through* the
+     bar as soft colour rather than a flat dark slab. */
+  background: rgba(16, 16, 16, 0.55);
   /* iOS Safari only blurs with the -webkit- prefix. Without it the bar is
-     just 82%-opaque dark over the hero photo and the text underneath shows
+     just semi-opaque dark over the hero photo and the text underneath shows
      through sharply — which is why the header looked broken on iPhone. */
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-  border-bottom-color: var(--line);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom-color: var(--line-strong);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .nav-inner {

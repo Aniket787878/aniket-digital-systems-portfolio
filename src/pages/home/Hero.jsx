@@ -90,6 +90,9 @@ export default function Hero() {
       </picture>
       <div className="hero-scrim" aria-hidden="true" />
 
+      {/* Soft saffron blob low in the frame — warmth behind the copy. */}
+      <div className="hero-blob" aria-hidden="true" />
+
       {/* Pointer-reactive network, above the scrim and behind the copy.
           Suspense fallback is null — the photograph is already the ground,
           so there is nothing to show while the chunk loads. */}
@@ -109,6 +112,10 @@ export default function Hero() {
           animate="show"
         >
           <m.div variants={heroContainer}>
+            <m.div className="hero-badge" variants={heroItem}>
+              <span className="hero-badge-dot" aria-hidden="true" />
+              Available &middot; 2 build slots a month
+            </m.div>
             <m.p className="hero-eyebrow" variants={heroItem}>
               Hey, I&rsquo;m Aniket &mdash; I build
             </m.p>
@@ -172,6 +179,26 @@ export default function Hero() {
                   </span>
                 </Link>
               )}
+              {/* Hand-drawn flourish pointing at the primary CTA — warmth,
+                  desktop only, decorative. */}
+              <span className="hero-annotation" aria-hidden="true">
+                <svg viewBox="0 0 60 40" fill="none">
+                  <path
+                    d="M57 7c-14-4-33 0-45 14"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M12 21 6 21m6 0 3 6"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                Let&rsquo;s build
+              </span>
             </m.div>
           </m.div>
         </m.div>

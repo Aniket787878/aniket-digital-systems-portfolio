@@ -6,7 +6,7 @@ import ArrowIcon from '../../components/ArrowIcon.jsx'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
 import SafeMount from '../../components/SafeMount.jsx'
 import { hasWhatsApp } from '../../whatsapp.js'
-import { fadeUp, stagger } from '../../motion/variants.js'
+import { heroContainer, heroItem } from '../../motion/variants.js'
 
 /* three.js / R3F live behind this dynamic import, so they are a separate
    chunk that only downloads when the 3D actually mounts — never on mobile,
@@ -31,10 +31,17 @@ export default function Hero() {
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const wide = window.matchMedia('(min-width: 1024px)').matches
-    // Deliberately post-mount: flipping this after first paint is what keeps
-    // the three.js chunk out of the initial load and off the critical path.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (!reduce && wide) setEnable3D(true)
+    if (reduce || !wide) return undefined
+    // Load the three.js chunk only once the browser is idle — after the
+    // photo and copy have painted and the hero is interactive — so the 3D
+    // never sits on the critical path or competes for the first frames.
+    const ric = window.requestIdleCallback
+    if (ric) {
+      const id = ric(() => setEnable3D(true), { timeout: 1800 })
+      return () => window.cancelIdleCallback?.(id)
+    }
+    const t = setTimeout(() => setEnable3D(true), 600)
+    return () => clearTimeout(t)
   }, [])
 
   return (
@@ -95,19 +102,19 @@ export default function Hero() {
       <div className="container hero-content">
         <m.div
           className="hero-grid"
-          variants={stagger}
+          variants={heroContainer}
           initial="hidden"
           animate="show"
         >
-          <m.div variants={stagger}>
-            <m.p className="hero-eyebrow" variants={fadeUp}>
+          <m.div variants={heroContainer}>
+            <m.p className="hero-eyebrow" variants={heroItem}>
               Hey, I&rsquo;m Aniket &mdash; I build
             </m.p>
-            <m.h1 className="hero-title" variants={fadeUp}>
+            <m.h1 className="hero-title" variants={heroItem}>
               Complete systems, end to end
             </m.h1>
           </m.div>
-          <m.div className="hero-support" variants={stagger}>
+          <m.div className="hero-support" variants={heroContainer}>
             {/* A result, not a slogan. "Good systems should feel
                 invisible" said nothing a visitor could check; the number
                 below is the same length and does the persuading. The
@@ -116,10 +123,10 @@ export default function Hero() {
                 The claim and its note are one object, not two lines of
                 copy: an unqualified number is exactly what the note exists
                 to prevent, so nothing may separate them. */}
-            <m.p className="hero-claim" variants={fadeUp}>
+            <m.p className="hero-claim" variants={heroItem}>
               {site.heroProof.claim}
             </m.p>
-            <m.p className="hero-proof-note" variants={fadeUp}>
+            <m.p className="hero-proof-note" variants={heroItem}>
               {site.heroProof.note}{' '}
               <Link
                 to={`/projects/${site.heroProof.slug}`}
@@ -134,7 +141,7 @@ export default function Hero() {
             {/* WhatsApp leads when it exists, because the buyer already
                 lives there; the form drops to a quiet second path. With no
                 number set, the form is the only route and keeps the fill. */}
-            <m.div className="hero-actions" variants={fadeUp}>
+            <m.div className="hero-actions" variants={heroItem}>
               <WhatsAppCta
                 message={whatsappPrefill.hero}
                 label="Message me on WhatsApp"

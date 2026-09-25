@@ -39,6 +39,18 @@ export const staggerFast = {
   show: { transition: { staggerChildren: 0.06, delayChildren: 0.02 } },
 }
 
+/* Hero entrance — deliberately snappier and tighter than the scroll reveals,
+   so the fold reads as a crisp arrival rather than the same drift used down
+   the page. */
+export const heroContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07, delayChildren: 0.06 } },
+}
+export const heroItem = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
+}
+
 /* Standard whileInView viewport: fire once, a little before fully in view. */
 export const inview = { once: true, margin: '0px 0px -12% 0px' }
 

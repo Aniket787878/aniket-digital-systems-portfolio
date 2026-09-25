@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { m } from 'motion/react'
 import { projects } from '../../data.js'
 import ArrowIcon from '../../components/ArrowIcon.jsx'
+import { reveal } from '../../motion/variants.js'
 
 /* ---------------------------------------------------------------
    5 — Closing CTA, optionally over a fanned arc of the real case studies.
@@ -126,7 +128,7 @@ export default function Gallery() {
       </div>
       )}
 
-      <div className="container gallery-content">
+      <m.div className="container gallery-content" {...reveal}>
         <p className="kicker">Behind the systems</p>
         <h2 className="gallery-title">Curious what else I&rsquo;ve built?</h2>
         <p className="gallery-lede">
@@ -139,7 +141,7 @@ export default function Gallery() {
             <ArrowIcon />
           </span>
         </Link>
-      </div>
+      </m.div>
     </section>
   )
 }

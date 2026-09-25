@@ -1,4 +1,6 @@
+import { m } from 'motion/react'
 import { proofTools } from '../../data.js'
+import { fadeUp, reveal, revealStagger } from '../../motion/variants.js'
 
 /* ---------------------------------------------------------------
    1b — Proof strip. Who it is for, then the stack, straight under
@@ -22,7 +24,7 @@ export default function ProofStrip() {
         {/* Two columns so the band fills the width rather than stacking two
             narrow paragraphs against an empty right half: who it's for on the
             left, how it's built on the right. */}
-        <div className="proof-head">
+        <m.div className="proof-head" {...reveal}>
           <p className="proof-lede">
             For clinics, studios, agencies and consultancies: bookings, intake
             and follow-ups in one place instead of across WhatsApp threads and
@@ -32,15 +34,15 @@ export default function ProofStrip() {
             Built with tools you keep. Self-hosted where it matters, so the
             system stays yours after I hand it over.
           </p>
-        </div>
-        <ul className="proof-grid">
+        </m.div>
+        <m.ul className="proof-grid" {...revealStagger}>
           {proofTools.map((tool) => (
-            <li key={tool.name} className="proof-item">
+            <m.li key={tool.name} className="proof-item" variants={fadeUp}>
               <span className="proof-name">{tool.name}</span>
               <span className="proof-note">{tool.note}</span>
-            </li>
+            </m.li>
           ))}
-        </ul>
+        </m.ul>
       </div>
     </section>
   )

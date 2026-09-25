@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
+import { m } from 'motion/react'
 import { site, whatsappPrefill } from '../../data.js'
 import ArrowIcon from '../../components/ArrowIcon.jsx'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
 import { hasWhatsApp } from '../../whatsapp.js'
+import { reveal } from '../../motion/variants.js'
 
 /* ---------------------------------------------------------------
    5b — CTA band. The reference breaks its long middle with a
@@ -14,7 +16,7 @@ export default function CtaBand() {
   return (
     <section className="cta-band">
       <div className="container">
-        <div className="cta-band-inner">
+        <m.div className="cta-band-inner" {...reveal}>
           <p className="kicker cta-band-kicker">Free automation audit</p>
           {/* "20-minute" is one word — nowrap keeps the browser from
               breaking the line at its hyphen, which reads as a botched
@@ -58,7 +60,7 @@ export default function CtaBand() {
           {site.availability && (
             <p className="cta-band-availability">{site.availability}</p>
           )}
-        </div>
+        </m.div>
       </div>
     </section>
   )

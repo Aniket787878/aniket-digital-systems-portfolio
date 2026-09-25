@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
+import { m } from 'motion/react'
 import { projects } from '../../data.js'
 import SystemDiagram from '../../components/SystemDiagram.jsx'
+import { fadeUp, reveal, revealStagger } from '../../motion/variants.js'
 
 /* ---------------------------------------------------------------
    2 — Selected work. Real case studies, each headed by a schematic
@@ -10,7 +12,7 @@ export default function Work() {
   return (
     <section className="work">
       <div className="container">
-        <div className="split-head">
+        <m.div className="split-head" {...reveal}>
           <div>
             <p className="kicker">Selected Work</p>
             <h2 className="split-title">Problems, turned into systems</h2>
@@ -21,11 +23,11 @@ export default function Work() {
             client systems run real businesses every day; Signet, Relay and
             Prospector are tools I built to work the same ideas in the open.
           </p>
-        </div>
+        </m.div>
 
-        <ul className="work-grid">
+        <m.ul className="work-grid" {...revealStagger}>
           {projects.map((project) => (
-            <li key={project.slug} className="work-item">
+            <m.li key={project.slug} className="work-item" variants={fadeUp}>
               <Link to={`/projects/${project.slug}`} className="work-card">
                 <SystemDiagram className="work-media" variant={project.diagram} />
                 <div className="work-body">
@@ -51,9 +53,9 @@ export default function Work() {
                   </span>
                 </div>
               </Link>
-            </li>
+            </m.li>
           ))}
-        </ul>
+        </m.ul>
       </div>
     </section>
   )

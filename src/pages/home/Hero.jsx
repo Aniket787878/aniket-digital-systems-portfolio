@@ -1,8 +1,17 @@
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { m } from 'motion/react'
 import { site, whatsappPrefill } from '../../data.js'
 import ArrowIcon from '../../components/ArrowIcon.jsx'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
+import SafeMount from '../../components/SafeMount.jsx'
 import { hasWhatsApp } from '../../whatsapp.js'
+import { fadeUp, stagger } from '../../motion/variants.js'
+
+/* three.js / R3F live behind this dynamic import, so they are a separate
+   chunk that only downloads when the 3D actually mounts — never on mobile,
+   never under reduced motion, never in the first-load bundle. */
+const Hero3D = lazy(() => import('../../components/Hero3D.jsx'))
 
 /* ---------------------------------------------------------------
    1 — Hero. Full-bleed portrait ground, content anchored to the
@@ -15,6 +24,19 @@ import { hasWhatsApp } from '../../whatsapp.js'
    was 179px of the reason the hero did not fit a 900px laptop.
    --------------------------------------------------------------- */
 export default function Hero() {
+  // The 3D accent is opt-in: only a wide viewport with motion allowed gets
+  // it. Everyone else keeps the photograph alone. Computed after mount so it
+  // never runs during SSR/first paint and never blocks the hero.
+  const [enable3D, setEnable3D] = useState(false)
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const wide = window.matchMedia('(min-width: 1024px)').matches
+    // Deliberately post-mount: flipping this after first paint is what keeps
+    // the three.js chunk out of the initial load and off the critical path.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (!reduce && wide) setEnable3D(true)
+  }, [])
+
   return (
     <section className="hero">
       {/* Shows for the instant before the JPEG decodes, and is the whole
@@ -59,13 +81,33 @@ export default function Hero() {
       </picture>
       <div className="hero-scrim" aria-hidden="true" />
 
+      {/* Pointer-reactive network, above the scrim and behind the copy.
+          Suspense fallback is null — the photograph is already the ground,
+          so there is nothing to show while the chunk loads. */}
+      {enable3D && (
+        <SafeMount>
+          <Suspense fallback={null}>
+            <Hero3D />
+          </Suspense>
+        </SafeMount>
+      )}
+
       <div className="container hero-content">
-        <div className="hero-grid">
-          <div>
-            <p className="hero-eyebrow">Hey, I&rsquo;m Aniket &mdash; I build</p>
-            <h1 className="hero-title">Complete systems, end to end</h1>
-          </div>
-          <div className="hero-support">
+        <m.div
+          className="hero-grid"
+          variants={stagger}
+          initial="hidden"
+          animate="show"
+        >
+          <m.div variants={stagger}>
+            <m.p className="hero-eyebrow" variants={fadeUp}>
+              Hey, I&rsquo;m Aniket &mdash; I build
+            </m.p>
+            <m.h1 className="hero-title" variants={fadeUp}>
+              Complete systems, end to end
+            </m.h1>
+          </m.div>
+          <m.div className="hero-support" variants={stagger}>
             {/* A result, not a slogan. "Good systems should feel
                 invisible" said nothing a visitor could check; the number
                 below is the same length and does the persuading. The
@@ -74,8 +116,10 @@ export default function Hero() {
                 The claim and its note are one object, not two lines of
                 copy: an unqualified number is exactly what the note exists
                 to prevent, so nothing may separate them. */}
-            <p className="hero-claim">{site.heroProof.claim}</p>
-            <p className="hero-proof-note">
+            <m.p className="hero-claim" variants={fadeUp}>
+              {site.heroProof.claim}
+            </m.p>
+            <m.p className="hero-proof-note" variants={fadeUp}>
               {site.heroProof.note}{' '}
               <Link
                 to={`/projects/${site.heroProof.slug}`}
@@ -86,11 +130,11 @@ export default function Hero() {
                   &nbsp;&rarr;
                 </span>
               </Link>
-            </p>
+            </m.p>
             {/* WhatsApp leads when it exists, because the buyer already
                 lives there; the form drops to a quiet second path. With no
                 number set, the form is the only route and keeps the fill. */}
-            <div className="hero-actions">
+            <m.div className="hero-actions" variants={fadeUp}>
               <WhatsAppCta
                 message={whatsappPrefill.hero}
                 label="Message me on WhatsApp"
@@ -114,9 +158,9 @@ export default function Hero() {
                   </span>
                 </Link>
               )}
-            </div>
-          </div>
-        </div>
+            </m.div>
+          </m.div>
+        </m.div>
       </div>
     </section>
   )

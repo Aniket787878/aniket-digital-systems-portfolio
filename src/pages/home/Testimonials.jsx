@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
+import { m } from 'motion/react'
 import { testimonials, social } from '../../data.js'
+import { reveal } from '../../motion/variants.js'
 
 /* ---------------------------------------------------------------
    3b — Testimonials. The market's #1 trust lever (docs/research/06),
@@ -38,7 +40,7 @@ export default function Testimonials() {
             ))}
           </ul>
         ) : (
-          <div className="voices-empty">
+          <m.div className="voices-empty" {...reveal}>
             <p className="voices-empty-lead">
               Every system above is a real build, not a mockup.
             </p>
@@ -68,7 +70,7 @@ export default function Testimonials() {
                 </a>
               )}
             </div>
-          </div>
+          </m.div>
         )}
       </div>
     </section>

@@ -21,6 +21,22 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Escape closes the mobile panel — the standard exit for a disclosure
+  // menu. Only bound while it is open, so it never swallows Escape
+  // elsewhere. Focus returns to the toggle so a keyboard user is not
+  // dropped at the top of the document.
+  useEffect(() => {
+    if (!open) return undefined
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setOpen(false)
+        document.querySelector('.nav-toggle')?.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
+
   // Close the mobile panel whenever the route changes. Derived during
   // render rather than in an effect so it lands in the same commit as
   // the navigation instead of flashing the open panel on the new page.

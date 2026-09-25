@@ -1,4 +1,6 @@
+import { m } from 'motion/react'
 import { capabilities } from '../../data.js'
+import { fadeUp, reveal, revealStagger } from '../../motion/variants.js'
 
 /* ---------------------------------------------------------------
    2b — Capabilities. The hero names the four areas; this is where
@@ -9,7 +11,7 @@ export default function Capabilities() {
   return (
     <section className="caps">
       <div className="container">
-        <div className="split-head">
+        <m.div className="split-head" {...reveal}>
           <div>
             <p className="kicker">What I can help you with</p>
             <h2 className="split-title">Four things, done properly</h2>
@@ -19,11 +21,11 @@ export default function Capabilities() {
             the tool &mdash; it is the hour a week that stops being spent on
             copy-paste.
           </p>
-        </div>
+        </m.div>
 
-        <ul className="caps-grid">
+        <m.ul className="caps-grid" {...revealStagger}>
           {capabilities.map((cap) => (
-            <li key={cap.index} className="caps-card">
+            <m.li key={cap.index} className="caps-card" variants={fadeUp}>
               <span className="caps-index">
                 <span className="capability-hash" aria-hidden="true">
                   #
@@ -39,9 +41,9 @@ export default function Capabilities() {
                   </li>
                 ))}
               </ul>
-            </li>
+            </m.li>
           ))}
-        </ul>
+        </m.ul>
       </div>
     </section>
   )

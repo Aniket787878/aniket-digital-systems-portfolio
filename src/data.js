@@ -34,7 +34,16 @@ export const images = {
 
   projects: {
     'mindset-workspace': '',
-    udaan: ''
+    udaan: '',
+    /* The first real screenshots on the site — Signet, Relay and Prospector
+       are self-built tools, so unlike the two client systems their running
+       UI can actually be shown. Signet: the sealed document with its audit
+       trail. Relay: a live inbox thread with the contact and pipeline
+       alongside. Prospector: the lead workspace after a live scrape. All
+       captured from the running apps. */
+    signet: '/signet-sealed.png',
+    relay: '/relay-inbox.png',
+    prospector: '/prospector-workspace.png'
   }
 }
 
@@ -358,6 +367,239 @@ export const projects = [
     ],
     outcomeNote:
       'Module, session, stage and gate counts are real counts from the build. Everything else describes the platform’s design from the builder’s seat — directional, not an audited outcome.'
+  },
+  {
+    index: '03',
+    slug: 'signet',
+    diagram: 'signature',
+    title: 'Signet — Consent & Contract Signing',
+    summary:
+      'A self-built e-signature tool for service businesses: send a consent form or contract, collect a signature that carries a real audit trail, and get back a sealed, tamper-evident PDF — without an enterprise contract or a login for the person signing.',
+    metrics: [
+      { n: '3', label: 'signer-ready templates — clinic, studio, agency' },
+      { n: 'SHA-256', label: 'seal recomputed and checked on a public page' },
+      { n: '0', label: 'third-party e-signature services — the sealing and PDF are mine' },
+      { n: '1', label: 'person: design, engineering and the cryptography' }
+    ],
+    role:
+      'Self-initiated build — the product, the signature capture, the tamper-evident sealing, the certificate PDF and the verification flow.',
+    flow: ['Compose', 'Send', 'Sign', 'Seal', 'Verify'],
+    stack: [
+      'Next.js',
+      'React',
+      'TypeScript',
+      'Tailwind CSS',
+      'Drizzle ORM',
+      'libSQL / SQLite (Turso in production)',
+      'pdf-lib',
+      'Web Crypto — SHA-256',
+      'Vercel'
+    ],
+    problem:
+      'The businesses that most need a signed consent form or contract on file — a clinic taking informed consent, a studio taking a waiver, an agency getting a statement of work signed off — are the ones e-signature tools serve worst. The serious products are priced and shaped for enterprises, make the person signing create an account, and hide what "signed" actually means behind a black box. I wanted to see how small an honest version could be: send a link, collect a signature with a real audit trail, and hand back a document whose authenticity anyone can check — without a signing API doing the part that matters.',
+    system: [
+      'A composer that starts from a realistic clinic, studio or agency template — or blank — and takes the people who need to sign, each getting their own unguessable signing link with no account to create',
+      'A signing page that works on a phone: the signer reads the document, draws or types a signature, and consents, with their timestamp, IP and device recorded as they do',
+      'A tamper-evident seal — a SHA-256 computed over the document’s full text and every signature — set the moment the last signer is done, so the record is sealed rather than merely stored',
+      'A certificate PDF generated with pdf-lib: the document, each signature embedded, and a certificate page carrying the seal and the full event log',
+      'A public verification page that recomputes the seal over the current stored record and says plainly whether it still matches — the check, not a claim of it',
+      'An append-only audit trail behind all of it: created, sent, viewed, signed, completed — every state change writes a row before it touches the document'
+    ],
+    features: [
+      {
+        title: 'Compose & send in one step',
+        text: 'Pick a template, edit the wording, add signers, and every signer gets a private link. No outbox, no account for them to make.'
+      },
+      {
+        title: 'Sign on any device',
+        text: 'Draw a signature on a phone or type it; consent is explicit and recorded; the signer’s time, IP and user-agent are captured at the moment they sign.'
+      },
+      {
+        title: 'A seal, not just storage',
+        text: 'The finished document is hashed over its text and every signature. Change one character afterwards and the seal no longer matches — and the verify page catches it.'
+      },
+      {
+        title: 'Verification anyone can run',
+        text: 'A public page recomputes the seal live against the stored record and shows authentic or tampered — no account, no trust required, just the check.'
+      }
+    ],
+    decisions: [
+      {
+        title: 'A seal you can reproduce, not a black box',
+        text: 'The seal is a plain SHA-256 over a canonical view of the record. Anyone can read how it is built and recompute it themselves, rather than take a signing vendor’s word that a document is intact.'
+      },
+      {
+        title: 'One database that scales from a file to a URL',
+        text: 'libSQL is a local SQLite file in development and a hosted Turso database in production by changing two environment variables — the same "runs on a free tier, deploys without drama" posture as the client systems.'
+      },
+      {
+        title: 'No signing API doing the important part',
+        text: 'The signature capture, the hashing and the PDF are all in the repo. The point of the exercise was to build the mechanism, not to wire up someone else’s.'
+      },
+      {
+        title: 'Name the cut corners out loud',
+        text: 'As a demo it has no sender-side accounts and shows signing links to copy rather than emailing them. The README says so plainly — the limitations are stated, not hidden.'
+      }
+    ],
+    outcome: [
+      'The full loop works end to end: compose, sign on a phone, seal, and verify — demonstrated, not described',
+      'Tamper detection is proven — altering a sealed document flips the public verification page from authentic to a seal mismatch',
+      'It is the first project on this site with real product screenshots rather than a schematic standing in for one'
+    ],
+    outcomeNote:
+      'Signet is a self-initiated working demo, not a client deployment — so there are no usage numbers here, because there are no users yet. The counts above describe what was built. The screenshots are of the running app.'
+  },
+  {
+    index: '04',
+    slug: 'relay',
+    diagram: 'relay',
+    title: 'Relay — Shared Inbox & CRM',
+    summary:
+      'A self-built shared client inbox and lightweight CRM for service businesses: every enquiry — WhatsApp, email, web form — in one thread view, tied to a contact record that moves through the pipeline, so a lead stops living in one person’s phone.',
+    metrics: [
+      { n: '3', label: 'channels — WhatsApp, email, web form — in one inbox' },
+      { n: '5', label: 'pipeline stages from first enquiry to won' },
+      { n: '1', label: 'record for the enquiry and the client — not two' },
+      { n: '0', label: 'per-seat inbox subscriptions — it is one small app' }
+    ],
+    role:
+      'Self-initiated build — the inbox, the thread and triage model, the CRM pipeline, the data model and the seed.',
+    flow: ['Arrive', 'Triage', 'Reply', 'Advance', 'Win'],
+    stack: [
+      'Next.js',
+      'React',
+      'TypeScript',
+      'Tailwind CSS',
+      'Drizzle ORM',
+      'libSQL / SQLite (Turso in production)',
+      'React Server Components',
+      'Vercel'
+    ],
+    problem:
+      'A service business runs on first conversations — a WhatsApp from a referral, an email asking about fees, a web-form enquiry at midnight — and almost none of them are set up to hold those conversations well. The enquiry lands in someone’s personal phone; the client record, if it exists at all, lives in a separate spreadsheet; and the moment an enquiry becomes a client, the context of how they got there is gone. I wanted to build the smallest honest version of the thing the big support desks and CRMs each do half of: one place where the message and the person are the same record, so replying to a client and moving a deal forward happen in the same motion.',
+    system: [
+      'A shared inbox that collapses WhatsApp, email and web-form conversations into one list, each thread marked with the channel it arrived on so you always know how to reply',
+      'A thread view with the two things a team actually needs beside the messages: the contact’s details and pipeline stage, and internal notes the client never sees',
+      'Triage built for more than one person: assign a conversation, and set it open, pending or closed — where sending a reply moves it to pending on its own',
+      'A CRM that is the same data seen differently: every conversation is attached to a contact that moves lead → qualified → active → won or lost, shown as a pipeline board and a per-contact history',
+      'Server-rendered throughout, so the triage controls are real forms that work without JavaScript — only the composer and the inbox filter are client-side',
+      'A demo seeded with a believable morning of enquiries, and a control that fabricates an inbound reply so the live-inbox behaviour can be seen without a real messaging integration'
+    ],
+    features: [
+      {
+        title: 'One inbox, every channel',
+        text: 'WhatsApp, email and web-form threads in a single list, filterable by open, unread, pending and closed, each badged with its source.'
+      },
+      {
+        title: 'Reply and note in one place',
+        text: 'Answer the client or leave a note only the team can see, with the contact and their pipeline stage always in view beside the thread.'
+      },
+      {
+        title: 'Triage like a team',
+        text: 'Assign a conversation and move it through open, pending and closed — sending a reply advances it automatically.'
+      },
+      {
+        title: 'The pipeline is built in',
+        text: 'A board of every contact by stage, and a contact page that ties their whole conversation history to where they are in the pipeline.'
+      }
+    ],
+    decisions: [
+      {
+        title: 'The enquiry and the client are one record',
+        text: 'Rather than an inbox bolted to a separate CRM, a conversation belongs to a contact from the first message. Moving a deal and replying to a client act on the same row — which is the whole reason the tool exists.'
+      },
+      {
+        title: 'Server-rendered, so triage works without JavaScript',
+        text: 'Status, assignment and stage changes are plain forms backed by server actions. Only the composer and the inbox filter need the client, so the core of the app is robust and fast by default.'
+      },
+      {
+        title: 'Simulate the inbound rather than fake the integration',
+        text: 'Real WhatsApp and email webhooks were out of scope for a demo, so instead of pretending they exist, there is an honest "simulate a client reply" control — and the README says exactly where a real provider would plug in.'
+      }
+    ],
+    outcome: [
+      'The daily loop works end to end: open a thread, reply, triage, and advance the contact down the pipeline — on one record',
+      'The inbox and the CRM genuinely share data — a stage change on the contact page shows on the thread, and a reply shows on the pipeline',
+      'Seeded with realistic enquiries so the demo behaves like a real morning of client work, not an empty shell'
+    ],
+    outcomeNote:
+      'Relay is a self-initiated working demo, not a client deployment. Inbound channels are simulated, so the counts above describe what was built, not real message volumes. The screenshots are of the running app.'
+  },
+  {
+    index: '05',
+    slug: 'prospector',
+    diagram: 'prospect',
+    title: 'Prospector — Lead-Research Scraper',
+    summary:
+      'A self-built lead-research tool: paste a business website and Prospector reads its public pages and pulls the name, contact details, location and socials into one clean, scored, exportable list — for the studio or agency doing its own outreach.',
+    metrics: [
+      { n: '5', label: 'signals read per page — JSON-LD, OG, email, phone, socials' },
+      { n: '0–100', label: 'completeness score, weighted to contact details' },
+      { n: '0', label: 'third-party scraping APIs — the extractor is in the repo' },
+      { n: 'CSV', label: 'the whole list exports in one click' }
+    ],
+    role:
+      'Self-initiated build — the extractor, the scoring, the workspace, the data model and the CSV export.',
+    flow: ['Paste', 'Fetch', 'Extract', 'Score', 'Export'],
+    stack: [
+      'Next.js',
+      'React',
+      'TypeScript',
+      'Tailwind CSS',
+      'node-html-parser',
+      'Drizzle ORM',
+      'libSQL / SQLite (Turso in production)',
+      'Vercel'
+    ],
+    problem:
+      'A studio or agency doing its own outreach doesn’t need a sales platform with a per-seat licence and a CRM bolted on — it needs a short, clean list of businesses it could actually contact. Building that list by hand means opening twenty tabs and copying a name, an email and an Instagram handle off each one. The job here was the smallest honest version of that: paste the URLs, and let the tool do the reading — while being straight about the fact that real web pages are messy and half of them won’t give up an email.',
+    system: [
+      'A server-side extractor that fetches a page and reads the business behind it in priority order: JSON-LD structured data first, then Open Graph and meta tags, then the page itself for mailto and tel links and social profiles',
+      'A completeness score from 0 to 100, weighted toward contact details, so the businesses you can actually reach rise to the top of the list',
+      'A workspace that takes a batch of URLs at once, scrapes them with a little concurrency, and drops each result into a filterable, searchable table',
+      'A per-lead view showing every extracted field — and marking the ones that were not found as not found, rather than inventing them',
+      'A pipeline of its own — new, shortlisted, contacted, archived — plus a one-click CSV export of the whole list',
+      'No headless browser and no scraping API: the extractor is about a hundred readable lines built on a lightweight HTML parser'
+    ],
+    features: [
+      {
+        title: 'It actually reads the page',
+        text: 'Structured data, Open Graph, and the page’s own mailto / tel and social links — parsed into fields server-side, not scraped blindly or run through a paid API.'
+      },
+      {
+        title: 'Scored by what you can act on',
+        text: 'Each lead gets a completeness score weighted toward contact details, so a business with an email and a phone outranks one with only a name.'
+      },
+      {
+        title: 'Honest about the gaps',
+        text: 'Web pages are inconsistent. A missing email is shown as “Not found”, never guessed — the score simply reflects how much was there.'
+      },
+      {
+        title: 'Filter, shortlist, export',
+        text: 'Filter by status or “has email”, search the list, move leads through your own pipeline, and export everything to CSV in one click.'
+      }
+    ],
+    decisions: [
+      {
+        title: 'Structured data first, then fall back',
+        text: 'Sites that ship JSON-LD get read cleanly; the rest fall back to Open Graph, meta tags and links on the page. Reading the good signal first and degrading gracefully is what makes the output trustworthy.'
+      },
+      {
+        title: 'No headless browser, on purpose',
+        text: 'A real Chromium would read JavaScript-rendered sites but cost speed, memory and complexity. A lightweight HTML parser covers most real business pages and keeps the whole tool small — the README names the trade-off.'
+      },
+      {
+        title: 'Record what was found, score the rest',
+        text: 'The tool never fabricates a missing field to look complete. Honesty is the feature: a lead you can trust is worth more than a full-looking row you can’t.'
+      }
+    ],
+    outcome: [
+      'The extraction is real — pasting a live URL fetches and parses it on the spot, and the seeded rows are genuine extractions from real public pages',
+      'Leads sort by how reachable they are, so the list is useful the moment it is built',
+      'The whole list exports to CSV, which is the actual job of a research tool'
+    ],
+    outcomeNote:
+      'Prospector is a self-initiated working demo, not a client deployment. It reads only public pages and is best pointed at sites that publish structured data; the counts describe what was built. The screenshots are of the running app.'
   }
 ]
 

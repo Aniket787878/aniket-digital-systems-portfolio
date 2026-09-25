@@ -17,7 +17,22 @@ npm run lint     # eslint, currently clean
 ## Stack
 
 React 18 · Vite 5 · React Router 6 · Inter + Archivo (fontsource) · no backend.
-**Five runtime dependencies. Adding one needs a reason.**
+**Adding a runtime dependency needs a reason.**
+
+**Motion layer.** `motion` (Framer Motion, imported as `m` via
+`LazyMotion`/`domAnimation` in `App.jsx`) drives the scroll-reveals and the
+hero entrance — shared variants live in `src/motion/variants.js`. Every
+animation respects `prefers-reduced-motion` through the one
+`<MotionConfig reducedMotion="user">` wrapper, so components need no
+per-element guard.
+
+**3D hero accent.** `three` + `@react-three/fiber` + `@react-three/drei`
+render the pointer-reactive node network in `components/Hero3D.jsx`. It is
+**code-split** (a `lazy()` import in `Hero.jsx`) and only mounts on a wide
+viewport with motion allowed — never on mobile, never under reduced motion,
+never in the first-load bundle. A `SafeMount` boundary drops it silently if
+WebGL is unavailable, leaving the photograph. Keep it lazy: the three.js
+chunk is ~220KB gzip and must never re-enter the main bundle.
 
 **Live on Vercel**, deploying from `main` on every push (team `aniket-s1`,
 project `aniket-portfolio`). `vercel.json` holds the SPA rewrite — delete it and
@@ -51,8 +66,10 @@ Break any of these and nothing errors — it just renders wrong.
    preloads must stay identical.** Mismatch them and the phone downloads both
    frames and shows one. All three files must stay in `public/`: nothing
    imports them, so a bundler will not catch their absence and the hero
-   silently falls back to the CSS gradient. The old WebGL `HeroCanvas.jsx` is
-   deleted.
+   silently falls back to the CSS gradient. The photograph is still the hero's
+   ground; the `Hero3D` network (see Stack) only overlays it as a lazy accent
+   on capable desktops and must never become load-bearing for the hero being
+   visible.
 4. **`HomePage.css` stays one file.** Do not split it per section. Its rules beat
    `index.css` on source order alone (see 2), and a single import from a single
    place is what pins that order regardless of component evaluation order.

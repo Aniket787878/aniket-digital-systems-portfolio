@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { m } from 'motion/react'
 import { faq } from '../../data.js'
 import ArrowIcon from '../../components/ArrowIcon.jsx'
+import { fadeUp, reveal, revealStagger } from '../../motion/variants.js'
 
 /* ---------------------------------------------------------------
    4 — FAQ. Real disclosure buttons, one open at a time.
@@ -12,7 +14,7 @@ export default function Faq() {
   return (
     <section className="faq">
       <div className="container faq-grid">
-        <div className="faq-intro">
+        <m.div className="faq-intro" {...reveal}>
           <p className="kicker">Frequently Asked Questions</p>
           <h2 className="split-title">Answers to common questions</h2>
           <p className="faq-lede">
@@ -25,15 +27,16 @@ export default function Faq() {
               <ArrowIcon />
             </span>
           </Link>
-        </div>
+        </m.div>
 
-        <ul className="faq-list">
+        <m.ul className="faq-list" {...revealStagger}>
           {faq.map((item, i) => {
             const isOpen = openIndex === i
             return (
-              <li
+              <m.li
                 key={item.q}
                 className={`faq-item${isOpen ? ' faq-item-open' : ''}`}
+                variants={fadeUp}
               >
                 <h3>
                   <button
@@ -67,10 +70,10 @@ export default function Faq() {
                     <p>{item.a}</p>
                   </div>
                 )}
-              </li>
+              </m.li>
             )
           })}
-        </ul>
+        </m.ul>
       </div>
     </section>
   )

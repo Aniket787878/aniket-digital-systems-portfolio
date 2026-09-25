@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
+import { m } from 'motion/react'
 import { packages, carePlan, whatsappPrefill } from '../../data.js'
 import { hasWhatsApp, whatsappHref } from '../../whatsapp.js'
+import { fadeUp, reveal, revealStagger } from '../../motion/variants.js'
 
 /* The guarantee strip under the grid (docs/research/06, gap G8). Every
    line is a promise already made elsewhere on the site — the pricing lede,
@@ -30,7 +32,7 @@ export default function Pricing() {
   return (
     <section className="pricing">
       <div className="container">
-        <div className="split-head">
+        <m.div className="split-head" {...reveal}>
           <div>
             <p className="kicker">Pricing</p>
             <h2 className="split-title">Fixed scope, stated timeline</h2>
@@ -40,13 +42,14 @@ export default function Pricing() {
             written scope, with a date attached. Half up front, half on
             delivery.
           </p>
-        </div>
+        </m.div>
 
-        <ul className="pricing-grid">
+        <m.ul className="pricing-grid" {...revealStagger}>
           {packages.map((pkg) => (
-            <li
+            <m.li
               key={pkg.name}
               className={`pricing-card${pkg.featured ? ' pricing-card-featured' : ''}`}
+              variants={fadeUp}
             >
               {pkg.featured && (
                 <span className="pricing-flag">Most start here</span>
@@ -86,9 +89,9 @@ export default function Pricing() {
                   </span>
                 </Link>
               )}
-            </li>
+            </m.li>
           ))}
-        </ul>
+        </m.ul>
 
         <ul className="pricing-guarantees">
           {GUARANTEES.map((g) => (

@@ -767,6 +767,197 @@ function Journey() {
   )
 }
 
+/* Signet — a self-built e-signature tool. The flow runs left to right —
+   compose, sign, seal, verify — with the seal as the accent step because
+   it is the one that turns a signed form into a defensible record. The
+   bottom lane is the audit trail, the thing that makes the seal mean
+   something: an append-only log recomputed and checked on the verify
+   page. Unlike the other five diagrams, this project has real
+   screenshots, which sit in the screenshot slot below the schematic. */
+function Signature() {
+  const steps = [
+    { label: 'Compose', sub: 'template + signers' },
+    { label: 'Sign', sub: 'draw / type + consent' },
+    { label: 'Seal', sub: 'SHA-256 over the record', accent: true },
+    { label: 'Verify', sub: 'public, live check' }
+  ]
+  const NODE_W = 180
+  const STEP = 218
+
+  return (
+    <g>
+      <T x={52} y={76} caps>Consent to a sealed record</T>
+      {steps.map((s, i) => {
+        const x = 32 + i * STEP
+        return (
+          <g key={s.label}>
+            <Node x={x} y={92} w={NODE_W} h={60} label={s.label} sub={s.sub} accent={s.accent} />
+            {i < steps.length - 1 && <ArrowR x={x + NODE_W} y={122} len={38} />}
+          </g>
+        )
+      })}
+
+      {/* Left — what the hash is computed over. */}
+      <Panel x={32} y={196} w={516} h={112} />
+      <T x={52} y={224} caps>What the seal covers</T>
+      <T x={52} y={252} size={12} fill={C.muted} weight={400}>
+        Full document text
+      </T>
+      <T x={52} y={274} size={12} fill={C.muted} weight={400}>
+        Every signature — drawn or typed
+      </T>
+      <T x={52} y={296} size={12} fill={C.muted} weight={400}>
+        Each signer, timestamp and IP
+      </T>
+
+      {/* Right — verification: recompute and compare. */}
+      <Panel x={568} y={196} w={300} h={112} fill={C.panelHi} />
+      <T x={588} y={224} caps>Verify, anytime</T>
+      <T x={588} y={250} size={11.5} fill={C.muted} weight={400}>
+        Recompute the seal, compare.
+      </T>
+      <Chip x={588} y={264} w={128} label="match = authentic" accent />
+      <Chip x={726} y={264} w={124} label="mismatch = tampered" />
+
+      {/* Bottom — the audit trail. */}
+      <line x1={52} y1={340} x2={848} y2={340} stroke={C.strokeSoft} strokeWidth="1.5" />
+      <T x={52} y={372} caps>Audit trail — every event logged</T>
+      {[
+        { label: 'created', x: 32, w: 78 },
+        { label: 'viewed', x: 128, w: 74 },
+        { label: 'signed', x: 220, w: 74 },
+        { label: 'completed', x: 312, w: 98 }
+      ].map((c, i, arr) => (
+        <g key={c.label}>
+          <Chip x={c.x} y={388} w={c.w} label={c.label} />
+          {i < arr.length - 1 && <ArrowR x={c.x + c.w + 3} y={398} len={13} />}
+        </g>
+      ))}
+      <T x={430} y={402} size={12} fill={C.muted} weight={400}>
+        printed onto the certificate page of the sealed PDF
+      </T>
+    </g>
+  )
+}
+
+/* Relay — a self-built shared inbox and CRM. The top lane collapses three
+   channels into one thread and its triage; the bottom lane is the pipeline
+   the same contact moves along. The whole point of the drawing is the join
+   between them: the inbox and the CRM are one record, not two systems. Like
+   Signet, this project has real screenshots, which sit below the schematic. */
+function Relay() {
+  const channels = ['WhatsApp', 'Email', 'Web form']
+
+  return (
+    <g>
+      <T x={52} y={72} caps>Many channels, one thread</T>
+
+      {/* Channel sources feeding the inbox. */}
+      {channels.map((c, i) => {
+        const y = 92 + i * 48
+        return (
+          <g key={c}>
+            <Node x={32} y={y} w={150} h={40} label={c} />
+            <ArrowR x={182} y={y + 20} len={62} />
+          </g>
+        )
+      })}
+
+      {/* Inbox → thread → contact. */}
+      <Node x={244} y={92} w={168} h={136} label="Shared inbox" sub="one list, every source" />
+      <ArrowR x={412} y={160} len={38} />
+      <Node x={450} y={120} w={190} h={80} label="Thread + triage" sub="reply · note · assign" />
+      <ArrowR x={640} y={160} len={38} />
+      <Node x={678} y={120} w={190} h={80} label="Contact record" sub="the same person" accent />
+
+      {/* The pipeline, built in. */}
+      <line x1={52} y1={272} x2={848} y2={272} stroke={C.strokeSoft} strokeWidth="1.5" />
+      <T x={52} y={304} caps>One pipeline, built in</T>
+      {[
+        { label: 'Lead', x: 32 },
+        { label: 'Qualified', x: 196 },
+        { label: 'Active', x: 360 },
+        { label: 'Won', x: 524, accent: true },
+        { label: 'Lost', x: 688 }
+      ].map((s, i, arr) => (
+        <g key={s.label}>
+          <Node x={s.x} y={324} w={150} h={44} label={s.label} accent={s.accent} />
+          {i < arr.length - 1 && <ArrowR x={s.x + 150} y={346} len={14} />}
+        </g>
+      ))}
+      <T x={52} y={410} size={12} fill={C.muted} weight={400}>
+        The inbox and the CRM are the same record — reply to a message and move the deal on the same contact.
+      </T>
+    </g>
+  )
+}
+
+/* Prospector — a self-built lead-research tool. A URL goes in; the page is
+   fetched and read for the business behind it. The accent step is the
+   extraction, because reading a real page honestly — structured data first,
+   then falling back — is the whole craft. The left panel is what it reads,
+   the right is how a lead is scored. Like the other two tools, this one has
+   real screenshots, which sit below the schematic. */
+function Prospect() {
+  const steps = [
+    { label: 'Paste URL', sub: 'one or many' },
+    { label: 'Fetch page', sub: 'server-side' },
+    { label: 'Extract', sub: 'the business behind it', accent: true },
+    { label: 'Scored lead', sub: 'ranked by reach' }
+  ]
+  const NODE_W = 180
+  const STEP = 218
+
+  return (
+    <g>
+      <T x={52} y={72} caps>From a URL to a lead</T>
+      {steps.map((s, i) => {
+        const x = 32 + i * STEP
+        return (
+          <g key={s.label}>
+            <Node x={x} y={92} w={NODE_W} h={60} label={s.label} sub={s.sub} accent={s.accent} />
+            {i < steps.length - 1 && <ArrowR x={x + NODE_W} y={122} len={38} />}
+          </g>
+        )
+      })}
+
+      {/* Left — what the extractor reads, in priority order. */}
+      <Panel x={32} y={196} w={430} h={120} />
+      <T x={52} y={224} caps>What it reads, in order</T>
+      <T x={52} y={250} size={12} fill={C.muted} weight={400}>
+        JSON-LD structured data
+      </T>
+      <T x={52} y={272} size={12} fill={C.muted} weight={400}>
+        Open Graph &amp; meta tags
+      </T>
+      <T x={52} y={294} size={12} fill={C.muted} weight={400}>
+        mailto / tel links, social profiles
+      </T>
+
+      {/* Right — scoring. */}
+      <Panel x={478} y={196} w={390} h={120} fill={C.panelHi} />
+      <T x={498} y={224} caps>Scored by contactability</T>
+      <rect x={498} y={244} width={250} height={8} rx={4} fill={C.ground} />
+      <rect x={498} y={244} width={158} height={8} rx={4} fill={C.accent} />
+      <T x={760} y={252} size={11} fill={C.muted} weight={400}>
+        63 / 100
+      </T>
+      <Chip x={498} y={274} w={64} label="new" accent />
+      <Chip x={572} y={274} w={92} label="shortlisted" />
+      <Chip x={674} y={274} w={86} label="contacted" />
+
+      {/* Bottom — the honesty rule + export. */}
+      <line x1={52} y1={344} x2={848} y2={344} stroke={C.strokeSoft} strokeWidth="1.5" />
+      <T x={52} y={378} size={12} fill={C.muted} weight={400}>
+        A field that isn&rsquo;t found is left blank, never invented — the score reflects what was actually there.
+      </T>
+      <T x={52} y={400} size={12} fill={C.muted} weight={400}>
+        Filter, shortlist, and export the whole list as CSV.
+      </T>
+    </g>
+  )
+}
+
 /* ---------------------------------------------------------------
    Registry. Keys are referenced from data.js, so a diagram can be
    swapped for a real screenshot later by changing one string.
@@ -779,7 +970,10 @@ const VARIANTS = {
   booking: { vb: WIDE, draw: Booking, label: 'Schematic: one therapist’s day, showing a 15-minute turnaround padding an existing calendar booking on both sides, and the next slot resuming one gap after that booking ends rather than a whole session later.' },
   approval: { vb: WIDE, draw: Approval, label: 'Schematic: a consent form signed on the client’s phone, routed for supervisor approval, producing a signed PDF filed automatically.' },
   operations: { vb: WIDE, draw: Operations, label: 'Schematic: a task board with a named owner and due date on every card, over a bar chart of workload per person.' },
-  assistant: { vb: WIDE, draw: Assistant, label: 'Schematic: an incoming request classified and drafted by Claude against stored project context, held at a human approval gate before sending.' }
+  assistant: { vb: WIDE, draw: Assistant, label: 'Schematic: an incoming request classified and drafted by Claude against stored project context, held at a human approval gate before sending.' },
+  signature: { vb: WIDE, draw: Signature, label: 'Schematic: a consent-and-contract signing tool — compose from a template, sign by drawing or typing with consent, seal the document with a SHA-256 hash over its text and every signature, and verify it on a public page that recomputes the seal. An append-only audit trail of created, viewed, signed and completed events is printed onto the certificate page of the sealed PDF.' },
+  relay: { vb: WIDE, draw: Relay, label: 'Schematic: a shared client inbox and CRM — WhatsApp, email and web-form conversations collapse into one thread with reply, internal-note, assign and status triage, tied to a contact record that moves along a lead, qualified, active, won or lost pipeline. The inbox and the CRM are the same record.' },
+  prospect: { vb: WIDE, draw: Prospect, label: 'Schematic: a lead-research tool — paste one or more business URLs, fetch each page server-side, and extract the business behind it from JSON-LD structured data, Open Graph and meta tags, and mailto, tel and social links. Each lead is scored by contactability and moves through new, shortlisted and contacted; a field that is not found is left blank, and the list exports as CSV.' }
 }
 
 export default function SystemDiagram({ variant, className = '' }) {

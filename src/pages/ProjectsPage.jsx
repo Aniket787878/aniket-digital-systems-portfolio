@@ -15,9 +15,10 @@ export default function ProjectsPage() {
       <p className="eyebrow">Projects</p>
       <h1 className="page-title">Projects</h1>
       <p className="page-lede">
-        Two complete production systems, each designed, built and shipped end to
-        end by one person — the app, the backend, the payments, the AI and the
-        infrastructure. Real software, in daily use.
+        Complete systems, each designed, built and shipped end to end by one
+        person — the app, the backend, the payments, the AI and the
+        infrastructure. Two run real businesses every day; Signet, Relay and
+        Prospector are tools I built to work the same ideas in the open.
       </p>
       <ul className="project-list">
         {projects.map((project) => {

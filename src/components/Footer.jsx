@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
+import { m } from 'motion/react'
 import { site, footerMenu, social, whatsappPrefill } from '../data.js'
 import WhatsAppCta from './WhatsAppCta.jsx'
 import { hasWhatsApp } from '../whatsapp.js'
+import { reveal } from '../motion/variants.js'
 
 /*
   Footer: intro column (brand, promise, one-line description, CTA,
@@ -15,7 +17,7 @@ export default function Footer() {
 
   return (
     <footer className="footer">
-      <div className="container footer-inner">
+      <m.div className="container footer-inner" {...reveal}>
         <div className="footer-intro">
           <p className="footer-brand">Aniket</p>
           <p className="footer-tagline">
@@ -96,7 +98,7 @@ export default function Footer() {
             <p className="meta">Profiles going up shortly.</p>
           )}
         </div>
-      </div>
+      </m.div>
 
       <p className="footer-watermark" aria-hidden="true">
         Aniket&reg;

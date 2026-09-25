@@ -163,6 +163,21 @@
   pointer-events: none;
   border-radius: inherit;
   overflow: hidden;
+  /* Fade the network out before it reaches the portrait, so it lives only in
+     the dark negative space behind the copy and never crosses the face. */
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 48%, transparent 76%);
+  mask-image: linear-gradient(to right, #000 0%, #000 48%, transparent 76%);
+  /* Choreography: the layer fades in after the photo and copy have settled,
+     rather than booting up alongside them. Only ever mounts with motion
+     allowed, so no reduced-motion guard is needed. */
+  opacity: 0;
+  animation: hero-canvas-in 1.6s var(--ease-out) 0.2s forwards;
+}
+
+@keyframes hero-canvas-in {
+  to {
+    opacity: 1;
+  }
 }
 
 .hero-canvas canvas {
@@ -299,6 +314,49 @@
   gap: clamp(1.25rem, 2.5vw, 2rem);
 }
 
+/* Featured (first) card: spans both columns and lays the schematic beside
+   the copy, so the section opens on the flagship instead of orphaning an
+   odd card at the end. */
+.work-item-featured {
+  grid-column: 1 / -1;
+}
+
+/* Compound selector so `display: grid` beats `.work-card { display: flex }`,
+   which is defined later at equal specificity. */
+.work-card.work-card-featured {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2.75rem);
+}
+
+.work-card-featured .media.work-media {
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  height: auto;
+  align-self: center;
+}
+
+.work-card-featured .work-body {
+  padding: clamp(1rem, 2vw, 1.75rem) clamp(1rem, 2vw, 2rem) clamp(1rem, 2vw, 1.75rem)
+    var(--space-2);
+}
+
+.work-card-featured .work-title {
+  font-size: clamp(1.875rem, 3.4vw, 2.75rem);
+}
+
+.work-card-featured .work-summary {
+  max-width: 46ch;
+}
+
+/* The one accent-tinted tag on the page — reserved for the flagship. */
+.work-tag-flag {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
 .work-card {
   display: flex;
   flex-direction: column;
@@ -389,35 +447,49 @@
 
 .process-steps-wrap {
   position: relative;
+  /* Shared x for the spine and its nodes; sits in each step's left padding,
+     clear of the index. */
+  --spine-x: clamp(0.85rem, 1.6vw, 1.15rem);
 }
 
-/* The scroll-drawn spine. It sits directly over the left column of accent
-   rules — same x (a step's inline padding) and same 3px width — so it reads
-   as those rules connected into one line. z-index lifts it over the odd
-   steps' opaque surface fill; the accent fill matches the rules' colour, so
-   overlapping them is invisible. The fill's scaleY is driven by scroll in
-   Process.jsx; the faint track underneath is always drawn. */
+/* The timeline spine: a faint full-height track with an accent fill that is
+   drawn top-to-bottom by scroll (scaleY set in Process.jsx). z-index lifts it
+   over the odd steps' opaque fill; it is a thin line in the left gutter, so it
+   never crosses the step text. overflow is visible so the node glow shows. */
 .process-spine {
   position: absolute;
   z-index: 2;
   top: 1.9rem;
   bottom: 1.9rem;
-  left: clamp(1.25rem, 2.5vw, 2rem);
-  width: 3px;
+  left: var(--spine-x);
+  width: 2px;
+  margin-left: -1px;
   border-radius: 2px;
   background: var(--line-strong);
-  overflow: hidden;
   pointer-events: none;
 }
 
 .process-spine-fill {
-  display: block;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   border-radius: 2px;
   background: var(--accent);
   transform-origin: top center;
   transform: scaleY(0);
+  box-shadow: 0 0 8px rgba(245, 135, 30, 0.4);
+}
+
+/* One node per step, evenly spaced down the spine. `top` is set inline; the
+   dot is centred with margins (not transform) so Motion's scale/glow — which
+   drives the light-up as the fill passes — is free to own `transform`. */
+.process-dot {
+  position: absolute;
+  left: 50%;
+  width: 11px;
+  height: 11px;
+  margin: -5.5px 0 0 -5.5px;
+  border-radius: 50%;
+  background: var(--line-strong);
 }
 
 .process-steps {
@@ -429,10 +501,12 @@
 .process-step {
   position: relative;
   display: grid;
-  grid-template-columns: 3px auto minmax(0, 15rem) minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 15rem) minmax(0, 1fr);
   align-items: center;
   gap: clamp(1rem, 2.5vw, 2.25rem);
-  padding: clamp(1.25rem, 2.2vw, 1.75rem) clamp(1.25rem, 2.5vw, 2rem);
+  /* Extra left padding clears the spine + node that live in the gutter. */
+  padding: clamp(1.25rem, 2.2vw, 1.75rem) clamp(1.25rem, 2.5vw, 2rem)
+    clamp(1.25rem, 2.2vw, 1.75rem) clamp(2.25rem, 4vw, 3rem);
   border-radius: var(--radius-md);
   background: transparent;
   overflow: hidden;
@@ -445,18 +519,6 @@
 
 .process-step:hover {
   background: var(--accent);
-}
-
-.process-rule {
-  width: 3px;
-  height: 2.5rem;
-  border-radius: 2px;
-  background: var(--accent);
-  transition: background-color var(--dur-mid) ease;
-}
-
-.process-step:hover .process-rule {
-  background: rgba(255, 255, 255, 0.55);
 }
 
 .process-index {
@@ -1488,6 +1550,23 @@
     max-width: 44rem;
   }
 
+  /* Below 960 the featured card stops being a side-by-side split and stacks
+     like every other card, so the schematic never gets squeezed to a sliver.
+     Compound selector to match the base rule's specificity. */
+  .work-card.work-card-featured {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .work-card-featured .media.work-media {
+    aspect-ratio: 16 / 10;
+    height: auto;
+  }
+
+  .work-card-featured .work-body {
+    padding: var(--space-6) clamp(0.75rem, 1.5vw, 1.25rem) 0;
+  }
+
   /* Same call as the work cards: below this the second column is too
      narrow for a blurb plus its tag row. */
   .caps-grid,
@@ -1590,15 +1669,10 @@
   }
 
   .process-step {
-    grid-template-columns: 3px auto minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: start;
     row-gap: var(--space-2);
     column-gap: var(--space-4);
-  }
-
-  .process-rule {
-    height: 1.75rem;
-    margin-top: 0.25rem;
   }
 
   .process-index {
@@ -1606,7 +1680,7 @@
   }
 
   .process-text {
-    grid-column: 3;
+    grid-column: 2;
     justify-self: start;
     text-align: left;
     max-width: none;

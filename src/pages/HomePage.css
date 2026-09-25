@@ -1682,14 +1682,15 @@
      reading as an edge: the picture dissolves into the ground rather
      than stopping on a line. */
   .hero-photo {
-    /* 54% of a tall phone, but never more than the copy can spare. The
-       second term reserves 24rem for eyebrow, headline, claim, note and
-       button; without it a 640px-tall phone gave the picture 346px and
-       the headline started 161px inside it, on his face. Short screens
-       hand the room back to the words, which is the right priority. */
-    height: min(54%, 100% - 24rem);
+    /* The portrait is 720x900 (exactly 4:5). Giving the band that aspect and
+       starting it just under the nav shows the whole head — crown, full hair,
+       face — with clean headroom above it, instead of cover cropping the top
+       against the nav. Capped so tall content still fits; the mask dissolves
+       the bottom into the ground as before. */
+    top: calc(var(--nav-h) - 0.75rem);
+    height: min(56%, 100% - 23rem);
     bottom: auto;
-    object-position: center 22%;
+    object-position: center top;
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,

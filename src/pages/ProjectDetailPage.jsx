@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom'
 import { projects, site, images, proofTools } from '../data.js'
 import SystemDiagram from '../components/SystemDiagram.jsx'
 import Media from '../components/Media.jsx'
+import Counter from '../motion/Counter.jsx'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 
 /* Every field below is optional in data.js — nothing here may assume it exists. */
@@ -107,7 +108,9 @@ export default function ProjectDetailPage() {
         <dl className="case-metrics">
           {metrics.map((m, i) => (
             <div className="case-metric" key={i}>
-              <dt className="case-metric-n">{m.n}</dt>
+              <dt className="case-metric-n">
+                <Counter value={m.n} />
+              </dt>
               <dd className="case-metric-label">{m.label}</dd>
             </div>
           ))}

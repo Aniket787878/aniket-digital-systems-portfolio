@@ -2,7 +2,9 @@ import { Link } from 'react-router-dom'
 import { m } from 'motion/react'
 import { packages, carePlan, whatsappPrefill } from '../../data.js'
 import { hasWhatsApp, whatsappHref } from '../../whatsapp.js'
-import { fadeUp, reveal, revealStagger } from '../../motion/variants.js'
+import { fadeUp, stagger, revealStagger } from '../../motion/variants.js'
+import { spotlightMove } from '../../motion/interactions.js'
+import SplitText from '../../motion/SplitText.jsx'
 
 /* The guarantee strip under the grid (docs/research/06, gap G8). Every
    line is a promise already made elsewhere on the site — the pricing lede,
@@ -32,23 +34,29 @@ export default function Pricing() {
   return (
     <section className="pricing">
       <div className="container">
-        <m.div className="split-head" {...reveal}>
-          <div>
-            <p className="kicker">Pricing</p>
-            <h2 className="split-title">Fixed scope, stated timeline</h2>
-          </div>
-          <p className="split-lede">
+        <m.div className="split-head" {...revealStagger}>
+          <m.div variants={stagger}>
+            <m.p className="kicker" variants={fadeUp}>Pricing</m.p>
+            <SplitText
+              as="h2"
+              className="split-title"
+              text="Fixed scope, stated timeline"
+              standalone={false}
+            />
+          </m.div>
+          <m.p className="split-lede" variants={fadeUp}>
             No hourly billing. Every engagement is a fixed price against a
             written scope, with a date attached. Half up front, half on
             delivery.
-          </p>
+          </m.p>
         </m.div>
 
         <m.ul className="pricing-grid" {...revealStagger}>
           {packages.map((pkg) => (
             <m.li
               key={pkg.name}
-              className={`pricing-card${pkg.featured ? ' pricing-card-featured' : ''}`}
+              className={`pricing-card spotlight${pkg.featured ? ' pricing-card-featured' : ''}`}
+              onPointerMove={spotlightMove}
               variants={fadeUp}
             >
               {pkg.featured && (

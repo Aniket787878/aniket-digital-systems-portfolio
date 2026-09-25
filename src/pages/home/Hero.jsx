@@ -5,6 +5,8 @@ import { site, whatsappPrefill } from '../../data.js'
 import ArrowIcon from '../../components/ArrowIcon.jsx'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
 import SafeMount from '../../components/SafeMount.jsx'
+import Magnetic from '../../motion/Magnetic.jsx'
+import SplitText from '../../motion/SplitText.jsx'
 import { hasWhatsApp } from '../../whatsapp.js'
 import { heroContainer, heroItem } from '../../motion/variants.js'
 
@@ -110,9 +112,12 @@ export default function Hero() {
             <m.p className="hero-eyebrow" variants={heroItem}>
               Hey, I&rsquo;m Aniket &mdash; I build
             </m.p>
-            <m.h1 className="hero-title" variants={heroItem}>
-              Complete systems, end to end
-            </m.h1>
+            <SplitText
+              as="h1"
+              className="hero-title"
+              text="Complete systems, end to end"
+              standalone={false}
+            />
           </m.div>
           <m.div className="hero-support" variants={heroContainer}>
             {/* A result, not a slogan. "Good systems should feel
@@ -142,11 +147,13 @@ export default function Hero() {
                 lives there; the form drops to a quiet second path. With no
                 number set, the form is the only route and keeps the fill. */}
             <m.div className="hero-actions" variants={heroItem}>
-              <WhatsAppCta
-                message={whatsappPrefill.hero}
-                label="Message me on WhatsApp"
-                className="btn-pill btn-pill-accent hero-cta"
-              />
+              <Magnetic>
+                <WhatsAppCta
+                  message={whatsappPrefill.hero}
+                  label="Message me on WhatsApp"
+                  className="btn-pill btn-pill-accent hero-cta"
+                />
+              </Magnetic>
               {hasWhatsApp ? (
                 <Link to="/contact" className="arrow-link hero-alt-cta">
                   Or send a message

@@ -49,188 +49,208 @@
    1 — Hero
    ============================================================ */
 
+/* The hero is now a two-part composition, in the manner of getstage.co:
+   centred copy at the top, and a wide showcase card below carrying the
+   portrait beside the workflow schematic. The full-bleed photograph, the
+   scrim, and the 3D canvas are all gone — the picture that mattered
+   (the person + the systems) now lives inside the card. */
 .hero {
   position: relative;
   isolation: isolate;
-  min-height: 100svh;
   display: flex;
-  align-items: flex-end;
-  /* Top padding is the nav plus a hair, not the nav plus a band. This was
-     --space-6 on top of a 5.5rem nav, a 120px ceiling on a hero that
-     already stood 1065px tall in a 900px laptop viewport. */
-  padding-block: calc(var(--nav-h) + var(--space-3)) clamp(2.5rem, 5vw, 4rem);
+  flex-direction: column;
+  padding-block: calc(var(--nav-h) + clamp(1.5rem, 4vw, 3rem))
+    clamp(2.5rem, 5vw, 4rem);
   overflow: hidden;
-  /* The hero is a slab, not a background: rounding the bottom edge lets
-     the page ground show through at the corners, which is what separates
-     it from the section beneath. Everything inside is clipped to it. */
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
-/* The hero ground. The portrait paints over this, but it is also the whole
-   picture for the moment before the JPEG decodes — and if it never arrives —
-   so it stays a designed ramp in the brand colours rather than a placeholder
-   fill. The stops are sampled off the photograph, so the swap is invisible. */
+/* The hero ground. A saffron-to-black ramp in the site's warm system,
+   with a soft radial fall-off behind the copy so the centred headline
+   sits on a glow rather than a flat slab. */
 .hero-ground {
   position: absolute;
   inset: 0;
   z-index: -2;
   border-radius: inherit;
-  background: linear-gradient(
-    155deg,
-    #ff6a12 0%,
-    #d94500 28%,
-    #63200a 62%,
-    #150802 100%
-  );
-}
-
-/* The portrait. Same stacking level as `.hero-ground` and later in the DOM,
-   so it paints over the gradient while staying under the scrim.
-
-   `object-position: 85%` is measured, not chosen by eye. The subject sits in
-   the right third of a 1913x822 frame and the left half is empty lit ground;
-   anchoring the cover crop right keeps his face in shot at every width and
-   parks that empty half under the copy. It is the reason `.hero-grid` is
-   capped at 38rem below — move one and the other stops making sense. */
-.hero-photo {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 85% center;
-  border-radius: inherit;
-  pointer-events: none;
-  /* Deliberately not `both`. A backwards fill holds the photo at the
-     keyframe's opacity: 0 until the animation actually runs, which makes an
-     entrance flourish load-bearing for the hero being visible at all --
-     anything that stops it starting (a tab opened in the background, a
-     paused-animation environment) leaves a bare gradient. Without the fill
-     the resting state is the visible one and the fade is purely additive. */
-  animation: hero-photo-in 900ms ease-out;
-}
-
-@keyframes hero-photo-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-photo {
-    animation: none;
-  }
-}
-
-/* Two ramps, not one. The vertical ramp is the original: nav legible at the
-   top, copy legible at the bottom. The horizontal ramp is what
-   the photograph needs — white type on the lit part of that orange measures
-   about 5.2:1, which passes AA but sits close enough to the floor that a
-   brighter frame would fail it. */
-.hero-scrim {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
   background:
-    linear-gradient(
-      to right,
-      rgba(16, 16, 16, 0.68) 0%,
-      rgba(16, 16, 16, 0.42) 34%,
-      rgba(16, 16, 16, 0) 64%
+    radial-gradient(
+      ellipse 60% 40% at 50% 12%,
+      rgba(245, 135, 30, 0.32) 0%,
+      rgba(245, 135, 30, 0) 70%
     ),
-    linear-gradient(
-      to bottom,
-      rgba(16, 16, 16, 0.55) 0%,
-      rgba(16, 16, 16, 0.1) 30%,
-      rgba(16, 16, 16, 0.55) 70%,
-      rgba(16, 16, 16, 0.92) 100%
-    );
-}
-
-/* The 3D network sits above the scrim (also z -1, but earlier in the DOM)
-   and below the copy. pointer-events: none so it never intercepts a CTA —
-   the parallax is driven by pointer position, not by hovering the canvas. */
-.hero-canvas {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  border-radius: inherit;
-  overflow: hidden;
-  /* Fade the network out before it reaches the portrait, so it lives only in
-     the dark negative space behind the copy and never crosses the face. */
-  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 48%, transparent 76%);
-  mask-image: linear-gradient(to right, #000 0%, #000 48%, transparent 76%);
-  /* Choreography: the layer fades in after the photo and copy have settled,
-     rather than booting up alongside them. Only ever mounts with motion
-     allowed, so no reduced-motion guard is needed. */
-  opacity: 0;
-  animation: hero-canvas-in 1.6s var(--ease-out) 0.2s forwards;
-}
-
-@keyframes hero-canvas-in {
-  to {
-    opacity: 1;
-  }
-}
-
-.hero-canvas canvas {
-  display: block;
+    linear-gradient(180deg, #1a0f07 0%, #110804 40%, #0a0603 100%);
 }
 
 .hero-content {
   position: relative;
   z-index: 1;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
 }
 
-/* One column. The right of the frame is the portrait, so the whole block —
-   eyebrow, headline, claim, lede, button — stacks in the empty left half.
-   38rem is the widest the copy can run before it reaches his hair at the
-   narrowest width this two-part composition still holds (1280). */
-.hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: clamp(1.5rem, 3vw, 2.25rem);
-  align-items: start;
-  max-width: min(38rem, 52%);
+/* Centred copy lockup at the top of the hero. Everything anchors to the
+   middle of the section — eyebrow, title, sub, CTAs — for the getstage
+   composition where the page opens on a single, calm claim. */
+.hero-lockup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+  max-width: 60rem;
+  margin: 0 auto;
 }
 
 .hero-eyebrow {
   font-family: var(--font-sans);
-  font-size: clamp(1rem, 1.6vw, 1.375rem);
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: var(--space-4);
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  font-weight: 500;
+  color: var(--ink-soft);
+  margin: 0;
 }
 
-/* Not --display-1. That token tops out at 7rem, and at 7rem the phrase
-   "run themselves" measures 798px against a 608px column, so this headline
-   broke to three lines at every width above 960 — and to three again at
-   390. The cap below is the largest size whose longest line still fits the
-   column this composition allows: 798 x (84/112) = 599px against 608. The
-   floor is picked the same way against a 327px phone column. Change the
-   headline copy and both need re-measuring, not re-guessing. */
+/* Sized for the centred composition. Wider column than the old bottom-left
+   stack, so the display can breathe: cap at ~6rem, floor at 2.5rem for a
+   327px phone. */
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5.8vw, 5.25rem);
+  font-size: clamp(2.5rem, 6.4vw, 6rem);
   font-weight: 800;
-  line-height: 0.95;
-  letter-spacing: -0.04em;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  max-width: 20ch;
+  margin: 0;
+}
+
+.hero-sub {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 46ch;
+  margin: 0;
+}
+
+/* The showcase card — two panels inside one glassy frame. Portrait on
+   the left says who is doing the building; workflow on the right says
+   what is being built. */
+.hero-showcase {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 0;
+  width: 100%;
+  max-width: 1160px;
+  margin: 0 auto;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.02)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.hero-showcase-portrait {
+  position: relative;
+  min-height: 420px;
+  background: #100804;
+}
+
+.hero-portrait-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+}
+
+.hero-portrait-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: var(--space-5);
+  background: linear-gradient(
+    to top,
+    rgba(10, 6, 3, 0.9) 0%,
+    rgba(10, 6, 3, 0.5) 60%,
+    rgba(10, 6, 3, 0) 100%
+  );
   color: var(--ink);
 }
 
-.hero-support {
+.hero-portrait-name {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.hero-portrait-role {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.hero-showcase-workflow {
+  position: relative;
+  background: #131313;
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-4);
+}
+
+/* A little chrome bar so the panel reads as a workflow surface, not just
+   a schematic dropped on grey. */
+.hero-workflow-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.hero-workflow-dots {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.hero-workflow-dots i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #3a3a3a;
+}
+
+.hero-workflow-dots i:first-child { background: #f5871e; }
+
+.hero-workflow-label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.hero-workflow-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  flex: 1;
+  padding: var(--space-5);
+  box-sizing: border-box;
 }
 
 /* The proof claim: the support column's lead line. A sentence, not a bare
@@ -1501,29 +1521,9 @@
   }
 }
 
-.hero-eyebrow,
-.hero-title,
-.hero-claim,
-.hero-proof-note,
-.hero-actions {
-  animation: hero-rise var(--dur-slow) var(--ease-out) both;
-}
-
-.hero-title {
-  animation-delay: 70ms;
-}
-
-.hero-claim {
-  animation-delay: 140ms;
-}
-
-.hero-proof-note {
-  animation-delay: 215ms;
-}
-
-.hero-actions {
-  animation-delay: 240ms;
-}
+/* Hero copy entrance is now driven by the motion variants in Hero.jsx —
+   the CSS keyframe here is kept for legacy elements only, and no hero
+   selector still binds to it. */
 
 /* ============================================================
    Responsive — the ladder, widest first.
@@ -1571,21 +1571,19 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  /* The cover crop stops leaving an empty half here: at this width the frame
-     is mostly face, so the copy runs full width and the scrim does the
-     contrast work the composition was doing above 960. */
-  .hero-grid {
-    max-width: 100%;
+  /* Below 960 the showcase card stacks: portrait on top, workflow below,
+     both full width. */
+  .hero-showcase {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .hero-scrim {
-    background: linear-gradient(
-      to bottom,
-      rgba(16, 16, 16, 0.62) 0%,
-      rgba(16, 16, 16, 0.36) 24%,
-      rgba(16, 16, 16, 0.74) 62%,
-      rgba(16, 16, 16, 0.95) 100%
-    );
+  .hero-showcase-portrait {
+    min-height: 320px;
+  }
+
+  .hero-showcase-workflow {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
   }
 
   .split-lede {
@@ -1595,11 +1593,6 @@
 
   .split-title {
     max-width: 22ch;
-  }
-
-  .hero-support {
-    gap: var(--space-3);
-    max-width: 44ch;
   }
 
   .work-grid {
@@ -1660,65 +1653,9 @@
 
 /* --- Nav collapses here too (see index.css) --- */
 @media (max-width: 810px) {
-  /* Own the screen. The copy is bottom-anchored, so every pixel the hero
-     does not spend on text is headroom the portrait gets to use. */
   .hero {
-    min-height: 100svh;
-    padding-block: calc(var(--nav-h) + var(--space-3))
+    padding-block: calc(var(--nav-h) + var(--space-4))
       clamp(2.5rem, 6vw, 3.5rem);
-  }
-
-  /* Below this width the photograph stops being a full-bleed ground and
-     becomes a band across the top. Note the band starts here at 810 but the
-     portrait crop only arrives at 600 (see Hero.jsx): between the two, the
-     band is landscape and so is the frame that fills it.
-
-     Stretched to the full height it could not win: the box is about
-     0.45:1 and even the 4:5 crop the <source> hands a phone is 0.8, so
-     a cover fit still ate a third of the width and put his face directly
-     behind the headline. Given its own 54% of the height the box lands
-     near 0.86:1, the crop very nearly fits it whole, and the copy gets
-     the bottom half to itself. The mask is what keeps the seam from
-     reading as an edge: the picture dissolves into the ground rather
-     than stopping on a line. */
-  .hero-photo {
-    /* The portrait is 720x900 (exactly 4:5). Giving the band that aspect and
-       starting it just under the nav shows the whole head — crown, full hair,
-       face — with clean headroom above it, instead of cover cropping the top
-       against the nav. Capped so tall content still fits; the mask dissolves
-       the bottom into the ground as before. */
-    top: calc(var(--nav-h) - 0.75rem);
-    height: min(56%, 100% - 23rem);
-    bottom: auto;
-    object-position: center top;
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 58%,
-      rgba(0, 0, 0, 0.55) 82%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 58%,
-      rgba(0, 0, 0, 0.55) 82%,
-      transparent 100%
-    );
-  }
-
-  /* The horizontal ramp was for a composition with an empty left half.
-     There is no empty half here, so the scrim is purely vertical: light
-     over the face, solid under the copy. */
-  .hero-scrim {
-    background: linear-gradient(
-      to bottom,
-      rgba(16, 16, 16, 0.58) 0%,
-      rgba(16, 16, 16, 0.18) 26%,
-      rgba(16, 16, 16, 0.62) 52%,
-      rgba(16, 16, 16, 0.94) 74%,
-      rgba(16, 16, 16, 0.97) 100%
-    );
   }
 
   .hero-title {
@@ -1873,51 +1810,21 @@
   }
 }
 
-/* --- Small phone --- */
-/* --- Portrait phones (the 4:5 crop) --- */
+/* --- Portrait phones --- */
 @media (max-width: 600px) {
-  /* With the proof lines removed, hand the top of the hero to the portrait:
-     a tall photo band, and the whole header dropped below it, so the face
-     reads first and the copy follows underneath rather than sitting over it. */
-  .hero {
-    --hero-photo-h: min(56vh, 116vw);
-  }
-
-  .hero-photo {
-    height: var(--hero-photo-h);
-    object-position: center top;
-  }
-
-  /* Push the header to just below the photo. The photo starts ~1.5rem above
-     the content's normal top (nav offset minus the band's top nudge), so
-     that much is subtracted to butt the header against the faded photo edge. */
   .hero-content {
-    padding-top: calc(var(--hero-photo-h) - 1.5rem);
+    gap: clamp(1.75rem, 6vw, 2.5rem);
+  }
+
+  .hero-showcase-portrait {
+    min-height: 260px;
   }
 }
 
 @media (max-width: 480px) {
-  /* Own the first screen. This was min-height: 0, which left the hero at
-     its content height — 699px on a 844px phone — so the fold landed a
-     third of the way into the proof strip and the hero read as cut off.
-     svh (not vh) is the height with the browser chrome showing, which is
-     the state the page actually loads in.
-
-     Landscape phones are handled separately at the bottom of this file:
-     that rule comes later and still drops the hero to content height, so
-     this does not trap anyone in a 100svh hero on a short screen. */
-  .hero {
-    min-height: 100svh;
-  }
-
-  .hero-eyebrow {
-    margin-bottom: var(--space-3);
-  }
-
-  /* Stack the hero pair: each button claims its own row at 20rem, and
-     the text alternative sits under it rather than beside it. */
   .hero-actions {
     width: 100%;
+    justify-content: center;
   }
 
   .hero-cta,
@@ -1966,21 +1873,9 @@
   }
 }
 
-/* --- Short landscape (phone on its side, split-screen tablet) --- */
-@media (max-height: 560px) and (max-width: 1080px) {
-  .hero {
-    min-height: 0;
-  }
-
-  /* A phone on its side is about 2.6:1. There is no band worth cutting out
-     of that, so the photograph goes back to being a full-bleed ground and
-     the scrim carries the contrast, exactly as it does above 810. */
-  .hero-photo {
-    height: 100%;
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-}
+/* --- Short landscape (phone on its side, split-screen tablet) ---
+   The hero already flows naturally at content height in the new
+   composition, so no override is needed here. */
 
 /* ============================================================
    Warm-glass pass — glassmorphism + soft depth + hero warmth,

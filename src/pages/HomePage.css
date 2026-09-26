@@ -159,17 +159,25 @@
 .hero-showcase-portrait {
   position: relative;
   min-height: 420px;
-  background: #100804;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 92%, rgba(245, 135, 30, 0.22) 0%, rgba(245, 135, 30, 0) 70%),
+    linear-gradient(180deg, #150a04 0%, #080402 100%);
+  overflow: hidden;
 }
 
-.hero-portrait-img {
+/* Subtle scanning ring under the placeholder — hints "waiting for
+   content" without pretending to be a photograph. */
+.hero-showcase-portrait::before {
+  content: '';
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 20%;
-  display: block;
+  left: 50%;
+  bottom: 40px;
+  width: 260px;
+  height: 260px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 1px dashed rgba(245, 135, 30, 0.25);
+  pointer-events: none;
 }
 
 .hero-portrait-caption {
@@ -244,13 +252,152 @@
   color: var(--ink-soft);
 }
 
-.hero-workflow-svg {
-  display: block;
-  width: 100%;
-  height: auto;
+/* ---- Mountain parallax ---- */
+.hero-mountains {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.hero-mtn-layer {
+  position: absolute;
+  left: -5%;
+  right: -5%;
+  bottom: 0;
+  width: 110%;
+  will-change: transform;
+}
+
+.hero-mtn-far,
+.hero-mtn-mid,
+.hero-mtn-near {
+  height: 60%;
+}
+
+.hero-mtn-stars {
+  top: 0;
+  bottom: auto;
+  height: 100%;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(255, 214, 176, 0.55) 50%, transparent 60%),
+    radial-gradient(1px 1px at 27% 42%, rgba(255, 214, 176, 0.35) 50%, transparent 60%),
+    radial-gradient(1.5px 1.5px at 44% 12%, rgba(255, 214, 176, 0.5) 50%, transparent 60%),
+    radial-gradient(1px 1px at 63% 30%, rgba(255, 214, 176, 0.4) 50%, transparent 60%),
+    radial-gradient(1px 1px at 78% 18%, rgba(255, 214, 176, 0.55) 50%, transparent 60%),
+    radial-gradient(1.5px 1.5px at 88% 44%, rgba(255, 214, 176, 0.35) 50%, transparent 60%),
+    radial-gradient(1px 1px at 34% 60%, rgba(255, 214, 176, 0.28) 50%, transparent 60%),
+    radial-gradient(1px 1px at 55% 8%, rgba(255, 214, 176, 0.5) 50%, transparent 60%);
+  opacity: 0.7;
+}
+
+/* ---- Spider workflow ---- */
+.hero-workflow {
+  position: relative;
   flex: 1;
-  padding: var(--space-5);
+  width: 100%;
+  min-height: 460px;
+  padding: 1rem;
   box-sizing: border-box;
+  /* Faint n8n canvas dot grid. */
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+.hero-workflow-wires {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hero-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.75rem 0.55rem 0.55rem;
+  min-width: 138px;
+  background: linear-gradient(180deg, #1f1f1f, #171717);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  box-shadow: 0 8px 22px -12px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color: var(--ink);
+  z-index: 2;
+}
+
+.hero-node-agent {
+  padding: 0.75rem 0.95rem 0.75rem 0.75rem;
+  min-width: 168px;
+  border-color: rgba(245, 135, 30, 0.55);
+  box-shadow: 0 0 0 3px rgba(245, 135, 30, 0.12),
+    0 18px 45px -18px rgba(245, 135, 30, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, #2a1a0a, #150b04);
+}
+
+.hero-node-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.hero-node-agent .hero-node-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(245, 135, 30, 0.14);
+  border-color: rgba(245, 135, 30, 0.4);
+}
+
+.hero-node-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.15;
+}
+
+.hero-node-tag {
+  font-family: var(--font-sans);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.hero-node-agent .hero-node-tag {
+  color: var(--accent);
+}
+
+.hero-node-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.hero-node-sub {
+  font-size: 0.6875rem;
+  color: var(--ink-soft);
+}
+
+/* ---- Standing-figure placeholder ---- */
+.hero-standing-figure {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 /* The proof claim: the support column's lead line. A sentence, not a bare

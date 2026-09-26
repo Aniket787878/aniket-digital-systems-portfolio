@@ -7,33 +7,26 @@ import Magnetic from '../../motion/Magnetic.jsx'
 import SplitText from '../../motion/SplitText.jsx'
 import { hasWhatsApp } from '../../whatsapp.js'
 import { heroContainer, heroItem } from '../../motion/variants.js'
+import HeroMountains from './HeroMountains.jsx'
 import HeroWorkflow from './HeroWorkflow.jsx'
 
 /* ---------------------------------------------------------------
    1 — Hero.
 
-   Composition inspired by getstage.co: centred copy at the top,
-   a wide showcase card below. The showcase carries the two things
-   that describe the offer at a glance — who is building this, and
-   the shape of the systems he builds.
+   Composition inspired by getstage.co: centred copy over a parallax
+   mountain scene, then a wide showcase card below with a standing
+   figure on the left and the spider workflow on the right.
 
-   The showcase is a two-column card:
-     · Left  — the portrait, the person you'd be working with.
-     · Right — three n8n-style workflows drawn as a schematic, so
-               the reader sees the mechanism, not a stock diagram.
-
-   The photograph is `/hero-portrait.jpg` — the same real photo of
-   Aniket already deployed. A proper standing-pose shot has been
-   requested and will drop straight into the same <img>; nothing
-   about the layout depends on it being a face crop today.
+   The portrait slot renders an SVG silhouette placeholder — the real
+   standing-pose photograph of Aniket is not yet supplied, so we mark
+   the slot honestly rather than repurpose the old face crop as a
+   stand-in.
    --------------------------------------------------------------- */
 export default function Hero() {
   return (
     <section className="hero">
-      {/* The hero ground: dark gradient, no full-bleed photograph any
-          more — the portrait now lives inside the showcase card so it
-          reads as a person, not as a background. */}
       <div className="hero-ground" aria-hidden="true" />
+      <HeroMountains />
 
       <div className="container hero-content">
         <m.div
@@ -58,7 +51,8 @@ export default function Hero() {
           />
           <m.p className="hero-sub" variants={heroItem}>
             AI agents, n8n workflows and the software behind them &mdash;
-            wired into WhatsApp, email and the tools your team already uses.
+            wired into WhatsApp, Slack, email and the tools your team
+            already uses.
           </m.p>
 
           <m.div className="hero-actions" variants={heroItem}>
@@ -90,9 +84,6 @@ export default function Hero() {
           </m.div>
         </m.div>
 
-        {/* The showcase card. Two panels sit inside one frame so the
-            person on the left and the systems on the right read as one
-            offer, not two adjacent slots. */}
         <m.div
           className="hero-showcase"
           variants={heroItem}
@@ -100,19 +91,11 @@ export default function Hero() {
           animate="show"
         >
           <div className="hero-showcase-portrait">
-            <img
-              className="hero-portrait-img"
-              src="/hero-portrait.jpg"
-              width="720"
-              height="900"
-              alt="Aniket"
-              loading="eager"
-              decoding="async"
-            />
+            <StandingFigure />
             <div className="hero-portrait-caption">
-              <span className="hero-portrait-name">Aniket</span>
+              <span className="hero-portrait-name">Placeholder</span>
               <span className="hero-portrait-role">
-                Solo builder &middot; AI &amp; ops automation
+                Standing-pose photograph &mdash; pending
               </span>
             </div>
           </div>
@@ -121,12 +104,47 @@ export default function Hero() {
               <span className="hero-workflow-dots">
                 <i /><i /><i />
               </span>
-              <span className="hero-workflow-label">n8n &middot; live workflows</span>
+              <span className="hero-workflow-label">n8n &middot; live workflow</span>
             </div>
             <HeroWorkflow />
           </div>
         </m.div>
       </div>
     </section>
+  )
+}
+
+/* Silhouette of a standing figure. Not a photograph, not stock — a
+   deliberate placeholder so the slot reads as awaiting a real image
+   rather than pretending to have one. */
+function StandingFigure() {
+  return (
+    <svg
+      className="hero-standing-figure"
+      viewBox="0 0 240 400"
+      preserveAspectRatio="xMidYMax meet"
+      role="img"
+      aria-label="Placeholder silhouette of a standing person"
+    >
+      <defs>
+        <linearGradient id="figure-g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#3a1a08" />
+          <stop offset="100%" stopColor="#0a0402" />
+        </linearGradient>
+        <linearGradient id="figure-floor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="rgba(245,135,30,0.18)" />
+          <stop offset="100%" stopColor="rgba(245,135,30,0)" />
+        </linearGradient>
+      </defs>
+      {/* Floor pool of light */}
+      <ellipse cx="120" cy="380" rx="90" ry="14" fill="url(#figure-floor)" />
+      {/* Head */}
+      <circle cx="120" cy="70" r="28" fill="url(#figure-g)" />
+      {/* Neck + shoulders */}
+      <path
+        d="M108 92 Q120 108 132 92 L154 118 Q170 150 168 185 L166 240 Q166 260 158 275 L146 340 L152 384 L138 384 L128 340 L122 300 L118 340 L108 384 L94 384 L100 340 L88 275 Q80 260 80 240 L78 185 Q76 150 92 118 Z"
+        fill="url(#figure-g)"
+      />
+    </svg>
   )
 }

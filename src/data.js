@@ -226,20 +226,6 @@ export const site = {
   /* A template, filled from the first entry in `packages` (the entry
      offer) in the visitor's currency, so the price is stated once. */
   pricingAnchor: 'The usual starting point is an {offer}: one workflow, end to end, {price}, {timeline}.',
-
-  /* The hero's proof, lifted from project 01 and condensed.
-
-     It lives here rather than in Hero.jsx for one reason: it states a
-     number, and the house rule is that no number appears without the
-     caveat that qualifies it. Keeping claim and note in the same object
-     makes them awkward to separate by accident. If project 01's outcome
-     is ever restated, restate this with it. */
-  heroProof: {
-    claim: 'An 11-therapist clinic already runs its day on one.',
-    note: 'The therapist count is a row count from the clinic’s live production database, not an estimate.',
-    slug: 'therapist-pwa',
-    linkLabel: 'See the system'
-  }
 }
 
 /* Title, description and share card for index.html. vite.config.js writes

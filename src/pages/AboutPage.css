@@ -952,13 +952,11 @@
     padding: 1.25rem;
   }
 
-  .about-steps-nav {
-    width: 100%;
-  }
-
-  .about-steps-btn.is-next {
-    flex: 1;
-    justify-content: center;
+  .about-steps-btn {
+    height: 40px;
+    padding: 0 0.95rem;
+    font-size: 0.875rem;
+    border-radius: 10px;
   }
 
   /* Films: a swipeable row inside its own box, so the page never scrolls

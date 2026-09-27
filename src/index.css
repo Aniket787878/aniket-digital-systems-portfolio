@@ -2875,3 +2875,58 @@ a:hover .text-link svg {
 .privacy .page-lede {
   margin-top: var(--space-3);
 }
+
+/* LoopVideo's loading state: a spinner over the poster while a film
+   buffers, and a reload button if it never arrives. The film's frame
+   (dusk-card, explainer-frame, row-frame, card-media, showcase-media) is
+   the positioned ancestor. pointer-events stay off except on the button,
+   so a card link underneath still takes the click. */
+.loop-video-status {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.loop-video-spinner {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 3px solid rgba(242, 240, 237, 0.22);
+  border-top-color: #f5871e;
+  /* a dark badge behind the ring, so it reads on light and dark posters */
+  box-shadow: 0 0 0 11px rgba(11, 11, 12, 0.72), 0 6px 24px 8px rgba(0, 0, 0, 0.25);
+  animation: loop-video-spin 0.9s linear infinite;
+}
+
+@keyframes loop-video-spin {
+  to { transform: rotate(360deg); }
+}
+
+.loop-video-reload,
+.loop-video-note {
+  font: inherit;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  color: #0b0b0c;
+  background: #f5871e;
+  border: 0;
+}
+
+.loop-video-reload {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.loop-video-reload:hover {
+  background: #ff9e45;
+}
+
+.loop-video-note {
+  color: #f2f0ed;
+  background: rgba(11, 11, 12, 0.7);
+}

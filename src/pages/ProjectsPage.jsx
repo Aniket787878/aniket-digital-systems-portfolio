@@ -16,9 +16,9 @@ export default function ProjectsPage() {
       <h1 className="page-title">Projects</h1>
       <p className="page-lede">
         Complete systems, each designed, built and shipped end to end by one
-        person: the app, the backend, the payments, the AI and the
-        infrastructure. Two run real businesses every day; Signet, Relay and
-        Prospector are tools I built to work the same ideas in the open.
+        person. The clinic platform runs an eleven-therapist practice every
+        day; Udaan, a recovery-care platform, is in pre-launch. Signet, Relay
+        and Prospector are tools I built myself to work the same ideas.
       </p>
       {/* A showcase, not a list: every project leads with its film. The
           working demos play real captures on hover; the client platforms

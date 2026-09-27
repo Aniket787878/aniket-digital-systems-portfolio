@@ -18,22 +18,25 @@ import Cta from './home/Cta.jsx'
    order the section components above happen to be evaluated in. */
 import './HomePage.css'
 import { useDocumentTitle } from '../useDocumentTitle.js'
+import { seo } from '../data.js'
 
-/* Bands in render order, alternating the dark and light grounds of the
-   Dusk system (docs/design-system.md). Testimonials renders only once a
+/* Bands in render order, on the dark and light grounds of the Dusk system
+   (docs/design-system.md). Services (the prices) sits straight after the
+   work, so a buyer who has seen the proof reads the price next instead of
+   after two long scroll-driven bands. Testimonials renders only once a
    real quote exists. Each is one file in ./home. */
 export default function HomePage() {
-  useDocumentTitle('Aniket · Complete production systems, end to end')
+  useDocumentTitle(seo.title)
   return (
     <div className="home">
       <Hero />
       <Statement />
       <Work />
+      <Services />
       <Tour />
       <Connect />
       <Testimonials />
       <Process />
-      <Services />
       <Faq />
       <Cta />
     </div>

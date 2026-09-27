@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { m, AnimatePresence } from 'motion/react'
 import { faq } from '../../data.js'
+import { useCurrency, inCurrency } from '../../currency.js'
 import { reveal, revealStagger, fadeUp } from '../../motion/variants.js'
 import { PillLabel } from '../../components/ui.jsx'
 
@@ -10,6 +11,7 @@ import { PillLabel } from '../../components/ui.jsx'
    --------------------------------------------------------------- */
 export default function Faq() {
   const [openIndex, setOpenIndex] = useState(0)
+  const currency = useCurrency()
 
   return (
     <section className="paper faq" id="faq">
@@ -53,7 +55,7 @@ export default function Faq() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                     >
-                      <p>{item.a}</p>
+                      <p>{inCurrency(item.a, currency)}</p>
                     </m.div>
                   )}
                 </AnimatePresence>

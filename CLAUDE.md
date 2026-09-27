@@ -143,8 +143,11 @@ measure both at matching viewports before changing anything.
 
 ## Blocked on Aniket
 
-Branded domain (email is `aniket.html@gmail.com` for now, working but not
-branded) · `VITE_LEAD_WEBHOOK_URL` · case-study numbers · testimonial · CV PDF
+Branded domain (set `site.origin` in `data.js`; canonical, OG, JSON-LD,
+robots.txt and sitemap.xml are generated from it by the `siteMeta` plugin in
+`vite.config.js`) · `site.bookingUrl` (Cal.com; setting it makes "Book a
+15-min call" the primary button everywhere) · Quick-Win INR price (placeholder
+₹25,000) · `VITE_LEAD_WEBHOOK_URL` · case-study numbers · testimonial · CV PDF
 and a real headshot (the `/about` page now exists and renders labelled slots for
 both) · real screenshots.
 
@@ -153,6 +156,7 @@ Resolved 2026-09-11: real email (`aniket.html@gmail.com`) and WhatsApp number
 
 The site itself is built and deployed. Of what's left, `VITE_LEAD_WEBHOOK_URL` is
 the costly one: it is now the **only** dead lead path (WhatsApp works), and
-until it is set the contact form logs the payload and shows the fallback panel —
-no form lead is captured. Because `VITE_*` is baked in at build time, setting it
+until it is set the contact form is not rendered at all: `/contact` shows the
+direct routes (booking link if set, WhatsApp, email) instead, so no lead is lost
+to a form that cannot send. Because `VITE_*` is baked in at build time, setting it
 needs a redeploy.

@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
 import Media from '../components/Media.jsx'
 import WhatsAppCta from '../components/WhatsAppCta.jsx'
+import BookingCta from '../components/BookingCta.jsx'
 import { hasWhatsApp } from '../whatsapp.js'
+import { hasBooking } from '../booking.js'
 import { founder, site, whatsappPrefill } from '../data.js'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 import './AboutPage.css'
@@ -89,16 +91,17 @@ export default function AboutPage() {
       <div className="about-cta">
         <h2 className="about-cta-title">Tell me which part is breaking.</h2>
         <p className="about-cta-body">
-          {site.availability} If your bookings, intake, follow-ups or team
-          coordination are running on WhatsApp threads and spreadsheets,
-          that&rsquo;s the conversation to start.
+          {site.availability} If your business&rsquo;s bookings, intake,
+          follow-ups or payments are running on WhatsApp threads and
+          spreadsheets, that&rsquo;s the conversation to start.
         </p>
         <div className="about-cta-actions">
+          <BookingCta className="btn-pill btn-pill-accent" />
           {hasWhatsApp && (
             <WhatsAppCta
               message={whatsappPrefill.contact}
               label="Message me on WhatsApp"
-              className="btn-pill btn-pill-accent"
+              className={hasBooking ? 'btn-pill' : 'btn-pill btn-pill-accent'}
             />
           )}
           <Link to="/contact" className="btn-pill">

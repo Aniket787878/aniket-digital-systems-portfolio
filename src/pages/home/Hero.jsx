@@ -1,12 +1,15 @@
-import { useRef } from 'react'
+import { useRef, useSyncExternalStore } from 'react'
 import { Link } from 'react-router-dom'
 import { m, useScroll, useTransform, useReducedMotion } from 'motion/react'
-import { whatsappPrefill, heroReel } from '../../data.js'
+import { site, whatsappPrefill, heroReel } from '../../data.js'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
+import BookingCta from '../../components/BookingCta.jsx'
 import LoopVideo from '../../components/LoopVideo.jsx'
+import Icon from '../../components/icons.jsx'
 import { Ridge } from '../../components/dusk/Mountains.jsx'
 import { ridge, starField } from '../../components/dusk/terrain.js'
 import { hasWhatsApp } from '../../whatsapp.js'
+import { hasBooking } from '../../booking.js'
 
 /* Seeded once at module load: the same range on every visit. */
 const FAR = ridge({ seed: 11, base: 150, amp: 60, detail: 0.8 })
@@ -15,8 +18,21 @@ const NEAR = ridge({ seed: 53, base: 300, amp: 44, detail: 1.2 })
 const STARS = starField(80, 5)
 
 const EASE = [0.22, 1, 0.36, 1]
-const LINE_1 = 'Complete production systems.'
-const LINE_2 = 'End to end. Solo.'
+const [LINE_1, LINE_2] = site.headline
+const PROOF = site.heroProof
+
+/* Phones and reduced motion get the reel's poster, not the reel: at 390px
+   the captures are unreadable, and the film was 5MB of a ~6MB first load.
+   A media-query store rather than CSS, because the point is that the
+   <video> never exists there, so nothing is fetched. */
+const STILL_QUERY = '(max-width: 640px), (prefers-reduced-motion: reduce)'
+const subscribeStill = (cb) => {
+  const mq = window.matchMedia(STILL_QUERY)
+  mq.addEventListener('change', cb)
+  return () => mq.removeEventListener('change', cb)
+}
+const stillSnapshot = () => window.matchMedia(STILL_QUERY).matches
+const useStillReel = () => useSyncExternalStore(subscribeStill, stillSnapshot, () => true)
 
 /* ---------------------------------------------------------------
    1 — Dusk hero (docs/design-system.md). A centred claim over a dusk
@@ -27,6 +43,7 @@ const LINE_2 = 'End to end. Solo.'
 export default function Hero() {
   const ref = useRef(null)
   const reduce = useReducedMotion()
+  const stillReel = useStillReel()
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
 
   const still = (v) => (reduce ? 0 : v)
@@ -102,8 +119,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.6, ease: EASE }}
         >
-          I design and build the software service businesses run on: bookings,
-          intake, payments, AI and the infrastructure underneath.
+          {site.subtitle}
         </m.p>
 
         <m.div
@@ -112,20 +128,32 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.75, ease: EASE }}
         >
-          {hasWhatsApp ? (
-            <WhatsAppCta
-              message={whatsappPrefill.audit}
-              label="Book a free audit"
-              className="btn-saffron"
-            />
+          {/* Booking link set: the call is primary, WhatsApp second, and
+              "See the work" gives way (three buttons read as a menu).
+              Not set: the WhatsApp audit, exactly as before. */}
+          {hasBooking ? (
+            <>
+              <BookingCta className="btn-saffron" />
+              <WhatsAppCta message={whatsappPrefill.hero} label="WhatsApp me" className="btn-light" />
+            </>
           ) : (
-            <Link to="/contact" className="btn-saffron">
-              Book a free audit
-            </Link>
+            <>
+              {hasWhatsApp ? (
+                <WhatsAppCta
+                  message={whatsappPrefill.audit}
+                  label="Book a free audit"
+                  className="btn-saffron"
+                />
+              ) : (
+                <Link to="/contact" className="btn-saffron">
+                  Book a free audit
+                </Link>
+              )}
+              <a href="#work" className="btn-light">
+                See the work
+              </a>
+            </>
           )}
-          <a href="#work" className="btn-light">
-            See the work
-          </a>
         </m.div>
         <m.p
           className="dusk-footnote"
@@ -133,8 +161,25 @@ export default function Hero() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7, delay: 0.95 }}
         >
-          Free 20-minute call. No obligation.
+          Free 15-minute call. No obligation.
         </m.p>
+
+        {/* The proof, with the caveat that qualifies its numbers right
+            beneath it (site.heroProof keeps the two together). */}
+        <m.div
+          className="dusk-proof"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 1.1, ease: EASE }}
+        >
+          <Link to={`/projects/${PROOF.slug}`} className="dusk-proof-link">
+            <span className="dusk-proof-claim">{PROOF.claim}</span>{' '}
+            <span className="dusk-proof-cta">
+              {PROOF.linkLabel} <Icon name="arrow" size={14} />
+            </span>
+          </Link>
+          <p className="dusk-proof-note">{PROOF.note}</p>
+        </m.div>
       </m.div>
 
       <m.figure
@@ -155,12 +200,23 @@ export default function Hero() {
             Relay, Signet and Prospector: recorded from the running apps
           </span>
         </div>
-        <LoopVideo
-          src={heroReel.src}
-          poster={heroReel.poster}
-          className="dusk-card-video"
-          label="Showreel of three working demos: Relay, Signet and Prospector"
-        />
+        {stillReel ? (
+          <img
+            src={heroReel.poster}
+            alt="Still from the showreel of three working demos: Relay, Signet and Prospector"
+            className="dusk-card-video"
+            width="1440"
+            height="900"
+            decoding="async"
+          />
+        ) : (
+          <LoopVideo
+            src={heroReel.src}
+            poster={heroReel.poster}
+            className="dusk-card-video"
+            label="Showreel of three working demos: Relay, Signet and Prospector"
+          />
+        )}
       </m.figure>
 
       <div className="dusk-layer dusk-near" aria-hidden="true">

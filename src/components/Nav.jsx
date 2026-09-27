@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import WhatsAppCta from './WhatsAppCta.jsx'
+import BookingCta from './BookingCta.jsx'
 import { hasWhatsApp } from '../whatsapp.js'
+import { hasBooking } from '../booking.js'
 import { whatsappPrefill } from '../data.js'
 
 /*
@@ -81,7 +83,9 @@ export default function Nav() {
         {/* The bar is tight, so the label is just "WhatsApp" here rather
             than the full sentence used further down the page. */}
         <div className="nav-actions">
-          {hasWhatsApp ? (
+          {hasBooking ? (
+            <BookingCta className="btn-saffron" />
+          ) : hasWhatsApp ? (
             <WhatsAppCta
               message={whatsappPrefill.nav}
               label="Let’s talk"
@@ -138,11 +142,13 @@ export default function Nav() {
           <NavLink to="/projects">Projects</NavLink>
           <NavLink to="/about">About</NavLink>
           <NavLink to="/contact">Contact</NavLink>
-          {/* Room to breathe here, so the panel offers both routes. */}
+          {/* Room to breathe here, so the panel offers every route: the
+              call first once it exists, then WhatsApp, then the page. */}
+          <BookingCta className="btn-saffron nav-panel-cta" />
           <WhatsAppCta
             message={whatsappPrefill.nav}
             label="Message me on WhatsApp"
-            className="btn-saffron nav-panel-cta"
+            className={`${hasBooking ? 'btn-light' : 'btn-saffron'} nav-panel-cta`}
           />
           <Link to="/contact" className="btn-pill nav-panel-cta">
             Get in touch

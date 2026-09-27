@@ -1,27 +1,25 @@
 import { useRef, useState } from 'react'
-import { site } from '../data.js'
+import { Link } from 'react-router-dom'
+import { site, budgetBands, whatsappPrefill } from '../data.js'
+import { useCurrency } from '../currency.js'
+import { hasBooking } from '../booking.js'
+import BookingCta from './BookingCta.jsx'
+import WhatsAppCta from './WhatsAppCta.jsx'
+import { WEBHOOK_URL, formConnected } from '../leadWebhook.js'
 
-const WEBHOOK_URL = import.meta.env.VITE_LEAD_WEBHOOK_URL
-
-const BUDGET_OPTIONS = [
-  { value: '<50k', label: 'Under ₹50k' },
-  { value: '50k-2L', label: '₹50k – ₹2L' },
-  { value: '2L+', label: '₹2L+' },
-  { value: 'not_sure', label: 'Not sure yet' }
-]
 
 /* Announced to screen readers via the polite live region below.
    Error states are announced by their own role="alert" node instead,
    so they are deliberately absent here. */
 const STATUS_MESSAGES = {
   sending: 'Sending your message.',
-  success: 'Sent. You will get a reply within 24 hours.',
-  fallback:
-    'Not sent. The form is not connected yet. Use the email link on screen instead.'
+  success: 'Sent. You will get a reply within 24 hours.'
 }
 
+const ALL_BANDS = [...budgetBands.usd, ...budgetBands.inr]
+
 function budgetLabel(value) {
-  const match = BUDGET_OPTIONS.find((option) => option.value === value)
+  const match = ALL_BANDS.find((option) => option.value === value)
   return match ? match.label : value
 }
 
@@ -35,12 +33,58 @@ const whatsappHref = whatsappIsUrl
   : `https://wa.me/${whatsappDigits}`
 const whatsappLabel = whatsappIsUrl ? 'WhatsApp' : whatsapp
 
+/*
+  With no webhook the form has nowhere to send, and a form that can only
+  answer "not sent" costs a lead every time someone fills it in. So until
+  VITE_LEAD_WEBHOOK_URL is set it is not rendered at all: the visitor gets
+  the routes that do reach me (the call link once it exists, WhatsApp,
+  email). Set the variable and redeploy, and the form comes back as it was.
+*/
 export default function ContactForm() {
+  return formConnected ? <LeadForm /> : <DirectContact />
+}
+
+function DirectContact() {
+  return (
+    <div className="contact-panel contact-direct-panel">
+      <h2 className="contact-panel-title">
+        {hasBooking ? 'Book a call, or message me.' : 'Message me directly.'}
+      </h2>
+      <p>
+        {hasBooking
+          ? 'Pick a 15-minute slot, or send a WhatsApp if that is easier. Tell me which part of the week is eating the most time. That is enough to start.'
+          : 'WhatsApp is the quickest way to reach me. Tell me which part of the week is eating the most time. That is enough to start.'}
+      </p>
+      <div className="contact-direct-actions">
+        <BookingCta className="btn-pill btn-pill-accent" />
+        <WhatsAppCta
+          message={whatsappPrefill.contact}
+          label="Message me on WhatsApp"
+          className={hasBooking ? 'btn-pill' : 'btn-pill btn-pill-accent'}
+        />
+      </div>
+      <p>
+        Or email{' '}
+        <a className="u-link" href={`mailto:${site.email}`}>
+          {site.email}
+        </a>
+        . I reply within 24 hours.
+      </p>
+      <PrivacyNote />
+    </div>
+  )
+}
+
+function LeadForm() {
+  const currency = useCurrency()
+  const bands = budgetBands[currency]
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [company, setCompany] = useState('')
   const [workflowBroken, setWorkflowBroken] = useState('')
   const [budgetBand, setBudgetBand] = useState('')
+  /* Honeypot: a field people never see, so only a bot fills it in. */
+  const [trap, setTrap] = useState('')
   const [status, setStatus] = useState('idle')
 
   const inFlight = useRef(false)
@@ -83,6 +127,13 @@ export default function ContactForm() {
 
     if (inFlight.current) return
 
+    /* A filled honeypot is a bot. Show it the success panel so it has
+       no reason to retry, and send nothing. */
+    if (trap) {
+      setStatus('success')
+      return
+    }
+
     const trimmed = {
       name: name.trim(),
       email: email.trim(),
@@ -113,16 +164,6 @@ export default function ContactForm() {
 
     inFlight.current = true
     setStatus('sending')
-
-    if (!WEBHOOK_URL) {
-      console.log(
-        '[ContactForm] No VITE_LEAD_WEBHOOK_URL configured, payload not sent:',
-        payload
-      )
-      inFlight.current = false
-      setStatus('fallback')
-      return
-    }
 
     try {
       const response = await fetch(WEBHOOK_URL, {
@@ -162,46 +203,6 @@ export default function ContactForm() {
         )}
       </div>
     )
-  } else if (status === 'fallback') {
-    body = (
-      <div className="contact-panel">
-        <h2 className="contact-panel-title">That didn&rsquo;t send.</h2>
-        <p>
-          The form isn&rsquo;t connected to its inbox yet, so your message was
-          not delivered. Better you hear that than have it disappear.
-        </p>
-        <p>
-          This opens an email with everything you just typed already in it.
-          Send that and it reaches me.
-        </p>
-        <p>
-          <a className="btn btn-primary" href={mailtoHref}>
-            Email it instead <span aria-hidden="true">&rarr;</span>
-          </a>
-        </p>
-        {whatsappLeadHref && (
-          <p>
-            Or send it on{' '}
-            <a
-              className="u-link"
-              href={whatsappLeadHref}
-              target="_blank"
-              rel="noreferrer"
-            >
-              WhatsApp
-            </a>
-            . It opens with your message ready to send.
-          </p>
-        )}
-        <p>
-          Or write to{' '}
-          <a className="u-link" href={`mailto:${site.email}`}>
-            {site.email}
-          </a>
-          .
-        </p>
-      </div>
-    )
   } else {
     body = (
       <form className="contact-form" onSubmit={handleSubmit}>
@@ -233,6 +234,22 @@ export default function ContactForm() {
             required
             value={email}
             onChange={(event) => setEmail(event.target.value)}
+          />
+        </div>
+
+        {/* Honeypot, see `trap` above. Off-screen rather than display:none,
+            which some bots skip; hidden from assistive tech and the tab
+            order so no person ever lands in it. */}
+        <div className="contact-hp" aria-hidden="true">
+          <label htmlFor="contact-company-website">Company website</label>
+          <input
+            id="contact-company-website"
+            name="company_website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={trap}
+            onChange={(event) => setTrap(event.target.value)}
           />
         </div>
 
@@ -272,7 +289,7 @@ export default function ContactForm() {
 
         <fieldset className="contact-fieldset">
           <legend className="contact-legend">Budget band</legend>
-          {BUDGET_OPTIONS.map((option) => (
+          {bands.map((option) => (
             <label className="contact-radio" key={option.value}>
               <input
                 type="radio"
@@ -337,6 +354,19 @@ export default function ContactForm() {
         {STATUS_MESSAGES[status] || ''}
       </p>
       {body}
+      <PrivacyNote />
     </>
+  )
+}
+
+function PrivacyNote() {
+  return (
+    <p className="contact-privacy">
+      What happens to what you send:{' '}
+      <Link className="u-link" to="/privacy">
+        privacy
+      </Link>
+      .
+    </p>
   )
 }

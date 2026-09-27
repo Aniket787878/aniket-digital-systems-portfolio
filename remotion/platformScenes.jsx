@@ -1,11 +1,17 @@
 import { interpolate } from 'remotion'
 import { C, DISPLAY, tween, clamp, easeInOut } from './shared.jsx'
+import { Icon } from './icons.jsx'
+
+/* "Done" states use the peach tint of the Dusk palette rather than a
+   green, so the schematics stay inside the brand's two-colour system. */
+const OK = C.peach
+const OK_SOFT = 'rgba(255,200,154,0.14)'
 
 /*
   Wireframe screens for the two client platforms, one per stage of the
   real flow in data.js. Deliberately schematic: grey bars stand in for any
   text a client would have typed, and nothing here resembles a real
-  record. Each Screen gets `f`, the frame local to its stage (0 → P_STAGE).
+  record. Each Screen gets `f`, the frame local to its stage (0 to P_STAGE).
 */
 
 /* ---------- primitives ---------- */
@@ -23,7 +29,7 @@ const Label = ({ children, style }) => (
 )
 
 const Title = ({ children, size = 30, style }) => (
-  <div style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: size, letterSpacing: '-0.025em', color: C.ink, ...style }}>{children}</div>
+  <div style={{ fontFamily: DISPLAY, fontWeight: 500, fontSize: size, letterSpacing: '-0.035em', color: C.ink, ...style }}>{children}</div>
 )
 
 function Field({ label, fill, lines = 1 }) {
@@ -48,10 +54,10 @@ function Btn({ children, press = 0, done = false, style }) {
         gap: 10,
         padding: '14px 26px',
         borderRadius: 999,
-        background: done ? 'rgba(62,207,142,0.16)' : C.accent,
-        color: done ? C.green : '#1a0900',
-        border: done ? `1px solid ${C.green}` : 'none',
-        fontWeight: 700,
+        background: done ? OK_SOFT : C.accent,
+        color: done ? OK : C.onAccent,
+        border: done ? `1px solid ${OK}` : 'none',
+        fontWeight: 500,
         fontSize: 17,
         transform: `scale(${1 - press * 0.06})`,
         ...style,
@@ -65,8 +71,8 @@ function Btn({ children, press = 0, done = false, style }) {
 function Tick({ on = 1, label, style }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12, opacity: on, transform: `translateY(${(1 - on) * 10}px)`, ...style }}>
-      <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'rgba(62,207,142,0.18)', border: `1.5px solid ${C.green}`, display: 'grid', placeItems: 'center', flex: 'none' }}>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke={C.green} strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      <div style={{ width: 26, height: 26, borderRadius: '50%', background: C.accent, display: 'grid', placeItems: 'center', flex: 'none' }}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#fff" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </div>
       <div style={{ fontSize: 17, color: C.inkSoft, fontWeight: 500 }}>{label}</div>
     </div>
@@ -92,12 +98,12 @@ function Toast({ f, at, children }) {
         opacity: t,
         transform: `translateY(${(1 - t) * -24}px)`,
         fontSize: 16,
-        fontWeight: 600,
+        fontWeight: 500,
         color: C.ink,
         zIndex: 5,
       }}
     >
-      <span style={{ width: 9, height: 9, borderRadius: '50%', background: C.green }} />
+      <span style={{ width: 9, height: 9, borderRadius: '50%', background: C.accent }} />
       {children}
     </div>
   )
@@ -163,8 +169,8 @@ function PwaBook({ f }) {
                     display: 'grid',
                     placeItems: 'center',
                     fontSize: 14,
-                    fontWeight: 700,
-                    color: on ? '#1a0900' : busy.has(key) ? 'rgba(255,255,255,0.2)' : C.accent,
+                    fontWeight: 500,
+                    color: on ? C.onAccent : busy.has(key) ? 'rgba(255,255,255,0.2)' : C.accent,
                     transform: on ? `scale(${1 + press(f, 34) * 0.06})` : 'none',
                   }}
                 >
@@ -183,7 +189,7 @@ function PwaBook({ f }) {
               <span key={m} style={{ fontSize: 15, fontWeight: 600, padding: '8px 14px', borderRadius: 999, border: `1px solid ${i === 0 ? C.accent : C.lineStrong}`, color: i === 0 ? C.accent : C.muted, background: i === 0 ? C.accentSoft : 'transparent' }}>{m}</span>
             ))}
           </div>
-          <div style={{ marginTop: 18, fontFamily: DISPLAY, fontWeight: 800, fontSize: 24, color: pick ? C.ink : C.muted }}>{pick ? 'Tue · 15:00' : 'Pick a slot'}</div>
+          <div style={{ marginTop: 18, fontFamily: DISPLAY, fontWeight: 500, fontSize: 26, letterSpacing: '-0.02em', color: pick ? C.ink : C.muted }}>{pick ? 'Tue · 15:00' : 'Pick a slot'}</div>
         </Panel>
         <Tick on={tween(f, 46, 56)} label="Google Calendar event" />
         <Tick on={tween(f, 54, 64)} label="WhatsApp confirmation" />
@@ -204,7 +210,7 @@ function PwaSee({ f }) {
           <span style={{ width: 14, height: 14, borderRadius: '50%', background: '#ff4d4d', opacity: 0.6 + 0.4 * Math.sin(f / 4) }} />
           <Label style={{ color: '#ff8080' }}>Recording on this device</Label>
         </div>
-        <div style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 96, letterSpacing: '-0.04em', color: C.ink, fontVariantNumeric: 'tabular-nums' }}>
+        <div style={{ fontFamily: DISPLAY, fontWeight: 500, fontSize: 96, letterSpacing: '-0.045em', color: C.ink, fontVariantNumeric: 'tabular-nums' }}>
           {String(Math.floor(secs / 60)).padStart(2, '0')}:{String(secs % 60).padStart(2, '0')}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 5, height: 90 }}>
@@ -223,7 +229,10 @@ function PwaSee({ f }) {
             return (
               <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', borderRadius: 10, border: `1px solid ${C.line}`, background: C.page, opacity: t, transform: `translateX(${(1 - t) * 20}px)` }}>
                 <span style={{ fontSize: 16, color: C.inkSoft, fontWeight: 600 }}>Chunk {String(i + 9).padStart(2, '0')}</span>
-                <span style={{ fontSize: 14, fontWeight: 600, color: done ? C.green : C.accent }}>{done ? 'Transcribed ✓' : 'Queued'}</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 14, fontWeight: 500, color: done ? OK : C.accent }}>
+                  {done && <Icon name="check" size={14} stroke={3} />}
+                  {done ? 'Transcribed' : 'Queued'}
+                </span>
               </div>
             )
           })}
@@ -241,14 +250,14 @@ function PwaNote({ f }) {
       <Panel>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Title size={28}>Clinical note</Title>
-          <span style={{ fontSize: 14, fontWeight: 700, color: C.accent, border: `1px solid ${C.accent}`, background: C.accentSoft, padding: '6px 12px', borderRadius: 999 }}>AI draft · therapist reviews</span>
+          <span style={{ fontSize: 14, fontWeight: 600, color: C.accent, border: `1px solid ${C.accent}`, background: C.accentSoft, padding: '6px 12px', borderRadius: 999 }}>AI draft · therapist reviews</span>
         </div>
         <div style={{ marginTop: 22, display: 'flex', flexDirection: 'column', gap: 20 }}>
           {sections.map((s, i) => {
             const t = tween(f, 8 + i * 12, 22 + i * 12)
             return (
               <div key={s} style={{ opacity: Math.min(1, t * 3) }}>
-                <div style={{ fontSize: 16, fontWeight: 700, color: C.inkSoft, marginBottom: 10 }}>{s}</div>
+                <div style={{ fontSize: 16, fontWeight: 600, color: C.inkSoft, marginBottom: 10 }}>{s}</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   <Bar w={`${t * 96}%`} h={10} c="rgba(255,255,255,0.16)" />
                   <Bar w={`${Math.max(0, t * 2 - 1) * 72}%`} h={10} c="rgba(255,255,255,0.16)" />
@@ -314,7 +323,7 @@ function PwaConsent({ f }) {
             borderRadius: 12,
             padding: '10px 18px',
             fontFamily: DISPLAY,
-            fontWeight: 800,
+            fontWeight: 600,
             fontSize: 22,
             letterSpacing: '0.06em',
           }}
@@ -349,7 +358,7 @@ function PwaFollow({ f }) {
             const done = i === 0 && f > 60
             return (
               <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', borderRadius: 12, border: `1px solid ${hot ? 'rgba(245,135,30,0.4)' : C.line}`, background: hot ? C.accentSoft : C.page }}>
-                <div style={{ width: 20, height: 20, borderRadius: 6, border: `2px solid ${done ? C.green : C.lineStrong}`, background: done ? C.green : 'transparent' }} />
+                <div style={{ width: 20, height: 20, borderRadius: 6, border: `2px solid ${done ? C.accent : C.lineStrong}`, background: done ? C.accent : 'transparent' }} />
                 <span style={{ flex: 1, fontSize: 17, fontWeight: 600, color: done ? C.muted : C.ink, textDecoration: done ? 'line-through' : 'none' }}>{t}</span>
                 <span style={{ fontSize: 14, color: C.muted }}>{when}</span>
                 <div style={{ width: 28, height: 28, borderRadius: '50%', background: C.surface3 }} />
@@ -363,7 +372,7 @@ function PwaFollow({ f }) {
         <div style={{ marginTop: 16, background: '#0b141a', border: `1px solid ${C.line}`, borderRadius: 18, padding: 18, height: 360 }}>
           <div style={{ maxWidth: 270, marginLeft: 'auto', background: '#005c4b', borderRadius: '14px 14px 4px 14px', padding: '12px 14px', color: '#e9edef', fontSize: 16, lineHeight: 1.45, opacity: bubble, transform: `translateY(${(1 - bubble) * 16}px)` }}>
             Hi! A reminder that your next session is tomorrow at 3:00 PM. Reply 1 to confirm.
-            <div style={{ fontSize: 12, opacity: 0.6, textAlign: 'right', marginTop: 4 }}>09:00 ✓✓</div>
+            <div style={{ fontSize: 12, opacity: 0.6, textAlign: 'right', marginTop: 4 }}>09:00</div>
           </div>
           <div style={{ maxWidth: 80, marginTop: 14, background: '#202c33', borderRadius: '14px 14px 14px 4px', padding: '10px 14px', color: '#e9edef', fontSize: 16, opacity: tween(f, 52, 62) }}>1</div>
         </div>
@@ -379,7 +388,7 @@ function UdDiscover({ f }) {
   return (
     <Pad style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 80px' }}>
       <Label style={{ color: C.accent }}>12-week recovery program</Label>
-      <div style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 64, lineHeight: 1, letterSpacing: '-0.04em', color: C.ink, margin: '18px 0 22px', maxWidth: 760 }}>
+      <div style={{ fontFamily: DISPLAY, fontWeight: 500, fontSize: 64, lineHeight: 1.02, letterSpacing: '-0.045em', color: C.ink, margin: '18px 0 22px', maxWidth: 760 }}>
         Recovery that doesn’t stop between sessions.
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 560, marginBottom: 34 }}>
@@ -395,7 +404,7 @@ function UdDiscover({ f }) {
           return (
             <div key={t} style={{ padding: 20, borderRadius: 14, border: `1px solid ${C.line}`, background: C.surface, opacity: s, transform: `translateY(${(1 - s) * 16}px)` }}>
               <div style={{ width: 30, height: 30, borderRadius: 8, background: C.accentSoft, border: `1px solid rgba(245,135,30,0.4)`, marginBottom: 12 }} />
-              <div style={{ fontSize: 18, fontWeight: 700, color: C.ink }}>{t}</div>
+              <div style={{ fontSize: 18, fontWeight: 500, color: C.ink }}>{t}</div>
             </div>
           )
         })}
@@ -417,7 +426,7 @@ function UdTriage({ f }) {
       </Panel>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingTop: 70 }}>
         <Label>Creates</Label>
-        <Tick on={tween(f, 58, 68)} label="A lead — not an account" />
+        <Tick on={tween(f, 58, 68)} label="A lead, not an account" />
         <Tick on={tween(f, 64, 74)} label="Coordinator alerted" />
         <div style={{ fontSize: 14, color: C.muted, lineHeight: 1.5, opacity: tween(f, 70, 82) }}>No portal access until screening, assessment and payment are done.</div>
       </div>
@@ -440,7 +449,7 @@ function UdScreen({ f }) {
       <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: `repeat(5, ${colW}px)`, gap: 16 }}>
         {cols.map((c, i) => (
           <div key={c} style={{ background: C.surface, border: `1px solid ${C.line}`, borderRadius: 14, padding: 14, minHeight: 470 }}>
-            <div style={{ fontSize: 15, fontWeight: 700, color: C.inkSoft, marginBottom: 12 }}>{c}</div>
+            <div style={{ fontSize: 15, fontWeight: 500, color: C.inkSoft, marginBottom: 12 }}>{c}</div>
             {Array.from({ length: counts[i] }).map((_, k) => (
               <div key={k} style={{ height: 64, borderRadius: 10, background: C.page, border: `1px solid ${C.line}`, marginBottom: 10, padding: 12 }}>
                 <Bar w="70%" h={10} c="rgba(255,255,255,0.14)" />
@@ -465,7 +474,7 @@ function UdScreen({ f }) {
           }}
         >
           <Bar w="70%" h={10} c="rgba(245,135,30,0.6)" />
-          <div style={{ fontSize: 12, fontWeight: 700, color: C.accent, marginTop: 8 }}>{move > 0.9 ? 'Call booked · Cal.com' : 'New lead'}</div>
+          <div style={{ fontSize: 12, fontWeight: 500, color: C.accent, marginTop: 8 }}>{move > 0.9 ? 'Call booked · Cal.com' : 'New lead'}</div>
         </div>
       </div>
     </Pad>
@@ -486,9 +495,12 @@ function UdAssess({ f }) {
         </div>
       </Panel>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingTop: 10 }}>
-        <Panel style={{ padding: 22, borderColor: f > 56 ? C.green : C.line, opacity: tween(f, 50, 60) }}>
+        <Panel style={{ padding: 22, borderColor: f > 56 ? OK : C.line, opacity: tween(f, 50, 60) }}>
           <Label>Outcome</Label>
-          <div style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 26, color: C.green, marginTop: 10 }}>Suitable ✓</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontFamily: DISPLAY, fontWeight: 500, fontSize: 26, color: OK, marginTop: 10 }}>
+            <Icon name="check" size={24} stroke={2.6} />
+            Suitable
+          </div>
           <div style={{ fontSize: 15, color: C.muted, marginTop: 8 }}>Signed off by the clinician</div>
         </Panel>
         <div style={{ fontSize: 14, color: C.muted, lineHeight: 1.5, opacity: tween(f, 62, 74) }}>Payment only unlocks after this step.</div>
@@ -554,7 +566,7 @@ function UdEnrol({ f }) {
           return (
             <div key={t} style={{ padding: 22, borderRadius: 16, border: `1px solid ${locked ? C.line : 'rgba(245,135,30,0.5)'}`, background: locked ? C.surface : '#1d160f', minHeight: 230, opacity: a, transform: `translateY(${(1 - a) * 14}px)`, display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 14, color: C.muted, fontWeight: 600 }}>{s}</div>
-              <div style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 28, color: locked ? C.muted : C.ink, marginTop: 8 }}>{t}</div>
+              <div style={{ fontFamily: DISPLAY, fontWeight: 500, fontSize: 28, letterSpacing: '-0.03em', color: locked ? C.muted : C.ink, marginTop: 8 }}>{t}</div>
               <div style={{ marginTop: 'auto' }}>
                 {locked ? (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: C.muted, fontWeight: 600 }}>
@@ -576,9 +588,9 @@ function UdEnrol({ f }) {
       </div>
       <div style={{ marginTop: 22, display: 'flex', alignItems: 'center', gap: 14, padding: '16px 20px', borderRadius: 14, border: `1px solid ${C.line}`, background: C.surface, opacity: tween(f, 40, 54) }}>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="10" rx="2" stroke={C.accent} strokeWidth="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke={C.accent} strokeWidth="2" /></svg>
-        <span style={{ fontSize: 16, color: C.inkSoft, fontWeight: 500 }}>Clinical gate — the same lock is checked by every screen and every media link.</span>
+        <span style={{ fontSize: 16, color: C.inkSoft, fontWeight: 500 }}>Clinical gate: the same lock is checked by every screen and every media link.</span>
       </div>
-      <div style={{ position: 'absolute', right: 30, bottom: 26, padding: '14px 22px', borderRadius: 999, background: '#e5484d', color: '#fff', fontWeight: 800, fontSize: 17, boxShadow: `0 0 0 ${8 + pulse * 10}px rgba(229,72,77,${0.25 - pulse * 0.15})` }}>
+      <div style={{ position: 'absolute', right: 30, bottom: 26, padding: '14px 22px', borderRadius: 999, background: '#e5484d', color: '#fff', fontWeight: 500, fontSize: 17, boxShadow: `0 0 0 ${8 + pulse * 10}px rgba(229,72,77,${0.25 - pulse * 0.15})` }}>
         Get help now
       </div>
     </Pad>
@@ -587,11 +599,11 @@ function UdEnrol({ f }) {
 
 export const SCENES = {
   'therapist-pwa': [
-    { stage: 'Enquire', tag: 'Public form → CRM lead', url: 'forms.clinic/enquiry', caption: 'A public form becomes a lead in the CRM, and the desk is notified.', Screen: PwaEnquire },
+    { stage: 'Enquire', tag: 'Public form to CRM lead', url: 'forms.clinic/enquiry', caption: 'A public form becomes a lead in the CRM, and the desk is notified.', Screen: PwaEnquire },
     { stage: 'Book', tag: 'Real-time availability', url: 'crm.clinic/booking-desk', caption: 'Booking checks real availability and syncs Calendar and WhatsApp through n8n.', Screen: PwaBook },
     { stage: 'See', tag: 'Recorded on the device', url: 'crm.clinic/session', caption: 'The session records on the device in 60-second chunks, queued offline.', Screen: PwaSee },
     { stage: 'Note', tag: 'AI draft, guarded', url: 'crm.clinic/notes/draft', caption: 'A clinical note is drafted within a minute, behind guards that fail loudly.', Screen: PwaNote },
-    { stage: 'Consent', tag: 'Signed → sealed PDF', url: 'forms.clinic/consent', caption: 'Consent is signed, sealed as a PDF server-side, stored and countersigned.', Screen: PwaConsent },
+    { stage: 'Consent', tag: 'Signed, then sealed as a PDF', url: 'forms.clinic/consent', caption: 'Consent is signed, sealed as a PDF server-side, stored and countersigned.', Screen: PwaConsent },
     { stage: 'Follow up', tag: 'Tasks + WhatsApp', url: 'crm.clinic/tasks', caption: 'Follow-ups run themselves: owned tasks, WhatsApp reminders, desktop push.', Screen: PwaFollow },
   ],
   udaan: [
@@ -600,6 +612,6 @@ export const SCENES = {
     { stage: 'Screen', tag: 'Coordinator books a call', url: 'admin.udaan.care/leads', caption: 'A coordinator books the screening call from the pipeline.', Screen: UdScreen },
     { stage: 'Assess', tag: 'Clinician signs off', url: 'admin.udaan.care/assessment', caption: 'A clinician assesses fit before anything can be paid for.', Screen: UdAssess },
     { stage: 'Pay', tag: 'Verified server-side', url: 'udaan.care/checkout', caption: 'Payment is verified server-side; only then is a portal account made.', Screen: UdPay },
-    { stage: 'Enrol', tag: 'Gated course + crisis help', url: 'portal.udaan.care', caption: 'The course unlocks as the work gets done — gated on real sessions.', Screen: UdEnrol },
+    { stage: 'Enrol', tag: 'Gated course + crisis help', url: 'portal.udaan.care', caption: 'The course unlocks as the work gets done, gated on real sessions.', Screen: UdEnrol },
   ],
 }

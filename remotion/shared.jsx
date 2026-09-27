@@ -1,30 +1,48 @@
 import { useState, useEffect } from 'react'
-import { continueRender, delayRender, interpolate, Easing } from 'remotion'
-import '@fontsource/archivo/600.css'
-import '@fontsource/archivo/700.css'
-import '@fontsource/archivo/800.css'
+import { continueRender, delayRender, interpolate, spring, Easing } from 'remotion'
 import '@fontsource/inter/400.css'
 import '@fontsource/inter/500.css'
 import '@fontsource/inter/600.css'
 
-/* Brand tokens, lifted from src/index.css so every film matches the site. */
+/* The "Dusk" tokens from docs/design-system.md, so a film and the page it
+   sits on read as one product. Night tokens for the dark ground, paper
+   tokens for the explaining scenes. */
 export const C = {
-  bg: '#0c0c0c',
-  page: '#101010',
-  surface: '#171717',
-  surface2: '#1f1f1f',
-  surface3: '#272727',
-  ink: '#ffffff',
-  inkSoft: '#d2d2d2',
-  muted: '#9a9a9a',
-  line: 'rgba(255,255,255,0.10)',
-  lineStrong: 'rgba(255,255,255,0.18)',
+  // night ground
+  bg: '#0b0b0c',
+  page: '#0f0f11',
+  surface: '#141416',
+  surface2: '#1b1a1c',
+  surface3: '#262427',
+  ink: '#f2f0ed',
+  inkSoft: '#d8d3cc',
+  muted: '#9a958f',
+  line: 'rgba(242,240,237,0.10)',
+  lineStrong: 'rgba(242,240,237,0.18)',
+  // saffron
   accent: '#f5871e',
+  accentDeep: '#b8560a',
   accentSoft: 'rgba(245,135,30,0.14)',
-  green: '#3ecf8e',
+  peach: '#ffc89a',
+  onAccent: '#1a0900',
+  // paper ground
+  paper: '#f5f3ef',
+  paper2: '#ebe7e1',
+  inkDark: '#161412',
+  mutedDark: '#6d6862',
+  tint: '#fbe6d2',
+  card: '#ffffff',
+  cardLine: '#e7e1d9',
+  // illustrative "something is wrong" red, used only in the chaos scenes
+  alert: '#d64545',
+  alertTint: '#fbe3e1',
 }
-export const DISPLAY = 'Archivo, system-ui, sans-serif'
+
+/* Inter only (design system, principle 2). DISPLAY is kept as a name so the
+   older films read the same; headings use it at 500, never bold. */
+export const DISPLAY = 'Inter, system-ui, sans-serif'
 export const SANS = 'Inter, system-ui, sans-serif'
+export const TRACK = '-0.045em'
 
 export const ease = Easing.bezier(0.22, 1, 0.36, 1)
 export const easeInOut = Easing.bezier(0.65, 0, 0.35, 1)
@@ -35,34 +53,73 @@ export const clamp = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
 export const tween = (frame, a, b, fn = ease) =>
   interpolate(frame, [a, b], [0, 1], { ...clamp, easing: fn })
 
+/* A calm, critically damped spring: the default for anything that arrives. */
+export const rise = (frame, start, config) =>
+  spring({ frame: frame - start, fps: 30, config: { damping: 200, stiffness: 90, mass: 1, ...config } })
+
+/* A spring with a touch of overshoot, for things that "land" (nodes, chips). */
+export const pop = (frame, start) =>
+  spring({ frame: frame - start, fps: 30, config: { damping: 15, stiffness: 120, mass: 0.9 } })
+
+export const lerp = (a, b, t) => a + (b - a) * t
+
 /* Hold every frame until the brand fonts are in, so no frame is rendered
-   with fallback metrics (the same trap CLAUDE.md warns about for probes). */
+   with fallback metrics (the same trap CLAUDE.md warns about for probes).
+   The second argument pulls in the latin-ext subset too, which is where
+   Inter keeps the rupee sign. */
 export function useFonts() {
   const [handle] = useState(() => delayRender('fonts'))
   useEffect(() => {
     const done = () => continueRender(handle)
+    const sample = 'Aa ₹ … · ’'
     Promise.all([
-      document.fonts.load('800 100px Archivo'),
-      document.fonts.load('700 40px Archivo'),
-      document.fonts.load('600 28px Inter'),
-      document.fonts.load('500 28px Inter'),
-      document.fonts.load('400 24px Inter'),
+      document.fonts.load(`600 28px Inter`, sample),
+      document.fonts.load(`500 28px Inter`, sample),
+      document.fonts.load(`400 24px Inter`, sample),
     ])
       .then(() => document.fonts.ready)
       .then(done, done)
   }, [handle])
 }
 
-/* "Signet — Consent & Contract Signing" → ["Signet", "Consent & Contract Signing"] */
-export function splitTitle(title) {
-  const [name, ...rest] = String(title).split(' — ')
-  return [name, rest.join(' — ')]
+/* A project's name and its one-line subtitle. data.js titles no longer
+   carry a "Name, subtitle" pair in one string, so prefer `subtitle`. */
+export function splitTitle(project) {
+  if (project && typeof project === 'object') {
+    const [name, sub] = splitTitle(project.title)
+    return [name, project.subtitle || sub]
+  }
+  const [name, ...rest] = String(project).split(/\s+[—–]\s+/)
+  return [name, rest.join(', ')]
 }
 
-export function Wordmark({ size = 26 }) {
+/* "Aniket" with a saffron dot: the sign-off on every film. */
+export function Wordmark({ size = 26, color = C.ink }) {
   return (
-    <div style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: size, color: C.ink, letterSpacing: '-0.02em' }}>
-      Aniket<span style={{ color: C.accent }}>.</span>
+    <div
+      style={{
+        fontFamily: SANS,
+        fontWeight: 500,
+        fontSize: size,
+        color,
+        letterSpacing: '-0.035em',
+        display: 'inline-flex',
+        alignItems: 'baseline',
+        lineHeight: 1,
+      }}
+    >
+      Aniket
+      <span
+        style={{
+          display: 'inline-block',
+          width: size * 0.2,
+          height: size * 0.2,
+          borderRadius: '50%',
+          background: C.accent,
+          marginLeft: size * 0.08,
+          boxShadow: `0 0 ${size * 0.4}px rgba(245,135,30,0.6)`,
+        }}
+      />
     </div>
   )
 }
@@ -77,7 +134,7 @@ export function BrowserChrome({ url, height = 44 }) {
         alignItems: 'center',
         gap: 18,
         padding: '0 18px',
-        background: '#1b1b1b',
+        background: '#18171a',
         borderBottom: `1px solid ${C.line}`,
         flex: 'none',
       }}
@@ -92,12 +149,12 @@ export function BrowserChrome({ url, height = 44 }) {
           flex: 1,
           maxWidth: 520,
           margin: '0 auto',
-          height: 26,
+          height: height - 16,
           borderRadius: 8,
-          background: '#101010',
+          background: C.bg,
           border: `1px solid ${C.line}`,
           color: C.muted,
-          fontSize: 13,
+          fontSize: Math.round(height * 0.34),
           fontFamily: SANS,
           display: 'flex',
           alignItems: 'center',
@@ -117,8 +174,8 @@ export function BrowserChrome({ url, height = 44 }) {
 }
 
 /* A macOS-style pointer. (x, y) is the hotspot. */
-export function Cursor({ x, y, press = 0, opacity = 1 }) {
-  const s = 1 - press * 0.14
+export function Cursor({ x, y, press = 0, opacity = 1, size = 30 }) {
+  const s = (1 - press * 0.14) * (size / 30)
   return (
     <div
       style={{
@@ -158,9 +215,9 @@ export function Cursor({ x, y, press = 0, opacity = 1 }) {
 }
 
 /* Expanding ring where the pointer clicks. t runs 0→1 over the ripple. */
-export function Ripple({ x, y, t }) {
+export function Ripple({ x, y, t, scale = 1 }) {
   if (t <= 0 || t >= 1) return null
-  const r = interpolate(t, [0, 1], [6, 46])
+  const r = interpolate(t, [0, 1], [6, 46]) * scale
   return (
     <div
       style={{

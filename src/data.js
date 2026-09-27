@@ -99,7 +99,7 @@ export const films = {
 /* Flip to true once public/videos/explainers/ holds the rendered films.
    Until then the explainer player and the "watch" buttons render nothing,
    so the live site never shows an empty player. */
-export const explainersReady = false
+export const explainersReady = true
 
 export const explainers = {
   brand: {

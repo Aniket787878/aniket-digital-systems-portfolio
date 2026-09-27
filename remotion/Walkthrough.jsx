@@ -1,174 +1,145 @@
-import { AbsoluteFill, useCurrentFrame, interpolate } from 'remotion'
+import { AbsoluteFill, useCurrentFrame, interpolate, spring } from 'remotion'
 import { projects } from '../src/data.js'
-import { WALKTHROUGHS, URLS } from './walkthroughs.js'
-import { Screen, STEP, VW, VH } from './Screen.jsx'
-import { C, DISPLAY, SANS, BrowserChrome, Wordmark, useFonts, splitTitle, tween, clamp } from './shared.jsx'
+import { WALKTHROUGHS } from './walkthroughs.js'
+import { STEP, modeSpec, trackAt, RecordingView } from './Screen.jsx'
+import { lerpCam } from './Camera.jsx'
+import { C, SANS, Wordmark, useFonts, splitTitle, tween, rise, clamp, easeInOut } from './shared.jsx'
+import { DuskScene } from './DuskScene.jsx'
+import { KineticText, PillLabel } from './KineticText.jsx'
+import { Icon } from './icons.jsx'
+import { CTA, CONTACT } from './EndCard.jsx'
 
 /* Beats, in frames @30fps. */
-export const INTRO = 78
-export const OUTRO = 110
+export const INTRO = 104
+export const OUTRO = 170
 export const walkthroughLength = (slug) => INTRO + WALKTHROUGHS[slug].length * STEP + OUTRO
 
-const CHROME = 44
-const WIN_SCALE = 0.92
-const WIN_H = (VH + CHROME) * WIN_SCALE
+const HORIZON = 0.78
 
 /*
-  The case-study film for a self-built tool: a title card, then the real
-  captures from steps.json played as one screen recording inside a browser
-  window, a caption per step, and a sign-off. Every pixel inside the window
-  is a screenshot of the running app — the camera, pointer and captions are
-  the only things added on top.
+  The case-study film for a self-built tool. It opens on the dusk scene
+  with the app's window small and tilted in 3D, rising from behind the
+  front ridge; the camera dollies in as it flattens. Each step then springs
+  in to the region that matters (spotlit, with a callout), and pulls back
+  out between steps. It closes by pulling back and tilting away into the
+  dusk. Every pixel inside the window is a capture of the running app: the
+  camera, pointer, spotlight and callouts are the only things added.
 */
 export function Walkthrough({ slug }) {
   useFonts()
   const frame = useCurrentFrame()
   const steps = WALKTHROUGHS[slug]
-  const project = projects.find((p) => p.slug === slug)
-  const [name, sub] = splitTitle(project.title)
+  const project = projects.find((p) => p.slug === slug) || { title: slug }
+  const [name, sub] = splitTitle(project)
   const total = walkthroughLength(slug)
   const stepsEnd = INTRO + steps.length * STEP
+  const spec = modeSpec('film')
+  const W = spec.wide
 
-  // Window: rises in with a tilt, then recedes for the sign-off.
-  const rise = tween(frame, 36, 78)
-  const recede = tween(frame, stepsEnd - 6, stepsEnd + 30)
-  const winY = interpolate(rise, [0, 1], [560, 0]) + recede * -120
-  const winTilt = interpolate(rise, [0, 1], [22, 0])
-  const winScale = 1 - recede * 0.38
-  const winOpacity = interpolate(rise, [0, 0.25], [0, 1], clamp) * (1 - tween(frame, stepsEnd + 14, stepsEnd + 34))
-
-  // Title card
-  const tIn = tween(frame, 0, 26)
-  const tOut = tween(frame, 40, 70)
-
-  // Caption for the current step
   const local = frame - INTRO
-  const idx = Math.max(0, Math.min(steps.length - 1, Math.floor(local / STEP)))
-  const f = local - idx * STEP
-  const capO = local < 0 || frame >= stepsEnd ? 0 : tween(f, 4, 16) * (1 - tween(f, STEP - 10, STEP))
-  const capY = (1 - tween(f, 4, 20)) * 18
+  const st = trackAt(steps, Math.max(0, Math.min(local, steps.length * STEP - 1)), spec)
 
-  // Sign-off
-  const oIn = tween(frame, stepsEnd + 18, stepsEnd + 48)
+  // Intro: small, tilted, rising from behind the front ridge; then dolly in.
+  const up = spring({ frame: frame - 8, fps: 30, config: { damping: 200, stiffness: 60 } })
+  const poseIn = { S: W.S * 0.46, cx: W.cx, cy: W.cy, ax: 960, ay: interpolate(up, [0, 1], [1260, 800]), rx: 18, ry: -14 }
+  const dolly = spring({ frame: frame - 54, fps: 30, config: { damping: 200, stiffness: 70 }, durationInFrames: INTRO - 54 })
+  // Outro: pull back and tilt away, down behind the ridge.
+  const o = frame - stepsEnd
+  const away = tween(o, 0, 64, easeInOut)
+  const poseOut = { S: W.S * 0.4, cx: W.cx, cy: W.cy, ax: 960, ay: 1020, rx: 20, ry: 14 }
 
+  let cam = st.cam
+  if (local < 0) cam = lerpCam(poseIn, W, dolly)
+  else if (o >= 0) cam = lerpCam(W, poseOut, away)
+
+  const ridges =
+    local < 0
+      ? interpolate(rise(frame, 0, { stiffness: 45 }), [0, 1], [0.3, 1]) * (1 - tween(frame, 54, INTRO, easeInOut))
+      : tween(o, 6, 70, easeInOut)
+
+  const titleOut = 50
+  const signAt = stepsEnd + 52
+  const inSteps = local >= 0 && o < 0
+  const cursorO = tween(local, 0, 10) * (1 - tween(o, 0, 8))
+  const winO = 1 - tween(o, 44, 76)
   const progress = interpolate(frame, [0, total], [0, 1], clamp)
 
   return (
     <AbsoluteFill style={{ background: C.bg, fontFamily: SANS, overflow: 'hidden' }}>
-      <AbsoluteFill
-        style={{
-          background:
-            'radial-gradient(60% 50% at 18% -8%, rgba(245,135,30,0.16), transparent 60%), radial-gradient(50% 45% at 90% 110%, rgba(245,135,30,0.08), transparent 60%)',
-        }}
-      />
-
-      {/* Title card */}
-      <AbsoluteFill
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-          opacity: tIn * (1 - tOut),
-          transform: `translateY(${(1 - tIn) * 24 - tOut * 60}px)`,
-        }}
+      <DuskScene
+        frame={frame}
+        push={tween(frame, 0, total, easeInOut)}
+        rise={ridges}
+        horizon={HORIZON}
+        fade={tween(frame, 0, 20)}
+        midground={
+          <AbsoluteFill style={{ opacity: winO }}>
+            <RecordingView st={st} cam={cam} spec={spec} slug={slug} title={`${name} · ${sub}`} showCursor={false} showCallout={false} />
+          </AbsoluteFill>
+        }
       >
-        <div style={{ fontSize: 18, fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.accent }}>
-          Working demo · real screens
-        </div>
-        <div style={{ marginTop: 22, fontFamily: DISPLAY, fontWeight: 800, fontSize: 132, lineHeight: 0.95, letterSpacing: '-0.045em', color: C.ink }}>
-          {name}
-        </div>
-        <div style={{ marginTop: 22, fontSize: 38, fontWeight: 500, color: C.inkSoft, letterSpacing: '-0.01em' }}>{sub}</div>
-      </AbsoluteFill>
+        {/* pointer and callout live above the ridges, in screen space */}
+        {inSteps && (
+          <AbsoluteFill style={{ opacity: cursorO }}>
+            <RecordingOverlay st={st} cam={cam} spec={spec} slug={slug} />
+          </AbsoluteFill>
+        )}
 
-      {/* Browser window */}
-      <div
-        style={{
-          position: 'absolute',
-          left: (1920 - VW) / 2,
-          top: 34,
-          width: VW,
-          height: WIN_H,
-          perspective: 2200,
-          opacity: winOpacity,
-        }}
-      >
-        <div
-          style={{
-            width: VW,
-            height: VH + CHROME,
-            transformOrigin: '50% 0',
-            transform: `translateY(${winY}px) scale(${WIN_SCALE * winScale}) rotateX(${winTilt}deg)`,
-            transformStyle: 'preserve-3d',
-            borderRadius: 18,
-            overflow: 'hidden',
-            border: `1px solid ${C.lineStrong}`,
-            boxShadow: '0 40px 120px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,0,0,0.4)',
-            display: 'flex',
-            flexDirection: 'column',
-            background: C.page,
-          }}
-        >
-          <BrowserChrome url={URLS[slug]} height={CHROME} />
-          <div style={{ position: 'relative', width: VW, height: VH }}>
-            <Screen slug={slug} steps={steps} frame={Math.max(0, Math.min(local, steps.length * STEP - 1))} showCursor={local >= 0 && frame < stepsEnd} />
+        {/* Title, over the sky while the window rises */}
+        {frame < INTRO && (
+          <div style={{ position: 'absolute', left: 96, right: 96, top: 150, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+            <div style={{ opacity: rise(frame, 6) * (1 - tween(frame, titleOut, titleOut + 14)), transform: `translateY(${(1 - rise(frame, 6)) * 16}px)` }}>
+              <PillLabel dark size={28}>Working demo · real screens</PillLabel>
+            </div>
+            <div style={{ marginTop: 26 }}>
+              <KineticText text={name} start={10} size={140} align="center" exit={titleOut} />
+            </div>
+            <div style={{ marginTop: 18 }}>
+              <KineticText text={sub} start={18} stagger={3} size={44} color={C.peach} align="center" exit={titleOut + 2} tracking="-0.03em" />
+            </div>
           </div>
-        </div>
-      </div>
+        )}
 
-      {/* Step caption */}
-      <div
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: 34 + WIN_H + 24,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 18,
-          opacity: capO,
-          transform: `translateY(${capY}px)`,
-        }}
-      >
-        <span style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 22, color: C.accent, letterSpacing: '0.02em' }}>
-          {String(idx + 1).padStart(2, '0')}
-          <span style={{ color: C.muted }}> / {String(steps.length).padStart(2, '0')}</span>
-        </span>
-        <span style={{ width: 1, height: 26, background: C.lineStrong }} />
-        <span style={{ fontSize: 30, fontWeight: 600, color: C.ink, letterSpacing: '-0.01em' }}>{steps[idx].caption}</span>
-      </div>
-
-      {/* Sign-off */}
-      <AbsoluteFill
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-          opacity: oIn,
-          transform: `translateY(${(1 - oIn) * 26}px)`,
-        }}
-      >
-        <Wordmark size={40} />
-        <div style={{ marginTop: 30, fontFamily: DISPLAY, fontWeight: 800, fontSize: 76, lineHeight: 1.02, letterSpacing: '-0.04em', color: C.ink, maxWidth: 1300 }}>
-          {name}, built end to end
-          <br />
-          <span style={{ color: C.accent }}>by one person.</span>
-        </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', maxWidth: 1100, marginTop: 40 }}>
-          {project.stack.slice(0, 6).map((t) => (
-            <span key={t} style={{ fontSize: 20, fontWeight: 500, color: C.inkSoft, border: `1px solid ${C.lineStrong}`, borderRadius: 999, padding: '9px 20px' }}>
-              {t}
-            </span>
-          ))}
-        </div>
-        <div style={{ marginTop: 36, fontSize: 20, color: C.muted }}>
-          Every screen in this film is the running app — nothing mocked up.
-        </div>
-      </AbsoluteFill>
+        {/* Sign-off */}
+        {o > 30 && (
+          <div style={{ position: 'absolute', left: 96, right: 96, top: 96, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+            <div style={{ opacity: rise(frame, signAt + 30) }}>
+              <Wordmark size={48} />
+            </div>
+            <div style={{ marginTop: 56 }}>
+              <KineticText text={`${name}, built end to end\n{by one person.}`} start={signAt} stagger={4} size={104} align="center" lineHeight={1.04} />
+            </div>
+            <div style={{ marginTop: 30, fontSize: 30, fontWeight: 500, letterSpacing: '-0.02em', color: C.inkSoft, opacity: rise(frame, signAt + 22) }}>
+              Every screen in this film is the running app. Nothing is mocked up.
+            </div>
+            <div style={{ marginTop: 44, display: 'flex', alignItems: 'center', gap: 36, opacity: rise(frame, signAt + 34), transform: `translateY(${(1 - rise(frame, signAt + 34)) * 16}px)` }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 14, padding: '22px 34px', borderRadius: 999, background: C.accent, color: C.onAccent, fontSize: 32, fontWeight: 500, letterSpacing: '-0.02em', boxShadow: '0 14px 44px rgba(245,135,30,0.4)' }}>
+                {CTA}
+                <Icon name="arrow" size={30} stroke={2.2} />
+              </div>
+              <div style={{ fontSize: 28, fontWeight: 500, color: C.ink, letterSpacing: '-0.015em', textAlign: 'left', lineHeight: 1.45 }}>
+                <div>
+                  <span style={{ color: C.muted }}>WhatsApp </span>
+                  {CONTACT.whatsapp}
+                </div>
+                <div>{CONTACT.email}</div>
+              </div>
+            </div>
+          </div>
+        )}
+      </DuskScene>
 
       {/* Progress hairline */}
       <div style={{ position: 'absolute', left: 0, bottom: 0, height: 4, width: `${progress * 100}%`, background: C.accent }} />
     </AbsoluteFill>
+  )
+}
+
+/* The pointer and callout for the film, drawn over the ridges. */
+function RecordingOverlay({ st, cam, spec, slug }) {
+  return (
+    <div style={{ position: 'absolute', inset: 0 }}>
+      <RecordingView st={st} cam={cam} spec={spec} slug={slug} showWindow={false} />
+    </div>
   )
 }

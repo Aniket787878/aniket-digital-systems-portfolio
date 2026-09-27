@@ -5,7 +5,6 @@ import { site, whatsappPrefill, explainers } from '../../data.js'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
 import BookingCta from '../../components/BookingCta.jsx'
 import LoopVideo from '../../components/LoopVideo.jsx'
-import Icon from '../../components/icons.jsx'
 import { Ridge } from '../../components/dusk/Mountains.jsx'
 import { ridge, starField } from '../../components/dusk/terrain.js'
 import { hasWhatsApp } from '../../whatsapp.js'
@@ -20,7 +19,6 @@ const STARS = starField(80, 5)
 
 const EASE = [0.22, 1, 0.36, 1]
 const [LINE_1, LINE_2] = site.headline
-const PROOF = site.heroProof
 
 /* The hero film is the one-minute explainer: it shows the result the
    headline promises (an enquiry answered, booked and followed up) in type
@@ -158,22 +156,6 @@ export default function Hero() {
           Free 15-minute call. No obligation.
         </m.p>
 
-        {/* The proof, with the caveat that qualifies its numbers right
-            beneath it (site.heroProof keeps the two together). */}
-        <m.div
-          className="dusk-proof"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 1.1, ease: EASE }}
-        >
-          <Link to={`/projects/${PROOF.slug}`} className="dusk-proof-link">
-            <span className="dusk-proof-claim">{PROOF.claim}</span>{' '}
-            <span className="dusk-proof-cta">
-              {PROOF.linkLabel} <Icon name="arrow" size={14} />
-            </span>
-          </Link>
-          <p className="dusk-proof-note">{PROOF.note}</p>
-        </m.div>
       </m.div>
 
       <m.figure

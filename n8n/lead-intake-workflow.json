@@ -4,7 +4,7 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "aniket-leads",
+        "path": "portfolio-leads",
         "responseMode": "responseNode",
         "options": {
           "allowedOrigins": "*"

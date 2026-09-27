@@ -1,5 +1,14 @@
 # n8n — Lead Intake Workflow
 
+> **Live since 2026-09-27** on the n8n instance, as three workflows:
+> "Portfolio — Lead intake" (webhook path `portfolio-leads`), "Portfolio —
+> Lead intake errors" (its error workflow, emails Aniket) and "Portfolio —
+> Unanswered lead reminder" (09:30 IST daily, emails Aniket about leads
+> still at Stage "New" after 24h). Sheet: "Portfolio leads" → "Leads" on
+> aniket.html@gmail.com. The site posts to `/api/lead`, which `vercel.json`
+> rewrites to the webhook. The JSON below is the reference design; the live
+> workflows were built from it and are the source of truth.
+
 `lead-intake-workflow.json` takes the portfolio contact form and:
 1. adds a row to a Google Sheet,
 2. emails Aniket at aniket.html@gmail.com (Reply-To is set to the lead),

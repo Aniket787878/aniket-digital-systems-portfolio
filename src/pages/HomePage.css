@@ -190,13 +190,13 @@
 }
 
 .dusk-title {
-  margin-top: 1.5rem;
+  margin-top: 1.75rem;
   /* Sized so each line (two short sentences) sits on one row on desktop:
      at 5.5rem the four sentences stacked into a wall that pushed the
-     buttons and the proof line off the first screen. */
+     buttons off the first screen. */
   font-size: clamp(2.25rem, 4.4vw, 3.5rem);
   font-weight: 500;
-  line-height: 1.08;
+  line-height: 1.1;
   letter-spacing: -0.055em;
   color: #fff;
 }
@@ -222,8 +222,10 @@
 }
 
 .dusk-sub {
-  max-width: 34em;
-  margin-top: 1.5rem;
+  max-width: 32em;
+  margin-top: 1.75rem;
+  /* Even line lengths, so a phone doesn't strand "weeks." on its own row. */
+  text-wrap: balance;
   font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.72);
@@ -234,47 +236,13 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.75rem;
-  margin-top: 2.25rem;
+  margin-top: 2.5rem;
 }
 
 .dusk-footnote {
-  margin-top: 0.9rem;
+  margin-top: 1rem;
   font-size: 0.8125rem;
   color: rgba(255, 255, 255, 0.5);
-}
-
-/* One line of proof under the buttons, linking to the case study, with
-   the caveat that qualifies its numbers directly beneath (house rule:
-   no number without its note). Quiet on purpose: the headline leads. */
-.dusk-proof {
-  max-width: 40rem;
-  margin: 1.6rem auto 0;
-}
-
-.dusk-proof-link {
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.82);
-}
-
-.dusk-proof-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  color: var(--peach);
-  white-space: nowrap;
-}
-
-.dusk-proof-link:hover .dusk-proof-cta {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.dusk-proof-note {
-  margin-top: 0.35rem;
-  font-size: 0.75rem;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.45);
 }
 
 /* --- The product card rising out of the range --- */
@@ -282,7 +250,7 @@
   position: relative;
   z-index: 3;
   width: min(1100px, calc(100% - var(--container-pad) * 2));
-  margin: clamp(2.75rem, 5vw, 4rem) auto 0;
+  margin: clamp(4rem, 7vw, 6rem) auto 0;
   overflow: hidden;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -1920,17 +1888,17 @@
      one row down to 320px and leaves the primary button on the first
      screen at 390x844. */
   .dusk-hero .dusk-title {
-    margin-top: 1rem;
+    margin-top: 1.25rem;
     font-size: 7vw;
   }
 
   .dusk-hero .dusk-sub {
-    margin-top: 1rem;
+    margin-top: 1.25rem;
     font-size: 1rem;
   }
 
   .dusk-hero .dusk-actions {
-    margin-top: 1.5rem;
+    margin-top: 1.75rem;
   }
 
   .dusk-card-title {

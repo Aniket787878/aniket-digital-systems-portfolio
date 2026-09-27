@@ -13,7 +13,7 @@ const NEXT_STEPS = [
     step: '01',
     label: 'A reply within 24 hours',
     detail:
-      'From me, not an autoresponder. If it isn’t a fit I’ll say so and point you somewhere better.'
+      'You get a confirmation straight away, then a personal reply from me. If it isn’t a fit I’ll say so and point you somewhere better.'
   },
   {
     step: '02',

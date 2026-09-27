@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Renders every film, loop and poster from remotion/ into public/videos/.
 #   bash scripts/render-videos.sh              # everything
-#   bash scripts/render-videos.sh signet       # one slug's film, loop and poster
+#   bash scripts/render-videos.sh consent-signer   # one slug's film, loop and poster
 #   bash scripts/render-videos.sh hero         # the home hero reel
 #   bash scripts/render-videos.sh explainers   # the five explainer films
 #   bash scripts/render-videos.sh explainer-ops-sprint   # one explainer
@@ -41,7 +41,7 @@ explainer() { # composition, output name, poster frame, crf
     --image-format=jpeg --jpeg-quality=82 "${BROWSER[@]}" --log=error
 }
 
-for slug in signet relay prospector; do
+for slug in consent-signer shared-inbox lead-research; do
   [ -n "$ONLY" ] && [ "$ONLY" != "$slug" ] && continue
   film "Walkthrough-$slug" "$slug" 190
   loop "Clip-$slug" "$OUT/clips/$slug.mp4" 0.8
@@ -49,7 +49,7 @@ for slug in signet relay prospector; do
   npx remotion still "$ENTRY" "Clip-$slug" "$OUT/posters/$slug-clip.jpg" --frame=0 \
     --scale=0.8 --image-format=jpeg --jpeg-quality=80 "${BROWSER[@]}" --log=error
 done
-for slug in therapist-pwa udaan; do
+for slug in therapist-pwa care-journey; do
   [ -n "$ONLY" ] && [ "$ONLY" != "$slug" ] && continue
   film "Platform-$slug" "$slug" 160
 done

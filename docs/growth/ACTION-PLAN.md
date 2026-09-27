@@ -56,7 +56,7 @@ you pressing send.
 | # | Build | Tool | What it does |
 |---|---|---|---|
 | 1.1 | Tracker sheet + status model | Sheets | `new → ready → contacted → followup_1-3 → replied → call_booked → proposal_sent → won/lost/not_now` |
-| 1.2 | **Pipeline 00 · Import leads** | n8n form | Paste a Prospector/Maps CSV → dedupe → `Leads` |
+| 1.2 | **Pipeline 00 · Import leads** | n8n form | Paste a Lead Research Tool/Maps CSV → dedupe → `Leads` |
 | 1.3 | **Pipeline 01 · Enrich & score** | n8n + Claude (personal key) | Reads each lead's site, scores it, drafts WhatsApp opener + email |
 | 1.4 | **Pipeline 02 · Buyer signals** | n8n RSS + Claude | Watches Reddit search feeds (r/n8n, r/forhire, r/smallbusiness, r/IndianStartups…) and the n8n forum Jobs feed every 2h; keeps real buyer posts, drafts a helpful reply; into `Leads` as type `buyer` |
 | 1.5 | **Pipeline 03 · Morning digest (09:00)** | n8n + Gmail | One email: hot replies, follow-ups due, top 20 new — with tap-to-open WhatsApp links and tap-to-update buttons |

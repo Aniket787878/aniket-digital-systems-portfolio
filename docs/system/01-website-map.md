@@ -141,7 +141,7 @@ with itself.
 ### `films`, `heroReel`, `stackMarquee` (2026-09-27)
 
 - `films[slug]` — `{ kind, src, poster, clip?, clipPoster? }`. `kind` is
-  `'real'` (Signet, Relay, Prospector: captures of the running app) or
+  `'real'` (the consent signer, shared inbox and lead research tool: captures of the running app) or
   `'schematic'` (the two client platforms). Read by the home work cards,
   `/projects` (now a film-led showcase, not a thumbnail list) and the case
   page. Every surface labels the kind.

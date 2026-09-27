@@ -170,7 +170,7 @@ export default function Tour() {
             </div>
 
             <Link to={`/projects/${project.slug}`} className="text-link tour-link">
-              See how {project.title} was built <Icon name="arrow" size={16} />
+              See how the {project.title} was built <Icon name="arrow" size={16} />
             </Link>
           </div>
 

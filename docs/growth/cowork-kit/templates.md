@@ -105,11 +105,11 @@ tools. Solo, fixed price, live in 1–2 weeks.
 **Public templates**
 - `whatsapp-appointment-reminders` — 24h/1h reminders with no double-sends
 - `clinic-booking-starter` — booking page + Google Calendar + WhatsApp confirm
-- `signet` · `relay` · `prospector` — tools I built and use
+- the consent signer, shared inbox and lead research tool: tools I built and use
 ```
 
-Pin: the two templates (build them fresh on your own account), Signet,
-Relay, Prospector, and the portfolio repo. Each README: one-line pitch,
+Pin: the two templates (build them fresh on your own account), the
+consent signer, the shared inbox, the lead research tool, and the portfolio repo. Each README: one-line pitch,
 demo GIF, live link, features, stack, decisions, how to run. (That's the
 useful part of the PDF's README template.)
 

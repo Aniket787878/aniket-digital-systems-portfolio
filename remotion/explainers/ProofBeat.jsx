@@ -21,26 +21,26 @@ const CH = 84 // chrome, tall enough that the product name still reads when smal
 const WIN = { w: VW, h: VH + CH }
 
 export const APPS = [
-  { key: 'relay', src: 'walkthroughs/relay/02.png', title: 'Relay · shared inbox', rect: { x: 528, y: 222, w: 400, h: 100 }, label: 'Relay', text: 'Every enquiry lands in one shared inbox.' },
-  { key: 'signet', src: 'walkthroughs/signet/06.png', title: 'Signet · consent signing', rect: { x: 876, y: 413, w: 388, h: 268 }, label: 'Signet', text: 'Signed, sealed and verifiable by anyone.' },
-  { key: 'prospector', src: 'walkthroughs/prospector/05.png', title: 'Prospector · lead research', rect: { x: 945, y: 578, w: 262, h: 290 }, label: 'Prospector', text: 'Every lead scored, shortlisted, tracked.' },
+  { key: 'shared-inbox', src: 'walkthroughs/shared-inbox/02.png', title: 'Shared Inbox CRM', rect: { x: 528, y: 222, w: 400, h: 100 }, label: 'Shared inbox', text: 'Every enquiry lands in one shared inbox.' },
+  { key: 'consent-signer', src: 'walkthroughs/consent-signer/06.png', title: 'Consent & Contract Signer', rect: { x: 876, y: 413, w: 388, h: 268 }, label: 'Consent signer', text: 'Signed, sealed and verifiable by anyone.' },
+  { key: 'lead-research', src: 'walkthroughs/lead-research/05.png', title: 'Lead Research Tool', rect: { x: 945, y: 578, w: 262, h: 290 }, label: 'Lead research', text: 'Every lead scored, shortlisted, tracked.' },
 ]
 
 /* Fan poses (window centre → stage point), per aspect. */
 const FAN = {
   wide: {
-    relay: { S: 0.66, ax: 960, ay: 610, rx: 0, ry: 0 },
-    signet: { S: 0.52, ax: 560, ay: 590, rx: 0, ry: 26 },
-    prospector: { S: 0.52, ax: 1360, ay: 590, rx: 0, ry: -26 },
+    'shared-inbox': { S: 0.66, ax: 960, ay: 610, rx: 0, ry: 0 },
+    'consent-signer': { S: 0.52, ax: 560, ay: 590, rx: 0, ry: 26 },
+    'lead-research': { S: 0.52, ax: 1360, ay: 590, rx: 0, ry: -26 },
   },
   tall: {
-    prospector: { S: 0.55, ax: 540, ay: 700, rx: 10, ry: 0 },
-    signet: { S: 0.57, ax: 540, ay: 1040, rx: 10, ry: 0 },
-    relay: { S: 0.59, ax: 540, ay: 1390, rx: 10, ry: 0 },
+    'lead-research': { S: 0.55, ax: 540, ay: 700, rx: 10, ry: 0 },
+    'consent-signer': { S: 0.57, ax: 540, ay: 1040, rx: 10, ry: 0 },
+    'shared-inbox': { S: 0.59, ax: 540, ay: 1390, rx: 10, ry: 0 },
   },
 }
 /* paint order: back to front */
-const ORDER = { wide: ['signet', 'prospector', 'relay'], tall: ['prospector', 'signet', 'relay'] }
+const ORDER = { wide: ['consent-signer', 'lead-research', 'shared-inbox'], tall: ['lead-research', 'consent-signer', 'shared-inbox'] }
 
 export const PROOF = { fanIn: 0, first: 76, every: 100, push: 32, hold: 44, back: 24 }
 export const proofLength = PROOF.first + PROOF.every * 3 - 4

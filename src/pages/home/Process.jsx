@@ -145,8 +145,8 @@ function MapVisual() {
 
 function BuildVisual() {
   return (
-    <Window title="relay.app / inbox">
-      <img className="pv-shot" src="/walkthroughs/relay/02.png" alt="" loading="lazy" />
+    <Window title="shared-inbox.app / inbox">
+      <img className="pv-shot" src="/walkthroughs/shared-inbox/02.png" alt="" loading="lazy" />
     </Window>
   )
 }

@@ -42,7 +42,7 @@ export default function Statement() {
             {still ? (
               <img
                 src={heroReel.poster}
-                alt="Still from the showreel of three working demos: Relay, Signet and Prospector"
+                alt="Still from the showreel of three working demos: a shared inbox, a consent signer and a lead research tool"
                 className="explainer-video"
                 width="1440"
                 height="900"
@@ -54,12 +54,12 @@ export default function Statement() {
                 src={heroReel.src}
                 poster={heroReel.poster}
                 className="explainer-video"
-                label="Showreel of three working demos: Relay, Signet and Prospector"
+                label="Showreel of three working demos: a shared inbox, a consent signer and a lead research tool"
               />
             )}
           </div>
           <figcaption className="explainer-caption">
-            <span>Relay, Signet and Prospector</span>
+            <span>Shared inbox, consent signer, lead research</span>
             <span>Recorded from the running apps</span>
           </figcaption>
         </m.figure>

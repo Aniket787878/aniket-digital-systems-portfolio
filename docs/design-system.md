@@ -21,8 +21,8 @@ what he has approved:
 - **One camera take** (the Codrops "scroll-driven world" idea): the page reads
   as a single continuous move from the dusk sky, down through the work, into
   the product screens and back out to dusk at the close.
-- **Identity:** saffron (bhagwa) dusk over Himalayan ridges, a nod to Udaan
-  ("flight") and to where he works from.
+- **Identity:** saffron (bhagwa) dusk over Himalayan ridges, a nod to flight
+  and to where he works from.
 - **Structure and polish** from getstage.co, which he approved twice.
 
 ## Principles

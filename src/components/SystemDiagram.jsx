@@ -667,7 +667,7 @@ function Platform() {
   )
 }
 
-/* 06 — Udaan. Three layers run at once: a self-paced course that teaches,
+/* 06 — The care journey platform. Three layers run at once: a self-paced course that teaches,
    live care that treats, and a safety layer that never switches off. The
    dashed accent link is the part that makes it clinical rather than a
    course site — the course pauses at a gate until a required therapist
@@ -767,7 +767,7 @@ function Journey() {
   )
 }
 
-/* Signet — a self-built e-signature tool. The flow runs left to right —
+/* The consent signer — a self-built e-signature tool. The flow runs left to right —
    compose, sign, seal, verify — with the seal as the accent step because
    it is the one that turns a signed form into a defensible record. The
    bottom lane is the audit trail, the thing that makes the seal mean
@@ -840,12 +840,12 @@ function Signature() {
   )
 }
 
-/* Relay — a self-built shared inbox and CRM. The top lane collapses three
+/* The shared inbox — a self-built shared inbox and CRM. The top lane collapses three
    channels into one thread and its triage; the bottom lane is the pipeline
    the same contact moves along. The whole point of the drawing is the join
    between them: the inbox and the CRM are one record, not two systems. Like
-   Signet, this project has real screenshots, which sit below the schematic. */
-function Relay() {
+   the consent signer, this project has real screenshots, which sit below the schematic. */
+function SharedInbox() {
   const channels = ['WhatsApp', 'Email', 'Web form']
 
   return (
@@ -892,7 +892,7 @@ function Relay() {
   )
 }
 
-/* Prospector — a self-built lead-research tool. A URL goes in; the page is
+/* The lead research tool — a self-built lead-research tool. A URL goes in; the page is
    fetched and read for the business behind it. The accent step is the
    extraction, because reading a real page honestly — structured data first,
    then falling back — is the whole craft. The left panel is what it reads,
@@ -972,7 +972,7 @@ const VARIANTS = {
   operations: { vb: WIDE, draw: Operations, label: 'Schematic: a task board with a named owner and due date on every card, over a bar chart of workload per person.' },
   assistant: { vb: WIDE, draw: Assistant, label: 'Schematic: an incoming request classified and drafted by Claude against stored project context, held at a human approval gate before sending.' },
   signature: { vb: WIDE, draw: Signature, label: 'Schematic: a consent-and-contract signing tool: compose from a template, sign by drawing or typing with consent, seal the document with a SHA-256 hash over its text and every signature, and verify it on a public page that recomputes the seal. An append-only audit trail of created, viewed, signed and completed events is printed onto the certificate page of the sealed PDF.' },
-  relay: { vb: WIDE, draw: Relay, label: 'Schematic: a shared client inbox and CRM: WhatsApp, email and web-form conversations collapse into one thread with reply, internal-note, assign and status triage, tied to a contact record that moves along a lead, qualified, active, won or lost pipeline. The inbox and the CRM are the same record.' },
+  'shared-inbox': { vb: WIDE, draw: SharedInbox, label: 'Schematic: a shared client inbox and CRM: WhatsApp, email and web-form conversations collapse into one thread with reply, internal-note, assign and status triage, tied to a contact record that moves along a lead, qualified, active, won or lost pipeline. The inbox and the CRM are the same record.' },
   prospect: { vb: WIDE, draw: Prospect, label: 'Schematic: a lead-research tool: paste one or more business URLs, fetch each page server-side, and extract the business behind it from JSON-LD structured data, Open Graph and meta tags, and mailto, tel and social links. Each lead is scored by contactability and moves through new, shortlisted and contacted; a field that is not found is left blank, and the list exports as CSV.' }
 }
 

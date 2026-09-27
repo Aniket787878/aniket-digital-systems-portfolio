@@ -1994,3 +1994,18 @@ a:hover {
 .case-flow-figure {
   margin-top: var(--space-7);
 }
+
+/* Case page: the rendered overview video, when one exists for the project. */
+.case-video-figure {
+  margin-top: var(--space-7);
+}
+
+.case-video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: block;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: #000;
+  object-fit: cover;
+}

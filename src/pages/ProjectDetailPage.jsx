@@ -36,6 +36,15 @@ const toolNote = (tool) => {
   return hit ? hit.note : ''
 }
 
+/* Projects with a rendered overview video in public/videos/. */
+const PROJECT_VIDEOS = new Set([
+  'therapist-pwa',
+  'udaan',
+  'signet',
+  'relay',
+  'prospector',
+])
+
 export default function ProjectDetailPage() {
   const { slug } = useParams()
   const position = projects.findIndex((item) => item.slug === slug)
@@ -121,14 +130,34 @@ export default function ProjectDetailPage() {
       {/* The flow, in motion. An illustrative loop of the real stages —
           captioned as an animation, not a screen recording, so it is never
           read as footage of the running product. */}
-      {flow.length >= 2 && (
-        <figure className="case-flow-figure">
-          <AnimatedFlow stages={flow} />
+      {PROJECT_VIDEOS.has(project.slug) ? (
+        <figure className="case-video-figure">
+          <video
+            className="case-video"
+            src={`/videos/${project.slug}.mp4`}
+            autoPlay
+            muted
+            loop
+            playsInline
+            controls
+            preload="metadata"
+            aria-label={`Animated overview of ${title}`}
+          />
           <figcaption className="case-caption">
-            The flow in motion — an illustration of the stages, not a
-            recording of the running app.
+            An animated overview of the system — illustrative, not a recording
+            of the running app.
           </figcaption>
         </figure>
+      ) : (
+        flow.length >= 2 && (
+          <figure className="case-flow-figure">
+            <AnimatedFlow stages={flow} />
+            <figcaption className="case-caption">
+              The flow in motion — an illustration of the stages, not a
+              recording of the running app.
+            </figcaption>
+          </figure>
+        )
       )}
 
       {/* The system, drawn. Captioned as a schematic on purpose: it is a

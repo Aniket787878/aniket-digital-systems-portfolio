@@ -178,7 +178,7 @@ export const projects = [
     diagram: 'platform',
     title: 'Therapist PWA App',
     summary:
-      'The internal staff CRM a multi-therapist mental-health clinic runs its day on — tasks, client records, the booking desk and the consent queue — plus the public forms clients fill in. An installable PWA with desktop push, fronting a private data service that owns the clinic’s data.',
+      'Three apps under one roof for a multi-therapist mental-health clinic: the staff CRM the team runs its day on (tasks, client records, the booking desk, consent), the public forms clients fill in, and a client-facing recovery-companion PWA. All installable, with desktop push, fronting a private data service that owns the clinic’s data.',
     metrics: [
       { n: '1,200+', label: 'client records managed day to day' },
       { n: '11', label: 'therapists on one system' },
@@ -203,52 +203,57 @@ export const projects = [
       'n8n',
       'Google Calendar / Meet',
       'MSG91 (WhatsApp)',
-      'Anthropic API'
+      'Google Gemini',
+      'IndexedDB (offline chunk queue)'
     ],
     problem:
       'A busy clinic was running on a pile of disconnected tools — a calendar here, a spreadsheet of clients there, session notes typed up from memory after hours, follow-ups slipping through the cracks. Nothing talked to anything else, so the same client could be double-booked, a note could go missing, and nobody could see the whole picture in one place. What the practice needed was a single system its whole team runs on — from the first enquiry to the follow-up — without anyone re-keying the same details five times, and without client records ever sitting somewhere they should not.',
     system: [
-      'Two React apps — the staff CRM and the public forms clients fill in (enquiry, screening, consent, booking) — fronting a private data service, so client data never lives in the browser tier',
+      'Three apps in one repo — the staff CRM, the public forms clients fill in (enquiry, screening, consent, booking), and a client-facing recovery-companion PWA — all fronting a private data service, so client data never lives in the browser tier',
+      'The flagship: a session-recording → clinical-note pipeline on Google Gemini that replaces a paid tool at a fraction of the cost — the browser records in 60-second chunks queued in IndexedDB with retries, each is transcribed and its audio dropped, and on stop the full transcript is written into a draft note the therapist reviews',
+      'Guardrails around the AI, because it fails quietly otherwise: each chunk is a complete audio file (a headerless one makes the model invent dialogue), a degenerate-loop check catches the transcriber repeating itself, and a note that is not well-formed English fails loudly so the therapist re-drafts instead of trusting a fabrication',
       'A booking desk that runs each action through visual n8n workflows to Google Calendar / Meet and WhatsApp, with real-time availability, three session modes (in person, telephonic, online) and recurring bookings capped and gated server-side',
-      'Around 1,200 client records with therapist assignment, case notes, AI case summaries and transcription of session recordings — visibility scoped per therapist and enforced on the server, down to a notes-locked flag',
-      'A consent pipeline: the client signs, a sealed PDF is generated server-side, stored on the record and emailed, and staff countersign and re-issue it from a forms queue',
-      'A per-person access model — an admin role plus granular access points for clients, the front desk and consent — checked on every request; a new capability has to be wired through in four places or it silently disappears between requests',
-      'Tasks with owners, subtasks, repeats and sharing; an overview of today’s sessions, pending consent and overdue tasks; and desktop push through the service worker and VAPID',
+      'Around 1,200 client records with therapist assignment, case notes, rolling AI case summaries regenerated after each note, and group sessions with a shared note read into every attendee’s file — visibility scoped per therapist and enforced on the server, down to a notes-locked flag',
+      'A consent pipeline (client signs, a sealed PDF generated server-side, stored, emailed and countersigned from a forms queue), a per-person access model checked on every request, tasks with owners and repeats, and desktop push through the service worker and VAPID',
     ],
     features: [
+      {
+        title: 'Session recording → AI clinical note',
+        text: 'The therapist records; a chunked Gemini pipeline transcribes as it goes and drafts a clinical note within about a minute of Stop — with loop- and hallucination-guards that fail loudly rather than invent a note.'
+      },
       {
         title: 'Booking desk',
         text: 'Real-time availability, three session modes and recurring bookings, each action driven through n8n to Google Calendar / Meet and WhatsApp — capped and gated on the server.'
       },
       {
-        title: 'Client records → AI case notes',
-        text: 'Around 1,200 clients with assignment, case notes, AI case summaries and transcription of recordings; who can see whom is enforced on the server, not hidden in the screen.'
+        title: 'Clients, groups & consent',
+        text: 'Around 1,200 client records with case notes and rolling AI summaries, group sessions with a shared note, and a consent pipeline that signs, seals and countersigns a server-generated PDF.'
       },
       {
-        title: 'Consent & public forms',
-        text: 'Public enquiry, screening and consent pages feed the CRM; consent is signed, sealed into a server-generated PDF, stored, emailed and countersigned from a forms queue.'
-      },
-      {
-        title: 'Tasks, roles & notifications',
-        text: 'Task management with owners, subtasks and repeats; a granular per-person access model; and desktop push for sessions, consent and overdue work.'
+        title: 'Roles, tasks & the client PWA',
+        text: 'A granular per-person access model enforced server-side, tasks with owners and repeats, desktop push, and a separate client-facing recovery-companion PWA (check-ins, craving protocol, crisis help).'
       }
     ],
     decisions: [
+      {
+        title: 'The AI note pipeline is guarded, not trusted',
+        text: 'The transcriber and the note model both fail loudly: chunks are whole audio files (a headerless one makes the model fabricate dialogue), a degenerate-loop check catches runaway repetition, and a malformed note is rejected. Once the model tried to write a cardiology work-up for a patient who did not exist — the guard is why no therapist ever saw it.'
+      },
+      {
+        title: 'The riskiest feature is deliberately unbuilt',
+        text: 'The client app has no AI coach yet, on purpose — a chatbot talking to someone in acute craving does not ship without crisis detection in front of every reply, a clinician-reviewed prompt, and an agreed answer to who responds when a client discloses self-harm at 2am. Until then, Help links to live 24/7 meetings.'
+      },
       {
         title: 'Twelve serverless functions, on purpose',
         text: 'The entire API is exactly twelve serverless functions — the host’s free-tier ceiling. New features add an action to an existing handler instead of a new file, so the whole thing keeps running at no infra cost.'
       },
       {
         title: 'The browser never touches the data tier',
-        text: 'A private data service owns Postgres, email, PDF generation and messaging, reached only through a tunnel; the public apps call it through a thin serverless layer, so real client data never sits in the browser.'
+        text: 'A private data service owns Postgres, email, PDF generation, messaging and the AI calls, reached only through a tunnel; the public apps call it through a thin serverless layer, so real client data never sits in the browser.'
       },
       {
         title: 'Permissions live on the server',
-        text: 'Who can do what — edit a client, work the front desk, see the whole client book — is checked on the server, so a hidden button is genuinely locked, not merely out of sight.'
-      },
-      {
-        title: 'Change the database like it is production, because it is',
-        text: 'Schema changes run through a tracked migration runner, shipping is checked through the real screens and endpoints rather than a passing query, and the codebase carries a living map updated in the same commit as the change.'
+        text: 'Who can do what — edit a client, work the front desk, read peer-support notes, see the whole client book — is checked on the server, so a hidden button is genuinely locked, not merely out of sight.'
       }
     ],
     outcome: [
@@ -358,6 +363,10 @@ export const projects = [
       {
         title: 'Manual-first where the tools cannot be trusted',
         text: 'The video tiers in use do not reliably report who attended, so attendance is taken by hand and topped up by a signed webhook — an honest default beats a number that looks precise and is wrong.'
+      },
+      {
+        title: 'No model where a template will do',
+        text: 'The program “builds” fourteen artifacts for each client — the six-part relapse-prevention plan, the letter to future self — but none use a model: each is assembled verbatim from worksheet answers the client already wrote, and the curriculum is real clinical content, not generated. In recovery care, a deterministic artifact you can trust beats a plausible one you cannot.'
       },
       {
         title: 'Cost-constrained by choice',

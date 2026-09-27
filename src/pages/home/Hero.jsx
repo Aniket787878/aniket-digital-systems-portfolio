@@ -1,4 +1,4 @@
-import { useRef, useSyncExternalStore } from 'react'
+import { Fragment, useRef, useSyncExternalStore } from 'react'
 import { Link } from 'react-router-dom'
 import { m, useScroll, useTransform, useReducedMotion } from 'motion/react'
 import { site, whatsappPrefill, heroReel } from '../../data.js'
@@ -235,8 +235,12 @@ function BlurLine({ text, delay = 0, className = '' }) {
   let n = 0
   return (
     <span className={`dusk-line ${className}`.trim()} aria-hidden="true">
+      {/* The space between sentences sits outside the inline-block phrase:
+          a trailing space inside one collapses, gluing "answered.Bookings". */}
       {sentences.map((words, si) => (
-        <span key={si} className="dusk-phrase">
+        <Fragment key={si}>
+        {si > 0 ? ' ' : ''}
+        <span className="dusk-phrase">
           {words.map((w, i) => {
             const at = n++
             return (
@@ -253,8 +257,8 @@ function BlurLine({ text, delay = 0, className = '' }) {
               </span>
             )
           })}
-          {si < sentences.length - 1 ? ' ' : ''}
         </span>
+        </Fragment>
       ))}
     </span>
   )

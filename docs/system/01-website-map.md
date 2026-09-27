@@ -145,7 +145,9 @@ with itself.
   `'schematic'` (the two client platforms). Read by the home work cards,
   `/projects` (now a film-led showcase, not a thumbnail list) and the case
   page. Every surface labels the kind.
-- `heroReel` — the silent loop beside the hero copy (real captures only).
+- `heroReel` — the silent loop of the real apps, shown in the Statement band
+  under the problem text (real captures only; phones get the poster). Moved
+  there 2026-09-27 when the brand explainer took the hero card.
 - `stackMarquee` — the moving "Built with" strip under the hero.
 - Source for all of it: `remotion/` + `public/walkthroughs/`, rendered by
   `scripts/render-videos.sh`.

@@ -1,19 +1,20 @@
 import { m } from 'motion/react'
-import { explainers, explainersReady } from '../../data.js'
+import { heroReel } from '../../data.js'
 import ScrollWords from '../../motion/ScrollWords.jsx'
 import LoopVideo from '../../components/LoopVideo.jsx'
 import { reveal } from '../../motion/variants.js'
+import { useStillMedia } from '../../stillMedia.js'
 
-const film = explainers.brand
 
 /* ---------------------------------------------------------------
-   1b — Statement + the one-minute explainer. The problem, lit word by
-   word as it scrolls past, then the film that answers it. No player:
-   the film plays itself, silent and looping, while it is on screen
-   (LoopVideo: poster only until it nears the viewport, and never
-   autoplays under reduced motion).
+   1b — Statement + the showreel. The problem, lit word by word as it
+   scrolls past, then the real apps that answer it (the explainer film
+   moved up to the hero). No player: the reel plays itself, silent and
+   looping, while it is on screen; phones and reduced motion get its
+   poster (see stillMedia.js).
    --------------------------------------------------------------- */
 export default function Statement() {
+  const still = useStillMedia()
   return (
     <section className="statement night">
       <div className="container statement-inner">
@@ -36,22 +37,32 @@ export default function Statement() {
           ]}
         />
 
-        {explainersReady && (
-          <m.figure className="explainer" {...reveal}>
-            <div className="explainer-frame">
-            <LoopVideo
-              src={film.src}
-              poster={film.poster}
-              className="explainer-video"
-              label={film.title}
-            />
+        <m.figure className="explainer" {...reveal}>
+          <div className="explainer-frame explainer-frame--reel">
+            {still ? (
+              <img
+                src={heroReel.poster}
+                alt="Still from the showreel of three working demos: Relay, Signet and Prospector"
+                className="explainer-video"
+                width="1440"
+                height="900"
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <LoopVideo
+                src={heroReel.src}
+                poster={heroReel.poster}
+                className="explainer-video"
+                label="Showreel of three working demos: Relay, Signet and Prospector"
+              />
+            )}
           </div>
           <figcaption className="explainer-caption">
-              <span>{film.title}</span>
-              <span>The problem, the system, the result</span>
-            </figcaption>
-          </m.figure>
-        )}
+            <span>Relay, Signet and Prospector</span>
+            <span>Recorded from the running apps</span>
+          </figcaption>
+        </m.figure>
       </div>
     </section>
   )

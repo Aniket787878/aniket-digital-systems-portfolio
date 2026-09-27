@@ -26,7 +26,7 @@ export default function Work() {
           <h2 className="h2">
             One platform in daily use, one in pre-launch.
             <br />
-            <span className="soft">Three tools I built myself.</span>
+            <span className="soft">Three working tools, running now.</span>
           </h2>
         </m.header>
 

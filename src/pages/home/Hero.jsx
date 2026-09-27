@@ -1,7 +1,7 @@
-import { Fragment, useRef, useSyncExternalStore } from 'react'
+import { Fragment, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { m, useScroll, useTransform, useReducedMotion } from 'motion/react'
-import { site, whatsappPrefill, heroReel } from '../../data.js'
+import { site, whatsappPrefill, explainers } from '../../data.js'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
 import BookingCta from '../../components/BookingCta.jsx'
 import LoopVideo from '../../components/LoopVideo.jsx'
@@ -10,6 +10,7 @@ import { Ridge } from '../../components/dusk/Mountains.jsx'
 import { ridge, starField } from '../../components/dusk/terrain.js'
 import { hasWhatsApp } from '../../whatsapp.js'
 import { hasBooking } from '../../booking.js'
+import { useStillMedia } from '../../stillMedia.js'
 
 /* Seeded once at module load: the same range on every visit. */
 const FAR = ridge({ seed: 11, base: 150, amp: 60, detail: 0.8 })
@@ -21,29 +22,22 @@ const EASE = [0.22, 1, 0.36, 1]
 const [LINE_1, LINE_2] = site.headline
 const PROOF = site.heroProof
 
-/* Phones and reduced motion get the reel's poster, not the reel: at 390px
-   the captures are unreadable, and the film was 5MB of a ~6MB first load.
-   A media-query store rather than CSS, because the point is that the
-   <video> never exists there, so nothing is fetched. */
-const STILL_QUERY = '(max-width: 640px), (prefers-reduced-motion: reduce)'
-const subscribeStill = (cb) => {
-  const mq = window.matchMedia(STILL_QUERY)
-  mq.addEventListener('change', cb)
-  return () => mq.removeEventListener('change', cb)
-}
-const stillSnapshot = () => window.matchMedia(STILL_QUERY).matches
-const useStillReel = () => useSyncExternalStore(subscribeStill, stillSnapshot, () => true)
+/* The hero film is the one-minute explainer: it shows the result the
+   headline promises (an enquiry answered, booked and followed up) in type
+   large enough to read on a phone. Phones get its poster, which is that
+   exact frame. The showreel of the real apps now sits in the Statement. */
+const FILM = explainers.brand
 
 /* ---------------------------------------------------------------
    1 — Dusk hero (docs/design-system.md). A centred claim over a dusk
    sky; three ridges parallax at different rates as the page scrolls,
-   and the showreel of the real apps rises out of the range, with the
+   and the one-minute explainer film rises out of the range, with the
    near ridge passing in front of it. Reduced motion: the still scene.
    --------------------------------------------------------------- */
 export default function Hero() {
   const ref = useRef(null)
   const reduce = useReducedMotion()
-  const stillReel = useStillReel()
+  const stillReel = useStillMedia()
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
 
   const still = (v) => (reduce ? 0 : v)
@@ -197,24 +191,24 @@ export default function Hero() {
           </span>
           <span className="dusk-card-title">
             <span className="live-dot" aria-hidden="true" />
-            Relay, Signet and Prospector: recorded from the running apps
+            {FILM.title}
           </span>
         </div>
         {stillReel ? (
           <img
-            src={heroReel.poster}
-            alt="Still from the showreel of three working demos: Relay, Signet and Prospector"
+            src={FILM.poster}
+            alt="An enquiry at 11:04 pm answered in seconds: web form, AI agent, CRM, WhatsApp reply, calendar slot, follow-up"
             className="dusk-card-video"
-            width="1440"
-            height="900"
+            width="1920"
+            height="1080"
             decoding="async"
           />
         ) : (
           <LoopVideo
-            src={heroReel.src}
-            poster={heroReel.poster}
+            src={FILM.src}
+            poster={FILM.poster}
             className="dusk-card-video"
-            label="Showreel of three working demos: Relay, Signet and Prospector"
+            label={FILM.title}
           />
         )}
       </m.figure>

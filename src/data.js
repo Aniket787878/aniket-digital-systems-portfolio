@@ -575,7 +575,7 @@ export const projects = [
       'Deployed on staging; not yet in use with clients'
     ],
     outcomeNote:
-      'Module, session, stage and gate counts are real counts from the build. Everything else describes the platform’s design from the builder’s seat, directional, not an audited outcome.'
+      'Module, session, stage and gate counts are real counts from the build. Everything else describes how the platform is designed, directional, not an audited outcome.'
   },
   {
     index: '03',
@@ -827,7 +827,7 @@ export const projects = [
       }
     ],
     outcome: [
-      'The extraction is real, pasting a live URL fetches and parses it on the spot, and the seeded rows are genuine extractions from real public pages',
+      'The extraction is real, pasting a live URL fetches and parses it on the spot, and the seeded rows were extracted from real public pages, with contact emails swapped for placeholders',
       'Leads sort by how reachable they are, so the list is useful the moment it is built',
       'The whole list exports to CSV, which is the actual job of a research tool'
     ],

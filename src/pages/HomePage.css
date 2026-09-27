@@ -354,72 +354,11 @@
   box-shadow: 0 50px 120px -50px rgba(0, 0, 0, 0.9), 0 0 120px -50px rgba(245, 135, 30, 0.35);
 }
 
-.explainer-frame video,
-.explainer-poster img {
+.explainer-video {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.explainer-poster {
-  display: block;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-
-.explainer-poster img {
-  transition: transform 0.8s var(--ease-out), filter 0.8s var(--ease-out);
-}
-
-.explainer-poster:hover img {
-  transform: scale(1.02);
-  filter: brightness(0.85);
-}
-
-.explainer-play {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  display: grid;
-  place-items: center;
-  width: 84px;
-  height: 84px;
-  padding-left: 4px;
-  border-radius: 50%;
-  translate: -50% -50%;
-  background: rgba(255, 255, 255, 0.94);
-  color: #161412;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-  transition: transform var(--dur-mid) var(--ease-out);
-}
-
-.explainer-play::after {
-  content: '';
-  position: absolute;
-  inset: -10px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(255, 255, 255, 0.5);
-  animation: play-ring 2.2s var(--ease-out) infinite;
-}
-
-@keyframes play-ring {
-  from {
-    transform: scale(0.85);
-    opacity: 1;
-  }
-  to {
-    transform: scale(1.35);
-    opacity: 0;
-  }
-}
-
-.explainer-poster:hover .explainer-play {
-  transform: scale(1.07);
 }
 
 .explainer-caption {

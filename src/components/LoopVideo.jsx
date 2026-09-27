@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 const reducedMotion = () =>
   typeof window !== 'undefined' &&
@@ -20,7 +20,6 @@ const reducedMotion = () =>
 */
 export default function LoopVideo({ src, poster, mode = 'inview', className = '', label }) {
   const ref = useRef(null)
-  const [armed, setArmed] = useState(false)
 
   useEffect(() => {
     const video = ref.current
@@ -30,8 +29,17 @@ export default function LoopVideo({ src, poster, mode = 'inview', className = ''
     const byHover = mode === 'hover' && canHover
     let visible = false
 
+    /* The source is attached imperatively, right here, rather than through
+       React state. The state version rendered the src a tick AFTER play()
+       was called, so the first play() hit a video with no source, failed
+       silently, and an in-view film sat on its poster until it was
+       scrolled away and back. Setting it on the element first means
+       play() always has something to play. */
+    const arm = () => {
+      if (video.getAttribute('src') !== src) video.setAttribute('src', src)
+    }
     const play = () => {
-      setArmed(true)
+      arm()
       const p = video.play()
       if (p && p.catch) p.catch(() => {})
     }
@@ -41,7 +49,7 @@ export default function LoopVideo({ src, poster, mode = 'inview', className = ''
       ([entry]) => {
         visible = entry.isIntersecting
         if (entry.isIntersecting) {
-          setArmed(true)
+          arm()
           if (!byHover) play()
         } else {
           pause()
@@ -71,13 +79,12 @@ export default function LoopVideo({ src, poster, mode = 'inview', className = ''
         host.removeEventListener('focusout', leave)
       }
     }
-  }, [mode])
+  }, [mode, src])
 
   return (
     <video
       ref={ref}
       className={['loop-video', className].filter(Boolean).join(' ')}
-      src={armed ? src : undefined}
       poster={poster}
       muted
       loop

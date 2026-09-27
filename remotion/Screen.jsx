@@ -1,155 +1,216 @@
-import { Img, staticFile, interpolate } from 'remotion'
-import { C, SANS, DISPLAY, Cursor, Ripple, tween, easeInOut, clamp } from './shared.jsx'
+import { spring, interpolate } from 'remotion'
+import { Cursor, Ripple, tween, easeInOut, clamp, lerp } from './shared.jsx'
+import { PERSPECTIVE, lerpCam, camTransform, project, focusShot, Spotlight, Callout, CalloutPill } from './Camera.jsx'
+import { BrowserFrame, SHADOW_NIGHT } from './BrowserFrame.jsx'
 
 /* The logical viewport every walkthrough was captured at (CSS px; the PNGs
    are 2x). Every rect in steps.json is in this space. */
 export const VW = 1440
 export const VH = 900
 
-/* Frames per step, and the beats inside one. */
-export const STEP = 96
-const FADE = 12
-const MOVE = [8, 40]
-const CLICK = 44
-const ZOOM_IN = [16, 52]
-const ZOOM_OUT = [STEP - 20, STEP + 2]
+/* Frames per step, and the beats inside one. Each step opens on the
+   pulled-back window (where the new capture crossfades in, so the change
+   reads as a match cut), springs in to the focus, holds with a spotlight
+   and a callout, then pulls back out so the viewer re-orients. */
+export const STEP = 144
+const T = {
+  fade: 14,
+  inAt: 16,
+  inDur: 40,
+  move: [10, 48],
+  click: 56,
+  spot: [36, 56],
+  call: 46,
+  callOut: 112,
+  spotOut: [110, 124],
+  out: [116, STEP - 2],
+}
 
-const MAX_ZOOM = 1.75
+/* The film window's chrome bar, in window px. */
+export const CHROME = 60
+
+/* Two ways of showing a recording:
+   film  a floating window on a 1920x1080 stage, tilted when pulled back,
+         with a chrome bar and a callout card beside the focus
+   loop  just the viewport (the site wraps it in its own frame): no tilt,
+         the zoom never shows an edge, and the callout is a compact pill */
+export function modeSpec(mode, stageW = 1920, stageH = 1080) {
+  if (mode === 'film') {
+    const winH = VH + CHROME
+    const S = Math.min(stageW / VW, stageH / winH) * 0.84
+    return {
+      mode,
+      stage: { w: stageW, h: stageH, persp: PERSPECTIVE },
+      win: { w: VW, h: winH },
+      top: CHROME,
+      wide: { S, cx: VW / 2, cy: winH / 2, ax: stageW / 2, ay: stageH / 2 + 6, rx: 5, ry: -6 },
+      minS: S * 1.18,
+      maxS: S * 2.2,
+    }
+  }
+  return {
+    mode,
+    stage: { w: VW, h: VH, persp: PERSPECTIVE },
+    win: { w: VW, h: VH },
+    top: 0,
+    wide: { S: 1, cx: VW / 2, cy: VH / 2, ax: VW / 2, ay: VH / 2, rx: 0, ry: 0 },
+    minS: 1.2,
+    maxS: 2.2,
+  }
+}
 
 const centre = (r) => (r ? { x: r.x + r.w / 2, y: r.y + r.h / 2 } : null)
 
-function zoomFor(focus) {
-  if (!focus) return 1
-  const fit = Math.min(VW / focus.w, VH / focus.h) * 0.82
-  return Math.max(1, Math.min(MAX_ZOOM, fit))
-}
-
-function camera(step, f) {
-  const focus = step.focus || step.target
-  const S = zoomFor(focus)
-  const z = tween(f, ...ZOOM_IN, easeInOut) * (1 - tween(f, ...ZOOM_OUT, easeInOut))
-  const s = 1 + (S - 1) * z
-  const c = centre(focus) || { x: VW / 2, y: VH / 2 }
-  const tx = Math.min(0, Math.max(VW - VW * s, VW / 2 - c.x * s))
-  const ty = Math.min(0, Math.max(VH - VH * s, VH / 2 - c.y * s))
-  return { s, tx, ty }
-}
-
-/* Where the pointer rests during step i, in image space. A step with no
+/* Where the pointer rests during step i, in capture space. A step with no
    target keeps the pointer where the last one left it. */
 function restPoint(steps, i) {
   for (let k = i; k >= 0; k--) {
     const c = centre(steps[k].target)
     if (c) return c
   }
-  return { x: VW * 0.62, y: VH * 0.72 }
+  return START
+}
+const START = { x: VW * 0.62, y: VH * 0.78 }
+
+const focusRect = (step) => step.focus || step.target || { x: 0, y: 0, w: VW, h: VH }
+
+/* The focus framing for one step, cached per mode. */
+function shotFor(step, spec) {
+  const r = focusRect(step)
+  if (spec.mode === 'film') {
+    const rect = { x: r.x, y: r.y + spec.top, w: r.w, h: r.h }
+    const { cam, box } = focusShot({
+      rect,
+      win: spec.win,
+      stage: spec.stage,
+      side: { w: 540, h: 280 },
+      stack: { w: 1040, h: 200 },
+      minS: spec.minS,
+      maxS: spec.maxS,
+    })
+    return { cam, box }
+  }
+  // loop: centre the focus, then clamp so the viewport never shows an edge
+  const pad = 40
+  const S = Math.max(spec.minS, Math.min(spec.maxS, Math.min((VW * 0.8) / (r.w + pad), (VH * 0.72) / (r.h + pad))))
+  const cx = r.x + r.w / 2
+  const cy = r.y + r.h / 2
+  const ax = Math.min(S * cx, Math.max(VW - S * (VW - cx), VW / 2))
+  const ay = Math.min(S * cy, Math.max(VH - S * (VH - cy), VH / 2))
+  return { cam: { S, cx, cy, ax, ay, rx: 0, ry: 0 }, box: null }
 }
 
 /*
-  Renders `steps` (from a steps.json) as one continuous screen recording:
-  each capture crossfades in wide, the camera eases into its focus region
-  while the pointer travels to the control and clicks, then eases back out.
-  `frame` is local to the first step. Captions are left to the caller.
+  Everything about the recording at one frame: which capture, the camera,
+  the spotlight, the pointer and the callout. `frame` is local to the first
+  step. With `loop`, the last step ends back on step 1's wide frame, so the
+  clip loops without a seam.
 */
-export function Screen({ slug, steps, frame, showCursor = true }) {
-  const i = Math.max(0, Math.min(steps.length - 1, Math.floor(frame / STEP)))
+export function trackAt(steps, frame, spec, { loop = false } = {}) {
+  const n = steps.length
+  const i = Math.max(0, Math.min(n - 1, Math.floor(frame / STEP)))
   const f = frame - i * STEP
   const step = steps[i]
   const prev = i > 0 ? steps[i - 1] : null
+  const last = i === n - 1
+  const shot = shotFor(step, spec)
 
-  const cam = camera(step, f)
-  const fadeIn = i === 0 ? 1 : tween(f, 0, FADE)
+  const pin = spring({ frame: f - T.inAt, fps: 30, config: { damping: 22, stiffness: 110, mass: 1 }, durationInFrames: T.inDur })
+  const pout = tween(f, T.out[0], T.out[1], easeInOut)
+  const z = Math.max(0, pin) * (1 - pout)
+  const cam = lerpCam(spec.wide, shot.cam, z)
+  if (spec.mode !== 'film') {
+    // the spring overshoots a touch; never let that show an edge in a loop
+    cam.S = Math.max(1, cam.S)
+    cam.ax = Math.min(cam.S * cam.cx, Math.max(VW - cam.S * (VW - cam.cx), cam.ax))
+    cam.ay = Math.min(cam.S * cam.cy, Math.max(VH - cam.S * (VH - cam.cy), cam.ay))
+  }
 
-  // Pointer path: from the previous rest point to this step's target.
-  const from = i > 0 ? restPoint(steps, i - 1) : { x: VW * 0.62, y: VH * 0.78 }
+  const spot = tween(f, T.spot[0], T.spot[1]) * (1 - tween(f, T.spotOut[0], T.spotOut[1]))
+  const call = spring({ frame: f - T.call, fps: 30, config: { damping: 200, stiffness: 120 } }) * (1 - tween(f, T.callOut, T.callOut + 10))
+
+  // pointer, in capture space
+  const from = i > 0 ? restPoint(steps, i - 1) : START
   const to = restPoint(steps, i)
-  const m = tween(f, ...MOVE, easeInOut)
-  // A slight arc reads as a hand, a straight line reads as a robot.
+  const m = tween(f, T.move[0], T.move[1], easeInOut)
   const arc = Math.sin(m * Math.PI) * 26
-  const px = from.x + (to.x - from.x) * m
-  const py = from.y + (to.y - from.y) * m - arc
+  let px = from.x + (to.x - from.x) * m
+  let py = from.y + (to.y - from.y) * m - arc
+  if (loop && last) {
+    // glide home while the camera pulls back, so frame 0 follows seamlessly
+    const back = tween(f, T.out[0] - 4, T.out[1], easeInOut)
+    px = lerp(px, START.x, back)
+    py = lerp(py, START.y, back)
+  }
   const clicks = Boolean(step.target)
-  const press = clicks
-    ? interpolate(f, [CLICK - 3, CLICK, CLICK + 6], [0, 1, 0], clamp)
-    : 0
-  const rippleT = clicks ? interpolate(f, [CLICK, CLICK + 20], [0, 1], clamp) : 0
+  const press = clicks ? interpolate(f, [T.click - 3, T.click, T.click + 6], [0, 1, 0], clamp) : 0
+  const ripple = clicks ? interpolate(f, [T.click, T.click + 20], [0, 1], clamp) : 0
 
-  const sx = px * cam.s + cam.tx
-  const sy = py * cam.s + cam.ty
-
-  const shot = (s) => staticFile(`walkthroughs/${s.slug || slug}/${s.file}`)
-
-  return (
-    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', background: C.page }}>
-      {prev && fadeIn < 1 && (
-        <Img
-          src={shot(prev)}
-          style={{ position: 'absolute', left: 0, top: 0, width: VW, height: VH }}
-        />
-      )}
-      <div
-        style={{
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          width: VW,
-          height: VH,
-          transformOrigin: '0 0',
-          transform: `translate(${cam.tx}px, ${cam.ty}px) scale(${cam.s})`,
-          opacity: fadeIn,
-        }}
-      >
-        <Img src={shot(step)} style={{ width: VW, height: VH, display: 'block' }} />
-      </div>
-      {showCursor && (
-        <>
-          <Ripple x={sx} y={sy} t={rippleT} />
-          <Cursor x={sx} y={sy} press={press} />
-        </>
-      )}
-    </div>
-  )
+  // captures: crossfade on the pulled-back frame
+  let src = step
+  let prevSrc = prev
+  let fade = i === 0 ? 1 : tween(f, 0, T.fade)
+  if (loop && last && f > T.out[1] - 16) {
+    prevSrc = step
+    src = steps[0]
+    fade = tween(f, T.out[1] - 16, T.out[1])
+  }
+  return { i, f, n, step, src, prevSrc, fade, cam, shot, spot, call, px, py, press, ripple, rect: focusRect(step) }
 }
 
-/* Small in-frame caption chip, for the silent loops. */
-export function CaptionChip({ index, total, text, frame }) {
-  const f = frame % STEP
-  const o = tween(f, 6, 18) * (1 - tween(f, STEP - 12, STEP - 2))
-  const y = (1 - tween(f, 6, 22)) * 14
+/* Draws a track state with the camera `cam` (the caller may have blended
+   it with an intro or outro pose). */
+export function RecordingView({ st, cam, spec, slug, title, showWindow = true, showCursor = true, showCallout = true, cursorSize }) {
+  const { stage, top } = spec
+  const film = spec.mode === 'film'
+  const file = (s) => (s ? `walkthroughs/${s.slug || slug}/${s.file}` : null)
+  const [sx, sy] = project(st.px, st.py + top, cam, stage)
+  const cs = cursorSize ?? (film ? 38 : 34)
+
+  // loop pill: next to the projected focus rect
+  let pill = null
+  if (!film && showCallout && st.call > 0.001) {
+    const r = st.rect
+    const [x0, y0] = project(r.x, r.y, cam, stage)
+    const [x1, y1] = project(r.x + r.w, r.y + r.h, cam, stage)
+    const estW = 110 + st.step.caption.length * 15.2
+    const pillH = 64
+    let y = y1 + 22
+    if (y + pillH > stage.h - 28) y = y0 - 22 - pillH
+    if (y < 28) y = stage.h - 28 - pillH
+    const x = Math.max(28, Math.min(stage.w - 28 - estW, (x0 + x1) / 2 - estW / 2))
+    pill = <CalloutPill x={x} y={y} index={st.i} text={st.step.caption} t={st.call} />
+  }
+
   return (
-    <div
-      style={{
-        position: 'absolute',
-        left: 28,
-        bottom: 28,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 12,
-        padding: '12px 20px 12px 14px',
-        borderRadius: 999,
-        background: 'rgba(16,16,16,0.86)',
-        border: `1px solid ${C.lineStrong}`,
-        boxShadow: '0 12px 40px rgba(0,0,0,0.45)',
-        opacity: o,
-        transform: `translateY(${y}px)`,
-        zIndex: 30,
-      }}
-    >
-      <span
-        style={{
-          fontFamily: DISPLAY,
-          fontWeight: 800,
-          fontSize: 16,
-          color: '#1a0900',
-          background: C.accent,
-          borderRadius: 999,
-          padding: '4px 10px',
-        }}
-      >
-        {String(index + 1).padStart(2, '0')}
-        <span style={{ opacity: 0.6 }}>/{String(total).padStart(2, '0')}</span>
-      </span>
-      <span style={{ fontFamily: SANS, fontWeight: 600, fontSize: 22, color: C.ink }}>{text}</span>
-    </div>
+    <>
+      {showWindow && (
+      <div style={{ position: 'absolute', inset: 0, perspective: stage.persp, perspectiveOrigin: '50% 50%', overflow: film ? 'visible' : 'hidden' }}>
+        <BrowserFrame
+          src={file(st.src)}
+          prevSrc={file(st.prevSrc)}
+          fade={st.fade}
+          width={VW}
+          title={title}
+          chrome={film ? CHROME : 0}
+          bare={!film}
+          shadow={SHADOW_NIGHT}
+          style={{ position: 'absolute', left: 0, top: 0, transformOrigin: '0 0', transform: camTransform(cam) }}
+        >
+          <Spotlight rect={st.rect} amount={st.spot} S={cam.S} w={VW} h={VH} />
+        </BrowserFrame>
+      </div>
+      )}
+      {showCursor && (
+        <>
+          <Ripple x={sx} y={sy} t={st.ripple} scale={cs / 30} />
+          <Cursor x={sx} y={sy} press={st.press} size={cs} />
+        </>
+      )}
+      {film && showCallout && st.shot.box && (
+        <Callout box={st.shot.box} label={`Step ${String(st.i + 1).padStart(2, '0')}`} text={st.step.caption} t={st.call} />
+      )}
+      {pill}
+    </>
   )
 }

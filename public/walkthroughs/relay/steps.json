@@ -1,7 +1,7 @@
 [
   {
     "file": "01.png",
-    "caption": "Every enquiry — WhatsApp, email, web — in one inbox",
+    "caption": "Every enquiry, from WhatsApp, email and the web, in one inbox",
     "target": {
       "x": 487,
       "y": 67,
@@ -17,7 +17,7 @@
   },
   {
     "file": "02.png",
-    "caption": "Open a thread — the client’s details sit alongside",
+    "caption": "Open a thread: the client’s details sit alongside",
     "target": {
       "x": 160,
       "y": 102,
@@ -33,7 +33,7 @@
   },
   {
     "file": "03.png",
-    "caption": "Reply in seconds — the thread moves to pending",
+    "caption": "Reply in seconds, and the thread moves to pending",
     "target": {
       "x": 868,
       "y": 849,
@@ -49,7 +49,7 @@
   },
   {
     "file": "04.png",
-    "caption": "Leave notes your team sees — clients never do",
+    "caption": "Leave notes your team sees. Clients never do.",
     "target": {
       "x": 880,
       "y": 849,
@@ -65,7 +65,7 @@
   },
   {
     "file": "05.png",
-    "caption": "Client replies — it lands straight back in the thread",
+    "caption": "The client’s reply lands straight back in the thread",
     "target": {
       "x": 826,
       "y": 172,
@@ -81,7 +81,7 @@
   },
   {
     "file": "06.png",
-    "caption": "Move the enquiry forward: Lead → Qualified",
+    "caption": "Move the enquiry forward, from Lead to Qualified",
     "target": {
       "x": 961,
       "y": 254,

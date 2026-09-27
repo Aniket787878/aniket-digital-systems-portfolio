@@ -4,6 +4,10 @@ import { PlatformFilm, platformLength } from './PlatformFilm.jsx'
 import { Clip, clipLength } from './Clip.jsx'
 import { WALKTHROUGHS } from './walkthroughs.js'
 import { SCENES } from './platformScenes.jsx'
+import { ExplainerBrand, BRAND_LEN } from './explainers/ExplainerBrand.jsx'
+import { ExplainerOpsSprint, OPS_LEN } from './explainers/ExplainerOpsSprint.jsx'
+import { ExplainerAiAssistant, AI_LEN } from './explainers/ExplainerAiAssistant.jsx'
+import { ExplainerInternalTool, TOOL_LEN } from './explainers/ExplainerInternalTool.jsx'
 
 /* The hero reel: the strongest beats of each working demo, back to back. */
 export const HERO_REEL = [
@@ -25,6 +29,9 @@ export const CARD_PICKS = {
     Platform-<slug>     1920x1080 schematic film for the client platforms
     Clip-<slug>         1440x900 silent loop for the project cards
     HeroReel            1440x900 silent loop for the home hero
+    Explainer-<name>    1920x1080 illustrative explainers (brand, ops-sprint,
+                        ai-assistant, internal-tool) in remotion/explainers/
+    Explainer-brand-vertical  1080x1920, the brand film recomposed for phones
 */
 export const RemotionRoot = () => (
   <>
@@ -61,9 +68,14 @@ export const RemotionRoot = () => (
         fps={30}
         width={1440}
         height={900}
-        defaultProps={{ items: [{ slug, pick }], captions: false }}
+        defaultProps={{ items: [{ slug, pick }], captions: true }}
       />
     ))}
+    <Composition id="Explainer-brand" component={ExplainerBrand} durationInFrames={BRAND_LEN} fps={30} width={1920} height={1080} />
+    <Composition id="Explainer-brand-vertical" component={ExplainerBrand} durationInFrames={BRAND_LEN} fps={30} width={1080} height={1920} />
+    <Composition id="Explainer-ops-sprint" component={ExplainerOpsSprint} durationInFrames={OPS_LEN} fps={30} width={1920} height={1080} />
+    <Composition id="Explainer-ai-assistant" component={ExplainerAiAssistant} durationInFrames={AI_LEN} fps={30} width={1920} height={1080} />
+    <Composition id="Explainer-internal-tool" component={ExplainerInternalTool} durationInFrames={TOOL_LEN} fps={30} width={1920} height={1080} />
     <Composition
       id="HeroReel"
       component={Clip}

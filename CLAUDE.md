@@ -43,7 +43,11 @@ pointer and captions. The two client platforms are **schematics** —
 wireframes of the real flow in `remotion/platformScenes.jsx`, labelled as
 such on every frame, on the card and in the caption, because their real
 screens hold client records. Never swap one kind for the other without
-changing the label (`films[slug].kind` in `data.js`). Remotion is a dev
+changing the label (`films[slug].kind` in `data.js`). The explainer films
+(`remotion/explainers/`, target `explainers`) are illustrative motion design
+that quotes the real captures; the site shows them only while
+`explainersReady` in `data.js` is true, so an unrendered film never ships as
+an empty player. Remotion is a dev
 dependency only; nothing from it ships in the site bundle. Renders need a
 scale giving even pixel sizes (H.264), hence 0.8 for the card loops.
 

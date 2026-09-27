@@ -2889,6 +2889,7 @@ a:hover .text-link svg {
     gap: 0.45rem;
     border-radius: 10px;
   }
+}
 
 /* LoopVideo's loading state: a spinner over the poster while a film
    buffers, and a reload button if it never arrives. The film's frame

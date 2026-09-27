@@ -191,15 +191,25 @@
 
 .dusk-title {
   margin-top: 1.5rem;
-  font-size: clamp(2.75rem, 7vw, 5.5rem);
+  /* Sized so each line (two short sentences) sits on one row on desktop:
+     at 5.5rem the four sentences stacked into a wall that pushed the
+     buttons and the proof line off the first screen. */
+  font-size: clamp(2.25rem, 4.4vw, 3.5rem);
   font-weight: 500;
-  line-height: 1.02;
+  line-height: 1.08;
   letter-spacing: -0.055em;
   color: #fff;
 }
 
 .dusk-line {
   display: block;
+}
+
+/* A sentence of the headline stays on one line where it fits (see
+   BlurLine in Hero.jsx); max-width lets a long one still wrap on a phone. */
+.dusk-phrase {
+  display: inline-block;
+  max-width: 100%;
 }
 
 .dusk-word {
@@ -1895,6 +1905,24 @@
 @media (max-width: 640px) {
   .cards {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* On a phone the headline is four short sentences, one per line. The
+     longest ("Without anyone typing.") is ~9.8em wide; 7vw keeps each on
+     one row down to 320px and leaves the primary button on the first
+     screen at 390x844. */
+  .dusk-hero .dusk-title {
+    margin-top: 1rem;
+    font-size: 7vw;
+  }
+
+  .dusk-hero .dusk-sub {
+    margin-top: 1rem;
+    font-size: 1rem;
+  }
+
+  .dusk-hero .dusk-actions {
+    margin-top: 1.5rem;
   }
 
   .dusk-card-title {

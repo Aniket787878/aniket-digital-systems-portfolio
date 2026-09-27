@@ -1,11 +1,36 @@
 # 05 — ICP & Positioning
 
+**Status: REPOSITIONED (2026-09-27).** Supersedes the 2026-09-13 decision below
+("complete production systems, built solo") and the short-lived clinic-first line
+used for the outreach pass earlier the same day. Both are kept for history.
+
+## Decision (current — 2026-09-27)
+
+**Service businesses broadly, a result-led headline, no solo framing.**
+
+- **Headline (hero, title, OG):** "Enquiries answered. Bookings confirmed." /
+  "Follow-ups sent. Without anyone typing."
+- **Support line:** "Custom systems and automations for clinics, studios, agencies
+  and growing teams, live in weeks."
+- **Proof:** "An 11-therapist clinic already runs its day on one." The clinic system
+  is the evidence, not the market.
+- **Retired everywhere on the site:** "Solo", "one person", "by one person", "sole
+  designer", "the person who builds it", "not a team to manage" and any
+  solo-versus-agency comparison. Lead with the result the buyer gets, not with how
+  many people built it.
+- The copy lives in `site.headline`, `site.subtitle`, `site.tagline`, `site.heroProof`
+  and `seo` in `src/data.js`; `public/og.png` is rendered from `site.headline` by
+  `scripts/render-og.mjs`.
+
+---
+
+## Superseded (2026-09-13)
 **Status: REPOSITIONED (2026-09-13).** Supersedes the 2026-08-25 "sell narrow to
 service businesses" lock, which is kept below under *History*. The trigger was not
 the scheduled 60-day review — it was reweighting two flagship builds the old
 decision undervalued.
 
-## Decision (current — 2026-09-13)
+### Decision (2026-09-13, superseded 2026-09-27)
 
 **Sell the proof: complete production systems, built solo.**
 
@@ -174,13 +199,17 @@ named workflow. That is the case for E over A.
 - **C — D2C e-commerce brands:** ROI easy to prove, but weakest fluency and fit.
 - **D — Solo consultants/coaches:** natural expansion, small budgets.
 
-## Positioning statement (live)
+## Positioning statement (2026-08-25, no longer live)
+
+_Superseded 2026-09-27: the live line is the result-led headline and tagline in
+the current decision at the top of this doc._
 
 > I build AI and operations automation for service businesses — clinics, studios,
 > agencies and consultancies — so bookings, client intake, follow-ups and team
 > coordination stop running on WhatsApp threads and manual copy-paste.
 
-This is live as `site.tagline` in `src/data.js`. Change it there, not in a component.
+This was `site.tagline` in `src/data.js` at the time. The tagline still lives
+there; change it there, not in a component.
 
 ## Next steps now the ICP is locked
 

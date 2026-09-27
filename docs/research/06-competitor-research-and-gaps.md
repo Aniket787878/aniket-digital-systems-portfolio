@@ -5,6 +5,8 @@ Companion to `05-icp-positioning.md` (ICP is locked; this is about *presentation
 
 ## The brand-model decision (settled 2026-09-11)
 
+**Superseded 2026-09-27:** Aniket dropped the solo / one-person framing everywhere (he called it generic). Positioning is result-led: 'Enquiries answered. Bookings confirmed. Follow-ups sent. Without anyone typing.' Keep first-person 'I build' voice and the /about identity layer; just don't sell 'solo' as the edge.
+
 **Model chosen: solo specialist.** You, by name and face — not an agency ("we/our
 team"), not a generic "service provider."
 

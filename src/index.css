@@ -2862,3 +2862,16 @@ a:hover .text-link svg {
   background: linear-gradient(180deg, #ffa552, #f79330);
   color: #1f0d00;
 }
+
+/* ---------- Privacy page: one readable column ---------- */
+.privacy {
+  max-width: calc(46rem + var(--container-pad) * 2);
+}
+
+.privacy .case-section-title {
+  margin-top: var(--space-7);
+}
+
+.privacy .page-lede {
+  margin-top: var(--space-3);
+}

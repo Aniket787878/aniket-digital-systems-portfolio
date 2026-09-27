@@ -257,15 +257,21 @@ export const founder = {
   /* One honest paragraph. Asserts only what the case studies, pricing and
      process on the rest of the site already stand behind. */
   intro:
-    'I build the software service businesses actually run on: booking, intake, follow-ups, payments and AI, so the work stops living in WhatsApp threads and spreadsheets. It started with the system an eleven-therapist clinic needed to stop drowning in admin, and it is the same shape of problem in a studio, an agency or a growing team. You own what ships.',
+    'I build the software service businesses actually run on: booking, intake, follow-ups, payments and AI, so the work stops living in WhatsApp threads and spreadsheets. Clinics, studios, agencies, consultancies and growing teams all hit the same shape of problem. You own what ships.',
 
   /* Aniket's own story — how he got here, what he did before — is his to
      write. Left empty on purpose rather than invented; the About page
      renders a labelled slot when it is blank. */
   story: '',
 
-  /* Real headshot → drop it in public/ (e.g. public/aniket.jpg) and set the
-     path here. Until then the About page shows the honest placeholder well. */
+  /* The About page portrait. To add the real one (a one-line change):
+       1. put the file in public/, e.g. public/aniket.jpg (portrait
+          orientation, 4:5, at least 960x1200; it is cropped to 4:5 on wide
+          screens and to 16:10 from the top on phones, so keep the face in
+          the upper third);
+       2. set   photo: '/aniket.jpg',
+     While this is '' the page shows a dusk monogram card (pages/about/
+     Portrait.jsx) that is plainly not a photograph: never a stock face. */
   photo: '',
 
   basedIn: 'Based in India · working remotely worldwide',
@@ -273,6 +279,49 @@ export const founder = {
   /* What a buyer actually gets. Each line is already promised elsewhere on
      the site (pricing timelines, FAQ, handover). No solo-vs-agency framing:
      retired 2026-09-27, see docs/system/05-icp-positioning.md. */
+  /* The About page stepper: first message to handover. Every line restates
+     a promise already made elsewhere (the reply and the call from the
+     contact page, proposal and payment terms from the FAQ and pricing,
+     timelines from `packages`, handover and the Care Plan from the FAQ and
+     `carePlan`). Nothing new is promised here. */
+  steps: [
+    {
+      key: 'enquiry',
+      label: 'Enquiry',
+      title: 'You tell me which part is breaking',
+      text: 'A message on WhatsApp or through the contact form. The one part of the week that eats the most time is enough to start.',
+      gets: ['A personal reply within 24 hours', 'A straight answer if it is not a fit, and a pointer somewhere better']
+    },
+    {
+      key: 'call',
+      label: 'Call',
+      title: 'A 15-minute call',
+      text: 'We walk through how the work moves today: who touches it, where it stalls, what it costs you in hours.',
+      gets: ['The one process worth automating first', 'What automating it would take, and whether it is worth doing']
+    },
+    {
+      key: 'scope',
+      label: 'Scope',
+      title: 'Fixed scope, fixed price, a live date',
+      text: 'A one-page proposal in writing before anything starts. No hourly billing, no verbal quotes, no scope that quietly grows.',
+      gets: ['Half up front, half on delivery', 'Not live by the date in writing? You do not pay the second half']
+    },
+    {
+      key: 'build',
+      label: 'Build',
+      title: 'Live in weeks, not quarters',
+      text: 'Built on the tools you already pay for, with async updates as it takes shape, so you see it working early and can change course while that is cheap.',
+      gets: ['From 5 days for one workflow to 3 to 4 weeks for an internal tool', 'Automations on your own accounts from day one']
+    },
+    {
+      key: 'handover',
+      label: 'Handover',
+      title: 'You own the system',
+      text: 'The code sits in your repository and the automations run on your accounts. A live walkthrough at handover means your team can change the obvious things without calling me.',
+      gets: ['A walkthrough for whoever runs it day to day', 'Optional Care Plan: broken automations fixed inside 24 hours']
+    }
+  ],
+
   principles: [
     {
       title: 'Live in weeks, not quarters',
@@ -293,11 +342,10 @@ export const founder = {
   ],
 
   /* Verified facts only. Anything needing a number Aniket has not supplied
-     stays out. */
+     stays out. (The stack now lives in `toolbox`, below `proofTools`.) */
   quickFacts: [
     { label: 'Based', value: 'India · remote worldwide' },
     { label: 'Focus', value: 'Booking, intake, follow-ups, payments, AI' },
-    { label: 'Core stack', value: 'React · TypeScript · Node · Postgres · n8n · Claude' },
     { label: 'Availability', value: 'Taking new projects' }
   ]
 }
@@ -868,6 +916,49 @@ export const proofTools = [
   {
     name: 'Node & serverless',
     note: 'The backend and APIs on Vercel or Cloudflare Workers, nothing to babysit, and it scales to zero when idle.'
+  }
+]
+
+/* The About page toolbox: the same tools, sorted by what each does for the
+   client rather than listed as a tag wall. Notes come from `proofTools`
+   where one exists; the rest describe how the projects above use them. */
+const toolNote = (name) => proofTools.find((t) => t.name === name).note
+
+export const toolbox = [
+  {
+    key: 'repeat',
+    outcome: 'The repeat work happens on its own',
+    tools: [
+      { name: 'n8n', note: toolNote('n8n') },
+      { name: 'WhatsApp · MSG91', note: 'Confirmations and reminders arrive where your clients already are.' },
+      { name: 'Google Calendar', note: 'Bookings land on the calendar your team already checks, with the Meet link attached.' },
+      { name: 'Razorpay', note: 'Payment taken inside the booking flow, so nobody chases it by hand.' }
+    ]
+  },
+  {
+    key: 'judgement',
+    outcome: 'Messy input gets read for you',
+    tools: [
+      { name: 'Claude', note: toolNote('Claude') },
+      { name: 'Gemini', note: 'Transcribes session audio into a draft note that a person reviews before it counts.' }
+    ]
+  },
+  {
+    key: 'screens',
+    outcome: 'Your team gets screens that fit the work',
+    tools: [
+      { name: 'React & Next.js', note: toolNote('React & Next.js') },
+      { name: 'PWA', note: 'Installable on a phone or a desktop, with push notifications and no app store in the way.' }
+    ]
+  },
+  {
+    key: 'record',
+    outcome: 'One record you can trust, always up',
+    tools: [
+      { name: 'Postgres', note: toolNote('Postgres') },
+      { name: 'TypeScript', note: toolNote('TypeScript') },
+      { name: 'Node & serverless', note: toolNote('Node & serverless') }
+    ]
   }
 ]
 

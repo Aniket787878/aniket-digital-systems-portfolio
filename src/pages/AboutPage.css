@@ -45,7 +45,10 @@
 }
 
 .about-title-warm {
+  display: block;
   color: var(--peach);
+  /* keeps "on." from sitting alone on the last line */
+  text-wrap: balance;
 }
 
 .about-lede,

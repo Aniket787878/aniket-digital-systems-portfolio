@@ -257,7 +257,7 @@ export const founder = {
   /* One honest paragraph. Asserts only what the case studies, pricing and
      process on the rest of the site already stand behind. */
   intro:
-    'I build the software service businesses actually run on: booking, intake, follow-ups, payments and AI, so the work stops living in WhatsApp threads and spreadsheets. Clinics, studios, agencies, consultancies and growing teams all hit the same shape of problem. You own what ships.',
+    'Booking, intake, follow-ups, payments and AI, built as one system, so the work stops living in WhatsApp threads and spreadsheets. Clinics, studios, agencies, consultancies and growing teams all hit the same shape of problem. You own what ships.',
 
   /* Aniket's own story — how he got here, what he did before — is his to
      write. Left empty on purpose rather than invented; the About page

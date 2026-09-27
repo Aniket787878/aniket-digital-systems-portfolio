@@ -1,100 +1,62 @@
+import { m } from 'motion/react'
 import ContactForm from '../components/ContactForm.jsx'
-import { formConnected } from '../leadWebhook.js'
-import WhatsAppCta from '../components/WhatsAppCta.jsx'
-import BookingCta from '../components/BookingCta.jsx'
-import { hasWhatsApp } from '../whatsapp.js'
-import { hasBooking } from '../booking.js'
-import { site, whatsappPrefill } from '../data.js'
+import { PillLabel, TickList } from '../components/ui.jsx'
+import { reveal } from '../motion/variants.js'
 import { useDocumentTitle } from '../useDocumentTitle.js'
+import ContactHero from './contact/ContactHero.jsx'
+import NextSteps from './contact/NextSteps.jsx'
 import './ContactPage.css'
 
-const NEXT_STEPS = [
-  {
-    step: '01',
-    label: 'A reply within 24 hours',
-    detail:
-      'You get a confirmation straight away, then a personal reply from me. If it isn’t a fit I’ll say so and point you somewhere better.'
-  },
-  {
-    step: '02',
-    label: 'A 15-minute call',
-    detail:
-      'We walk through how the work moves today: who touches it, where it stalls, what it costs you in hours.'
-  },
-  {
-    step: '03',
-    label: 'A one-page proposal, in writing',
-    detail:
-      'Fixed scope, fixed price, a date it goes live. No hourly billing and no verbal quotes.'
-  }
+/*
+  Contact, in the Dusk system (docs/design-system.md). Composition only,
+  one idea per band, the same grounds as the home and About pages:
+
+    1. ContactHero (dusk)   the ask, and the three ways to reach me
+    2. Write it out (paper) the lead form, as a white card
+    3. NextSteps (night)    what happens after you get in touch
+
+  Every word is for a business owner, not a developer: no "workflow",
+  no "automation", no "budget band". The form's field *names* (what the
+  n8n intake reads) are unchanged; only what the visitor sees moved.
+*/
+
+const FORM_POINTS = [
+  'A few lines in your own words is enough.',
+  'You get a confirmation straight away.',
+  'I reply personally within 24 hours.'
 ]
 
 export default function ContactPage() {
   useDocumentTitle('Contact · Aniket')
+
   return (
-    <section className="container page page-wide contact">
-      {/* Two-column header so the title and intro span the band. */}
-      <div className="contact-head">
-        <div className="contact-head-lead">
-          <p className="eyebrow">Contact</p>
-          <h1 className="page-title">Tell me which part is breaking</h1>
+    <>
+      <ContactHero />
+
+      {/* The target of the "Fill in a short form" route in the hero. */}
+      <section className="paper contact-write" id="write" aria-labelledby="contact-write-title">
+        <div className="container contact-write-grid">
+          <m.header className="contact-write-copy" {...reveal}>
+            <PillLabel icon="pen">Write it out</PillLabel>
+            <h2 className="h2" id="contact-write-title">
+              Prefer to type it?
+              <br />
+              <span className="soft">Five short questions.</span>
+            </h2>
+            <p className="contact-write-lede">
+              Tell me what keeps you or your team busy with the same task
+              over and over. No need to know what the fix is. That is my job.
+            </p>
+            <TickList items={FORM_POINTS} className="contact-write-points" />
+          </m.header>
+
+          <m.div className="contact-card" {...reveal}>
+            <ContactForm />
+          </m.div>
         </div>
-        <p className="page-lede">
-          I build the systems service businesses run on: booking, intake,
-          follow-ups, payments and AI, for clinics, studios, agencies and
-          growing teams. If yours are running on WhatsApp threads,
-          spreadsheets and copy-paste, tell me the one that eats the most
-          time. That is enough to start.
-        </p>
-      </div>
+      </section>
 
-      {/* Body: the context and fast route on one side, the form on the
-          other, so the page fills the band instead of stacking one narrow
-          column down the left. The context is DOM-first: on a phone it
-          leads, on wide screens it sits beside the form. */}
-      <div className="contact-body">
-        <div className="contact-context">
-          {site.availability && (
-            <p className="contact-availability">{site.availability}</p>
-          )}
-
-          {/* Someone who reached this page has already decided to talk. Give
-              them the fast route before asking them to fill anything in.
-              Only beside a live form: without one, ContactForm renders these
-              same routes in its place, and twice would be noise. */}
-          {formConnected && (hasBooking || hasWhatsApp) && (
-            <div className="contact-direct">
-              <BookingCta className="btn-pill btn-pill-accent" />
-              <WhatsAppCta
-                message={whatsappPrefill.contact}
-                label="Message me on WhatsApp"
-                className={hasBooking ? 'btn-pill' : 'btn-pill btn-pill-accent'}
-              />
-              <p className="contact-direct-note">
-                Usually the quickest way to reach me. The form works just as
-                well if you would rather write it out.
-              </p>
-            </div>
-          )}
-
-          <div className="contact-next">
-            <h2 className="contact-next-title">What happens next</h2>
-            <ol className="contact-next-list">
-              {NEXT_STEPS.map((item) => (
-                <li key={item.step}>
-                  <span className="contact-next-step">{item.step}</span>
-                  <span className="contact-next-label">{item.label}</span>
-                  <p>{item.detail}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
-
-        <div className="contact-main">
-          <ContactForm />
-        </div>
-      </div>
-    </section>
+      <NextSteps />
+    </>
   )
 }

@@ -49,7 +49,7 @@ export default function NextSteps() {
           <h2 className="h2" id="contact-next-title">
             From your message to a price in writing.
             <br />
-            <span className="soft">Three steps. Pick one.</span>
+            <span className="soft">Three steps, nothing hidden.</span>
           </h2>
         </m.header>
 

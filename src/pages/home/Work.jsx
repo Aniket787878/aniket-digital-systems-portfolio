@@ -1,18 +1,19 @@
 import { Link } from 'react-router-dom'
 import { m } from 'motion/react'
-import { projects, images } from '../../data.js'
+import { projects, images, films } from '../../data.js'
 import { fadeUp, stagger, revealStagger } from '../../motion/variants.js'
 import { spotlightMove } from '../../motion/interactions.js'
 import SplitText from '../../motion/SplitText.jsx'
+import LoopVideo from '../../components/LoopVideo.jsx'
 
 /* ---------------------------------------------------------------
    2 — Selected work, matched to the approved redesign concept.
 
    The split is honest, not cosmetic: the two client platforms have no
-   shareable screenshots (client records), so they lead as large
-   "flagship" cards carrying their real figures, stack and a system map.
-   The three self-built tools DO have real screenshots of their running
-   UI (images.projects), so they sit in a demo grid showing that UI.
+   shareable screenshots (client records), so their cards play a
+   schematic film of the real flow, labelled as one on the card. The
+   three self-built tools DO have real captures of their running UI, so
+   their cards show a screenshot that plays a walkthrough on hover.
    --------------------------------------------------------------- */
 export default function Work() {
   const platforms = projects.filter((p) => !images.projects[p.slug])
@@ -78,15 +79,27 @@ export default function Work() {
               </div>
 
               <div className="work-flagship-panel">
-                <span className="work-panel-label">System map</span>
+                {films[project.slug] && (
+                  <>
+                    <span className="work-film-tag">
+                      Schematic film &middot; client data never shown
+                    </span>
+                    <div className="work-film">
+                      <LoopVideo
+                        src={films[project.slug].src}
+                        poster={films[project.slug].poster}
+                        className="work-film-video"
+                        label={`Schematic film of the ${project.title} flow`}
+                      />
+                    </div>
+                  </>
+                )}
+                <span className="work-panel-label">The flow, end to end</span>
                 <div className="work-flow">
                   {project.flow.map((stage) => (
                     <span key={stage} className="work-flow-stage">{stage}</span>
                   ))}
                 </div>
-                {project.system && project.system[0] && (
-                  <p className="work-panel-note">{project.system[0]}</p>
-                )}
               </div>
             </m.article>
           ))}
@@ -103,9 +116,9 @@ export default function Work() {
             />
           </m.div>
           <m.p className="split-lede" variants={fadeUp}>
-            Self-initiated, running apps &mdash; not mockups. Every screenshot
-            below is the real UI. Each rebuilds from scratch a thing the big
-            platforms sell as a black box.
+            Self-initiated, running apps &mdash; not mockups. Each card plays
+            a walkthrough, and every frame of it is the real UI. Each rebuilds from
+            scratch a thing the big platforms sell as a black box.
           </m.p>
         </m.div>
 
@@ -114,16 +127,29 @@ export default function Work() {
             <m.li key={project.slug} className="work-tool-item" variants={fadeUp}>
               <Link
                 to={`/projects/${project.slug}`}
-                className="work-tool spotlight"
+                className="work-tool spotlight loop-video-host"
                 onPointerMove={spotlightMove}
               >
                 <div className="media work-tool-shot">
-                  <img
-                    src={images.projects[project.slug]}
-                    alt=""
-                    className="media-img"
-                    loading="lazy"
-                  />
+                  {films[project.slug]?.clip ? (
+                    <LoopVideo
+                      mode="hover"
+                      src={films[project.slug].clip}
+                      poster={films[project.slug].clipPoster}
+                      className="media-img"
+                    />
+                  ) : (
+                    <img
+                      src={images.projects[project.slug]}
+                      alt=""
+                      className="media-img"
+                      loading="lazy"
+                    />
+                  )}
+                  <span className="work-tool-badge" aria-hidden="true">
+                    <span className="work-tool-badge-dot" />
+                    Real screens
+                  </span>
                 </div>
                 <div className="work-tool-body">
                   <span className="work-tag">Working demo</span>

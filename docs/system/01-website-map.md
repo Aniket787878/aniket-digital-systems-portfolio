@@ -138,6 +138,18 @@ always import `site.email`.
 number twice — the anchor names Offer A's floor. Move both or the site disagrees
 with itself.
 
+### `films`, `heroReel`, `stackMarquee` (2026-09-27)
+
+- `films[slug]` — `{ kind, src, poster, clip?, clipPoster? }`. `kind` is
+  `'real'` (Signet, Relay, Prospector: captures of the running app) or
+  `'schematic'` (the two client platforms). Read by the home work cards,
+  `/projects` (now a film-led showcase, not a thumbnail list) and the case
+  page. Every surface labels the kind.
+- `heroReel` — the silent loop beside the hero copy (real captures only).
+- `stackMarquee` — the moving "Built with" strip under the hero.
+- Source for all of it: `remotion/` + `public/walkthroughs/`, rendered by
+  `scripts/render-videos.sh`.
+
 ### Images — all empty, and that is deliberate
 
 `images` used to hold 16 hotlinked Unsplash URLs across three keys. All 16 are

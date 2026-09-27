@@ -47,6 +47,59 @@ export const images = {
   }
 }
 
+/* ------------------------------------------------------------------
+   PRODUCT FILMS — rendered from remotion/ by scripts/render-videos.sh.
+
+   Two kinds, and the site says which on every one:
+   - 'real'      Signet, Relay, Prospector. Every pixel inside the window is
+                 a capture of the running app (public/walkthroughs/); only
+                 the camera, pointer and captions are added.
+   - 'schematic' The two client platforms. Their screens hold client
+                 records, so the film is a labelled wireframe of the real
+                 flow and never presents itself as a recording.
+   `clip` is the short silent loop the project cards play on hover.
+   ------------------------------------------------------------------ */
+export const films = {
+  'therapist-pwa': {
+    kind: 'schematic',
+    src: '/videos/therapist-pwa.mp4',
+    poster: '/videos/posters/therapist-pwa.jpg'
+  },
+  udaan: {
+    kind: 'schematic',
+    src: '/videos/udaan.mp4',
+    poster: '/videos/posters/udaan.jpg'
+  },
+  signet: {
+    kind: 'real',
+    src: '/videos/signet.mp4',
+    poster: '/videos/posters/signet.jpg',
+    clip: '/videos/clips/signet.mp4',
+    clipPoster: '/videos/posters/signet-clip.jpg'
+  },
+  relay: {
+    kind: 'real',
+    src: '/videos/relay.mp4',
+    poster: '/videos/posters/relay.jpg',
+    clip: '/videos/clips/relay.mp4',
+    clipPoster: '/videos/posters/relay-clip.jpg'
+  },
+  prospector: {
+    kind: 'real',
+    src: '/videos/prospector.mp4',
+    poster: '/videos/posters/prospector.jpg',
+    clip: '/videos/clips/prospector.mp4',
+    clipPoster: '/videos/posters/prospector-clip.jpg'
+  }
+}
+
+/* The hero showreel: the strongest beats of the three working demos. */
+export const heroReel = {
+  src: '/videos/hero-reel.mp4',
+  poster: '/videos/posters/hero-reel.jpg',
+  caption: 'Relay, Signet and Prospector — real screens from the running apps.'
+}
+
 export const site = {
   name: 'Digital Systems Builder',
   tagline:
@@ -615,6 +668,27 @@ export const projects = [
     outcomeNote:
       'Prospector is a self-initiated working demo, not a client deployment. It reads only public pages and is best pointed at sites that publish structured data; the counts describe what was built. The screenshots are of the running app.'
   }
+]
+
+/* The moving "built with" strip: every name here is in a project's
+   `stack` above or in proofTools below — nothing the work doesn't use. */
+export const stackMarquee = [
+  'React',
+  'Next.js',
+  'TypeScript',
+  'Node',
+  'PostgreSQL',
+  'n8n',
+  'Claude',
+  'Gemini',
+  'Tailwind CSS',
+  'Drizzle ORM',
+  'Vercel',
+  'Cloudflare Workers',
+  'Razorpay',
+  'Google Calendar',
+  'WhatsApp · MSG91',
+  'PWA · offline'
 ]
 
 export const proofTools = [

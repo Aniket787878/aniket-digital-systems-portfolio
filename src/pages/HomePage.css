@@ -130,6 +130,276 @@
   color: var(--ink);
 }
 
+/* A faint blueprint grid, masked to fade out from behind the copy, and a
+   slow aurora drifting under the reel. Both are CSS only — nothing to load,
+   and the aurora stops under reduced motion. */
+.hero-ground::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 35%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(70% 60% at 50% 35%, #000 20%, transparent 75%);
+}
+
+.hero-ground::after {
+  content: '';
+  position: absolute;
+  width: 60vw;
+  height: 60vw;
+  max-width: 900px;
+  max-height: 900px;
+  right: -12vw;
+  top: -8vw;
+  background:
+    radial-gradient(closest-side, rgba(245, 135, 30, 0.2), transparent 70%),
+    radial-gradient(closest-side at 30% 70%, rgba(255, 95, 46, 0.12), transparent 70%);
+  filter: blur(30px);
+  animation: hero-aurora 18s ease-in-out infinite alternate;
+}
+
+@keyframes hero-aurora {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-8vw, 6vw, 0) scale(1.15);
+  }
+}
+
+/* Proof chips floated around the showreel window. */
+.reel-chip {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px 10px 10px;
+  border-radius: 14px;
+  background: rgba(24, 24, 24, 0.78);
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-size: var(--text-xs);
+  line-height: 1.3;
+  color: var(--muted);
+  white-space: nowrap;
+  animation: reel-float 6s ease-in-out infinite;
+}
+
+.reel-chip strong {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.reel-chip-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #1a0900;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.9375rem;
+  flex: none;
+}
+
+.reel-chip-a {
+  left: -2.5rem;
+  top: 16%;
+}
+
+.reel-chip-b {
+  right: -1.5rem;
+  top: 30%;
+  animation-delay: -2s;
+}
+
+/* Right, not left: the reel's own step caption sits bottom-left. */
+.reel-chip-c {
+  right: 2.5rem;
+  bottom: 5rem;
+  animation-delay: -4s;
+}
+
+@keyframes reel-float {
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@media (max-width: 1280px) {
+  .reel-chip-a {
+    left: -1rem;
+  }
+  .reel-chip-b {
+    right: -0.5rem;
+  }
+}
+
+/* On stacked layouts the window fills the column, so chips would cover the
+   footage; they go. */
+@media (max-width: 1080px) {
+  .reel-chip {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ground::after,
+  .reel-chip {
+    animation: none;
+  }
+}
+
+/* Copy on the left, the showreel on the right. Stacks below 1080px, where
+   the reel drops under the CTAs at full width. */
+.hero-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+  align-items: center;
+  gap: clamp(2.5rem, 4.5vw, 5rem);
+}
+
+/* In the two-column layout the headline column is about half as wide as
+   it was, so the cap comes down with it: "Complete production" measures
+   ~9.7em, and 4.1vw keeps that inside the column from 1081px up. */
+@media (min-width: 1081px) {
+  .hero-top .hero-title {
+    font-size: clamp(2.5rem, 4.1vw, 4.5rem);
+  }
+}
+
+/* --- Showreel: a drawn browser window around a silent loop of the real
+   captures. The chrome is HTML so it stays crisp at any size; the video
+   is only the viewport. --- */
+.hero-reel {
+  position: relative;
+  margin: 0;
+}
+
+/* Warm light pooling under the window, so it sits on the page rather than
+   floating over it. */
+.hero-reel::before {
+  content: '';
+  position: absolute;
+  inset: 12% 6% -10%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgba(245, 135, 30, 0.22), transparent);
+  filter: blur(40px);
+}
+
+.reel-window {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  background: #1b1b1b;
+  box-shadow:
+    0 50px 100px -30px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(0, 0, 0, 0.5);
+  /* Pivot on the right edge so the tilt never pushes the window past the
+     container's gutter. */
+  transform: perspective(2000px) rotateY(-5deg) rotateX(2deg);
+  transform-origin: 100% 50%;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.hero-reel:hover .reel-window {
+  transform: none;
+}
+
+.reel-chrome {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 38px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.reel-dots {
+  display: flex;
+  gap: 7px;
+}
+
+.reel-dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+
+.reel-dots i:nth-child(2) {
+  background: #febc2e;
+}
+
+.reel-dots i:nth-child(3) {
+  background: #28c840;
+}
+
+.reel-url {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-inline: auto;
+  padding: 4px 14px;
+  border-radius: 7px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--muted);
+  transform: translateX(-24px);
+}
+
+.reel-live {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(245, 135, 30, 0.2);
+}
+
+.reel-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  background: var(--bg);
+}
+
+.hero-reel-caption {
+  margin-top: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--muted);
+  text-align: center;
+}
+
+@media (max-width: 1080px) {
+  .hero-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .reel-window {
+    transform: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .reel-url {
+    transform: none;
+    margin-inline: 0 auto;
+  }
+}
+
 /* The proof block sits below the copy, full width. Two real figures in
    cards, then the caveat that qualifies the number — never separated from
    it (CLAUDE.md rule 6). */
@@ -284,6 +554,88 @@
   padding: clamp(1.75rem, 3vw, 2.75rem);
   background: linear-gradient(155deg, rgba(245, 135, 30, 0.06), var(--surface) 62%);
   border-left: 1px solid var(--line);
+}
+
+/* The panel leads with the film, then the flow it walks through. */
+.work-flagship-panel {
+  justify-content: center;
+}
+
+.work-film {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7);
+  margin-bottom: var(--space-2);
+}
+
+.work-film-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+/* Says what the film is, right above it, so it can never be read as a
+   screen recording of the client system. Above rather than over: the film
+   carries its own captions along the bottom edge. */
+.work-film-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.work-film-tag::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.work-tool-shot {
+  position: relative;
+}
+
+.work-tool-shot .media-img {
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.work-tool:hover .work-tool-shot .media-img {
+  transform: scale(1.02);
+}
+
+.work-tool-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: rgba(16, 16, 16, 0.82);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  backdrop-filter: blur(6px);
+}
+
+.work-tool-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
 }
 
 /* Alternate card mirrors the layout so the two do not read as a repeat. */
@@ -930,10 +1282,9 @@
 }
 
 .builtwith-inner {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  justify-content: center;
   gap: var(--space-3) clamp(1rem, 2.5vw, 2rem);
   padding-block: clamp(1.5rem, 3vw, 2rem);
 }
@@ -956,13 +1307,33 @@
 }
 
 .builtwith-item {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin-right: clamp(1.5rem, 3vw, 2.5rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 1.8vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--ink-soft);
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  padding: 0.4rem 0.9rem;
+  white-space: nowrap;
+}
+
+/* A saffron diamond between names. */
+.builtwith-item::after {
+  content: '';
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+  transform: rotate(45deg);
+  opacity: 0.8;
+}
+
+@media (max-width: 640px) {
+  .builtwith-inner {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
 }
 
 /* Who-it's-for on the left, how-it's-built on the right — the two read as
@@ -1071,6 +1442,33 @@
 .caps-card:hover {
   background: var(--surface-2);
   border-color: var(--line-strong);
+}
+
+.caps-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--space-3);
+  border-radius: 16px;
+  color: var(--accent);
+  background: linear-gradient(150deg, rgba(245, 135, 30, 0.22), rgba(245, 135, 30, 0.04));
+  border: 1px solid rgba(245, 135, 30, 0.35);
+  box-shadow: 0 10px 30px -10px rgba(245, 135, 30, 0.35);
+  transition: transform var(--dur-mid) var(--ease-out);
+}
+
+.caps-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.caps-card:hover .caps-icon {
+  transform: translateY(-3px) rotate(-4deg);
+}
+
+.caps-card:hover {
+  border-color: rgba(245, 135, 30, 0.35);
 }
 
 .caps-index {
@@ -2160,20 +2558,24 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  /* Stack in DOM order (body then panel) on both cards; the visual mirror
-     only makes sense side by side. */
+  /* Stacked, both cards lead with the film — on a phone the copy runs
+     long, and the film is what earns the scroll. The mirror only makes
+     sense side by side. */
   .work-flagship-body,
-  .work-flagship-alt .work-flagship-body,
+  .work-flagship-alt .work-flagship-body {
+    order: 2;
+  }
+
   .work-flagship-panel,
   .work-flagship-alt .work-flagship-panel {
-    order: 0;
+    order: 1;
   }
 
   .work-flagship-panel,
   .work-flagship-alt .work-flagship-panel {
     border-left: 0;
     border-right: 0;
-    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
   }
 
   .work-tools {

@@ -73,8 +73,10 @@
   --space-9: 6rem;
   --space-10: 8rem;
 
-  /* Vertical breathing room inside each section band */
-  --section-pad: clamp(4.5rem, 9vw, 8.5rem);
+  /* Vertical breathing room inside each section band. Two adjacent bands
+     stack their padding, so this is half the gap between them: at the old
+     8.5rem cap the page read as islands of copy in ~270px of dead space. */
+  --section-pad: clamp(4rem, 7vw, 6.5rem);
 
   /* ---------- Containers ----------
 
@@ -1077,8 +1079,9 @@ a:hover {
     --radius-md: 18px;
     /* Was clamp(3.25rem, 13vw, 4.5rem) — 52px, so 104px between bands where
        the reference leaves about 140px at this width. 64px closes most of
-       that gap without turning the page into a scroll. It still meets the
-       unprefixed 4.5rem at 480px, so the step across the breakpoint is nil. */
+       that gap without turning the page into a scroll. The desktop value
+       now floors at 4rem, so crossing 480px steps 64px → 72px; kept, since
+       this is the rhythm the phone layout was measured against. */
     --section-pad: clamp(4rem, 15vw, 6rem);
   }
 
@@ -2008,4 +2011,225 @@ a:hover {
   border: 1px solid var(--line);
   background: #000;
   object-fit: cover;
+}
+
+/* ============================================================
+   Projects showcase (/projects). Each project leads with its film;
+   alternate rows mirror so five in a row do not read as a table.
+   ============================================================ */
+
+.showcase {
+  list-style: none;
+  display: grid;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  margin-top: var(--space-7);
+}
+
+.showcase-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.5rem, 3.5vw, 3.5rem);
+  padding: clamp(1rem, 1.6vw, 1.5rem);
+  background: linear-gradient(160deg, rgba(245, 135, 30, 0.05), var(--surface) 45%);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  color: var(--ink);
+  transition: border-color var(--dur-mid) ease, transform var(--dur-mid) var(--ease-out);
+}
+
+.showcase-card:hover {
+  color: var(--ink);
+  border-color: rgba(245, 135, 30, 0.45);
+  transform: translateY(-4px);
+}
+
+.showcase-item-alt .showcase-media {
+  order: 2;
+}
+
+.showcase-media {
+  position: relative;
+  border-radius: calc(var(--radius-lg) - 10px);
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.8);
+}
+
+.showcase-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+/* The schematic films are 16:9 and carry text to their edges; 16:10 would
+   crop it. */
+.showcase-media.is-schematic .showcase-video {
+  aspect-ratio: 16 / 9;
+}
+
+.showcase-card:hover .showcase-video {
+  transform: scale(1.02);
+}
+
+.showcase-badge {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: rgba(16, 16, 16, 0.84);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  backdrop-filter: blur(6px);
+}
+
+.showcase-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.showcase-badge.is-real::before {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(245, 135, 30, 0.2);
+}
+
+.showcase-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: clamp(0.5rem, 1.5vw, 1.25rem);
+}
+
+.showcase-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.showcase-index {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-sm);
+  color: var(--accent);
+}
+
+.showcase-kind {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--accent);
+  border: 1px solid rgba(245, 135, 30, 0.5);
+  background: var(--accent-soft);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+}
+
+.showcase-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.625rem, 2.8vw, 2.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.showcase-summary {
+  font-size: var(--text-base);
+  line-height: 1.65;
+  color: var(--muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.showcase-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+}
+
+.showcase-metrics > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.showcase-metric-n {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.showcase-metric-label {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  max-width: 20ch;
+  line-height: 1.4;
+}
+
+.showcase-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.showcase-stack .chip {
+  margin: 0;
+}
+
+.chip-more {
+  color: var(--accent);
+  border-color: rgba(245, 135, 30, 0.4);
+}
+
+.showcase-link {
+  color: var(--accent);
+  margin-top: var(--space-2);
+}
+
+@media (max-width: 900px) {
+  .showcase-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .showcase-item-alt .showcase-media {
+    order: 0;
+  }
+}
+
+/* The case-study film breaks out of the 62rem reading column: it is the
+   strongest thing on the page and was being shown at two thirds size. */
+.page:not(.page-wide) > .case-video-figure {
+  max-width: none;
+}
+
+.case-video {
+  border-color: var(--line-strong);
+  box-shadow: 0 50px 100px -40px rgba(0, 0, 0, 0.85), 0 0 80px -30px rgba(245, 135, 30, 0.25);
+}
+
+/* Saffron gradient for a single accented word (SplitText `accent`). */
+.text-accent {
+  background: linear-gradient(100deg, #ffc27a 0%, var(--accent) 45%, #ff5f2e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-right: 0.04em;
 }

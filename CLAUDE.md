@@ -34,6 +34,19 @@ never in the first-load bundle. A `SafeMount` boundary drops it silently if
 WebGL is unavailable, leaving the photograph. Keep it lazy: the three.js
 chunk is ~220KB gzip and must never re-enter the main bundle.
 
+**Product films.** Every video on the site is rendered from `remotion/` by
+`bash scripts/render-videos.sh [slug|hero]` into `public/videos/` (films,
+`clips/` loops, `posters/`). The three working demos are **real captures**:
+PNGs of the running apps plus a `steps.json` (caption, clicked element,
+zoom region) in `public/walkthroughs/<slug>/`; the film only adds camera,
+pointer and captions. The two client platforms are **schematics** —
+wireframes of the real flow in `remotion/platformScenes.jsx`, labelled as
+such on every frame, on the card and in the caption, because their real
+screens hold client records. Never swap one kind for the other without
+changing the label (`films[slug].kind` in `data.js`). Remotion is a dev
+dependency only; nothing from it ships in the site bundle. Renders need a
+scale giving even pixel sizes (H.264), hence 0.8 for the card loops.
+
 **Live on Vercel**, deploying from `main` on every push (team `aniket-s1`,
 project `aniket-portfolio`). `vercel.json` holds the SPA rewrite — delete it and
 every deep link 404s on refresh. Runbook: `docs/deploy.md`.

@@ -1,11 +1,12 @@
 import { m } from 'motion/react'
-import { proofTools } from '../../data.js'
+import { stackMarquee } from '../../data.js'
+import Marquee from '../../components/Marquee.jsx'
 import { reveal } from '../../motion/variants.js'
 
 /* ---------------------------------------------------------------
-   1b — "Built with" strip. A quiet, static credential row straight
-   under the hero, matching the redesign concept: no auto-scrolling
-   marquee, just the stack the systems are actually built on.
+   1b — "Built with" strip. A slow marquee of the stack the systems
+   are actually built on, straight under the hero. It pauses on hover
+   and stops (and wraps) under reduced motion — see .marquee.
 
    The honest version of a logo wall — no client logos to show yet,
    but the real toolset tells a technical buyer more than six greyed
@@ -16,13 +17,13 @@ export default function ProofStrip() {
     <section className="builtwith">
       <m.div className="container builtwith-inner" {...reveal}>
         <span className="builtwith-label">Built with</span>
-        <ul className="builtwith-list">
-          {proofTools.map((tool) => (
-            <li key={tool.name} className="builtwith-item">
-              {tool.name}
-            </li>
+        <Marquee seconds={40}>
+          {stackMarquee.map((tool) => (
+            <span key={tool} className="builtwith-item">
+              {tool}
+            </span>
           ))}
-        </ul>
+        </Marquee>
       </m.div>
     </section>
   )

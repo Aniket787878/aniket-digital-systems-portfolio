@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
-import { projects, site, images, proofTools } from '../data.js'
+import { films, projects, site, images, proofTools } from '../data.js'
 import SystemDiagram from '../components/SystemDiagram.jsx'
 import AnimatedFlow from '../components/AnimatedFlow.jsx'
 import Media from '../components/Media.jsx'
@@ -36,15 +36,6 @@ const toolNote = (tool) => {
   return hit ? hit.note : ''
 }
 
-/* Projects with a rendered overview video in public/videos/. */
-const PROJECT_VIDEOS = new Set([
-  'therapist-pwa',
-  'udaan',
-  'signet',
-  'relay',
-  'prospector',
-])
-
 export default function ProjectDetailPage() {
   const { slug } = useParams()
   const position = projects.findIndex((item) => item.slug === slug)
@@ -68,6 +59,9 @@ export default function ProjectDetailPage() {
   const timeline = toText(project.timeline)
   const stack = toList(project.stack)
   const flow = toList(project.flow)
+  const film = films[project.slug]
+  // Silent, so autoplay is allowed — but not for anyone who asked for less motion.
+  const autoPlay = !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
   const build = toList(project.system)
   const outcome = toList(project.outcome)
   const outcomeNote = toText(project.outcomeNote)
@@ -127,25 +121,27 @@ export default function ProjectDetailPage() {
         </dl>
       )}
 
-      {/* The flow, in motion. An illustrative loop of the real stages —
-          captioned as an animation, not a screen recording, so it is never
-          read as footage of the running product. */}
-      {PROJECT_VIDEOS.has(project.slug) ? (
+      {/* The film. Two kinds (data.js `films`), and the caption says which:
+          the working demos are real captures of the running app; the client
+          platforms are a labelled schematic, never read as footage. */}
+      {film ? (
         <figure className="case-video-figure">
           <video
             className="case-video"
-            src={`/videos/${project.slug}.mp4`}
-            autoPlay
+            src={film.src}
+            poster={film.poster}
+            autoPlay={autoPlay}
             muted
             loop
             playsInline
             controls
             preload="metadata"
-            aria-label={`Animated overview of ${title}`}
+            aria-label={`${film.kind === 'real' ? 'Walkthrough' : 'Schematic film'} of ${title}`}
           />
           <figcaption className="case-caption">
-            An animated overview of the system — illustrative, not a recording
-            of the running app.
+            {film.kind === 'real'
+              ? 'A walkthrough of the running app. Every screen is a real capture; only the camera moves, pointer and captions are added.'
+              : 'A schematic of the real flow. The client’s screens hold client records, so they are drawn as wireframes rather than shown.'}
           </figcaption>
         </figure>
       ) : (

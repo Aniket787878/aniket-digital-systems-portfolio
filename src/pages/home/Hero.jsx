@@ -1,32 +1,32 @@
 import { Link } from 'react-router-dom'
 import { m } from 'motion/react'
-import { whatsappPrefill } from '../../data.js'
+import { site, whatsappPrefill } from '../../data.js'
+
+const heroProof = site.heroProof
 import ArrowIcon from '../../components/ArrowIcon.jsx'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
 import Magnetic from '../../motion/Magnetic.jsx'
 import SplitText from '../../motion/SplitText.jsx'
 import { hasWhatsApp } from '../../whatsapp.js'
 import { heroContainer, heroItem } from '../../motion/variants.js'
-import HeroMountains from './HeroMountains.jsx'
-import HeroWorkflow from './HeroWorkflow.jsx'
 
 /* ---------------------------------------------------------------
-   1 — Hero.
+   1 — Hero. Proof-led, per the 2026-09-13 reposition ("sell the
+   proof: complete production systems, built solo").
 
-   Composition inspired by getstage.co: centred copy over a parallax
-   mountain scene, then a wide showcase card below with a standing
-   figure on the left and the spider workflow on the right.
+   No photograph and no 3D accent here any more: the fold now leads
+   with the claim and two real proof figures rather than a portrait.
+   The hero-photo files stay in public/ so the photographic hero can
+   be brought back, but nothing on this page references them.
 
-   The portrait slot renders an SVG silhouette placeholder — the real
-   standing-pose photograph of Aniket is not yet supplied, so we mark
-   the slot honestly rather than repurpose the old face crop as a
-   stand-in.
+   The 750+ figure never appears without heroProof.note beneath the
+   cards — the house rule that no number renders without the caveat
+   that qualifies it (CLAUDE.md rule 6, data.js heroProof).
    --------------------------------------------------------------- */
 export default function Hero() {
   return (
     <section className="hero">
       <div className="hero-ground" aria-hidden="true" />
-      <HeroMountains />
 
       <div className="container hero-content">
         <m.div
@@ -37,7 +37,9 @@ export default function Hero() {
         >
           <m.div className="hero-badge" variants={heroItem}>
             <span className="hero-badge-dot" aria-hidden="true" />
-            Available &middot; 2 build slots a month
+            {site.availability
+              ? 'Available · 2 build slots a month'
+              : 'Systems builder'}
           </m.div>
 
           <m.p className="hero-eyebrow" variants={heroItem}>
@@ -46,13 +48,13 @@ export default function Hero() {
           <SplitText
             as="h1"
             className="hero-title"
-            text="Complete systems, end to end."
+            text="Complete production systems. End to end. Solo."
             standalone={false}
           />
           <m.p className="hero-sub" variants={heroItem}>
-            AI agents, n8n workflows and the software behind them &mdash;
-            wired into WhatsApp, Slack, email and the tools your team
-            already uses.
+            Site, app, payments, backend, AI and the infrastructure
+            underneath &mdash; the whole thing built and shipped by one person,
+            for founders who need it done, not a team to manage.
           </m.p>
 
           <m.div className="hero-actions" variants={heroItem}>
@@ -64,17 +66,14 @@ export default function Hero() {
               />
             </Magnetic>
             {hasWhatsApp ? (
-              <Link to="/contact" className="arrow-link hero-alt-cta">
-                Or send a message
+              <Link to="/projects" className="arrow-link hero-alt-cta">
+                See the work
                 <span className="arrow" aria-hidden="true">
                   &rarr;
                 </span>
               </Link>
             ) : (
-              <Link
-                to="/contact"
-                className="btn-pill btn-pill-accent hero-cta"
-              >
+              <Link to="/contact" className="btn-pill hero-cta">
                 Get in touch
                 <span className="btn-pill-icon" aria-hidden="true">
                   <ArrowIcon />
@@ -84,67 +83,42 @@ export default function Hero() {
           </m.div>
         </m.div>
 
+        {/* Two real proof figures. The first is a row count from a live
+            production database; the second is the count of shipped systems.
+            heroProof.note qualifies the number directly beneath. */}
         <m.div
-          className="hero-showcase"
+          className="hero-proof"
           variants={heroItem}
           initial="hidden"
           animate="show"
         >
-          <div className="hero-showcase-portrait">
-            <StandingFigure />
-            <div className="hero-portrait-caption">
-              <span className="hero-portrait-name">Placeholder</span>
-              <span className="hero-portrait-role">
-                Standing-pose photograph &mdash; pending
-              </span>
+          <div className="hero-proof-row">
+            <div className="hero-proof-card">
+              <span className="hero-proof-num">750+</span>
+              <p className="hero-proof-text">
+                clients across <strong>11 therapists</strong>, running daily on
+                one platform I designed, built and ship.
+              </p>
+              <Link
+                to={`/projects/${heroProof.slug}`}
+                className="hero-proof-link"
+              >
+                {heroProof.linkLabel}
+                <span className="arrow" aria-hidden="true">&rarr;</span>
+              </Link>
+            </div>
+            <div className="hero-proof-card">
+              <span className="hero-proof-num">5</span>
+              <p className="hero-proof-text">
+                systems shipped end to end &mdash;{' '}
+                <strong>two production platforms</strong> and three working
+                tools.
+              </p>
             </div>
           </div>
-          <div className="hero-showcase-workflow">
-            <div className="hero-workflow-bar" aria-hidden="true">
-              <span className="hero-workflow-dots">
-                <i /><i /><i />
-              </span>
-              <span className="hero-workflow-label">n8n &middot; live workflow</span>
-            </div>
-            <HeroWorkflow />
-          </div>
+          <p className="hero-proof-note">{heroProof.note}</p>
         </m.div>
       </div>
     </section>
-  )
-}
-
-/* Silhouette of a standing figure. Not a photograph, not stock — a
-   deliberate placeholder so the slot reads as awaiting a real image
-   rather than pretending to have one. */
-function StandingFigure() {
-  return (
-    <svg
-      className="hero-standing-figure"
-      viewBox="0 0 240 400"
-      preserveAspectRatio="xMidYMax meet"
-      role="img"
-      aria-label="Placeholder silhouette of a standing person"
-    >
-      <defs>
-        <linearGradient id="figure-g" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#3a1a08" />
-          <stop offset="100%" stopColor="#0a0402" />
-        </linearGradient>
-        <linearGradient id="figure-floor" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="rgba(245,135,30,0.18)" />
-          <stop offset="100%" stopColor="rgba(245,135,30,0)" />
-        </linearGradient>
-      </defs>
-      {/* Floor pool of light */}
-      <ellipse cx="120" cy="380" rx="90" ry="14" fill="url(#figure-floor)" />
-      {/* Head */}
-      <circle cx="120" cy="70" r="28" fill="url(#figure-g)" />
-      {/* Neck + shoulders */}
-      <path
-        d="M108 92 Q120 108 132 92 L154 118 Q170 150 168 185 L166 240 Q166 260 158 275 L146 340 L152 384 L138 384 L128 340 L122 300 L118 340 L108 384 L94 384 L100 340 L88 275 Q80 260 80 240 L78 185 Q76 150 92 118 Z"
-        fill="url(#figure-g)"
-      />
-    </svg>
   )
 }

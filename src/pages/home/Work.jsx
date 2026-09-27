@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { m } from 'motion/react'
-import { projects } from '../../data.js'
+import { projects, images } from '../../data.js'
 import SystemDiagram from '../../components/SystemDiagram.jsx'
 import { fadeUp, stagger, revealStagger } from '../../motion/variants.js'
 import { spotlightMove } from '../../motion/interactions.js'
@@ -39,6 +39,11 @@ export default function Work() {
         <m.ul className="work-grid" {...revealStagger}>
           {projects.map((project, i) => {
             const featured = i === 0
+            /* The three self-built tools have real screenshots of their
+               running UI in data.js (images.projects); the two client
+               platforms do not — client records can't be shown — so those
+               keep the honest schematic. */
+            const shot = images.projects[project.slug]
             return (
               <m.li
                 key={project.slug}
@@ -50,7 +55,18 @@ export default function Work() {
                   className={`work-card spotlight${featured ? ' work-card-featured' : ''}`}
                   onPointerMove={spotlightMove}
                 >
-                  <SystemDiagram className="work-media" variant={project.diagram} />
+                  {shot ? (
+                    <div className="media work-media">
+                      <img
+                        src={shot}
+                        alt=""
+                        className="media-img"
+                        loading="lazy"
+                      />
+                    </div>
+                  ) : (
+                    <SystemDiagram className="work-media" variant={project.diagram} />
+                  )}
                   <div className="work-body">
                     <div className="work-meta">
                       <span className="work-index">{project.index}</span>

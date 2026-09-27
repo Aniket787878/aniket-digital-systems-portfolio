@@ -27,6 +27,7 @@ Append one line per section as it lands. Keep it terse; the diff is the detail.
 | M0 — lead webhook | Not started | Blocked on the n8n workflow + Aniket setting the Vercel env var. |
 | M1c — featured offer | **Blocked on a decision** | Needs Aniket to confirm narrowing the public offer to clinics at ₹60k. That contradicts the locked ICP doc (which explicitly rejected a single-vertical headline), so it is a positioning call, not a build task. Do not change prices without it. |
 | M1d — video embed | Not started | Blocked on the Loom link. |
+| Homepage redesign | **Built (2026-09-27)** | Owner-requested, supersedes the "never redesign" line below for the hero. Proof-led hero (no photo/3D; hero-*.jpg + Hero3D retained in tree), real tool screenshots in the Work band. CLAUDE.md rule 3 + index.html updated to match. |
 
 ## Standing rules (non-negotiable, from CLAUDE.md)
 

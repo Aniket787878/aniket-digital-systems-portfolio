@@ -49,391 +49,163 @@
    1 — Hero
    ============================================================ */
 
-/* The hero is now a two-part composition, in the manner of getstage.co:
-   centred copy at the top, and a wide showcase card below carrying the
-   portrait beside the workflow schematic. The full-bleed photograph, the
-   scrim, and the 3D canvas are all gone — the picture that mattered
-   (the person + the systems) now lives inside the card. */
 .hero {
   position: relative;
   isolation: isolate;
+  min-height: 100svh;
   display: flex;
-  flex-direction: column;
-  padding-block: calc(var(--nav-h) + clamp(1.5rem, 4vw, 3rem))
-    clamp(2.5rem, 5vw, 4rem);
+  align-items: center;
+  padding-block: calc(var(--nav-h) + clamp(2rem, 5vw, 4rem))
+    clamp(3rem, 6vw, 5rem);
   overflow: hidden;
+  /* The hero is a slab, not a background: rounding the bottom edge lets
+     the page ground show through at the corners, which is what separates
+     it from the section beneath. */
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
-/* The hero ground. A saffron-to-black ramp in the site's warm system,
-   with a soft radial fall-off behind the copy so the centred headline
-   sits on a glow rather than a flat slab. */
+/* Proof-led ground: the near-black page colour with a single soft saffron
+   glow bleeding down from the top, in place of the old photograph. No image
+   to decode, so there is nothing to fade in and no reduced-motion guard to
+   carry. */
 .hero-ground {
   position: absolute;
   inset: 0;
-  z-index: -2;
+  z-index: -1;
   border-radius: inherit;
+  /* Subtle, off-centre wash — light falling from the top-left corner, not a
+     symmetric glow parked behind the headline. Kept faint so it reads as
+     considered lighting rather than a template gradient. */
   background:
     radial-gradient(
-      ellipse 60% 40% at 50% 12%,
-      rgba(245, 135, 30, 0.32) 0%,
-      rgba(245, 135, 30, 0) 70%
+      80% 55% at 12% -12%,
+      rgba(245, 135, 30, 0.1) 0%,
+      transparent 52%
     ),
-    linear-gradient(180deg, #1a0f07 0%, #110804 40%, #0a0603 100%);
+    var(--bg);
 }
 
 .hero-content {
   position: relative;
   z-index: 1;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(2.5rem, 5vw, 4.5rem);
 }
 
-/* Centred copy lockup at the top of the hero. Everything anchors to the
-   middle of the section — eyebrow, title, sub, CTAs — for the getstage
-   composition where the page opens on a single, calm claim. */
+/* The copy block: badge, eyebrow, headline, sub, CTAs. Capped so the
+   headline breaks into a strong two/three-line stack rather than one long
+   ribbon on a wide screen. */
 .hero-lockup {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: var(--space-4);
   max-width: 60rem;
-  margin: 0 auto;
 }
 
 .hero-eyebrow {
   font-family: var(--font-sans);
-  font-size: clamp(1rem, 1.4vw, 1.25rem);
-  font-weight: 500;
-  color: var(--ink-soft);
-  margin: 0;
-}
-
-/* Sized for the centred composition. Wider column than the old bottom-left
-   stack, so the display can breathe: cap at ~6rem, floor at 2.5rem for a
-   327px phone. */
-.hero-title {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 6.4vw, 6rem);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.035em;
-  color: var(--ink);
-  max-width: 20ch;
-  margin: 0;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: var(--space-3);
 }
 
 .hero-sub {
-  font-size: clamp(1rem, 1.2vw, 1.15rem);
-  line-height: 1.55;
+  margin-top: var(--space-5);
+  font-size: var(--text-lg);
+  line-height: 1.6;
   color: var(--ink-soft);
-  max-width: 46ch;
-  margin: 0;
+  max-width: 54ch;
 }
 
-/* The showcase card — two panels inside one glassy frame. Portrait on
-   the left says who is doing the building; workflow on the right says
-   what is being built. */
-.hero-showcase {
+/* Not --display-1. That token tops out at 7rem, and at 7rem the phrase
+   "run themselves" measures 798px against a 608px column, so this headline
+   broke to three lines at every width above 960 — and to three again at
+   390. The cap below is the largest size whose longest line still fits the
+   column this composition allows: 798 x (84/112) = 599px against 608. The
+   floor is picked the same way against a 327px phone column. Change the
+   headline copy and both need re-measuring, not re-guessing. */
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5.8vw, 5.25rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+
+/* The proof block sits below the copy, full width. Two real figures in
+   cards, then the caveat that qualifies the number — never separated from
+   it (CLAUDE.md rule 6). */
+.hero-proof {
+  margin-top: clamp(2.75rem, 5vw, 4rem);
+}
+
+.hero-proof-row {
   display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: 0;
-  width: 100%;
-  max-width: 1160px;
-  margin: 0 auto;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.06),
-    rgba(255, 255, 255, 0.02)
-  );
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.7),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  overflow: hidden;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.875rem, 1.5vw, 1.25rem);
 }
 
-.hero-showcase-portrait {
-  position: relative;
-  min-height: 420px;
-  background:
-    radial-gradient(ellipse 70% 45% at 50% 92%, rgba(245, 135, 30, 0.22) 0%, rgba(245, 135, 30, 0) 70%),
-    linear-gradient(180deg, #150a04 0%, #080402 100%);
-  overflow: hidden;
-}
-
-/* Subtle scanning ring under the placeholder — hints "waiting for
-   content" without pretending to be a photograph. */
-.hero-showcase-portrait::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: 40px;
-  width: 260px;
-  height: 260px;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  border: 1px dashed rgba(245, 135, 30, 0.25);
-  pointer-events: none;
-}
-
-.hero-portrait-caption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
+.hero-proof-card {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding: var(--space-5);
-  background: linear-gradient(
-    to top,
-    rgba(10, 6, 3, 0.9) 0%,
-    rgba(10, 6, 3, 0.5) 60%,
-    rgba(10, 6, 3, 0) 100%
-  );
-  color: var(--ink);
-}
-
-.hero-portrait-name {
-  font-family: var(--font-display);
-  font-size: 1.125rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.hero-portrait-role {
-  font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.78);
-}
-
-.hero-showcase-workflow {
-  position: relative;
-  background: #131313;
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
-  display: flex;
-  flex-direction: column;
-}
-
-/* A little chrome bar so the panel reads as a workflow surface, not just
-   a schematic dropped on grey. */
-.hero-workflow-bar {
-  display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-3);
-  padding: 0.65rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.02);
+  padding: clamp(1.25rem, 2.2vw, 1.75rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
 }
 
-.hero-workflow-dots {
-  display: inline-flex;
-  gap: 6px;
-}
-
-.hero-workflow-dots i {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #3a3a3a;
-}
-
-.hero-workflow-dots i:first-child { background: #f5871e; }
-
-.hero-workflow-label {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-
-/* ---- Mountain parallax ---- */
-.hero-mountains {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-  border-radius: inherit;
-}
-
-.hero-mtn-layer {
-  position: absolute;
-  left: -5%;
-  right: -5%;
-  bottom: 0;
-  width: 110%;
-  will-change: transform;
-}
-
-.hero-mtn-far,
-.hero-mtn-mid,
-.hero-mtn-near {
-  height: 60%;
-}
-
-.hero-mtn-stars {
-  top: 0;
-  bottom: auto;
-  height: 100%;
-  background-image:
-    radial-gradient(1px 1px at 12% 18%, rgba(255, 214, 176, 0.55) 50%, transparent 60%),
-    radial-gradient(1px 1px at 27% 42%, rgba(255, 214, 176, 0.35) 50%, transparent 60%),
-    radial-gradient(1.5px 1.5px at 44% 12%, rgba(255, 214, 176, 0.5) 50%, transparent 60%),
-    radial-gradient(1px 1px at 63% 30%, rgba(255, 214, 176, 0.4) 50%, transparent 60%),
-    radial-gradient(1px 1px at 78% 18%, rgba(255, 214, 176, 0.55) 50%, transparent 60%),
-    radial-gradient(1.5px 1.5px at 88% 44%, rgba(255, 214, 176, 0.35) 50%, transparent 60%),
-    radial-gradient(1px 1px at 34% 60%, rgba(255, 214, 176, 0.28) 50%, transparent 60%),
-    radial-gradient(1px 1px at 55% 8%, rgba(255, 214, 176, 0.5) 50%, transparent 60%);
-  opacity: 0.7;
-}
-
-/* ---- Spider workflow ---- */
-.hero-workflow {
-  position: relative;
-  flex: 1;
-  width: 100%;
-  min-height: 460px;
-  padding: 1rem;
-  box-sizing: border-box;
-  /* Faint n8n canvas dot grid. */
-  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  background-size: 18px 18px;
-}
-
-.hero-workflow-wires {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.hero-node {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.55rem 0.75rem 0.55rem 0.55rem;
-  min-width: 138px;
-  background: linear-gradient(180deg, #1f1f1f, #171717);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 10px;
-  box-shadow: 0 8px 22px -12px rgba(0, 0, 0, 0.9),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  color: var(--ink);
-  z-index: 2;
-}
-
-.hero-node-agent {
-  padding: 0.75rem 0.95rem 0.75rem 0.75rem;
-  min-width: 168px;
-  border-color: rgba(245, 135, 30, 0.55);
-  box-shadow: 0 0 0 3px rgba(245, 135, 30, 0.12),
-    0 18px 45px -18px rgba(245, 135, 30, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  background: linear-gradient(180deg, #2a1a0a, #150b04);
-}
-
-.hero-node-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  background: #0f0f0f;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  flex-shrink: 0;
-}
-
-.hero-node-agent .hero-node-icon {
-  width: 40px;
-  height: 40px;
-  background: rgba(245, 135, 30, 0.14);
-  border-color: rgba(245, 135, 30, 0.4);
-}
-
-.hero-node-body {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  line-height: 1.15;
-}
-
-.hero-node-tag {
-  font-family: var(--font-sans);
-  font-size: 0.55rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-
-.hero-node-agent .hero-node-tag {
-  color: var(--accent);
-}
-
-.hero-node-title {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.hero-node-sub {
-  font-size: 0.6875rem;
-  color: var(--ink-soft);
-}
-
-/* ---- Standing-figure placeholder ---- */
-.hero-standing-figure {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* The proof claim: the support column's lead line. A sentence, not a bare
-   figure, so it is sized for presence without the display weight a single
-   number would carry. Its caveat is .hero-proof-note, just below. */
-.hero-claim {
+.hero-proof-num {
   font-family: var(--font-display);
-  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.5rem, 5vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
   color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 
-/* The caveat that travels with the number in .hero-claim. Deliberately
-   quiet — it has to be readable without competing with the claim — but
-   never hidden: an unqualified number is the thing this line exists to
-   prevent. */
+.hero-proof-text {
+  font-size: var(--text-base);
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.hero-proof-text strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* The caveat that travels with the 750+ figure. Quiet, but never hidden:
+   an unqualified number is the thing this line exists to prevent. */
 .hero-proof-note {
+  margin-top: var(--space-4);
   font-size: var(--text-sm);
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.72);
-  max-width: 46ch;
+  color: var(--muted);
+  max-width: 78ch;
 }
 
 .hero-proof-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: auto;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--ink);
-  white-space: nowrap;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-  transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+  color: var(--accent);
+}
+
+.hero-proof-link .arrow {
+  transition: transform var(--dur-slow) var(--ease-out);
 }
 
 .hero-proof-link:hover {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
+  color: var(--accent-hover);
+}
+
+.hero-proof-link:hover .arrow {
+  transform: translateX(4px);
 }
 
 /* Holds the primary CTA and, once a WhatsApp number exists, the quiet
@@ -1668,9 +1440,10 @@
   }
 }
 
-/* Hero copy entrance is now driven by the motion variants in Hero.jsx —
-   the CSS keyframe here is kept for legacy elements only, and no hero
-   selector still binds to it. */
+/* The hero entrance is driven by Framer Motion in Hero.jsx (heroContainer /
+   heroItem variants), which also respects prefers-reduced-motion through the
+   one <MotionConfig reducedMotion="user">. No CSS entrance here, so the two
+   never fight over opacity. */
 
 /* ============================================================
    Responsive — the ladder, widest first.
@@ -1718,19 +1491,21 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  /* Below 960 the showcase card stacks: portrait on top, workflow below,
-     both full width. */
-  .hero-showcase {
-    grid-template-columns: minmax(0, 1fr);
+  /* The cover crop stops leaving an empty half here: at this width the frame
+     is mostly face, so the copy runs full width and the scrim does the
+     contrast work the composition was doing above 960. */
+  .hero-grid {
+    max-width: 100%;
   }
 
-  .hero-showcase-portrait {
-    min-height: 320px;
-  }
-
-  .hero-showcase-workflow {
-    border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  .hero-scrim {
+    background: linear-gradient(
+      to bottom,
+      rgba(16, 16, 16, 0.62) 0%,
+      rgba(16, 16, 16, 0.36) 24%,
+      rgba(16, 16, 16, 0.74) 62%,
+      rgba(16, 16, 16, 0.95) 100%
+    );
   }
 
   .split-lede {
@@ -1740,6 +1515,11 @@
 
   .split-title {
     max-width: 22ch;
+  }
+
+  .hero-support {
+    gap: var(--space-3);
+    max-width: 44ch;
   }
 
   .work-grid {
@@ -1800,9 +1580,65 @@
 
 /* --- Nav collapses here too (see index.css) --- */
 @media (max-width: 810px) {
+  /* Own the screen. The copy is bottom-anchored, so every pixel the hero
+     does not spend on text is headroom the portrait gets to use. */
   .hero {
-    padding-block: calc(var(--nav-h) + var(--space-4))
+    min-height: 100svh;
+    padding-block: calc(var(--nav-h) + var(--space-3))
       clamp(2.5rem, 6vw, 3.5rem);
+  }
+
+  /* Below this width the photograph stops being a full-bleed ground and
+     becomes a band across the top. Note the band starts here at 810 but the
+     portrait crop only arrives at 600 (see Hero.jsx): between the two, the
+     band is landscape and so is the frame that fills it.
+
+     Stretched to the full height it could not win: the box is about
+     0.45:1 and even the 4:5 crop the <source> hands a phone is 0.8, so
+     a cover fit still ate a third of the width and put his face directly
+     behind the headline. Given its own 54% of the height the box lands
+     near 0.86:1, the crop very nearly fits it whole, and the copy gets
+     the bottom half to itself. The mask is what keeps the seam from
+     reading as an edge: the picture dissolves into the ground rather
+     than stopping on a line. */
+  .hero-photo {
+    /* The portrait is 720x900 (exactly 4:5). Giving the band that aspect and
+       starting it just under the nav shows the whole head — crown, full hair,
+       face — with clean headroom above it, instead of cover cropping the top
+       against the nav. Capped so tall content still fits; the mask dissolves
+       the bottom into the ground as before. */
+    top: calc(var(--nav-h) - 0.75rem);
+    height: min(56%, 100% - 23rem);
+    bottom: auto;
+    object-position: center top;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 58%,
+      rgba(0, 0, 0, 0.55) 82%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 58%,
+      rgba(0, 0, 0, 0.55) 82%,
+      transparent 100%
+    );
+  }
+
+  /* The horizontal ramp was for a composition with an empty left half.
+     There is no empty half here, so the scrim is purely vertical: light
+     over the face, solid under the copy. */
+  .hero-scrim {
+    background: linear-gradient(
+      to bottom,
+      rgba(16, 16, 16, 0.58) 0%,
+      rgba(16, 16, 16, 0.18) 26%,
+      rgba(16, 16, 16, 0.62) 52%,
+      rgba(16, 16, 16, 0.94) 74%,
+      rgba(16, 16, 16, 0.97) 100%
+    );
   }
 
   .hero-title {
@@ -1957,21 +1793,28 @@
   }
 }
 
-/* --- Portrait phones --- */
-@media (max-width: 600px) {
-  .hero-content {
-    gap: clamp(1.75rem, 6vw, 2.5rem);
-  }
-
-  .hero-showcase-portrait {
-    min-height: 260px;
-  }
-}
-
 @media (max-width: 480px) {
+  /* Own the first screen. This was min-height: 0, which left the hero at
+     its content height — 699px on a 844px phone — so the fold landed a
+     third of the way into the proof strip and the hero read as cut off.
+     svh (not vh) is the height with the browser chrome showing, which is
+     the state the page actually loads in.
+
+     Landscape phones are handled separately at the bottom of this file:
+     that rule comes later and still drops the hero to content height, so
+     this does not trap anyone in a 100svh hero on a short screen. */
+  .hero {
+    min-height: 100svh;
+  }
+
+  .hero-eyebrow {
+    margin-bottom: var(--space-3);
+  }
+
+  /* Stack the hero pair: each button claims its own row at 20rem, and
+     the text alternative sits under it rather than beside it. */
   .hero-actions {
     width: 100%;
-    justify-content: center;
   }
 
   .hero-cta,
@@ -2020,9 +1863,21 @@
   }
 }
 
-/* --- Short landscape (phone on its side, split-screen tablet) ---
-   The hero already flows naturally at content height in the new
-   composition, so no override is needed here. */
+/* --- Short landscape (phone on its side, split-screen tablet) --- */
+@media (max-height: 560px) and (max-width: 1080px) {
+  .hero {
+    min-height: 0;
+  }
+
+  /* A phone on its side is about 2.6:1. There is no band worth cutting out
+     of that, so the photograph goes back to being a full-bleed ground and
+     the scrim carries the contrast, exactly as it does above 810. */
+  .hero-photo {
+    height: 100%;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
 
 /* ============================================================
    Warm-glass pass — glassmorphism + soft depth + hero warmth,
@@ -2063,44 +1918,28 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-/* Honest credential/availability badge — a glass pill with a live pulse. */
+/* Availability line — a quiet editorial meta label, not a SaaS status pill.
+   No glass, no blinking dot, no off-brand green: a small letter-spaced line
+   with a static saffron marker, in the site's own type language. */
 .hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.6rem;
   width: fit-content;
-  margin-bottom: var(--space-4);
-  padding: 0.5rem 0.95rem;
-  border-radius: 999px;
+  margin-bottom: var(--space-5);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--ink-soft);
-  background: rgba(255, 255, 255, 0.06);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.13);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .hero-badge-dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: #34d399;
-  animation: badge-pulse 2.6s ease-out infinite;
-}
-
-@keyframes badge-pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55);
-  }
-  70% {
-    box-shadow: 0 0 0 9px rgba(52, 211, 153, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
-  }
+  background: var(--accent);
 }
 
 /* Hand-drawn annotation near the primary CTA — personality, desktop only. */
@@ -2136,4 +1975,12 @@
 /* Anchor the hand-drawn annotation to the actions row. */
 .hero-actions {
   position: relative;
+}
+
+/* The two hero proof cards stack on narrow phones, where side by side
+   leaves each too tight for its figure and its line of copy. */
+@media (max-width: 560px) {
+  .hero-proof-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

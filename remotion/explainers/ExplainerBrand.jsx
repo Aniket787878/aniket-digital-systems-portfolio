@@ -16,7 +16,7 @@ import { ChatBubble, Toast, EmailCard, SheetCard, CalendarCard, StickyNote, Chip
     2  paper  the chaos piles up: "Every enquiry, re-typed by hand."
     3  paper  "What if it ran itself?" the fragments snap into a flow that runs
     4  paper  proof: real captures of three running apps, then the counts
-    5  dusk   "Enquiries answered… Without anyone typing." and the offer
+    5  dusk   "Enquiries answered… Without anyone typing." and the contact card
 */
 
 /* Paper-world beats (frames local to the paper world). */
@@ -123,15 +123,8 @@ export function ExplainerBrand() {
         <IntroDusk L={L} />
       </Sequence>
       <Sequence from={OUTRO}>
-        <EndCard
-          frame={frame - OUTRO}
-          offerKey="sprint"
-          headline={'Enquiries answered.\nBookings confirmed.\n{Follow-ups sent.}\n{Without anyone typing.}'}
-          headlineSize={H > W ? 88 : 112}
-          hold={78}
-          price="from ₹40,000"
-          note="Live in 2 weeks. Fixed scope, fixed price."
-        />
+        {/* The card's own main line is the promise, so no headline runs before it. */}
+        <EndCard frame={frame - OUTRO} />
       </Sequence>
       <Sequence from={PAPER_IN} durationInFrames={PAPER_LEN}>
         <PaperWorld L={L} W={W} H={H} />

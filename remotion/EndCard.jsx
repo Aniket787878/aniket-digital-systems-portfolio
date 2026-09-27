@@ -2,36 +2,18 @@ import { AbsoluteFill, useVideoConfig, interpolate } from 'remotion'
 import * as data from '../src/data.js'
 import { C, SANS, Wordmark, rise, tween, clamp, easeInOut } from './shared.jsx'
 import { DuskScene } from './DuskScene.jsx'
-import { KineticText, PillLabel } from './KineticText.jsx'
+import { KineticText } from './KineticText.jsx'
 import { Icon } from './icons.jsx'
 
 /*
-  The closing card on every explainer: the offer, the call to action and
-  the contact line, on the dusk scene. Prices and timelines are read from
-  data.js `packages` (the site's source of truth) and only fall back to the
-  same values here if that file is mid-rewrite.
+  The closing card on every explainer: the promise, the call to action and
+  the contact line, on the dusk scene. No prices here: they live in the
+  site's pricing section, and the card's one job is to get the viewer in
+  touch.
 */
 
-const FALLBACK = {
-  sprint: { name: 'Ops Automation Sprint', price: '₹40k to ₹80k', timeline: 'Live in 2 weeks' },
-  assistant: { name: 'AI Assistant Build', price: '₹80k to ₹1.5L', timeline: 'Live in 3 weeks' },
-  tool: { name: 'Internal Tool / Dashboard', price: '₹1.5L to ₹3L', timeline: 'Live in 3 to 4 weeks' },
-}
-const MATCH = { sprint: /sprint/i, assistant: /assistant/i, tool: /internal tool/i }
-
-/* "₹40k – ₹80k" → "₹40k to ₹80k": ranges read as words on screen. */
-const words = (s) => String(s).replace(/\s*[–—]\s*/g, ' to ')
-
-export function offer(key) {
-  const pkgs = Array.isArray(data.packages) ? data.packages : []
-  const p = pkgs.find((x) => MATCH[key].test(x?.name || ''))
-  const f = FALLBACK[key]
-  return {
-    name: p?.name || f.name,
-    price: words(p?.price || f.price),
-    timeline: words(p?.timeline || f.timeline),
-  }
-}
+/* The card's main line; {braces} are the saffron words. */
+export const LINE = 'Enquiries answered.\nBookings confirmed.\n{Follow-ups sent.}\n{Without anyone typing.}'
 
 /* +91 9136582842 → +91 91365 82842 */
 function formatPhone(raw) {
@@ -43,21 +25,20 @@ export const CONTACT = {
   whatsapp: formatPhone(data.site?.whatsapp || '+91 9136582842'),
   email: data.site?.email || 'aniket.html@gmail.com',
 }
-export const CTA = 'Book a free 20-minute audit'
+export const CTA = 'Contact now'
 
 /*
   frame     local frame (0 = the end card starts; the dusk is already up)
-  headline  optional big line shown first, e.g. "Enquiries answered.\n{Follow-ups sent.}"
-  headlineSize  overrides the headline's type size (a four-line headline needs
-            less than the default to fit the frame)
+  headline  optional big line shown first, before the card replaces it
+  headlineSize  overrides the headline's type size
   hold      frames the headline holds before the card replaces it
-  price     overrides the price line (the brand film says "from ₹40,000")
-  note      overrides the timeline line
+  line      the card's main line (defaults to LINE)
+  price     optional line under the main line; nothing renders when absent
+  note      optional peach line under that; nothing renders when absent
 */
-export function EndCard({ frame, offerKey = 'sprint', headline, headlineSize, hold = 70, price, note, riseFrom = 0 }) {
+export function EndCard({ frame, headline, headlineSize, hold = 70, line = LINE, price, note, riseFrom = 0 }) {
   const { width: W, height: H } = useVideoConfig()
   const tall = H > W
-  const o = offer(offerKey)
   const cardAt = headline ? 16 + hold + 16 : 14
   const c = rise(frame, cardAt)
   const u = (k) => rise(frame, cardAt + k)
@@ -79,7 +60,7 @@ export function EndCard({ frame, offerKey = 'sprint', headline, headlineSize, ho
         <Wordmark size={tall ? 64 : 52} />
       </div>
 
-      {/* offer card */}
+      {/* contact card */}
       <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: tall ? 120 : 40 }}>
         <div
           style={{
@@ -98,15 +79,17 @@ export function EndCard({ frame, offerKey = 'sprint', headline, headlineSize, ho
             textAlign: tall ? 'center' : 'left',
           }}
         >
-          <div style={{ opacity: u(6), transform: `translateY(${(1 - u(6)) * 14}px)` }}>
-            <PillLabel dark size={28}>{o.name}</PillLabel>
-          </div>
-          <div style={{ marginTop: 30 }}>
-            <KineticText text={price || o.price} frame={frame} start={cardAt + 10} stagger={4} size={tall ? 112 : 120} align={tall ? 'center' : 'left'} lineHeight={1} />
-          </div>
-          <div style={{ marginTop: 22, fontSize: tall ? 38 : 40, fontWeight: 500, letterSpacing: '-0.025em', color: C.peach, opacity: u(18), transform: `translateY(${(1 - u(18)) * 14}px)` }}>
-            {note || `${o.timeline}. Fixed scope, fixed price.`}
-          </div>
+          <KineticText text={line} frame={frame} start={cardAt + 6} stagger={4} size={tall ? 76 : 84} align={tall ? 'center' : 'left'} lineHeight={1.04} />
+          {price && (
+            <div style={{ marginTop: 30 }}>
+              <KineticText text={price} frame={frame} start={cardAt + 10} stagger={4} size={tall ? 112 : 120} align={tall ? 'center' : 'left'} lineHeight={1} />
+            </div>
+          )}
+          {note && (
+            <div style={{ marginTop: 22, fontSize: tall ? 38 : 40, fontWeight: 500, letterSpacing: '-0.025em', color: C.peach, opacity: u(18), transform: `translateY(${(1 - u(18)) * 14}px)` }}>
+              {note}
+            </div>
+          )}
           <div style={{ height: 1, background: 'rgba(242,240,237,0.12)', margin: tall ? '48px 0 44px' : '44px 0 40px', transform: `scaleX(${u(24)})`, transformOrigin: tall ? '50% 50%' : '0 50%' }} />
           <div style={{ display: 'flex', flexDirection: tall ? 'column' : 'row', alignItems: 'center', justifyContent: 'space-between', gap: tall ? 40 : 36 }}>
             <div

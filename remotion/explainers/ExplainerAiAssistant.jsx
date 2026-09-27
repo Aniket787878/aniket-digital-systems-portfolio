@@ -39,7 +39,7 @@ const REPLY = 'Yes! We have evening slots on Tuesday and Thursday from 6 pm. Sha
 
 export function ExplainerAiAssistant() {
   return (
-    <Shell hook={'The same questions.\n{Every single day.}'} hookIcon="chat" paperAt={PAPER_AT} paperEnd={PAPER_END} offerKey="assistant">
+    <Shell hook={'The same questions.\n{Every single day.}'} hookIcon="chat" paperAt={PAPER_AT} paperEnd={PAPER_END}>
       {(f) => <Paper f={f} />}
     </Shell>
   )

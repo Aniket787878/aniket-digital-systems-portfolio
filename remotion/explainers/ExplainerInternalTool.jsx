@@ -90,7 +90,7 @@ function mix(a, b, t) {
 
 export function ExplainerInternalTool() {
   return (
-    <Shell hook={'Still running the business\n{out of a spreadsheet?}'} hookIcon="grid" paperAt={PAPER_AT} paperEnd={PAPER_END} offerKey="tool">
+    <Shell hook={'Still running the business\n{out of a spreadsheet?}'} hookIcon="grid" paperAt={PAPER_AT} paperEnd={PAPER_END}>
       {(f) => <Paper f={f} />}
     </Shell>
   )

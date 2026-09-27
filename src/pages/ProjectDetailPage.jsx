@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
 import { projects, site, images, proofTools } from '../data.js'
 import SystemDiagram from '../components/SystemDiagram.jsx'
+import AnimatedFlow from '../components/AnimatedFlow.jsx'
 import Media from '../components/Media.jsx'
 import Counter from '../motion/Counter.jsx'
 import { useDocumentTitle } from '../useDocumentTitle.js'
@@ -115,6 +116,19 @@ export default function ProjectDetailPage() {
             </div>
           ))}
         </dl>
+      )}
+
+      {/* The flow, in motion. An illustrative loop of the real stages —
+          captioned as an animation, not a screen recording, so it is never
+          read as footage of the running product. */}
+      {flow.length >= 2 && (
+        <figure className="case-flow-figure">
+          <AnimatedFlow stages={flow} />
+          <figcaption className="case-caption">
+            The flow in motion — an illustration of the stages, not a
+            recording of the running app.
+          </figcaption>
+        </figure>
       )}
 
       {/* The system, drawn. Captioned as a schematic on purpose: it is a

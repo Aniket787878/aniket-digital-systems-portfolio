@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { m } from 'motion/react'
-import { packages, carePlan, whatsappPrefill, explainers } from '../../data.js'
+import { packages, carePlan, whatsappPrefill, explainers, explainersReady } from '../../data.js'
 import { whatsappHref, hasWhatsApp } from '../../whatsapp.js'
 import { reveal, revealStagger, fadeUp } from '../../motion/variants.js'
 import Icon from '../../components/icons.jsx'
@@ -33,7 +33,7 @@ export default function Services() {
 
         <m.ul className="price-grid" {...revealStagger}>
           {packages.map((pkg) => {
-            const ex = explainers[pkg.explainer]
+            const ex = explainersReady ? explainers[pkg.explainer] : null
             return (
               <m.li
                 key={pkg.name}

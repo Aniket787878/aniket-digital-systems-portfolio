@@ -96,6 +96,11 @@ export const films = {
 /* Explainer films (remotion/explainers, rendered by
    scripts/render-videos.sh explainers). Illustrative motion design, not
    screen recordings, apart from the real captures they quote. */
+/* Flip to true once public/videos/explainers/ holds the rendered films.
+   Until then the explainer player and the "watch" buttons render nothing,
+   so the live site never shows an empty player. */
+export const explainersReady = false
+
 export const explainers = {
   brand: {
     title: 'What I build, in one minute',

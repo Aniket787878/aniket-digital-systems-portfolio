@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { m } from 'motion/react'
-import { explainers } from '../../data.js'
+import { explainers, explainersReady } from '../../data.js'
 import ScrollWords from '../../motion/ScrollWords.jsx'
 import Icon from '../../components/icons.jsx'
 import { reveal } from '../../motion/variants.js'
@@ -38,29 +38,31 @@ export default function Statement() {
           ]}
         />
 
-        <m.figure className="explainer" {...reveal}>
-          <div className="explainer-frame">
-            {playing ? (
-              <video src={film.src} poster={film.poster} controls autoPlay playsInline />
-            ) : (
-              <button
-                type="button"
-                className="explainer-poster"
-                onClick={() => setPlaying(true)}
-                aria-label={`Play: ${film.title}`}
-              >
-                <img src={film.poster} alt="" loading="lazy" />
-                <span className="explainer-play" aria-hidden="true">
-                  <Icon name="play" size={26} />
-                </span>
-              </button>
-            )}
-          </div>
-          <figcaption className="explainer-caption">
-            <span>{film.title}</span>
-            <span>The problem, the system, the result</span>
-          </figcaption>
-        </m.figure>
+        {explainersReady && (
+          <m.figure className="explainer" {...reveal}>
+            <div className="explainer-frame">
+              {playing ? (
+                <video src={film.src} poster={film.poster} controls autoPlay playsInline />
+              ) : (
+                <button
+                  type="button"
+                  className="explainer-poster"
+                  onClick={() => setPlaying(true)}
+                  aria-label={`Play: ${film.title}`}
+                >
+                  <img src={film.poster} alt="" loading="lazy" />
+                  <span className="explainer-play" aria-hidden="true">
+                    <Icon name="play" size={26} />
+                  </span>
+                </button>
+              )}
+            </div>
+            <figcaption className="explainer-caption">
+              <span>{film.title}</span>
+              <span>The problem, the system, the result</span>
+            </figcaption>
+          </m.figure>
+        )}
       </div>
     </section>
   )

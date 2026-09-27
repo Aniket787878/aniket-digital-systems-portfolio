@@ -211,9 +211,8 @@ after the blocking event ends rather than a whole session later. Every block in
 it is placed by clock arithmetic from constants at the top of the drawing, so
 the picture cannot drift out of agreement with the prose beside it.
 
-`site.heroProof` quotes this project and was restated with it. Its previous
-claim — two hours of booking admin down to thirty minutes — was an unaudited
-business number and is gone.
+The hero no longer quotes this project (`site.heroProof` was removed
+2026-09-27); the brand explainer film carries the proof instead.
 
 ## Home page composition
 
@@ -229,7 +228,7 @@ that order fixed. The reasoning is repeated in a comment in `HomePage.jsx`.
 
 | # | Band | File in `src/pages/home/` | Reads from |
 |---|---|---|---|
-| 1 | Hero (photographic ground; a top band below 810px) | `Hero.jsx` | `site.heroProof`, `whatsappPrefill.hero` |
+| 1 | Hero (dusk scene with the brand explainer; poster on phones) | `Hero.jsx` | `site.headline`, `explainers.brand`, `whatsappPrefill.hero` |
 | 1b | Proof strip — who it is for, then the stack | `ProofStrip.jsx` | `proofTools`. The `.proof-lede` ICP line is hardcoded here; it was the hero lede until the hero was cut to four elements |
 | 2 | Selected work | `Work.jsx` | `projects` (incl. `diagram`) |
 | 3b | Testimonials | `Testimonials.jsx` | `testimonials` (empty → honest slot), `social` (GitHub) |

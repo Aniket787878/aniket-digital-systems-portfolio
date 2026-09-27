@@ -202,14 +202,15 @@ export const site = {
      the second button. See components/BookingCta.jsx. */
   bookingUrl: '',
 
-  /* Positioning, in one place. Clinics and care practices first (therapy,
-     physio, wellness, dental), the agencies that serve them second. The
-     hero, the meta description and the OG card all read from here. */
-  headline: ['The system your clinic runs on.', 'Built end to end. Solo.'],
+  /* Positioning, in one place: service businesses broadly (clinics,
+     studios, agencies, growing teams). The clinic system is the proof,
+     not the market. The hero, the meta description, the JSON-LD and the
+     OG card (scripts/render-og.mjs) all read from here. */
+  headline: ['The systems your business runs on.', 'Built end to end. Solo.'],
   subtitle:
-    'Booking, intake, follow-ups and AI notes, built and run by one person, live in weeks. For clinics and care practices, and the agencies that serve them.',
+    'Booking, intake, follow-ups, payments and AI, built and run by one person, live in weeks. For clinics, studios, agencies and growing teams.',
   tagline:
-    'Booking, intake, follow-ups and AI notes for clinics and care practices, built and run by one person, live in weeks.',
+    'Booking, intake, follow-ups, payments and AI for clinics, studios, agencies and growing teams, built and run by one person, live in weeks.',
 
   /* Shown beside the prices. A promise, so it lives with the data it
      qualifies rather than in a component. */
@@ -233,8 +234,8 @@ export const site = {
      makes them awkward to separate by accident. If project 01's outcome
      is ever restated, restate this with it. */
   heroProof: {
-    claim: 'Over twelve hundred client records, eleven therapists, one CRM the clinic runs its day on.',
-    note: 'From a live clinic CRM: the client and therapist counts are row counts from its production database, not an estimate.',
+    claim: 'An 11-therapist clinic runs its day on a system I built.',
+    note: 'The therapist count is a row count from the clinic’s live production database, not an estimate.',
     slug: 'therapist-pwa',
     linkLabel: 'See the system'
   }
@@ -243,13 +244,13 @@ export const site = {
 /* Title, description and share card for index.html. vite.config.js writes
    these into the <head> at build time, together with site.origin. */
 export const seo = {
-  title: 'Clinic systems, built end to end · Aniket',
+  title: 'Business systems, built end to end · Aniket',
   description:
-    'Booking, intake, follow-ups and AI notes for clinics and care practices (therapy, physio, wellness, dental) and the agencies that serve them. Built and run by one person, live in weeks.',
-  ogTitle: 'The system your clinic runs on. Built end to end, solo.',
+    'Booking, intake, follow-ups, payments and AI for clinics, studios, agencies and growing teams. Built and run by one person, live in weeks.',
+  ogTitle: 'The systems your business runs on. Built end to end, solo.',
   ogImage: '/og.png',
   ogImageAlt:
-    'The system your clinic runs on. Built end to end, solo. Aniket builds booking, intake, follow-ups and AI notes for clinics.'
+    'The systems your business runs on. Built end to end, solo. Aniket builds booking, intake, follow-ups, payments and AI for service businesses.'
 }
 
 /*
@@ -269,7 +270,7 @@ export const founder = {
   /* One honest paragraph. Asserts only what the case studies, pricing and
      process on the rest of the site already stand behind. */
   intro:
-    'I build the software clinics and care practices actually run on: booking, intake, follow-ups and AI notes, so the work stops living in WhatsApp threads and spreadsheets. It started with the system an eleven-therapist clinic needed to stop drowning in admin, and it is the same shape of problem in a physio, wellness or dental practice, and for the agencies that serve them. You work with the person who builds it, and you own what ships.',
+    'I build the software service businesses actually run on: booking, intake, follow-ups, payments and AI, so the work stops living in WhatsApp threads and spreadsheets. It started with the system an eleven-therapist clinic needed to stop drowning in admin, and it is the same shape of problem in a studio, an agency or a growing team. You work with the person who builds it, and you own what ships.',
 
   /* Aniket's own story — how he got here, what he did before — is his to
      write. Left empty on purpose rather than invented; the About page
@@ -308,7 +309,7 @@ export const founder = {
      stays out. */
   quickFacts: [
     { label: 'Based', value: 'India · remote worldwide' },
-    { label: 'Focus', value: 'Clinic booking, intake, follow-ups, AI notes' },
+    { label: 'Focus', value: 'Booking, intake, follow-ups, payments, AI' },
     { label: 'Core stack', value: 'React · TypeScript · Node · Postgres · n8n · Claude' },
     { label: 'Availability', value: 'Two new builds a month' }
   ]
@@ -336,7 +337,7 @@ export const testimonials = []
   Unused while `site.whatsapp` is empty — see components/WhatsAppCta.jsx.
 */
 export const whatsappPrefill = {
-  hero: 'Hi Aniket, I saw your site. Can we talk about the bookings at my clinic?',
+  hero: 'Hi Aniket, I saw your site. Can we talk about a system for my business?',
   /* The free-audit entry point (docs/research/06, gap G5) — highest-intent
      top-of-funnel opener, in the buyer's voice. */
   audit:
@@ -1052,7 +1053,7 @@ export const process = [
 export const faq = [
   {
     q: 'How long does a build take?',
-    a: 'An Automation Quick-Win is live in 5 days. An Ops Automation Sprint is live in two weeks. Larger systems (a booking platform, a full clinic operations layer) run three to five weeks depending on how many people and tools they touch.'
+    a: 'An Automation Quick-Win is live in 5 days. An Ops Automation Sprint is live in two weeks. Larger systems (a booking platform, a full operations layer for a clinic, studio or agency) run three to five weeks depending on how many people and tools they touch.'
   },
   {
     q: 'What does it cost?',
@@ -1079,7 +1080,7 @@ export const faq = [
   },
   {
     q: 'Is client data safe?',
-    a: 'Client records stay on your own accounts and servers, and access is checked on the server, not just hidden in the screen. The clinic system on this site keeps its data behind a private service the browser never touches.'
+    a: 'Client records stay on your own accounts and servers, and access is checked on the server, not just hidden in the screen. The Therapist PWA on this site keeps its data behind a private service the browser never touches.'
   }
 ]
 
@@ -1087,7 +1088,8 @@ export const footerMenu = [
   { label: 'Home', to: '/' },
   { label: 'Projects', to: '/projects' },
   { label: 'About', to: '/about' },
-  { label: 'Get in touch', to: '/contact' }
+  { label: 'Get in touch', to: '/contact' },
+  { label: 'Privacy', to: '/privacy' }
 ]
 
 /* Set `href` to go live. Empty entries are skipped, not rendered dead. */

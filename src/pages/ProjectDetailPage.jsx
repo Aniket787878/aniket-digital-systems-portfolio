@@ -374,10 +374,10 @@ export default function ProjectDetailPage() {
       )}
 
       <section className="case-cta">
-        <h2 className="case-cta-title">Want this running in your practice?</h2>
+        <h2 className="case-cta-title">Want this running in your business?</h2>
         <p className="case-cta-body">
           Tell me which part of your week is still on WhatsApp threads and
-          spreadsheets: bookings, intake, follow-ups or notes. In 15 minutes I will
+          spreadsheets: bookings, intake, follow-ups or payments. In 15 minutes I will
           tell you what automating it would take, what it costs and the date it goes
           live.
         </p>

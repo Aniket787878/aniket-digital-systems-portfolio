@@ -91,8 +91,8 @@ export default function AboutPage() {
       <div className="about-cta">
         <h2 className="about-cta-title">Tell me which part is breaking.</h2>
         <p className="about-cta-body">
-          {site.availability} If your clinic&rsquo;s bookings, intake,
-          follow-ups or notes are running on WhatsApp threads and
+          {site.availability} If your business&rsquo;s bookings, intake,
+          follow-ups or payments are running on WhatsApp threads and
           spreadsheets, that&rsquo;s the conversation to start.
         </p>
         <div className="about-cta-actions">

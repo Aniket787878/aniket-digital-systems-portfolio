@@ -27,14 +27,14 @@ function jsonLd() {
         '@id': abs('/#person'),
         name: 'Aniket',
         url: abs('/'),
-        jobTitle: 'Systems builder for clinics and care practices',
+        jobTitle: 'Digital systems builder for service businesses',
         description: site.subtitle,
         address: { '@type': 'PostalAddress', addressCountry: 'IN' },
         knowsAbout: [
-          'Clinic operations software',
           'Booking and scheduling systems',
           'Client intake and consent workflows',
-          'AI clinical note drafting',
+          'Payments integration',
+          'AI assistants and document drafting',
           'Operations automation',
           'Internal tools and dashboards',
           'n8n',
@@ -47,7 +47,7 @@ function jsonLd() {
       {
         '@type': 'ProfessionalService',
         '@id': abs('/#service'),
-        name: 'Aniket · Systems for clinics and care practices',
+        name: 'Aniket · Digital Systems Builder',
         url: abs('/'),
         image: abs(seo.ogImage),
         description: seo.description,
@@ -76,7 +76,7 @@ function jsonLd() {
   return JSON.stringify(graph).replace(/</g, '\\u003c')
 }
 
-const routes = ['/', '/projects', '/about', '/contact', ...projects.map((p) => `/projects/${p.slug}`)]
+const routes = ['/', '/projects', '/about', '/contact', '/privacy', ...projects.map((p) => `/projects/${p.slug}`)]
 
 function sitemap() {
   const today = new Date().toISOString().slice(0, 10)

@@ -51,7 +51,7 @@ ${svg(NEAR, { c: '#0b0b0c' }, 110)}
 <div class="copy">
   <span class="brand"><svg width="26" height="26" viewBox="0 0 16 16" fill="none"><path d="M3.5 10.5a4.5 4.5 0 0 1 9 0z" fill="#f5871e"/><path d="M1.5 12.5h13" stroke="#ffc89a" stroke-width="1.4" stroke-linecap="round"/></svg>Aniket</span>
   <h1><span>${line1}</span><span class="warm">${line2}</span></h1>
-  <p>Booking, intake, follow-ups and AI notes for clinics and care practices.</p>
+  <p>Booking, intake, follow-ups, payments and AI, for service businesses.</p>
 </div></div></body></html>`
 
 const browser = await chromium.launch()

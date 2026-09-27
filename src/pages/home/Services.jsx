@@ -33,7 +33,7 @@ export default function Services() {
     <section className="paper services" id="services">
       <div className="container">
         <m.header className="center-head" {...reveal}>
-          <PillLabel icon="rupee">Services</PillLabel>
+          <PillLabel icon="chart">Services</PillLabel>
           <h2 className="h2">
             Fixed scope. Fixed price.
             <br />

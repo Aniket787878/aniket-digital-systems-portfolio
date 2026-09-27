@@ -33,7 +33,7 @@ export const images = {
   },
 
   projects: {
-    'mindset-workspace': '',
+    'therapist-pwa': '',
     udaan: '',
     /* The first real screenshots on the site — Signet, Relay and Prospector
        are self-built tools, so unlike the two client systems their running
@@ -67,9 +67,9 @@ export const site = {
      makes them awkward to separate by accident. If project 01's outcome
      is ever restated, restate this with it. */
   heroProof: {
-    claim: 'Seven hundred and fifty clients, eleven therapists, one app the whole clinic runs on.',
-    note: 'From a live practice-management platform — the client and therapist counts are row counts from its production database, not an estimate.',
-    slug: 'mindset-workspace',
+    claim: 'Over twelve hundred client records, eleven therapists, one CRM the clinic runs its day on.',
+    note: 'From a live clinic CRM — the client and therapist counts are row counts from its production database, not an estimate.',
+    slug: 'therapist-pwa',
     linkLabel: 'See the system'
   }
 }
@@ -174,87 +174,96 @@ export const whatsappPrefill = {
 export const projects = [
   {
     index: '01',
-    slug: 'mindset-workspace',
+    slug: 'therapist-pwa',
     diagram: 'platform',
-    title: 'Mindset Workspace PWA App',
+    title: 'Therapist PWA App',
     summary:
-      'A full practice-management app for a multi-therapist mental-health clinic — the one place a client is booked, seen, recorded, documented, billed and followed up. It installs like a phone app, works offline, and records each session on the device.',
+      'Three apps under one roof for a multi-therapist mental-health clinic: the staff CRM the team runs its day on (tasks, client records, the booking desk, consent), the public forms clients fill in, and a client-facing recovery-companion PWA. All installable, with desktop push, fronting a private data service that owns the clinic’s data.',
     metrics: [
-      { n: '750+', label: 'clients imported and in daily use' },
-      { n: '11', label: 'therapists working out of one system' },
-      { n: '4', label: 'clean layers every feature passes through' },
+      { n: '1,200+', label: 'client records managed day to day' },
+      { n: '11', label: 'therapists on one system' },
+      { n: '12', label: 'serverless functions — the whole API, by design' },
       { n: '1', label: 'person designed, built and ships it' }
     ],
     role:
-      'Sole designer and engineer — the app, the offline layer, the serverless API, the self-hosted backend, every automation and the payment integration.',
-    flow: ['Book', 'See', 'Record', 'Document', 'Bill', 'Follow up'],
+      'Sole designer and engineer — both React apps, the serverless API, the private data service, the access model and every automation behind it.',
+    flow: ['Enquire', 'Book', 'See', 'Note', 'Consent', 'Follow up'],
     stack: [
-      'React',
-      'TypeScript',
-      'Tailwind CSS',
-      'PWA — offline + on-device recording',
+      'React 19',
+      'Vite',
+      'TanStack Router & Query',
+      'Zustand',
+      'Radix UI',
+      'Tailwind CSS v4',
+      'PWA — installable + web push',
+      'Node data service',
+      'PostgreSQL',
       'Vercel serverless',
-      'Oracle Cloud VPS (Docker + Postgres)',
+      'Oracle Cloud VM',
       'n8n',
-      'Google Calendar API',
-      'MSG91 (WhatsApp / SMS)',
-      'HDFC SmartGateway (UPI)',
-      'Anthropic API'
+      'Google Calendar / Meet',
+      'MSG91 (WhatsApp)',
+      'Google Gemini',
+      'IndexedDB (offline chunk queue)'
     ],
     problem:
-      'A busy clinic was running on a pile of disconnected tools — a calendar here, a spreadsheet of clients there, session notes typed up from memory after hours, payments chased by hand. Nothing talked to anything else, so the same client could be double-booked, a note could go missing, and nobody could see the whole picture in one place. What the practice needed was a single system that carried a client all the way through — from the first booking to the follow-up — without anyone re-keying the same details five times.',
+      'A busy clinic was running on a pile of disconnected tools — a calendar here, a spreadsheet of clients there, session notes typed up from memory after hours, follow-ups slipping through the cracks. Nothing talked to anything else, so the same client could be double-booked, a note could go missing, and nobody could see the whole picture in one place. What the practice needed was a single system its whole team runs on — from the first enquiry to the follow-up — without anyone re-keying the same details five times, and without client records ever sitting somewhere they should not.',
     system: [
-      'One installable app the whole clinic runs on — it works offline and records the session right on the device, so a dropped connection never costs a note',
-      'A booking engine with real-time availability, custom and forced times, and three session modes (in person, telephonic, online), kept in step with each therapist’s Google Calendar',
-      'A client record that is hard to mess up — several contacts per person, soft-delete instead of real delete, and duplicate detection that spots the same phone number and offers to merge',
-      'A recording-to-note pipeline: the session is captured, broken into chunks, transcribed, and turned into a structured clinical note for the therapist to check — the writing-up that used to eat the evening',
-      'A per-person permission system that decides exactly what each role can do — who can edit a client, force a booking, see the whole client book — enforced on the server, not just hidden in the screen',
-      'Calendar and messaging kept in visual workflows, and payments taken over a bank gateway with every message signed and verified end to end'
+      'Three apps in one repo — the staff CRM, the public forms clients fill in (enquiry, screening, consent, booking), and a client-facing recovery-companion PWA — all fronting a private data service, so client data never lives in the browser tier',
+      'The flagship: a session-recording → clinical-note pipeline on Google Gemini that replaces a paid tool at a fraction of the cost — the browser records in 60-second chunks queued in IndexedDB with retries, each is transcribed and its audio dropped, and on stop the full transcript is written into a draft note the therapist reviews',
+      'Guardrails around the AI, because it fails quietly otherwise: each chunk is a complete audio file (a headerless one makes the model invent dialogue), a degenerate-loop check catches the transcriber repeating itself, and a note that is not well-formed English fails loudly so the therapist re-drafts instead of trusting a fabrication',
+      'A booking desk that runs each action through visual n8n workflows to Google Calendar / Meet and WhatsApp, with real-time availability, three session modes (in person, telephonic, online) and recurring bookings capped and gated server-side',
+      'Around 1,200 client records with therapist assignment, case notes, rolling AI case summaries regenerated after each note, and group sessions with a shared note read into every attendee’s file — visibility scoped per therapist and enforced on the server, down to a notes-locked flag',
+      'A consent pipeline (client signs, a sealed PDF generated server-side, stored, emailed and countersigned from a forms queue), a per-person access model checked on every request, tasks with owners and repeats, and desktop push through the service worker and VAPID',
     ],
     features: [
       {
-        title: 'Booking & availability',
-        text: 'Real-time slots, custom and forced times, and three session modes, all reconciled against each therapist’s Google Calendar.'
+        title: 'Session recording → AI clinical note',
+        text: 'The therapist records; a chunked Gemini pipeline transcribes as it goes and drafts a clinical note within about a minute of Stop — with loop- and hallucination-guards that fail loudly rather than invent a note.'
       },
       {
-        title: 'Client management',
-        text: 'Add, edit and soft-delete; several contacts per client; duplicate detection and merge by phone number; and a bulk import that brought 750+ existing clients in at once.'
+        title: 'Booking desk',
+        text: 'Real-time availability, three session modes and recurring bookings, each action driven through n8n to Google Calendar / Meet and WhatsApp — capped and gated on the server.'
       },
       {
-        title: 'Session recording → clinical note',
-        text: 'Records in the app on the device, transcribes it, and drafts a structured clinical note for the therapist to review — instead of writing every note from memory.'
+        title: 'Clients, groups & consent',
+        text: 'Around 1,200 client records with case notes and rolling AI summaries, group sessions with a shared note, and a consent pipeline that signs, seals and countersigns a server-generated PDF.'
       },
       {
-        title: 'The front desk, and everything around it',
-        text: 'A day register, task management with owners and email alerts, group sessions, public enquiry / screening / consent forms, a WhatsApp helper bot, and role-scoped onboarding for new therapists.'
+        title: 'Roles, tasks & the client PWA',
+        text: 'A granular per-person access model enforced server-side, tasks with owners and repeats, desktop push, and a separate client-facing recovery-companion PWA (check-ins, craving protocol, crisis help).'
       }
     ],
     decisions: [
       {
-        title: 'Record on the device, not in the cloud first',
-        text: 'Sessions are captured on the device and keep working offline, so a weak clinic connection never loses a recording or a note mid-session.'
+        title: 'The AI note pipeline is guarded, not trusted',
+        text: 'The transcriber and the note model both fail loudly: chunks are whole audio files (a headerless one makes the model fabricate dialogue), a degenerate-loop check catches runaway repetition, and a malformed note is rejected. Once the model tried to write a cardiology work-up for a patient who did not exist — the guard is why no therapist ever saw it.'
+      },
+      {
+        title: 'The riskiest feature is deliberately unbuilt',
+        text: 'The client app has no AI coach yet, on purpose — a chatbot talking to someone in acute craving does not ship without crisis detection in front of every reply, a clinician-reviewed prompt, and an agreed answer to who responds when a client discloses self-harm at 2am. Until then, Help links to live 24/7 meetings.'
+      },
+      {
+        title: 'Twelve serverless functions, on purpose',
+        text: 'The entire API is exactly twelve serverless functions — the host’s free-tier ceiling. New features add an action to an existing handler instead of a new file, so the whole thing keeps running at no infra cost.'
+      },
+      {
+        title: 'The browser never touches the data tier',
+        text: 'A private data service owns Postgres, email, PDF generation, messaging and the AI calls, reached only through a tunnel; the public apps call it through a thin serverless layer, so real client data never sits in the browser.'
       },
       {
         title: 'Permissions live on the server',
-        text: 'Who can do what is checked on the server, not just hidden in the screen — so a hidden button is genuinely locked, not merely out of sight.'
-      },
-      {
-        title: 'Stay inside the free tier, on purpose',
-        text: 'The serverless API was deliberately kept under the host’s handler limit by grouping actions instead of one file per endpoint, and the backend runs on a single self-hosted box — no Kubernetes — because the practice needs neither the bill nor the complexity.'
-      },
-      {
-        title: 'Change the database like it is production, because it is',
-        text: 'Schema changes are rehearsed inside a transaction before they land, shipping is checked through the real screens and endpoints rather than a passing query, and the codebase carries a living map updated in the same commit as the change.'
+        text: 'Who can do what — edit a client, work the front desk, read peer-support notes, see the whole client book — is checked on the server, so a hidden button is genuinely locked, not merely out of sight.'
       }
     ],
     outcome: [
-      'The whole practice — booking, clients, notes, tasks, billing, follow-up — runs from one app instead of a scatter of tools',
-      '750+ clients across 11 therapists moved in and are managed day to day',
-      'Writing up a session went from a from-memory chore to checking a draft the app already prepared',
-      'One person can keep the entire system running because every feature is built the same way and documented as it ships'
+      'The clinic’s day — tasks, clients, bookings, consent and forms — runs from one installable app instead of a scatter of tools',
+      'Around 1,200 client records across 11 therapists, managed day to day with assignment-scoped access',
+      'Writing up a session became checking an AI-drafted summary instead of typing it from memory',
+      'One person keeps the whole thing running: two apps, a private data service, and the automations behind them'
     ],
     outcomeNote:
-      'The client and therapist counts are row counts from the live system. The rest describes the change from the clinic’s side — directional, not an audited metric.'
+      'Client and therapist counts are row counts from the live system. The rest describes the change from the clinic’s side — directional, not an audited metric.'
   },
   {
     index: '02',
@@ -262,7 +271,7 @@ export const projects = [
     diagram: 'journey',
     title: 'Udaan — Online Recovery-Care Platform',
     summary:
-      'A 12-week online recovery program that runs three things at once: a self-paced course that teaches, live one-to-one and group therapy that treats, and an always-on safety layer that never switches off — all behind a private, gated portal. Built for a clinical provider.',
+      'A 12-week online recovery program that runs three things at once: a self-paced course that teaches, live one-to-one and group therapy that treats, and an always-on safety layer that never switches off — all behind a private, gated portal.',
     metrics: [
       { n: '12', label: 'week program, from intake to graduation' },
       { n: '10', label: 'stages in the client journey, each a real screen' },
@@ -273,24 +282,25 @@ export const projects = [
       'Sole designer and engineer — the client journey, the course engine, all four portals, the private data model, every integration and the infrastructure.',
     flow: ['Discover', 'Triage', 'Screen', 'Assess', 'Pay', 'Enrol'],
     stack: [
-      'Next.js',
-      'React',
+      'Next.js 16',
+      'React 19',
       'TypeScript',
-      'Tailwind CSS',
+      'Tailwind CSS v4',
+      'shadcn/ui',
       'PostgreSQL (Drizzle ORM)',
       'Better-Auth',
-      'Cloudflare Workers',
+      'Cloudflare Pages (@opennextjs/cloudflare)',
       'Cloudflare R2',
+      'Cloudflare Tunnel',
       'n8n',
       'Cal.com',
-      'Razorpay',
-      'Tailscale'
+      'Razorpay'
     ],
     problem:
       'Recovery care is not a video course, and it is not only therapy — it is both at once, with a safety net underneath. The hard part is holding all three together honestly. A course that lets someone race ahead without ever speaking to a therapist is just content; therapy with no structure between sessions loses people in the gaps; and a platform handling this kind of health data cannot let the wrong person see the wrong thing, ever. The job was to build one platform where the course, the live care and the safety layer run together — and where the clinical rules are actually enforced, not just printed in a handbook.',
     system: [
       'A ten-stage journey from stranger to enrolled client: someone discovers the site, fills a triage form (which creates a lead, not yet an account), a coordinator books a screening call, the person is assessed, pays, and only then is given a portal account — each stage a real working screen with its own data and admin tools',
-      'A course engine of 12 modules across four movements — Understand, Regulate, Rebuild, Become — that unlocks by doing the work, never by a score',
+      'A course engine of 12 modules and 48 lessons across four movements — Understand, Regulate, Rebuild, Become — worksheets instead of scored quizzes, unlocking by doing the work rather than by a grade',
       'Clinical gates that pause the course until a required therapist session actually happens — and the rule is enforced in one place, so even a hand-made link hits the same lock as a button on the screen',
       'Course video and audio served through short-lived signed links that check enrolment, order and the gates before anything plays',
       'A privacy boundary built into the data itself: a family member sees the shape of the program but never the client’s journal, check-ins or notes, and a flagged journal entry sends the alert, never the words',
@@ -353,6 +363,10 @@ export const projects = [
       {
         title: 'Manual-first where the tools cannot be trusted',
         text: 'The video tiers in use do not reliably report who attended, so attendance is taken by hand and topped up by a signed webhook — an honest default beats a number that looks precise and is wrong.'
+      },
+      {
+        title: 'No model where a template will do',
+        text: 'The program “builds” fourteen artifacts for each client — the six-part relapse-prevention plan, the letter to future self — but none use a model: each is assembled verbatim from worksheet answers the client already wrote, and the curriculum is real clinical content, not generated. In recovery care, a deterministic artifact you can trust beats a plausible one you cannot.'
       },
       {
         title: 'Cost-constrained by choice',

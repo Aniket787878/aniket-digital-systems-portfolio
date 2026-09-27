@@ -600,7 +600,7 @@ function Assistant() {
   )
 }
 
-/* 05 — Mindset Workspace. The point is the path every feature takes —
+/* 05 — Therapist PWA App. The point is the path every feature takes —
    four clean layers from the screen down to the data — and the capability
    check that gates who is allowed to do what. The bottom row is where the
    server layer actually reaches: calendar, messaging, payments, and the

@@ -94,10 +94,10 @@ export default function Hero() {
         >
           <div className="hero-proof-row">
             <div className="hero-proof-card">
-              <span className="hero-proof-num">750+</span>
+              <span className="hero-proof-num">1,200+</span>
               <p className="hero-proof-text">
-                clients across <strong>11 therapists</strong>, running daily on
-                one platform I designed, built and ship.
+                client records across <strong>11 therapists</strong>, in daily
+                use on one system I designed, built and ship.
               </p>
               <Link
                 to={`/projects/${heroProof.slug}`}

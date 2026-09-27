@@ -339,6 +339,10 @@
 .dusk-card-video {
   display: block;
   width: 100%;
+  /* The phone still is an <img> with height="900": without height: auto
+     that attribute wins, aspect-ratio is ignored, and object-fit crops a
+     900px-tall slice out of the middle of the screenshot. */
+  height: auto;
   aspect-ratio: 16 / 10;
   object-fit: cover;
   background: #111;

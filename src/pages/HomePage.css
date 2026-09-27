@@ -533,7 +533,8 @@
 
 .card-media {
   position: relative;
-  aspect-ratio: 16 / 10;
+  /* 16:9, the framed loops' own ratio, so the wordmark and tag aren't cropped */
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 14px;
   background: #0f0f10;

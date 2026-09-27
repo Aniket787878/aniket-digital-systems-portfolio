@@ -144,7 +144,7 @@ export default function ProjectDetailPage() {
           />
           <figcaption className="case-caption">
             {film.kind === 'real'
-              ? 'A walkthrough of the running app. Every screen is a real capture; only the camera moves, pointer and captions are added.'
+              ? 'A walkthrough of the running app. Every screen is a real capture; only the framing, zoom and captions are added.'
               : 'A schematic of the real flow. The client’s screens hold client records, so they are drawn as wireframes rather than shown.'}
           </figcaption>
         </figure>

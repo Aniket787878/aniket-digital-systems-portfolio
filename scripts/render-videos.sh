@@ -47,7 +47,10 @@ for slug in consent-signer shared-inbox lead-research; do
   loop "Clip-$slug" "$OUT/clips/$slug.mp4" 0.8
   # frame 0 is the loop's wide frame, so the poster and the first frame match
   npx remotion still "$ENTRY" "Clip-$slug" "$OUT/posters/$slug-clip.jpg" --frame=0 \
-    --scale=0.8 --image-format=jpeg --jpeg-quality=80 "${BROWSER[@]}" --log=error
+    --scale=0.8 --image-format=jpeg --jpeg-quality=80 "${BROWSER[@]}" --log=error  # the /projects card: the same loop framed like the platform films
+  loop "Framed-$slug" "$OUT/clips/$slug-framed.mp4" 0.6
+  npx remotion still "$ENTRY" "Framed-$slug" "$OUT/posters/$slug-framed.jpg" --frame=40 \
+    --scale=0.6 --image-format=jpeg --jpeg-quality=82 "${BROWSER[@]}" --log=error
 done
 for slug in therapist-pwa care-journey; do
   [ -n "$ONLY" ] && [ "$ONLY" != "$slug" ] && continue

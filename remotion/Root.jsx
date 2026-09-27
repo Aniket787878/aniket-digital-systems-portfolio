@@ -2,6 +2,7 @@ import { Composition } from 'remotion'
 import { Walkthrough, walkthroughLength } from './Walkthrough.jsx'
 import { PlatformFilm, platformLength } from './PlatformFilm.jsx'
 import { Clip, clipLength } from './Clip.jsx'
+import { FramedClip, FRAMED, framedLength } from './FramedClip.jsx'
 import { WALKTHROUGHS } from './walkthroughs.js'
 import { SCENES } from './platformScenes.jsx'
 import { ExplainerBrand, BRAND_LEN } from './explainers/ExplainerBrand.jsx'
@@ -27,7 +28,8 @@ export const CARD_PICKS = {
   Compositions, rendered by scripts/render-videos.sh:
     Walkthrough-<slug>  1920x1080 case-study film, real captures
     Platform-<slug>     1920x1080 schematic film for the client platforms
-    Clip-<slug>         1440x900 silent loop for the project cards
+    Clip-<slug>         1440x900 silent loop (raw viewport), kept for reuse
+    Framed-<slug>       1920x1080 framed card loop for the three demos
     HeroReel            1440x900 silent loop for the home hero
     Explainer-<name>    1920x1080 illustrative explainers (brand, ops-sprint,
                         ai-assistant, internal-tool) in remotion/explainers/
@@ -53,6 +55,18 @@ export const RemotionRoot = () => (
         id={`Platform-${slug}`}
         component={PlatformFilm}
         durationInFrames={platformLength(slug)}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{ slug }}
+      />
+    ))}
+    {Object.keys(FRAMED).map((slug) => (
+      <Composition
+        key={`f-${slug}`}
+        id={`Framed-${slug}`}
+        component={FramedClip}
+        durationInFrames={framedLength(slug)}
         fps={30}
         width={1920}
         height={1080}

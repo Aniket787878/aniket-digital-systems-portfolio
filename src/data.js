@@ -59,6 +59,9 @@ export const images = {
                  records, so the film is a labelled wireframe of the real
                  flow and never presents itself as a recording.
    `clip` is the short silent loop the project cards play on hover.
+   `framed` is the same idea framed like the platform films (wordmark,
+   step rail, browser window, caption), for the /projects showcase, where
+   the demos sit beside the two platforms.
    ------------------------------------------------------------------ */
 export const films = {
   'therapist-pwa': {
@@ -76,21 +79,27 @@ export const films = {
     src: '/videos/consent-signer.mp4',
     poster: '/videos/posters/consent-signer.jpg',
     clip: '/videos/clips/consent-signer.mp4',
-    clipPoster: '/videos/posters/consent-signer-clip.jpg'
+    clipPoster: '/videos/posters/consent-signer-clip.jpg',
+    framed: '/videos/clips/consent-signer-framed.mp4',
+    framedPoster: '/videos/posters/consent-signer-framed.jpg'
   },
   'shared-inbox': {
     kind: 'real',
     src: '/videos/shared-inbox.mp4',
     poster: '/videos/posters/shared-inbox.jpg',
     clip: '/videos/clips/shared-inbox.mp4',
-    clipPoster: '/videos/posters/shared-inbox-clip.jpg'
+    clipPoster: '/videos/posters/shared-inbox-clip.jpg',
+    framed: '/videos/clips/shared-inbox-framed.mp4',
+    framedPoster: '/videos/posters/shared-inbox-framed.jpg'
   },
   'lead-research': {
     kind: 'real',
     src: '/videos/lead-research.mp4',
     poster: '/videos/posters/lead-research.jpg',
     clip: '/videos/clips/lead-research.mp4',
-    clipPoster: '/videos/posters/lead-research-clip.jpg'
+    clipPoster: '/videos/posters/lead-research-clip.jpg',
+    framed: '/videos/clips/lead-research-framed.mp4',
+    framedPoster: '/videos/posters/lead-research-framed.jpg'
   }
 }
 

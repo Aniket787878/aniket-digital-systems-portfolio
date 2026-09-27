@@ -2076,18 +2076,14 @@ a:hover {
   box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.8);
 }
 
+/* Every showcase film is 16:9 and framed the same way (the demos use their
+   `framed` loop), and carries text to its edges, so nothing is cropped. */
 .showcase-video {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
   transition: transform var(--dur-slow) var(--ease-out);
-}
-
-/* The schematic films are 16:9 and carry text to their edges; 16:10 would
-   crop it. */
-.showcase-media.is-schematic .showcase-video {
-  aspect-ratio: 16 / 9;
 }
 
 .showcase-card:hover .showcase-video {

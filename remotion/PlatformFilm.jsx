@@ -188,10 +188,11 @@ export function PlatformFilm({ slug }) {
   )
 }
 
-function StageRail({ scenes, idx, f, local }) {
+/* Shared with FramedClip, which runs the same rail over real captures. */
+export function StageRail({ scenes, idx, f, local, stageLen = P_STAGE }) {
   const top = 230
   const gap = 104
-  const fill = Math.max(0, Math.min(scenes.length - 1, idx + tween(f, P_STAGE - 14, P_STAGE + 6, easeInOut)))
+  const fill = Math.max(0, Math.min(scenes.length - 1, idx + tween(f, stageLen - 14, stageLen + 6, easeInOut)))
   return (
     <div style={{ position: 'absolute', left: 110, top, width: 540 }}>
       <div style={{ fontSize: 24, fontWeight: 500, letterSpacing: '-0.01em', color: C.peach, marginBottom: 34, marginTop: -70 }}>How it runs, step by step</div>
@@ -223,7 +224,7 @@ function StageRail({ scenes, idx, f, local }) {
             </div>
             <div>
               <div style={{ fontWeight: 500, fontSize: on ? 44 : 32, letterSpacing: '-0.035em', color: on ? C.ink : done ? C.inkSoft : C.muted }}>{s.stage}</div>
-              {on && <div style={{ marginTop: 4, fontSize: 24, color: C.muted, opacity: tween(f, 6, 18) }}>{s.tag}</div>}
+              {on && s.tag && <div style={{ marginTop: 4, fontSize: 24, color: C.muted, opacity: tween(f, 6, 18) }}>{s.tag}</div>}
             </div>
           </div>
         )

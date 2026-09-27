@@ -15,8 +15,8 @@ export default function ProjectsPage() {
       <p className="eyebrow">Projects</p>
       <h1 className="page-title">Projects</h1>
       <p className="page-lede">
-        Complete systems, each designed, built and shipped end to end by one
-        person. The clinic platform runs an eleven-therapist practice every
+        Complete systems, each designed, built and shipped end to end. The
+        clinic platform runs an eleven-therapist practice every
         day; Udaan, a recovery-care platform, is in pre-launch. Signet, Relay
         and Prospector are tools I built myself to work the same ideas.
       </p>

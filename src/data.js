@@ -206,11 +206,11 @@ export const site = {
      studios, agencies, growing teams). The clinic system is the proof,
      not the market. The hero, the meta description, the JSON-LD and the
      OG card (scripts/render-og.mjs) all read from here. */
-  headline: ['The systems your business runs on.', 'Built end to end. Solo.'],
+  headline: ['Enquiries answered. Bookings confirmed.', 'Follow-ups sent. Without anyone typing.'],
   subtitle:
-    'Booking, intake, follow-ups, payments and AI, built and run by one person, live in weeks. For clinics, studios, agencies and growing teams.',
+    'Custom systems and automations for clinics, studios, agencies and growing teams, live in weeks.',
   tagline:
-    'Booking, intake, follow-ups, payments and AI for clinics, studios, agencies and growing teams, built and run by one person, live in weeks.',
+    'Enquiries answered, bookings confirmed and follow-ups sent without anyone typing. Custom systems and automations for clinics, studios, agencies and growing teams, live in weeks.',
 
   /* Shown beside the prices. A promise, so it lives with the data it
      qualifies rather than in a component. */
@@ -234,7 +234,7 @@ export const site = {
      makes them awkward to separate by accident. If project 01's outcome
      is ever restated, restate this with it. */
   heroProof: {
-    claim: 'An 11-therapist clinic runs its day on a system I built.',
+    claim: 'An 11-therapist clinic already runs its day on one.',
     note: 'The therapist count is a row count from the clinic’s live production database, not an estimate.',
     slug: 'therapist-pwa',
     linkLabel: 'See the system'
@@ -244,18 +244,18 @@ export const site = {
 /* Title, description and share card for index.html. vite.config.js writes
    these into the <head> at build time, together with site.origin. */
 export const seo = {
-  title: 'Business systems, built end to end · Aniket',
+  title: 'Enquiries answered. Bookings confirmed. · Aniket',
   description:
-    'Booking, intake, follow-ups, payments and AI for clinics, studios, agencies and growing teams. Built and run by one person, live in weeks.',
-  ogTitle: 'The systems your business runs on. Built end to end, solo.',
+    'Enquiries answered, bookings confirmed and follow-ups sent without anyone typing. Custom systems and automations for clinics, studios, agencies and growing teams, live in weeks.',
+  ogTitle: 'Enquiries answered. Bookings confirmed. Follow-ups sent.',
   ogImage: '/og.png',
   ogImageAlt:
-    'The systems your business runs on. Built end to end, solo. Aniket builds booking, intake, follow-ups, payments and AI for service businesses.'
+    'Enquiries answered. Bookings confirmed. Follow-ups sent. Without anyone typing. Custom systems and automations by Aniket.'
 }
 
 /*
-  Identity layer — the site sells a solo specialist, so the person has to
-  be on it (docs/research/06, gap G2). Everything here is either true and
+  Identity layer — the About page puts a real person behind the work, so
+  he has to be on it (docs/research/06, gap G2). Everything here is either true and
   already backed by the rest of the site, or a clearly-empty slot for
   Aniket to fill. Same rule as `images` and `testimonials`: no invented
   bio and no stock headshot. `photo` stays '' until a real file lands in
@@ -270,7 +270,7 @@ export const founder = {
   /* One honest paragraph. Asserts only what the case studies, pricing and
      process on the rest of the site already stand behind. */
   intro:
-    'I build the software service businesses actually run on: booking, intake, follow-ups, payments and AI, so the work stops living in WhatsApp threads and spreadsheets. It started with the system an eleven-therapist clinic needed to stop drowning in admin, and it is the same shape of problem in a studio, an agency or a growing team. You work with the person who builds it, and you own what ships.',
+    'I build the software service businesses actually run on: booking, intake, follow-ups, payments and AI, so the work stops living in WhatsApp threads and spreadsheets. It started with the system an eleven-therapist clinic needed to stop drowning in admin, and it is the same shape of problem in a studio, an agency or a growing team. You own what ships.',
 
   /* Aniket's own story — how he got here, what he did before — is his to
      write. Left empty on purpose rather than invented; the About page
@@ -283,13 +283,13 @@ export const founder = {
 
   basedIn: 'Based in India · working remotely worldwide',
 
-  /* What a buyer actually gets from a solo builder rather than an agency —
-     the real edge behind the model decision in docs/research/06. Each line
-     is already promised elsewhere on the site (FAQ, pricing, handover). */
+  /* What a buyer actually gets. Each line is already promised elsewhere on
+     the site (pricing timelines, FAQ, handover). No solo-vs-agency framing:
+     retired 2026-09-27, see docs/system/05-icp-positioning.md. */
   principles: [
     {
-      title: 'One person, start to finish',
-      text: 'You talk to the builder, not an account manager. Nothing is lost in a handoff between the person who scoped it and the person who ships it.'
+      title: 'Live in weeks, not quarters',
+      text: 'Every offer has a timeline in writing, from 5 days for a single workflow to 3–4 weeks for an internal tool, so you see it working early and can change course while that is cheap.'
     },
     {
       title: 'You own the system',
@@ -370,10 +370,10 @@ export const projects = [
       { n: '1,200+', label: 'client records managed day to day' },
       { n: '11', label: 'therapists on one system' },
       { n: '12', label: 'serverless functions: the whole API, by design' },
-      { n: '1', label: 'person designed, built and ships it' }
+      { n: '3', label: 'apps under one roof: staff CRM, client forms, client PWA' }
     ],
     role:
-      'Sole designer and engineer: both React apps, the serverless API, the private data service, the access model and every automation behind it.',
+      'Designer and engineer: both React apps, the serverless API, the private data service, the access model and every automation behind it.',
     flow: ['Enquire', 'Book', 'See', 'Note', 'Consent', 'Follow up'],
     stack: [
       'React 19',
@@ -447,7 +447,7 @@ export const projects = [
       'The clinic’s day (tasks, clients, bookings, consent and forms) runs from one installable app instead of a scatter of tools',
       'Around 1,200 client records across 11 therapists, managed day to day with assignment-scoped access',
       'Writing up a session became checking an AI-drafted summary instead of typing it from memory',
-      'One person keeps the whole thing running: two apps, a private data service, and the automations behind them'
+      'Two apps, a private data service and the automations behind them, maintained as one system'
     ],
     outcomeNote:
       'Client and therapist counts are row counts from the live system. The rest describes the change from the clinic’s side, directional, not an audited metric.'
@@ -474,7 +474,7 @@ export const projects = [
       { n: '5', label: 'clinical gates that pause the course for care' }
     ],
     role:
-      'Sole designer and engineer: the client journey, the course engine, all four portals, the private data model, every integration and the infrastructure.',
+      'Designer and engineer: the client journey, the course engine, all four portals, the private data model, every integration and the infrastructure.',
     flow: ['Discover', 'Triage', 'Screen', 'Assess', 'Pay', 'Enrol'],
     stack: [
       'Next.js 16',
@@ -596,7 +596,7 @@ export const projects = [
       { n: '3', label: 'signer-ready templates: clinic, studio, agency' },
       { n: 'SHA-256', label: 'seal recomputed and checked on a public page' },
       { n: '0', label: 'third-party e-signature services; the sealing and PDF are mine' },
-      { n: '1', label: 'person: design, engineering and the cryptography' }
+      { n: '5', label: 'audit events logged: created, sent, viewed, signed, completed' }
     ],
     role:
       'Self-initiated build: the product, the signature capture, the tamper-evident sealing, the certificate PDF and the verification flow.',
@@ -680,7 +680,7 @@ export const projects = [
     tagline: 'WhatsApp, email and web enquiries in one shared inbox, tied to a pipeline.',
     year: '2026',
     summary:
-      'A self-built shared client inbox and lightweight CRM for service businesses: every enquiry (WhatsApp, email, web form) in one thread view, tied to a contact record that moves through the pipeline, so a lead stops living in one person’s phone.',
+      'A self-built shared client inbox and lightweight CRM for service businesses: every enquiry (WhatsApp, email, web form) in one thread view, tied to a contact record that moves through the pipeline, so a lead stops living in someone’s personal phone.',
     metrics: [
       { n: '3', label: 'channels (WhatsApp, email, web form) in one inbox' },
       { n: '5', label: 'pipeline stages from first enquiry to won' },
@@ -705,7 +705,7 @@ export const projects = [
     system: [
       'A shared inbox that collapses WhatsApp, email and web-form conversations into one list, each thread marked with the channel it arrived on so you always know how to reply',
       'A thread view with the two things a team actually needs beside the messages: the contact’s details and pipeline stage, and internal notes the client never sees',
-      'Triage built for more than one person: assign a conversation, and set it open, pending or closed, where sending a reply moves it to pending on its own',
+      'Triage built for a team: assign a conversation, and set it open, pending or closed, where sending a reply moves it to pending on its own',
       'A CRM that is the same data seen differently: every conversation is attached to a contact that moves lead → qualified → active → won or lost, shown as a pipeline board and a per-contact history',
       'Server-rendered throughout, so the triage controls are real forms that work without JavaScript, only the composer and the inbox filter are client-side',
       'A demo seeded with a believable morning of enquiries, and a control that fabricates an inbound reply so the live-inbox behaviour can be seen without a real messaging integration'

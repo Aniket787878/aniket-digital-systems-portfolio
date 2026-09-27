@@ -22,7 +22,10 @@ const NEAR = ridge({ seed: 53, base: 300, amp: 44, detail: 1.2 })
 const stars = starField(60, 5)
   .map((s) => `<i style="left:${s.x}%;top:${s.y}%;width:${s.r}px;height:${s.r}px;opacity:${s.o}"></i>`)
   .join('')
-const [line1, line2] = site.headline
+/* Each sentence on its own line: at 1200px a full headline line wraps
+   mid-sentence and leaves an orphan, so break where the sentences do. */
+const sentences = (line) => line.split(/(?<=\.)\s+/).map((t) => `<span>${t}</span>`).join('')
+const [line1, line2] = site.headline.map(sentences)
 const svg = (d, fill, h) =>
   `<svg viewBox="0 0 1440 400" preserveAspectRatio="none" style="position:absolute;left:-2%;right:-2%;bottom:0;width:104%;height:${h}px">${fill.defs || ''}<path d="${d}" fill="${fill.c}"/></svg>`
 
@@ -36,12 +39,12 @@ body { width: 1200px; height: 630px; overflow: hidden; font-family: Inter, sans-
 .stars i { position: absolute; border-radius: 50%; background: #fff4e8; }
 .sun { position: absolute; left: 50%; bottom: 4%; width: 1300px; height: 520px; transform: translateX(-50%);
   background: radial-gradient(closest-side, rgba(255,196,130,.6), rgba(245,135,30,.2) 55%, transparent); filter: blur(12px); }
-.copy { position: absolute; z-index: 5; left: 0; right: 0; top: 92px; text-align: center; color: #fff; }
+.copy { position: absolute; z-index: 5; left: 0; right: 0; top: 70px; text-align: center; color: #fff; }
 .brand { display: inline-flex; align-items: center; gap: 12px; padding: 9px 20px 9px 14px; border-radius: 999px;
   background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 24px; letter-spacing: -0.01em; }
-h1 { margin-top: 34px; font-weight: 500; font-size: 76px; line-height: 1.04; letter-spacing: -0.045em; }
+h1 { margin-top: 30px; font-weight: 500; font-size: 68px; line-height: 1.06; letter-spacing: -0.045em; }
 h1 span { display: block; }
-h1 .warm { color: #ffc89a; }
+h1 .warm span { color: #ffc89a; }
 p { margin-top: 26px; font-size: 25px; color: rgba(255,255,255,.78); letter-spacing: -0.01em; }
 </style></head><body><div class="card">
 <div class="stars">${stars}</div><div class="sun"></div>
@@ -51,7 +54,6 @@ ${svg(NEAR, { c: '#0b0b0c' }, 110)}
 <div class="copy">
   <span class="brand"><svg width="26" height="26" viewBox="0 0 16 16" fill="none"><path d="M3.5 10.5a4.5 4.5 0 0 1 9 0z" fill="#f5871e"/><path d="M1.5 12.5h13" stroke="#ffc89a" stroke-width="1.4" stroke-linecap="round"/></svg>Aniket</span>
   <h1><span>${line1}</span><span class="warm">${line2}</span></h1>
-  <p>Booking, intake, follow-ups, payments and AI, for service businesses.</p>
 </div></div></body></html>`
 
 const browser = await chromium.launch()

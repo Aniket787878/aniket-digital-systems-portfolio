@@ -226,22 +226,34 @@ export default function Hero() {
   )
 }
 
-/* One headline line, word by word, each rising out of a blur. */
+/* One headline line, word by word, each rising out of a blur. Words are
+   grouped by sentence ("Enquiries answered." / "Bookings confirmed."), and
+   a sentence only wraps inside itself when it is wider than the screen, so
+   the line breaks between sentences instead of leaving an orphan word. */
 function BlurLine({ text, delay = 0, className = '' }) {
-  const words = text.split(' ')
+  const sentences = text.split(/(?<=\.)\s+/).map((t) => t.split(' '))
+  let n = 0
   return (
     <span className={`dusk-line ${className}`.trim()} aria-hidden="true">
-      {words.map((w, i) => (
-        <span key={i}>
-          <m.span
-            className="dusk-word"
-            initial={{ opacity: 0, y: '0.35em', filter: 'blur(12px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 0.9, delay: delay + i * 0.07, ease: EASE }}
-          >
-            {w}
-          </m.span>
-          {i < words.length - 1 ? ' ' : ''}
+      {sentences.map((words, si) => (
+        <span key={si} className="dusk-phrase">
+          {words.map((w, i) => {
+            const at = n++
+            return (
+              <span key={i}>
+                <m.span
+                  className="dusk-word"
+                  initial={{ opacity: 0, y: '0.35em', filter: 'blur(12px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  transition={{ duration: 0.9, delay: delay + at * 0.07, ease: EASE }}
+                >
+                  {w}
+                </m.span>
+                {i < words.length - 1 ? ' ' : ''}
+              </span>
+            )
+          })}
+          {si < sentences.length - 1 ? ' ' : ''}
         </span>
       ))}
     </span>

@@ -202,6 +202,13 @@
   display: block;
 }
 
+/* A sentence of the headline stays on one line where it fits (see
+   BlurLine in Hero.jsx); max-width lets a long one still wrap on a phone. */
+.dusk-phrase {
+  display: inline-block;
+  max-width: 100%;
+}
+
 .dusk-word {
   display: inline-block;
   will-change: transform, filter;
@@ -1895,6 +1902,14 @@
 @media (max-width: 640px) {
   .cards {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The headline is four short sentences, one per line. The longest
+     ("Without anyone typing.") is ~9.8em wide, so sizing the type to the
+     viewport keeps every sentence on one line down to 320px instead of
+     breaking into orphan words at the 2.75rem floor. */
+  .dusk-hero .dusk-title {
+    font-size: 8.4vw;
   }
 
   .dusk-card-title {

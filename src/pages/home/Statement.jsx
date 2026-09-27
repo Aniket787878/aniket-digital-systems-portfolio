@@ -32,7 +32,7 @@ export default function Statement() {
           parts={[
             'I replace that with one system',
             { icon: 'flow' },
-            'that runs by itself. Built by one person, end to end, and yours to keep.'
+            'that runs by itself. Built end to end, and yours to keep.'
           ]}
         />
 

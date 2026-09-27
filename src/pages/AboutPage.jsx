@@ -9,8 +9,8 @@ import { useDocumentTitle } from '../useDocumentTitle.js'
 import './AboutPage.css'
 
 /*
-  About — the person behind the work. The site sells a solo specialist
-  (docs/research/06), so this page exists to put a real human on it.
+  About — the person behind the work (docs/research/06): this page exists
+  to put a real human on the site.
 
   Everything renders from `founder` in data.js: honest facts where they
   exist, labelled slots where they don't. The photo well and the story
@@ -30,7 +30,7 @@ export default function AboutPage() {
         <div className="about-head-lead">
           <p className="eyebrow">About</p>
           <h1 className="page-title">
-            The person you&rsquo;ll actually work with
+            Who builds it, and how
           </h1>
         </div>
         <p className="page-lede">{founder.intro}</p>

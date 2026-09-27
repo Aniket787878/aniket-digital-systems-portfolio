@@ -57,7 +57,7 @@ misspelled `Refrence files/` (now `docs/reference/folioblox.html`).
 | `/` | `src/pages/HomePage.jsx` + `src/pages/home/` | Done | `HomePage.jsx` is composition only; one file per band — see *Home page composition* below |
 | `/projects` | `src/pages/ProjectsPage.jsx` | Done | Reads `src/data.js` |
 | `/projects/:slug` | `src/pages/ProjectDetailPage.jsx` | Done | Renders `problem`, `system`, `outcome` and `outcomeNote` |
-| `/about` | `src/pages/AboutPage.jsx` | Done | The solo-specialist identity layer (see `docs/research/06`). Renders from `founder`; photo and story are honest empty slots until Aniket supplies them |
+| `/about` | `src/pages/AboutPage.jsx` | Done | The identity layer that puts a real person behind the work (see `docs/research/06`; the solo framing there was superseded 2026-09-27). Renders from `founder`; photo and story are honest empty slots until Aniket supplies them |
 | `/contact` | `src/pages/ContactPage.jsx` | Done | Renders `ContactForm.jsx` |
 | `*` | `src/pages/NotFoundPage.jsx` | Done | Real 404 with a CTA, wired to `path="*"` in `App.jsx` |
 
@@ -72,8 +72,8 @@ offset from an in-memory map keyed on `location.key`. It must stay in memory —
 persisting it would restore a stale offset onto an unrelated page after a
 reload, since every freshly loaded document keys its first entry `default`.
 
-The `/about` route now **exists** (added 2026-09-11) as the identity layer the
-solo-specialist model needs. It is content-complete from what the site already
+The `/about` route now **exists** (added 2026-09-11) as the identity layer that
+puts a real person behind the work. It is content-complete from what the site already
 backs; a CV PDF and a real headshot remain blocked on Aniket, but neither blocks
 the page — it renders labelled slots in their place.
 
@@ -283,7 +283,7 @@ real figures.
 | 6 | Rewrite each project as a case study (Problem → System → Outcome) | **Done** — all four scaffolded in data and rendered by `ProjectDetailPage.jsx`. Numbers are still directional |
 | 7 | Proof strip on home | **Done** — `proofTools` renders as band 1b. Testimonial band (3b) now exists too, as an **empty slot**: it renders an honest "references on request" state until Aniket supplies a real attributed quote. None invented |
 | 8 | Pricing anchor | **Done** — `site.pricingAnchor` in the CTA band, and `packages` renders the full grid |
-| 9 | `/about` page + CV download | **Page done (2026-09-11)** — `/about` renders the solo-specialist identity layer from `founder`. CV PDF and a real headshot still blocked on Aniket, but the page renders labelled slots for both rather than waiting on them |
+| 9 | `/about` page + CV download | **Page done (2026-09-11)** — `/about` renders the identity layer from `founder`. CV PDF and a real headshot still blocked on Aniket, but the page renders labelled slots for both rather than waiting on them |
 
 ### P2 — polish
 

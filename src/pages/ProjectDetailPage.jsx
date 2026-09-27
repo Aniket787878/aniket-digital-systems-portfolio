@@ -41,7 +41,7 @@ export default function ProjectDetailPage() {
   const position = projects.findIndex((item) => item.slug === slug)
   const project = position === -1 ? null : projects[position]
 
-  useDocumentTitle(project ? `${project.title} — Aniket` : 'Project not found — Aniket')
+  useDocumentTitle(project ? `${project.title} · Aniket` : 'Project not found · Aniket')
 
   if (!project) {
     return (
@@ -86,7 +86,7 @@ export default function ProjectDetailPage() {
     : []
   const availability = toText(site && site.availability)
 
-  const eyebrow = [toText(project.index), project.private ? 'Private Client System' : '']
+  const eyebrow = [toText(project.subtitle), films[project.slug]?.kind === 'real' ? 'Working demo' : 'Production platform']
     .filter(Boolean)
     .join(' · ')
 
@@ -149,7 +149,7 @@ export default function ProjectDetailPage() {
           <figure className="case-flow-figure">
             <AnimatedFlow stages={flow} />
             <figcaption className="case-caption">
-              The flow in motion — an illustration of the stages, not a
+              The flow in motion, an illustration of the stages, not a
               recording of the running app.
             </figcaption>
           </figure>
@@ -373,7 +373,7 @@ export default function ProjectDetailPage() {
         <h2 className="case-cta-title">Have something like this to build?</h2>
         <p className="case-cta-body">
           Tell me what you are trying to build and where it is stuck. I will map the whole
-          thing — product, app, payments, backend, AI, infrastructure — and tell you what
+          thing (product, app, payments, backend, AI, infrastructure) and tell you what
           it takes to ship it.
         </p>
         {availability && <p className="case-cta-note">{availability}</p>}

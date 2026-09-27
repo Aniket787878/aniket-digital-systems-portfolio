@@ -16,7 +16,7 @@ const NEXT_STEPS = [
     step: '02',
     label: 'A 20-minute call',
     detail:
-      'We walk through how the work moves today — who touches it, where it stalls, what it costs you in hours.'
+      'We walk through how the work moves today: who touches it, where it stalls, what it costs you in hours.'
   },
   {
     step: '03',
@@ -27,7 +27,7 @@ const NEXT_STEPS = [
 ]
 
 export default function ContactPage() {
-  useDocumentTitle('Contact — Aniket')
+  useDocumentTitle('Contact · Aniket')
   return (
     <section className="container page page-wide contact">
       {/* Two-column header so the title and intro span the band. */}
@@ -37,7 +37,7 @@ export default function ContactPage() {
           <h1 className="page-title">Tell me which part is breaking</h1>
         </div>
         <p className="page-lede">
-          I build AI and operations automation for service businesses &mdash;
+          I build AI and operations automation for service businesses:
           clinics, studios, agencies and consultancies. If your bookings,
           client intake, follow-ups or team coordination are running on
           WhatsApp threads, spreadsheets and copy-paste, describe the one that

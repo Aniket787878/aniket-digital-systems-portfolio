@@ -2,14 +2,14 @@ import { Link } from 'react-router-dom'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 
 export default function NotFoundPage() {
-  useDocumentTitle('Page not found — Aniket')
+  useDocumentTitle('Page not found · Aniket')
   return (
     <section className="container error-page">
       <p className="eyebrow">404</p>
       <h1>This page doesn&rsquo;t exist</h1>
       <p className="page-lede">
         The link is broken or the page has moved. Nothing went wrong on your
-        end &mdash; here is the rest of the site.
+        end. Here is the rest of the site.
       </p>
 
       <ul className="project-list">

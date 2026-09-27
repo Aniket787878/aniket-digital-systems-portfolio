@@ -17,7 +17,7 @@ const STATUS_MESSAGES = {
   sending: 'Sending your message.',
   success: 'Sent. You will get a reply within 24 hours.',
   fallback:
-    'Not sent. The form is not connected yet — use the email link on screen instead.'
+    'Not sent. The form is not connected yet. Use the email link on screen instead.'
 }
 
 function budgetLabel(value) {
@@ -49,7 +49,7 @@ export default function ContactForm() {
   /* Nothing the visitor typed should be lost if the send fails.
      This link hands the same message to their own mail client. */
   const mailSubject = name
-    ? `Automation enquiry — ${name}`
+    ? `Automation enquiry: ${name}`
     : 'Automation enquiry'
   const mailBody = [
     `Name: ${name}`,
@@ -74,7 +74,7 @@ export default function ContactForm() {
     ? whatsappIsUrl
       ? whatsapp
       : `https://wa.me/${whatsappDigits}?text=${encodeURIComponent(
-          `Hi Aniket — automation enquiry.\n\n${mailBody}`
+          `Hi Aniket, automation enquiry.\n\n${mailBody}`
         )}`
     : null
 
@@ -116,7 +116,7 @@ export default function ContactForm() {
 
     if (!WEBHOOK_URL) {
       console.log(
-        '[ContactForm] No VITE_LEAD_WEBHOOK_URL configured — payload not sent:',
+        '[ContactForm] No VITE_LEAD_WEBHOOK_URL configured, payload not sent:',
         payload
       )
       inFlight.current = false
@@ -189,8 +189,8 @@ export default function ContactForm() {
               rel="noreferrer"
             >
               WhatsApp
-            </a>{' '}
-            — it opens with your message ready to send.
+            </a>
+            . It opens with your message ready to send.
           </p>
         )}
         <p>
@@ -321,8 +321,8 @@ export default function ContactForm() {
                   send it on WhatsApp
                 </a>
               </>
-            )}{' '}
-            — everything you typed is already in it.
+            )}
+            . Everything you typed is already in it.
           </p>
         )}
       </form>

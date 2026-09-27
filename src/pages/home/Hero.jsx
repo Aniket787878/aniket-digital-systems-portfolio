@@ -1,176 +1,193 @@
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { m } from 'motion/react'
-import { site, whatsappPrefill, heroReel } from '../../data.js'
-
-const heroProof = site.heroProof
-import ArrowIcon from '../../components/ArrowIcon.jsx'
+import { m, useScroll, useTransform, useReducedMotion } from 'motion/react'
+import { whatsappPrefill, heroReel } from '../../data.js'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
 import LoopVideo from '../../components/LoopVideo.jsx'
-import Magnetic from '../../motion/Magnetic.jsx'
-import SplitText from '../../motion/SplitText.jsx'
+import { Ridge } from '../../components/dusk/Mountains.jsx'
+import { ridge, starField } from '../../components/dusk/terrain.js'
 import { hasWhatsApp } from '../../whatsapp.js'
-import { heroContainer, heroItem } from '../../motion/variants.js'
+
+/* Seeded once at module load: the same range on every visit. */
+const FAR = ridge({ seed: 11, base: 150, amp: 60, detail: 0.8 })
+const MID = ridge({ seed: 29, base: 210, amp: 70 })
+const NEAR = ridge({ seed: 53, base: 300, amp: 44, detail: 1.2 })
+const STARS = starField(80, 5)
+
+const EASE = [0.22, 1, 0.36, 1]
+const LINE_1 = 'Complete production systems.'
+const LINE_2 = 'End to end. Solo.'
 
 /* ---------------------------------------------------------------
-   1 — Hero. Proof-led, per the 2026-09-13 reposition ("sell the
-   proof: complete production systems, built solo").
-
-   No photograph and no 3D accent here any more: the fold leads with
-   the claim, a showreel of the working demos beside it, and two real
-   proof figures beneath. The reel is real captures only — never the
-   client platforms, whose films are schematics (data.js `films`).
-   The hero-photo files stay in public/ so the photographic hero can
-   be brought back, but nothing on this page references them.
-
-   The 750+ figure never appears without heroProof.note beneath the
-   cards — the house rule that no number renders without the caveat
-   that qualifies it (CLAUDE.md rule 6, data.js heroProof).
+   1 — Dusk hero (docs/design-system.md). A centred claim over a dusk
+   sky; three ridges parallax at different rates as the page scrolls,
+   and the showreel of the real apps rises out of the range, with the
+   near ridge passing in front of it. Reduced motion: the still scene.
    --------------------------------------------------------------- */
 export default function Hero() {
+  const ref = useRef(null)
+  const reduce = useReducedMotion()
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
+
+  const still = (v) => (reduce ? 0 : v)
+  const yFar = useTransform(scrollYProgress, [0, 1], [0, still(260)])
+  const yMid = useTransform(scrollYProgress, [0, 1], [0, still(140)])
+  const yStars = useTransform(scrollYProgress, [0, 1], [0, still(320)])
+  const cardY = useTransform(scrollYProgress, [0, 0.5], [still(24), still(-40)])
+  const cardScale = useTransform(scrollYProgress, [0, 0.45], [reduce ? 1 : 0.94, 1])
+  const copyY = useTransform(scrollYProgress, [0, 0.4], [0, still(-80)])
+  const copyO = useTransform(scrollYProgress, [0, 0.35], [1, reduce ? 1 : 0])
+
   return (
-    <section className="hero">
-      <div className="hero-ground" aria-hidden="true" />
-
-      <div className="container hero-content">
-        <div className="hero-top">
-          <m.div
-            className="hero-lockup"
-            variants={heroContainer}
-            initial="hidden"
-            animate="show"
-          >
-            <m.div className="hero-badge" variants={heroItem}>
-              <span className="hero-badge-dot" aria-hidden="true" />
-              {site.availability
-                ? 'Available · 2 build slots a month'
-                : 'Systems builder'}
-            </m.div>
-
-            <m.p className="hero-eyebrow" variants={heroItem}>
-              Hey, I&rsquo;m Aniket &mdash; I build
-            </m.p>
-            <SplitText
-              as="h1"
-              className="hero-title"
-              text="Complete production systems. End to end. Solo."
-              standalone={false}
-              accent={[6]}
+    <section className="dusk-hero" ref={ref}>
+      <div className="dusk-sky" aria-hidden="true">
+        <m.div className="dusk-stars" style={{ y: yStars }}>
+          {STARS.map((s) => (
+            <i
+              key={s.id}
+              style={{
+                left: `${s.x}%`,
+                top: `${s.y}%`,
+                width: s.r,
+                height: s.r,
+                opacity: s.o,
+                animationDelay: `${s.d}s`
+              }}
             />
-            <m.p className="hero-sub" variants={heroItem}>
-              Site, app, payments, backend, AI and the infrastructure
-              underneath &mdash; the whole thing built and shipped by one person,
-              for founders who need it done, not a team to manage.
-            </m.p>
-
-            <m.div className="hero-actions" variants={heroItem}>
-              <Magnetic>
-                <WhatsAppCta
-                  message={whatsappPrefill.hero}
-                  label="Message me on WhatsApp"
-                  className="btn-pill btn-pill-accent hero-cta"
-                />
-              </Magnetic>
-              {hasWhatsApp ? (
-                <Link to="/projects" className="arrow-link hero-alt-cta">
-                  See the work
-                  <span className="arrow" aria-hidden="true">
-                    &rarr;
-                  </span>
-                </Link>
-              ) : (
-                <Link to="/contact" className="btn-pill hero-cta">
-                  Get in touch
-                  <span className="btn-pill-icon" aria-hidden="true">
-                    <ArrowIcon />
-                  </span>
-                </Link>
-              )}
-            </m.div>
-          </m.div>
-
-          <m.figure
-            className="hero-reel"
-            variants={heroItem}
-            initial="hidden"
-            animate="show"
-          >
-            <div className="reel-window">
-              <div className="reel-chrome" aria-hidden="true">
-                <span className="reel-dots">
-                  <i /><i /><i />
-                </span>
-                <span className="reel-url">
-                  <span className="reel-live" />
-                  Recorded from the running apps
-                </span>
-              </div>
-              <LoopVideo
-                src={heroReel.src}
-                poster={heroReel.poster}
-                className="reel-video"
-                label="Showreel of three working demos: Relay, Signet and Prospector"
-              />
-            </div>
-            {/* Three facts the reel itself shows, one per demo — floated
-                around the window so the claim sits beside its proof. */}
-            <div className="reel-chip reel-chip-a" aria-hidden="true">
-              <span className="reel-chip-icon">✓</span>
-              <span>
-                <strong>Sealed</strong> SHA-256 · tamper-evident
-              </span>
-            </div>
-            <div className="reel-chip reel-chip-b" aria-hidden="true">
-              <span className="reel-chip-icon">↗</span>
-              <span>
-                <strong>Lead → Qualified</strong> one record, one click
-              </span>
-            </div>
-            <div className="reel-chip reel-chip-c" aria-hidden="true">
-              <span className="reel-chip-icon">90</span>
-              <span>
-                <strong>Lead score</strong> read live off a real site
-              </span>
-            </div>
-            <figcaption className="hero-reel-caption">{heroReel.caption}</figcaption>
-          </m.figure>
-        </div>
-
-        {/* Two real proof figures. The first is a row count from a live
-            production database; the second is the count of shipped systems.
-            heroProof.note qualifies the number directly beneath. */}
-        <m.div
-          className="hero-proof"
-          variants={heroItem}
-          initial="hidden"
-          animate="show"
-        >
-          <div className="hero-proof-row">
-            <div className="hero-proof-card">
-              <span className="hero-proof-num">1,200+</span>
-              <p className="hero-proof-text">
-                client records across <strong>11 therapists</strong>, in daily
-                use on one system I designed, built and ship.
-              </p>
-              <Link
-                to={`/projects/${heroProof.slug}`}
-                className="hero-proof-link"
-              >
-                {heroProof.linkLabel}
-                <span className="arrow" aria-hidden="true">&rarr;</span>
-              </Link>
-            </div>
-            <div className="hero-proof-card">
-              <span className="hero-proof-num">5</span>
-              <p className="hero-proof-text">
-                systems shipped end to end &mdash;{' '}
-                <strong>two production platforms</strong> and three working
-                tools.
-              </p>
-            </div>
-          </div>
-          <p className="hero-proof-note">{heroProof.note}</p>
+          ))}
         </m.div>
+        <div className="dusk-sun" />
+      </div>
+
+      <m.div className="dusk-layer dusk-far" style={{ y: yFar }} aria-hidden="true">
+        <Ridge d={FAR} fill="url(#far-grad)">
+          <defs>
+            <linearGradient id="far-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#7a3812" />
+              <stop offset="0.6" stopColor="#3a1b0b" />
+            </linearGradient>
+          </defs>
+        </Ridge>
+      </m.div>
+      <m.div className="dusk-layer dusk-mid" style={{ y: yMid }} aria-hidden="true">
+        <Ridge d={MID} fill="url(#mid-grad)">
+          <defs>
+            <linearGradient id="mid-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#3b1b0c" />
+              <stop offset="0.5" stopColor="#1a0e08" />
+            </linearGradient>
+          </defs>
+        </Ridge>
+      </m.div>
+
+      <m.div className="container dusk-copy" style={{ y: copyY, opacity: copyO }}>
+        <m.p
+          className="glass-pill"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: EASE }}
+        >
+          <span className="status-dot" aria-hidden="true" />
+          Available for new projects &middot; two builds a month
+        </m.p>
+
+        <h1 className="dusk-title" aria-label={`${LINE_1} ${LINE_2}`}>
+          <BlurLine text={LINE_1} delay={0.1} />
+          <BlurLine text={LINE_2} delay={0.35} className="dusk-title-warm" />
+        </h1>
+
+        <m.p
+          className="dusk-sub"
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.6, ease: EASE }}
+        >
+          I design and build the software service businesses run on: bookings,
+          intake, payments, AI and the infrastructure underneath.
+        </m.p>
+
+        <m.div
+          className="dusk-actions"
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.75, ease: EASE }}
+        >
+          {hasWhatsApp ? (
+            <WhatsAppCta
+              message={whatsappPrefill.audit}
+              label="Book a free audit"
+              className="btn-saffron"
+            />
+          ) : (
+            <Link to="/contact" className="btn-saffron">
+              Book a free audit
+            </Link>
+          )}
+          <a href="#work" className="btn-light">
+            See the work
+          </a>
+        </m.div>
+        <m.p
+          className="dusk-footnote"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.95 }}
+        >
+          Free 20-minute call. No obligation.
+        </m.p>
+      </m.div>
+
+      <m.figure
+        className="dusk-card"
+        style={{ y: cardY, scale: cardScale }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 0.5, ease: EASE }}
+      >
+        <div className="dusk-card-bar">
+          <span className="dusk-card-dots" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </span>
+          <span className="dusk-card-title">
+            <span className="live-dot" aria-hidden="true" />
+            Relay, Signet and Prospector: recorded from the running apps
+          </span>
+        </div>
+        <LoopVideo
+          src={heroReel.src}
+          poster={heroReel.poster}
+          className="dusk-card-video"
+          label="Showreel of three working demos: Relay, Signet and Prospector"
+        />
+      </m.figure>
+
+      <div className="dusk-layer dusk-near" aria-hidden="true">
+        <Ridge d={NEAR} fill="var(--night)" />
       </div>
     </section>
+  )
+}
+
+/* One headline line, word by word, each rising out of a blur. */
+function BlurLine({ text, delay = 0, className = '' }) {
+  const words = text.split(' ')
+  return (
+    <span className={`dusk-line ${className}`.trim()} aria-hidden="true">
+      {words.map((w, i) => (
+        <span key={i}>
+          <m.span
+            className="dusk-word"
+            initial={{ opacity: 0, y: '0.35em', filter: 'blur(12px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.9, delay: delay + i * 0.07, ease: EASE }}
+          >
+            {w}
+          </m.span>
+          {i < words.length - 1 ? ' ' : ''}
+        </span>
+      ))}
+    </span>
   )
 }

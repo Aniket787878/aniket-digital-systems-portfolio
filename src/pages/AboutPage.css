@@ -99,7 +99,7 @@
 .about-h2 {
   font-family: var(--font-display);
   font-size: var(--display-3);
-  font-weight: 800;
+  font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: var(--ink);
@@ -151,7 +151,7 @@
 .about-principle-title {
   font-family: var(--font-display);
   font-size: var(--text-lg);
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--ink);
   margin-bottom: var(--space-3);
@@ -175,7 +175,7 @@
 .about-cta-title {
   font-family: var(--font-display);
   font-size: var(--display-3);
-  font-weight: 800;
+  font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: var(--ink);

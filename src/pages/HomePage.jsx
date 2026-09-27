@@ -1,12 +1,12 @@
 import Hero from './home/Hero.jsx'
-import ProofStrip from './home/ProofStrip.jsx'
+import Statement from './home/Statement.jsx'
 import Work from './home/Work.jsx'
-import Capabilities from './home/Capabilities.jsx'
-import Process from './home/Process.jsx'
-import Pricing from './home/Pricing.jsx'
+import Connect from './home/Connect.jsx'
 import Testimonials from './home/Testimonials.jsx'
-import CtaBand from './home/CtaBand.jsx'
+import Process from './home/Process.jsx'
+import Services from './home/Services.jsx'
 import Faq from './home/Faq.jsx'
+import Cta from './home/Cta.jsx'
 
 /* The page's stylesheet stays a single file, imported once, here.
 
@@ -18,21 +18,22 @@ import Faq from './home/Faq.jsx'
 import './HomePage.css'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 
-/* Nine bands, in render order. Each is one file in ./home, and each maps
-   to the band of the same name in HomePage.css. */
+/* Bands in render order, alternating the dark and light grounds of the
+   Dusk system (docs/design-system.md). Testimonials renders only once a
+   real quote exists. Each is one file in ./home. */
 export default function HomePage() {
-  useDocumentTitle('Aniket — Digital Systems Builder')
+  useDocumentTitle('Aniket · Complete production systems, end to end')
   return (
     <div className="home">
       <Hero />
-      <ProofStrip />
+      <Statement />
       <Work />
-      <Capabilities />
-      <Process />
-      <Pricing />
+      <Connect />
       <Testimonials />
-      <CtaBand />
+      <Process />
+      <Services />
       <Faq />
+      <Cta />
     </div>
   )
 }

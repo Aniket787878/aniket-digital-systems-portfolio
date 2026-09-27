@@ -9,14 +9,14 @@ const toList = (value) =>
 const toText = (value) => (typeof value === 'string' && value.trim() ? value.trim() : '')
 
 export default function ProjectsPage() {
-  useDocumentTitle('Projects — Aniket')
+  useDocumentTitle('Projects · Aniket')
   return (
     <section className="container page page-wide">
       <p className="eyebrow">Projects</p>
       <h1 className="page-title">Projects</h1>
       <p className="page-lede">
         Complete systems, each designed, built and shipped end to end by one
-        person — the app, the backend, the payments, the AI and the
+        person: the app, the backend, the payments, the AI and the
         infrastructure. Two run real businesses every day; Signet, Relay and
         Prospector are tools I built to work the same ideas in the open.
       </p>

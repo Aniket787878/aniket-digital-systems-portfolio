@@ -17,7 +17,7 @@ import './AboutPage.css'
   placeholders elsewhere on the site. Nothing here is invented.
 */
 export default function AboutPage() {
-  useDocumentTitle('About — Aniket')
+  useDocumentTitle('About · Aniket')
   const hasStory = founder.story.trim().length > 0
 
   return (
@@ -66,8 +66,8 @@ export default function AboutPage() {
               /* Empty slot, said out loud rather than papered over with
                  invented biography. */
               <p className="about-story-slot">
-                The longer version &mdash; the practice this grew out of, and
-                the builds since &mdash; is going here shortly.
+                The longer version (the practice this grew out of, and
+                the builds since) is going here shortly.
               </p>
             )}
           </div>

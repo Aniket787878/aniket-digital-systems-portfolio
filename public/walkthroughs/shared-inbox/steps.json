@@ -3,16 +3,16 @@
     "file": "01.png",
     "caption": "Every enquiry, from WhatsApp, email and the web, in one inbox",
     "target": {
-      "x": 487,
+      "x": 481,
       "y": 67,
-      "w": 49,
+      "w": 50,
       "h": 24
     },
     "focus": {
       "x": 160,
       "y": 57,
       "w": 360,
-      "h": 843
+      "h": 844
     }
   },
   {
@@ -28,55 +28,55 @@
       "x": 520,
       "y": 57,
       "w": 760,
-      "h": 843
+      "h": 844
     }
   },
   {
     "file": "03.png",
     "caption": "Reply in seconds, and the thread moves to pending",
     "target": {
-      "x": 868,
+      "x": 872,
       "y": 849,
-      "w": 116,
+      "w": 112,
       "h": 36
     },
     "focus": {
       "x": 520,
       "y": 57,
       "w": 760,
-      "h": 843
+      "h": 844
     }
   },
   {
     "file": "04.png",
     "caption": "Leave notes your team sees. Clients never do.",
     "target": {
-      "x": 880,
+      "x": 883,
       "y": 849,
-      "w": 104,
+      "w": 101,
       "h": 36
     },
     "focus": {
       "x": 520,
       "y": 57,
       "w": 760,
-      "h": 843
+      "h": 844
     }
   },
   {
     "file": "05.png",
     "caption": "The client’s reply lands straight back in the thread",
     "target": {
-      "x": 826,
+      "x": 827,
       "y": 172,
-      "w": 154,
+      "w": 153,
       "h": 26
     },
     "focus": {
       "x": 520,
       "y": 57,
       "w": 760,
-      "h": 843
+      "h": 844
     }
   },
   {
@@ -100,9 +100,9 @@
     "caption": "Your whole pipeline on one board",
     "target": {
       "x": 180,
-      "y": 94,
-      "w": 66,
-      "h": 16
+      "y": 93,
+      "w": 67,
+      "h": 17
     },
     "focus": {
       "x": 160,

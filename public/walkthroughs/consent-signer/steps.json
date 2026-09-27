@@ -3,9 +3,9 @@
     "file": "01.png",
     "caption": "Every consent form and contract, tracked in one place",
     "target": {
-      "x": 1115,
+      "x": 1119,
       "y": 129,
-      "w": 145,
+      "w": 141,
       "h": 40
     },
     "focus": {
@@ -21,7 +21,7 @@
     "target": {
       "x": 180,
       "y": 229,
-      "w": 208,
+      "w": 191,
       "h": 38
     },
     "focus": {
@@ -51,15 +51,15 @@
     "file": "04.png",
     "caption": "A private signing link is ready to send",
     "target": {
-      "x": 1211,
+      "x": 1207,
       "y": 353,
-      "w": 54,
+      "w": 52,
       "h": 26
     },
     "focus": {
       "x": 856,
       "y": 219,
-      "w": 458,
+      "w": 452,
       "h": 210
     }
   },
@@ -69,7 +69,7 @@
     "target": {
       "x": 356,
       "y": 820,
-      "w": 146,
+      "w": 140,
       "h": 40
     },
     "focus": {
@@ -103,7 +103,7 @@
       "x": 433,
       "y": 94,
       "w": 574,
-      "h": 338
+      "h": 318
     }
   },
   {

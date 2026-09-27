@@ -30,9 +30,9 @@
     "file": "03.png",
     "caption": "One click: each site is read live and lands as a lead",
     "target": {
-      "x": 1139,
+      "x": 1145,
       "y": 187,
-      "w": 108,
+      "w": 102,
       "h": 40
     },
     "focus": {
@@ -57,7 +57,7 @@
     "file": "05.png",
     "caption": "Filter to leads you can email today",
     "target": {
-      "x": 457,
+      "x": 449,
       "y": 297,
       "w": 80,
       "h": 24
@@ -100,13 +100,13 @@
     "file": "08.png",
     "caption": "Export your list to CSV for outreach",
     "target": {
-      "x": 1053,
+      "x": 1056,
       "y": 12,
       "w": 100,
       "h": 32
     },
     "focus": {
-      "x": 353,
+      "x": 356,
       "y": 0,
       "w": 840,
       "h": 380

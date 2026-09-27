@@ -54,134 +54,33 @@
   isolation: isolate;
   min-height: 100svh;
   display: flex;
-  align-items: flex-end;
-  /* Top padding is the nav plus a hair, not the nav plus a band. This was
-     --space-6 on top of a 5.5rem nav, a 120px ceiling on a hero that
-     already stood 1065px tall in a 900px laptop viewport. */
-  padding-block: calc(var(--nav-h) + var(--space-3)) clamp(2.5rem, 5vw, 4rem);
+  align-items: center;
+  padding-block: calc(var(--nav-h) + clamp(2rem, 5vw, 4rem))
+    clamp(3rem, 6vw, 5rem);
   overflow: hidden;
   /* The hero is a slab, not a background: rounding the bottom edge lets
      the page ground show through at the corners, which is what separates
-     it from the section beneath. Everything inside is clipped to it. */
+     it from the section beneath. */
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
-/* The hero ground. The portrait paints over this, but it is also the whole
-   picture for the moment before the JPEG decodes — and if it never arrives —
-   so it stays a designed ramp in the brand colours rather than a placeholder
-   fill. The stops are sampled off the photograph, so the swap is invisible. */
+/* Proof-led ground: the near-black page colour with a single soft saffron
+   glow bleeding down from the top, in place of the old photograph. No image
+   to decode, so there is nothing to fade in and no reduced-motion guard to
+   carry. */
 .hero-ground {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  border-radius: inherit;
-  background: linear-gradient(
-    155deg,
-    #ff6a12 0%,
-    #d94500 28%,
-    #63200a 62%,
-    #150802 100%
-  );
-}
-
-/* The portrait. Same stacking level as `.hero-ground` and later in the DOM,
-   so it paints over the gradient while staying under the scrim.
-
-   `object-position: 85%` is measured, not chosen by eye. The subject sits in
-   the right third of a 1913x822 frame and the left half is empty lit ground;
-   anchoring the cover crop right keeps his face in shot at every width and
-   parks that empty half under the copy. It is the reason `.hero-grid` is
-   capped at 38rem below — move one and the other stops making sense. */
-.hero-photo {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 85% center;
-  border-radius: inherit;
-  pointer-events: none;
-  /* Deliberately not `both`. A backwards fill holds the photo at the
-     keyframe's opacity: 0 until the animation actually runs, which makes an
-     entrance flourish load-bearing for the hero being visible at all --
-     anything that stops it starting (a tab opened in the background, a
-     paused-animation environment) leaves a bare gradient. Without the fill
-     the resting state is the visible one and the fade is purely additive. */
-  animation: hero-photo-in 900ms ease-out;
-}
-
-@keyframes hero-photo-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-photo {
-    animation: none;
-  }
-}
-
-/* Two ramps, not one. The vertical ramp is the original: nav legible at the
-   top, copy legible at the bottom. The horizontal ramp is what
-   the photograph needs — white type on the lit part of that orange measures
-   about 5.2:1, which passes AA but sits close enough to the floor that a
-   brighter frame would fail it. */
-.hero-scrim {
   position: absolute;
   inset: 0;
   z-index: -1;
   border-radius: inherit;
   background:
-    linear-gradient(
-      to right,
-      rgba(16, 16, 16, 0.68) 0%,
-      rgba(16, 16, 16, 0.42) 34%,
-      rgba(16, 16, 16, 0) 64%
+    radial-gradient(
+      120% 70% at 50% -10%,
+      rgba(245, 135, 30, 0.16) 0%,
+      rgba(245, 135, 30, 0.05) 34%,
+      transparent 62%
     ),
-    linear-gradient(
-      to bottom,
-      rgba(16, 16, 16, 0.55) 0%,
-      rgba(16, 16, 16, 0.1) 30%,
-      rgba(16, 16, 16, 0.55) 70%,
-      rgba(16, 16, 16, 0.92) 100%
-    );
-}
-
-/* The 3D network sits above the scrim (also z -1, but earlier in the DOM)
-   and below the copy. pointer-events: none so it never intercepts a CTA —
-   the parallax is driven by pointer position, not by hovering the canvas. */
-.hero-canvas {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  border-radius: inherit;
-  overflow: hidden;
-  /* Fade the network out before it reaches the portrait, so it lives only in
-     the dark negative space behind the copy and never crosses the face. */
-  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 48%, transparent 76%);
-  mask-image: linear-gradient(to right, #000 0%, #000 48%, transparent 76%);
-  /* Choreography: the layer fades in after the photo and copy have settled,
-     rather than booting up alongside them. Only ever mounts with motion
-     allowed, so no reduced-motion guard is needed. */
-  opacity: 0;
-  animation: hero-canvas-in 1.6s var(--ease-out) 0.2s forwards;
-}
-
-@keyframes hero-canvas-in {
-  to {
-    opacity: 1;
-  }
-}
-
-.hero-canvas canvas {
-  display: block;
+    var(--bg);
 }
 
 .hero-content {
@@ -190,24 +89,27 @@
   width: 100%;
 }
 
-/* One column. The right of the frame is the portrait, so the whole block —
-   eyebrow, headline, claim, lede, button — stacks in the empty left half.
-   38rem is the widest the copy can run before it reaches his hair at the
-   narrowest width this two-part composition still holds (1280). */
-.hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: clamp(1.5rem, 3vw, 2.25rem);
-  align-items: start;
-  max-width: min(38rem, 52%);
+/* The copy block: badge, eyebrow, headline, sub, CTAs. Capped so the
+   headline breaks into a strong two/three-line stack rather than one long
+   ribbon on a wide screen. */
+.hero-lockup {
+  max-width: 60rem;
 }
 
 .hero-eyebrow {
   font-family: var(--font-sans);
-  font-size: clamp(1rem, 1.6vw, 1.375rem);
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
   font-weight: 600;
-  color: var(--ink);
-  margin-bottom: var(--space-4);
+  color: var(--muted);
+  margin-bottom: var(--space-3);
+}
+
+.hero-sub {
+  margin-top: var(--space-5);
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 54ch;
 }
 
 /* Not --display-1. That token tops out at 7rem, and at 7rem the phrase
@@ -226,47 +128,82 @@
   color: var(--ink);
 }
 
-.hero-support {
+/* The proof block sits below the copy, full width. Two real figures in
+   cards, then the caveat that qualifies the number — never separated from
+   it (CLAUDE.md rule 6). */
+.hero-proof {
+  margin-top: clamp(2.75rem, 5vw, 4rem);
+}
+
+.hero-proof-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.875rem, 1.5vw, 1.25rem);
+}
+
+.hero-proof-card {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--space-4);
+  gap: var(--space-3);
+  padding: clamp(1.25rem, 2.2vw, 1.75rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
 }
 
-/* The proof claim: the support column's lead line. A sentence, not a bare
-   figure, so it is sized for presence without the display weight a single
-   number would carry. Its caveat is .hero-proof-note, just below. */
-.hero-claim {
+.hero-proof-num {
   font-family: var(--font-display);
-  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.5rem, 5vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
   color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 
-/* The caveat that travels with the number in .hero-claim. Deliberately
-   quiet — it has to be readable without competing with the claim — but
-   never hidden: an unqualified number is the thing this line exists to
-   prevent. */
+.hero-proof-text {
+  font-size: var(--text-base);
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.hero-proof-text strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* The caveat that travels with the 750+ figure. Quiet, but never hidden:
+   an unqualified number is the thing this line exists to prevent. */
 .hero-proof-note {
+  margin-top: var(--space-4);
   font-size: var(--text-sm);
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.72);
-  max-width: 46ch;
+  color: var(--muted);
+  max-width: 78ch;
 }
 
 .hero-proof-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: auto;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--ink);
-  white-space: nowrap;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-  transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+  color: var(--accent);
+}
+
+.hero-proof-link .arrow {
+  transition: transform var(--dur-slow) var(--ease-out);
 }
 
 .hero-proof-link:hover {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
+  color: var(--accent-hover);
+}
+
+.hero-proof-link:hover .arrow {
+  transform: translateX(4px);
 }
 
 /* Holds the primary CTA and, once a WhatsApp number exists, the quiet
@@ -1501,29 +1438,10 @@
   }
 }
 
-.hero-eyebrow,
-.hero-title,
-.hero-claim,
-.hero-proof-note,
-.hero-actions {
-  animation: hero-rise var(--dur-slow) var(--ease-out) both;
-}
-
-.hero-title {
-  animation-delay: 70ms;
-}
-
-.hero-claim {
-  animation-delay: 140ms;
-}
-
-.hero-proof-note {
-  animation-delay: 215ms;
-}
-
-.hero-actions {
-  animation-delay: 240ms;
-}
+/* The hero entrance is driven by Framer Motion in Hero.jsx (heroContainer /
+   heroItem variants), which also respects prefers-reduced-motion through the
+   one <MotionConfig reducedMotion="user">. No CSS entrance here, so the two
+   never fight over opacity. */
 
 /* ============================================================
    Responsive — the ladder, widest first.
@@ -1873,29 +1791,6 @@
   }
 }
 
-/* --- Small phone --- */
-/* --- Portrait phones (the 4:5 crop) --- */
-@media (max-width: 600px) {
-  /* With the proof lines removed, hand the top of the hero to the portrait:
-     a tall photo band, and the whole header dropped below it, so the face
-     reads first and the copy follows underneath rather than sitting over it. */
-  .hero {
-    --hero-photo-h: min(56vh, 116vw);
-  }
-
-  .hero-photo {
-    height: var(--hero-photo-h);
-    object-position: center top;
-  }
-
-  /* Push the header to just below the photo. The photo starts ~1.5rem above
-     the content's normal top (nav offset minus the band's top nudge), so
-     that much is subtracted to butt the header against the faded photo edge. */
-  .hero-content {
-    padding-top: calc(var(--hero-photo-h) - 1.5rem);
-  }
-}
-
 @media (max-width: 480px) {
   /* Own the first screen. This was min-height: 0, which left the hero at
      its content height — 699px on a 844px phone — so the fold landed a
@@ -2094,4 +1989,12 @@
 /* Anchor the hand-drawn annotation to the actions row. */
 .hero-actions {
   position: relative;
+}
+
+/* The two hero proof cards stack on narrow phones, where side by side
+   leaves each too tight for its figure and its line of copy. */
+@media (max-width: 560px) {
+  .hero-proof-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

@@ -57,19 +57,17 @@ Break any of these and nothing errors — it just renders wrong.
 2. **`index.css` imports before `App.jsx` in `main.jsx`.** Reverse it and every
    page stylesheet loads ahead of the base sheet, so `index.css` wins every
    specificity *tie* — a page override that ties simply does nothing.
-3. **The hero ground is a photograph, not a shader.** Three files, all in
-   `public/`: `hero.jpg` and `hero-960.jpg` are the landscape frame, and
-   `hero-portrait.jpg` is the same shot cropped to 4:5 for phones. They are
-   referenced from `Hero.jsx` as a `<picture>` — not a CSS background, so it
-   can carry a `srcset` and a `<source>` — and preloaded in `index.html`.
-   **The `600px` in that `<source>` and the two `media` attributes on the
-   preloads must stay identical.** Mismatch them and the phone downloads both
-   frames and shows one. All three files must stay in `public/`: nothing
-   imports them, so a bundler will not catch their absence and the hero
-   silently falls back to the CSS gradient. The photograph is still the hero's
-   ground; the `Hero3D` network (see Stack) only overlays it as a lazy accent
-   on capable desktops and must never become load-bearing for the hero being
-   visible.
+3. **The hero is a proof-led text composition (redesigned 2026-09-27).** The
+   fold leads with the claim and two real proof figures (750+ clients / 11
+   therapists, and 5 systems shipped) in cards over a dark ground with a soft
+   saffron glow — no photograph and no 3D accent. `Hero.jsx` is driven by
+   Framer Motion; do **not** add a CSS entrance animation beside it (the two
+   fight over opacity). The `hero-*.jpg` files stay in `public/` and `Hero3D`
+   stays in the tree so the photographic hero *can* be brought back on request,
+   but nothing references them now — don't "restore" the photo hero unprompted.
+   If the photo hero is ever reinstated: it was a `<picture>` (not a CSS
+   background) whose `600px` `<source>` had to match the `media` on the
+   `index.html` preloads, or the phone downloads both frames and shows one.
 4. **`HomePage.css` stays one file.** Do not split it per section. Its rules beat
    `index.css` on source order alone (see 2), and a single import from a single
    place is what pins that order regardless of component evaluation order.

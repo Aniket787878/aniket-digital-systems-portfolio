@@ -47,10 +47,167 @@ export const images = {
   }
 }
 
+/* ------------------------------------------------------------------
+   PRODUCT FILMS — rendered from remotion/ by scripts/render-videos.sh.
+
+   Two kinds, and the site says which on every one:
+   - 'real'      Signet, Relay, Prospector. Every pixel inside the window is
+                 a capture of the running app (public/walkthroughs/); only
+                 the camera, pointer and captions are added.
+   - 'schematic' The two client platforms. Their screens hold client
+                 records, so the film is a labelled wireframe of the real
+                 flow and never presents itself as a recording.
+   `clip` is the short silent loop the project cards play on hover.
+   ------------------------------------------------------------------ */
+export const films = {
+  'therapist-pwa': {
+    kind: 'schematic',
+    src: '/videos/therapist-pwa.mp4',
+    poster: '/videos/posters/therapist-pwa.jpg'
+  },
+  udaan: {
+    kind: 'schematic',
+    src: '/videos/udaan.mp4',
+    poster: '/videos/posters/udaan.jpg'
+  },
+  signet: {
+    kind: 'real',
+    src: '/videos/signet.mp4',
+    poster: '/videos/posters/signet.jpg',
+    clip: '/videos/clips/signet.mp4',
+    clipPoster: '/videos/posters/signet-clip.jpg'
+  },
+  relay: {
+    kind: 'real',
+    src: '/videos/relay.mp4',
+    poster: '/videos/posters/relay.jpg',
+    clip: '/videos/clips/relay.mp4',
+    clipPoster: '/videos/posters/relay-clip.jpg'
+  },
+  prospector: {
+    kind: 'real',
+    src: '/videos/prospector.mp4',
+    poster: '/videos/posters/prospector.jpg',
+    clip: '/videos/clips/prospector.mp4',
+    clipPoster: '/videos/posters/prospector-clip.jpg'
+  }
+}
+
+/* Explainer films (remotion/explainers, rendered by
+   scripts/render-videos.sh explainers). Illustrative motion design, not
+   screen recordings, apart from the real captures they quote. */
+/* Flip to true once public/videos/explainers/ holds the rendered films.
+   Until then the explainer player and the "watch" buttons render nothing,
+   so the live site never shows an empty player. */
+export const explainersReady = false
+
+export const explainers = {
+  brand: {
+    title: 'What I build, in one minute',
+    src: '/videos/explainers/explainer-brand.mp4',
+    vertical: '/videos/explainers/explainer-brand-vertical.mp4',
+    poster: '/videos/posters/explainer-brand.jpg'
+  },
+  'ops-sprint': {
+    title: 'Ops Automation Sprint',
+    src: '/videos/explainers/explainer-ops-sprint.mp4',
+    poster: '/videos/posters/explainer-ops-sprint.jpg'
+  },
+  'ai-assistant': {
+    title: 'AI Assistant Build',
+    src: '/videos/explainers/explainer-ai-assistant.mp4',
+    poster: '/videos/posters/explainer-ai-assistant.jpg'
+  },
+  'internal-tool': {
+    title: 'Internal Tool / Dashboard',
+    src: '/videos/explainers/explainer-internal-tool.mp4',
+    poster: '/videos/posters/explainer-internal-tool.jpg'
+  }
+}
+
+/* ------------------------------------------------------------------
+   The product tour on the home page: nine moments across the three
+   working demos. Every image is a real 2x capture of the running app
+   (public/walkthroughs/); `spot` is the region the camera zooms into and
+   highlights, in the 1440x900 CSS-pixel space the captures were taken at.
+   ------------------------------------------------------------------ */
+export const screenTour = [
+  {
+    slug: 'relay',
+    url: 'relay.app/inbox',
+    file: '/walkthroughs/relay/03.png',
+    spot: { x: 160, y: 100, w: 362, h: 570 },
+    caption: 'WhatsApp, email and web enquiries land in one shared inbox.'
+  },
+  {
+    slug: 'relay',
+    url: 'relay.app/inbox',
+    file: '/walkthroughs/relay/03.png',
+    spot: { x: 521, y: 62, w: 480, h: 372 },
+    caption: 'Reply in one click, and the thread moves itself to pending.'
+  },
+  {
+    slug: 'relay',
+    url: 'relay.app/inbox',
+    file: '/walkthroughs/relay/03.png',
+    spot: { x: 1000, y: 62, w: 268, h: 300 },
+    caption: 'The client and their pipeline stage sit beside every thread.'
+  },
+  {
+    slug: 'signet',
+    url: 'signet.app/sign',
+    file: '/walkthroughs/signet/05.png',
+    spot: { x: 332, y: 504, w: 775, h: 380 },
+    caption: 'Your client signs with a finger. No account to create.'
+  },
+  {
+    slug: 'signet',
+    url: 'signet.app/documents',
+    file: '/walkthroughs/signet/06.png',
+    spot: { x: 880, y: 417, w: 380, h: 260 },
+    caption: 'Sealed with a SHA-256 fingerprint of the text and every signature.'
+  },
+  {
+    slug: 'signet',
+    url: 'signet.app/verify',
+    file: '/walkthroughs/signet/08.png',
+    spot: { x: 429, y: 90, w: 582, h: 130 },
+    caption: 'Change one character afterwards and the public check fails.'
+  },
+  {
+    slug: 'prospector',
+    url: 'prospector.app/workspace',
+    file: '/walkthroughs/prospector/03.png',
+    spot: { x: 176, y: 58, w: 1088, h: 208 },
+    caption: 'Paste a few websites. Each one is read live, on the spot.'
+  },
+  {
+    slug: 'prospector',
+    url: 'prospector.app/workspace',
+    file: '/walkthroughs/prospector/03.png',
+    spot: { x: 176, y: 382, w: 1088, h: 180 },
+    caption: 'Real contact details, scored by how reachable each lead is.'
+  },
+  {
+    slug: 'prospector',
+    url: 'prospector.app/leads',
+    file: '/walkthroughs/prospector/06.png',
+    spot: { x: 164, y: 115, w: 760, h: 280 },
+    caption: 'Anything missing is marked Not found, never guessed.'
+  }
+]
+
+/* The hero showreel: the strongest beats of the three working demos. */
+export const heroReel = {
+  src: '/videos/hero-reel.mp4',
+  poster: '/videos/posters/hero-reel.jpg',
+  caption: 'Relay, Signet and Prospector, real screens from the running apps.'
+}
+
 export const site = {
   name: 'Digital Systems Builder',
   tagline:
-    'I build complete production systems end to end — the site, the app, the payments, the backend, the AI and the infrastructure — for founders who need the whole thing built and shipped by one person, not a team to manage.',
+    'I build complete production systems end to end, the site, the app, the payments, the backend, the AI and the infrastructure, for founders who need the whole thing built and shipped by one person, not a team to manage.',
   email: 'aniket.html@gmail.com',
   whatsapp: '+91 9136582842', // digits are stripped in whatsapp.js for the wa.me link
   location: 'India · working with clients worldwide',
@@ -68,7 +225,7 @@ export const site = {
      is ever restated, restate this with it. */
   heroProof: {
     claim: 'Over twelve hundred client records, eleven therapists, one CRM the clinic runs its day on.',
-    note: 'From a live clinic CRM — the client and therapist counts are row counts from its production database, not an estimate.',
+    note: 'From a live clinic CRM: the client and therapist counts are row counts from its production database, not an estimate.',
     slug: 'therapist-pwa',
     linkLabel: 'See the system'
   }
@@ -91,7 +248,7 @@ export const founder = {
   /* One honest paragraph. Asserts only what the case studies, pricing and
      process on the rest of the site already stand behind. */
   intro:
-    'I build the operations software service businesses actually run on — booking, intake, follow-ups and team coordination — so the work stops living in WhatsApp threads and spreadsheets. It started with the systems a multi-practitioner wellness practice needed to stop drowning in admin, and it is the same shape of problem in a studio, an agency or a consultancy. You work with the person who builds it, and you own what ships.',
+    'I build the operations software service businesses actually run on: booking, intake, follow-ups and team coordination, so the work stops living in WhatsApp threads and spreadsheets. It started with the systems a multi-practitioner wellness practice needed to stop drowning in admin, and it is the same shape of problem in a studio, an agency or a consultancy. You work with the person who builds it, and you own what ships.',
 
   /* Aniket's own story — how he got here, what he did before — is his to
      write. Left empty on purpose rather than invented; the About page
@@ -122,7 +279,7 @@ export const founder = {
     },
     {
       title: 'Built on the tools you already pay for',
-      text: 'I pick the stack to fit the build — React, TypeScript, Postgres, n8n, Claude — and where your team already runs on something that works, I build on it instead of charging you to migrate.'
+      text: 'I pick the stack to fit the build (React, TypeScript, Postgres, n8n, Claude), and where your team already runs on something that works, I build on it instead of charging you to migrate.'
     }
   ],
 
@@ -158,35 +315,43 @@ export const testimonials = []
   Unused while `site.whatsapp` is empty — see components/WhatsAppCta.jsx.
 */
 export const whatsappPrefill = {
-  hero: 'Hi Aniket — I saw your site. Can we talk about the bookings at my clinic?',
+  hero: 'Hi Aniket, I saw your site. Can we talk about the bookings at my clinic?',
   /* The free-audit entry point (docs/research/06, gap G5) — highest-intent
      top-of-funnel opener, in the buyer's voice. */
   audit:
-    'Hi Aniket — I’d like to book the free 20-minute automation audit. The part of our week that eats the most time is:',
+    'Hi Aniket, I’d like to book the free 20-minute automation audit. The part of our week that eats the most time is:',
   /* `{offer}` is replaced with the package name by Pricing.jsx. */
-  pricing: 'Hi Aniket — I’d like to know more about the {offer} for my business.',
-  cta: 'Hi Aniket — there’s a part of our week I’d like to stop doing by hand. Can we talk?',
-  contact: 'Hi Aniket — I have a process I’d like to automate. Do you have 20 minutes?',
-  footer: 'Hi Aniket — quick question about the systems you build.',
-  nav: 'Hi Aniket — I’m on your site and would like to talk about a system for my business.'
+  pricing: 'Hi Aniket, I’d like to know more about the {offer} for my business.',
+  cta: 'Hi Aniket, there’s a part of our week I’d like to stop doing by hand. Can we talk?',
+  contact: 'Hi Aniket, I have a process I’d like to automate. Do you have 20 minutes?',
+  footer: 'Hi Aniket, quick question about the systems you build.',
+  nav: 'Hi Aniket, I’m on your site and would like to talk about a system for my business.'
 }
 
 export const projects = [
   {
     index: '01',
     slug: 'therapist-pwa',
+    highlights: [
+      'Session recordings become draft clinical notes in about a minute',
+      'A booking desk synced to Google Calendar and WhatsApp',
+      'Consent signed, sealed as a PDF and countersigned in a queue'
+    ],
     diagram: 'platform',
-    title: 'Therapist PWA App',
+    title: 'Therapist PWA',
+    subtitle: 'Clinic operations platform',
+    tagline: 'The CRM, booking desk and AI note-taker an eleven-therapist clinic runs its day on.',
+    year: '2025–26',
     summary:
       'Three apps under one roof for a multi-therapist mental-health clinic: the staff CRM the team runs its day on (tasks, client records, the booking desk, consent), the public forms clients fill in, and a client-facing recovery-companion PWA. All installable, with desktop push, fronting a private data service that owns the clinic’s data.',
     metrics: [
       { n: '1,200+', label: 'client records managed day to day' },
       { n: '11', label: 'therapists on one system' },
-      { n: '12', label: 'serverless functions — the whole API, by design' },
+      { n: '12', label: 'serverless functions: the whole API, by design' },
       { n: '1', label: 'person designed, built and ships it' }
     ],
     role:
-      'Sole designer and engineer — both React apps, the serverless API, the private data service, the access model and every automation behind it.',
+      'Sole designer and engineer: both React apps, the serverless API, the private data service, the access model and every automation behind it.',
     flow: ['Enquire', 'Book', 'See', 'Note', 'Consent', 'Follow up'],
     stack: [
       'React 19',
@@ -195,7 +360,7 @@ export const projects = [
       'Zustand',
       'Radix UI',
       'Tailwind CSS v4',
-      'PWA — installable + web push',
+      'PWA, installable + web push',
       'Node data service',
       'PostgreSQL',
       'Vercel serverless',
@@ -207,23 +372,23 @@ export const projects = [
       'IndexedDB (offline chunk queue)'
     ],
     problem:
-      'A busy clinic was running on a pile of disconnected tools — a calendar here, a spreadsheet of clients there, session notes typed up from memory after hours, follow-ups slipping through the cracks. Nothing talked to anything else, so the same client could be double-booked, a note could go missing, and nobody could see the whole picture in one place. What the practice needed was a single system its whole team runs on — from the first enquiry to the follow-up — without anyone re-keying the same details five times, and without client records ever sitting somewhere they should not.',
+      'A busy clinic was running on a pile of disconnected tools, a calendar here, a spreadsheet of clients there, session notes typed up from memory after hours, follow-ups slipping through the cracks. Nothing talked to anything else, so the same client could be double-booked, a note could go missing, and nobody could see the whole picture in one place. What the practice needed was a single system its whole team runs on, from the first enquiry to the follow-up, without anyone re-keying the same details five times, and without client records ever sitting somewhere they should not.',
     system: [
-      'Three apps in one repo — the staff CRM, the public forms clients fill in (enquiry, screening, consent, booking), and a client-facing recovery-companion PWA — all fronting a private data service, so client data never lives in the browser tier',
-      'The flagship: a session-recording → clinical-note pipeline on Google Gemini that replaces a paid tool at a fraction of the cost — the browser records in 60-second chunks queued in IndexedDB with retries, each is transcribed and its audio dropped, and on stop the full transcript is written into a draft note the therapist reviews',
+      'Three apps in one repo: the staff CRM, the public forms clients fill in (enquiry, screening, consent, booking), and a client-facing recovery-companion PWA, all fronting a private data service, so client data never lives in the browser tier',
+      'The flagship: a session-recording → clinical-note pipeline on Google Gemini that replaces a paid tool at a fraction of the cost, the browser records in 60-second chunks queued in IndexedDB with retries, each is transcribed and its audio dropped, and on stop the full transcript is written into a draft note the therapist reviews',
       'Guardrails around the AI, because it fails quietly otherwise: each chunk is a complete audio file (a headerless one makes the model invent dialogue), a degenerate-loop check catches the transcriber repeating itself, and a note that is not well-formed English fails loudly so the therapist re-drafts instead of trusting a fabrication',
       'A booking desk that runs each action through visual n8n workflows to Google Calendar / Meet and WhatsApp, with real-time availability, three session modes (in person, telephonic, online) and recurring bookings capped and gated server-side',
-      'Around 1,200 client records with therapist assignment, case notes, rolling AI case summaries regenerated after each note, and group sessions with a shared note read into every attendee’s file — visibility scoped per therapist and enforced on the server, down to a notes-locked flag',
+      'Around 1,200 client records with therapist assignment, case notes, rolling AI case summaries regenerated after each note, and group sessions with a shared note read into every attendee’s file, visibility scoped per therapist and enforced on the server, down to a notes-locked flag',
       'A consent pipeline (client signs, a sealed PDF generated server-side, stored, emailed and countersigned from a forms queue), a per-person access model checked on every request, tasks with owners and repeats, and desktop push through the service worker and VAPID',
     ],
     features: [
       {
         title: 'Session recording → AI clinical note',
-        text: 'The therapist records; a chunked Gemini pipeline transcribes as it goes and drafts a clinical note within about a minute of Stop — with loop- and hallucination-guards that fail loudly rather than invent a note.'
+        text: 'The therapist records; a chunked Gemini pipeline transcribes as it goes and drafts a clinical note within about a minute of Stop, with loop- and hallucination-guards that fail loudly rather than invent a note.'
       },
       {
         title: 'Booking desk',
-        text: 'Real-time availability, three session modes and recurring bookings, each action driven through n8n to Google Calendar / Meet and WhatsApp — capped and gated on the server.'
+        text: 'Real-time availability, three session modes and recurring bookings, each action driven through n8n to Google Calendar / Meet and WhatsApp, capped and gated on the server.'
       },
       {
         title: 'Clients, groups & consent',
@@ -237,15 +402,15 @@ export const projects = [
     decisions: [
       {
         title: 'The AI note pipeline is guarded, not trusted',
-        text: 'The transcriber and the note model both fail loudly: chunks are whole audio files (a headerless one makes the model fabricate dialogue), a degenerate-loop check catches runaway repetition, and a malformed note is rejected. Once the model tried to write a cardiology work-up for a patient who did not exist — the guard is why no therapist ever saw it.'
+        text: 'The transcriber and the note model both fail loudly: chunks are whole audio files (a headerless one makes the model fabricate dialogue), a degenerate-loop check catches runaway repetition, and a malformed note is rejected. Once the model tried to write a cardiology work-up for a patient who did not exist, the guard is why no therapist ever saw it.'
       },
       {
         title: 'The riskiest feature is deliberately unbuilt',
-        text: 'The client app has no AI coach yet, on purpose — a chatbot talking to someone in acute craving does not ship without crisis detection in front of every reply, a clinician-reviewed prompt, and an agreed answer to who responds when a client discloses self-harm at 2am. Until then, Help links to live 24/7 meetings.'
+        text: 'The client app has no AI coach yet, on purpose, a chatbot talking to someone in acute craving does not ship without crisis detection in front of every reply, a clinician-reviewed prompt, and an agreed answer to who responds when a client discloses self-harm at 2am. Until then, Help links to live 24/7 meetings.'
       },
       {
         title: 'Twelve serverless functions, on purpose',
-        text: 'The entire API is exactly twelve serverless functions — the host’s free-tier ceiling. New features add an action to an existing handler instead of a new file, so the whole thing keeps running at no infra cost.'
+        text: 'The entire API is exactly twelve serverless functions, the host’s free-tier ceiling. New features add an action to an existing handler instead of a new file, so the whole thing keeps running at no infra cost.'
       },
       {
         title: 'The browser never touches the data tier',
@@ -253,25 +418,33 @@ export const projects = [
       },
       {
         title: 'Permissions live on the server',
-        text: 'Who can do what — edit a client, work the front desk, read peer-support notes, see the whole client book — is checked on the server, so a hidden button is genuinely locked, not merely out of sight.'
+        text: 'Who can do what (edit a client, work the front desk, read peer-support notes, see the whole client book) is checked on the server, so a hidden button is genuinely locked, not merely out of sight.'
       }
     ],
     outcome: [
-      'The clinic’s day — tasks, clients, bookings, consent and forms — runs from one installable app instead of a scatter of tools',
+      'The clinic’s day (tasks, clients, bookings, consent and forms) runs from one installable app instead of a scatter of tools',
       'Around 1,200 client records across 11 therapists, managed day to day with assignment-scoped access',
       'Writing up a session became checking an AI-drafted summary instead of typing it from memory',
       'One person keeps the whole thing running: two apps, a private data service, and the automations behind them'
     ],
     outcomeNote:
-      'Client and therapist counts are row counts from the live system. The rest describes the change from the clinic’s side — directional, not an audited metric.'
+      'Client and therapist counts are row counts from the live system. The rest describes the change from the clinic’s side, directional, not an audited metric.'
   },
   {
     index: '02',
     slug: 'udaan',
+    highlights: [
+      'A ten-stage journey from first enquiry to enrolled client',
+      'Clinical gates that lock the course until a real session happens',
+      'A privacy wall between family and client, enforced in the data'
+    ],
     diagram: 'journey',
-    title: 'Udaan — Online Recovery-Care Platform',
+    title: 'Udaan',
+    subtitle: 'Online recovery-care platform',
+    tagline: 'A 12-week recovery program: course, live therapy and an always-on safety layer in one gated portal.',
+    year: '2026',
     summary:
-      'A 12-week online recovery program that runs three things at once: a self-paced course that teaches, live one-to-one and group therapy that treats, and an always-on safety layer that never switches off — all behind a private, gated portal.',
+      'A 12-week online recovery program that runs three things at once: a self-paced course that teaches, live one-to-one and group therapy that treats, and an always-on safety layer that never switches off, all behind a private, gated portal.',
     metrics: [
       { n: '12', label: 'week program, from intake to graduation' },
       { n: '10', label: 'stages in the client journey, each a real screen' },
@@ -279,7 +452,7 @@ export const projects = [
       { n: '5', label: 'clinical gates that pause the course for care' }
     ],
     role:
-      'Sole designer and engineer — the client journey, the course engine, all four portals, the private data model, every integration and the infrastructure.',
+      'Sole designer and engineer: the client journey, the course engine, all four portals, the private data model, every integration and the infrastructure.',
     flow: ['Discover', 'Triage', 'Screen', 'Assess', 'Pay', 'Enrol'],
     stack: [
       'Next.js 16',
@@ -297,11 +470,11 @@ export const projects = [
       'Razorpay'
     ],
     problem:
-      'Recovery care is not a video course, and it is not only therapy — it is both at once, with a safety net underneath. The hard part is holding all three together honestly. A course that lets someone race ahead without ever speaking to a therapist is just content; therapy with no structure between sessions loses people in the gaps; and a platform handling this kind of health data cannot let the wrong person see the wrong thing, ever. The job was to build one platform where the course, the live care and the safety layer run together — and where the clinical rules are actually enforced, not just printed in a handbook.',
+      'Recovery care is not a video course, and it is not only therapy, it is both at once, with a safety net underneath. The hard part is holding all three together honestly. A course that lets someone race ahead without ever speaking to a therapist is just content; therapy with no structure between sessions loses people in the gaps; and a platform handling this kind of health data cannot let the wrong person see the wrong thing, ever. The job was to build one platform where the course, the live care and the safety layer run together, and where the clinical rules are actually enforced, not just printed in a handbook.',
     system: [
-      'A ten-stage journey from stranger to enrolled client: someone discovers the site, fills a triage form (which creates a lead, not yet an account), a coordinator books a screening call, the person is assessed, pays, and only then is given a portal account — each stage a real working screen with its own data and admin tools',
-      'A course engine of 12 modules and 48 lessons across four movements — Understand, Regulate, Rebuild, Become — worksheets instead of scored quizzes, unlocking by doing the work rather than by a grade',
-      'Clinical gates that pause the course until a required therapist session actually happens — and the rule is enforced in one place, so even a hand-made link hits the same lock as a button on the screen',
+      'A ten-stage journey from stranger to enrolled client: someone discovers the site, fills a triage form (which creates a lead, not yet an account), a coordinator books a screening call, the person is assessed, pays, and only then is given a portal account, each stage a real working screen with its own data and admin tools',
+      'A course engine of 12 modules and 48 lessons across four movements (Understand, Regulate, Rebuild, Become), worksheets instead of scored quizzes, unlocking by doing the work rather than by a grade',
+      'Clinical gates that pause the course until a required therapist session actually happens, and the rule is enforced in one place, so even a hand-made link hits the same lock as a button on the screen',
       'Course video and audio served through short-lived signed links that check enrolment, order and the gates before anything plays',
       'A privacy boundary built into the data itself: a family member sees the shape of the program but never the client’s journal, check-ins or notes, and a flagged journal entry sends the alert, never the words',
       'Booking, intake payment, email and media all wired in and verified, running on free tiers and a single self-hosted box by choice'
@@ -315,7 +488,7 @@ export const projects = [
       {
         role: 'Family',
         title: 'A window, not a door',
-        text: 'A relative sees the shape of the program and how it is going — never the journal, the check-ins or the notes. The boundary is enforced in the data, not just the design.'
+        text: 'A relative sees the shape of the program and how it is going, never the journal, the check-ins or the notes. The boundary is enforced in the data, not just the design.'
       },
       {
         role: 'Therapist',
@@ -331,7 +504,7 @@ export const projects = [
     stages: [
       {
         title: 'Understand',
-        text: 'The first movement — seeing the problem clearly, with the safety layer already on.'
+        text: 'The first movement, seeing the problem clearly, with the safety layer already on.'
       },
       {
         title: 'Regulate',
@@ -346,7 +519,7 @@ export const projects = [
         text: 'Consolidating into something that holds after the program ends.'
       },
       {
-        title: 'Get Help — always on',
+        title: 'Get Help: always on',
         text: 'A crisis button on every screen, backed by an escalation protocol, running under all four movements from day one.',
         safety: true
       }
@@ -354,7 +527,7 @@ export const projects = [
     decisions: [
       {
         title: 'One place for the clinical rules',
-        text: 'Every gate and permission is decided in a single source of truth that both the screen and the media links ask — so there is no back door where a rule quietly does not apply.'
+        text: 'Every gate and permission is decided in a single source of truth that both the screen and the media links ask, so there is no back door where a rule quietly does not apply.'
       },
       {
         title: 'Treat every client row as sensitive',
@@ -362,41 +535,49 @@ export const projects = [
       },
       {
         title: 'Manual-first where the tools cannot be trusted',
-        text: 'The video tiers in use do not reliably report who attended, so attendance is taken by hand and topped up by a signed webhook — an honest default beats a number that looks precise and is wrong.'
+        text: 'The video tiers in use do not reliably report who attended, so attendance is taken by hand and topped up by a signed webhook, an honest default beats a number that looks precise and is wrong.'
       },
       {
         title: 'No model where a template will do',
-        text: 'The program “builds” fourteen artifacts for each client — the six-part relapse-prevention plan, the letter to future self — but none use a model: each is assembled verbatim from worksheet answers the client already wrote, and the curriculum is real clinical content, not generated. In recovery care, a deterministic artifact you can trust beats a plausible one you cannot.'
+        text: 'The program “builds” fourteen artifacts for each client, the six-part relapse-prevention plan, the letter to future self, but none use a model: each is assembled verbatim from worksheet answers the client already wrote, and the curriculum is real clinical content, not generated. In recovery care, a deterministic artifact you can trust beats a plausible one you cannot.'
       },
       {
         title: 'Cost-constrained by choice',
-        text: 'Free tiers and one small self-hosted server, reached over a private tunnel — no Kubernetes, no managed sprawl, because the program does not need the bill.'
+        text: 'Free tiers and one small self-hosted server, reached over a private tunnel, no Kubernetes, no managed sprawl, because the program does not need the bill.'
       }
     ],
     outcome: [
       'The course, the live care and the safety layer run as one program instead of three disconnected things',
-      'The clinical rules are enforced by the system, not left to memory — a locked lesson is genuinely locked, everywhere',
+      'The clinical rules are enforced by the system, not left to memory, a locked lesson is genuinely locked, everywhere',
       'A hard privacy wall between family and client is guaranteed by the data model, not by people being careful',
       'Live on staging, built and run end to end by one person'
     ],
     outcomeNote:
-      'Module, session, stage and gate counts are real counts from the build. Everything else describes the platform’s design from the builder’s seat — directional, not an audited outcome.'
+      'Module, session, stage and gate counts are real counts from the build. Everything else describes the platform’s design from the builder’s seat, directional, not an audited outcome.'
   },
   {
     index: '03',
     slug: 'signet',
+    highlights: [
+      'Clinic, studio and agency templates, signed on any phone',
+      'A SHA-256 seal over the text and every signature',
+      'A public page that proves the document is unchanged'
+    ],
     diagram: 'signature',
-    title: 'Signet — Consent & Contract Signing',
+    title: 'Signet',
+    subtitle: 'Consent & contract signing',
+    tagline: 'E-signatures with a real audit trail and a tamper-evident seal anyone can verify.',
+    year: '2026',
     summary:
-      'A self-built e-signature tool for service businesses: send a consent form or contract, collect a signature that carries a real audit trail, and get back a sealed, tamper-evident PDF — without an enterprise contract or a login for the person signing.',
+      'A self-built e-signature tool for service businesses: send a consent form or contract, collect a signature that carries a real audit trail, and get back a sealed, tamper-evident PDF, without an enterprise contract or a login for the person signing.',
     metrics: [
-      { n: '3', label: 'signer-ready templates — clinic, studio, agency' },
+      { n: '3', label: 'signer-ready templates: clinic, studio, agency' },
       { n: 'SHA-256', label: 'seal recomputed and checked on a public page' },
-      { n: '0', label: 'third-party e-signature services — the sealing and PDF are mine' },
+      { n: '0', label: 'third-party e-signature services; the sealing and PDF are mine' },
       { n: '1', label: 'person: design, engineering and the cryptography' }
     ],
     role:
-      'Self-initiated build — the product, the signature capture, the tamper-evident sealing, the certificate PDF and the verification flow.',
+      'Self-initiated build: the product, the signature capture, the tamper-evident sealing, the certificate PDF and the verification flow.',
     flow: ['Compose', 'Send', 'Sign', 'Seal', 'Verify'],
     stack: [
       'Next.js',
@@ -406,18 +587,18 @@ export const projects = [
       'Drizzle ORM',
       'libSQL / SQLite (Turso in production)',
       'pdf-lib',
-      'Web Crypto — SHA-256',
+      'Web Crypto, SHA-256',
       'Vercel'
     ],
     problem:
-      'The businesses that most need a signed consent form or contract on file — a clinic taking informed consent, a studio taking a waiver, an agency getting a statement of work signed off — are the ones e-signature tools serve worst. The serious products are priced and shaped for enterprises, make the person signing create an account, and hide what "signed" actually means behind a black box. I wanted to see how small an honest version could be: send a link, collect a signature with a real audit trail, and hand back a document whose authenticity anyone can check — without a signing API doing the part that matters.',
+      'The businesses that most need a signed consent form or contract on file, a clinic taking informed consent, a studio taking a waiver, an agency getting a statement of work signed off, are the ones e-signature tools serve worst. The serious products are priced and shaped for enterprises, make the person signing create an account, and hide what "signed" actually means behind a black box. I wanted to see how small an honest version could be: send a link, collect a signature with a real audit trail, and hand back a document whose authenticity anyone can check, without a signing API doing the part that matters.',
     system: [
-      'A composer that starts from a realistic clinic, studio or agency template — or blank — and takes the people who need to sign, each getting their own unguessable signing link with no account to create',
+      'A composer that starts from a realistic clinic, studio or agency template, or blank, and takes the people who need to sign, each getting their own unguessable signing link with no account to create',
       'A signing page that works on a phone: the signer reads the document, draws or types a signature, and consents, with their timestamp, IP and device recorded as they do',
-      'A tamper-evident seal — a SHA-256 computed over the document’s full text and every signature — set the moment the last signer is done, so the record is sealed rather than merely stored',
+      'A tamper-evident seal, a SHA-256 computed over the document’s full text and every signature, set the moment the last signer is done, so the record is sealed rather than merely stored',
       'A certificate PDF generated with pdf-lib: the document, each signature embedded, and a certificate page carrying the seal and the full event log',
-      'A public verification page that recomputes the seal over the current stored record and says plainly whether it still matches — the check, not a claim of it',
-      'An append-only audit trail behind all of it: created, sent, viewed, signed, completed — every state change writes a row before it touches the document'
+      'A public verification page that recomputes the seal over the current stored record and says plainly whether it still matches, the check, not a claim of it',
+      'An append-only audit trail behind all of it: created, sent, viewed, signed, completed, every state change writes a row before it touches the document'
     ],
     features: [
       {
@@ -430,11 +611,11 @@ export const projects = [
       },
       {
         title: 'A seal, not just storage',
-        text: 'The finished document is hashed over its text and every signature. Change one character afterwards and the seal no longer matches — and the verify page catches it.'
+        text: 'The finished document is hashed over its text and every signature. Change one character afterwards and the seal no longer matches, and the verify page catches it.'
       },
       {
         title: 'Verification anyone can run',
-        text: 'A public page recomputes the seal live against the stored record and shows authentic or tampered — no account, no trust required, just the check.'
+        text: 'A public page recomputes the seal live against the stored record and shows authentic or tampered, no account, no trust required, just the check.'
       }
     ],
     decisions: [
@@ -444,7 +625,7 @@ export const projects = [
       },
       {
         title: 'One database that scales from a file to a URL',
-        text: 'libSQL is a local SQLite file in development and a hosted Turso database in production by changing two environment variables — the same "runs on a free tier, deploys without drama" posture as the client systems.'
+        text: 'libSQL is a local SQLite file in development and a hosted Turso database in production by changing two environment variables, the same "runs on a free tier, deploys without drama" posture as the client systems.'
       },
       {
         title: 'No signing API doing the important part',
@@ -452,32 +633,40 @@ export const projects = [
       },
       {
         title: 'Name the cut corners out loud',
-        text: 'As a demo it has no sender-side accounts and shows signing links to copy rather than emailing them. The README says so plainly — the limitations are stated, not hidden.'
+        text: 'As a demo it has no sender-side accounts and shows signing links to copy rather than emailing them. The README says so plainly, the limitations are stated, not hidden.'
       }
     ],
     outcome: [
-      'The full loop works end to end: compose, sign on a phone, seal, and verify — demonstrated, not described',
-      'Tamper detection is proven — altering a sealed document flips the public verification page from authentic to a seal mismatch',
+      'The full loop works end to end: compose, sign on a phone, seal, and verify, demonstrated, not described',
+      'Tamper detection is proven, altering a sealed document flips the public verification page from authentic to a seal mismatch',
       'It is the first project on this site with real product screenshots rather than a schematic standing in for one'
     ],
     outcomeNote:
-      'Signet is a self-initiated working demo, not a client deployment — so there are no usage numbers here, because there are no users yet. The counts above describe what was built. The screenshots are of the running app.'
+      'Signet is a self-initiated working demo, not a client deployment, so there are no usage numbers here, because there are no users yet. The counts above describe what was built. The screenshots are of the running app.'
   },
   {
     index: '04',
     slug: 'relay',
+    highlights: [
+      'WhatsApp, email and web enquiries in one shared inbox',
+      'Reply, leave a note or assign without leaving the thread',
+      'Every conversation tied to a stage in the pipeline'
+    ],
     diagram: 'relay',
-    title: 'Relay — Shared Inbox & CRM',
+    title: 'Relay',
+    subtitle: 'Shared inbox & CRM',
+    tagline: 'WhatsApp, email and web enquiries in one shared inbox, tied to a pipeline.',
+    year: '2026',
     summary:
-      'A self-built shared client inbox and lightweight CRM for service businesses: every enquiry — WhatsApp, email, web form — in one thread view, tied to a contact record that moves through the pipeline, so a lead stops living in one person’s phone.',
+      'A self-built shared client inbox and lightweight CRM for service businesses: every enquiry (WhatsApp, email, web form) in one thread view, tied to a contact record that moves through the pipeline, so a lead stops living in one person’s phone.',
     metrics: [
-      { n: '3', label: 'channels — WhatsApp, email, web form — in one inbox' },
+      { n: '3', label: 'channels (WhatsApp, email, web form) in one inbox' },
       { n: '5', label: 'pipeline stages from first enquiry to won' },
-      { n: '1', label: 'record for the enquiry and the client — not two' },
-      { n: '0', label: 'per-seat inbox subscriptions — it is one small app' }
+      { n: '1', label: 'record for the enquiry and the client, not two' },
+      { n: '0', label: 'per-seat inbox subscriptions; it is one small app' }
     ],
     role:
-      'Self-initiated build — the inbox, the thread and triage model, the CRM pipeline, the data model and the seed.',
+      'Self-initiated build: the inbox, the thread and triage model, the CRM pipeline, the data model and the seed.',
     flow: ['Arrive', 'Triage', 'Reply', 'Advance', 'Win'],
     stack: [
       'Next.js',
@@ -490,13 +679,13 @@ export const projects = [
       'Vercel'
     ],
     problem:
-      'A service business runs on first conversations — a WhatsApp from a referral, an email asking about fees, a web-form enquiry at midnight — and almost none of them are set up to hold those conversations well. The enquiry lands in someone’s personal phone; the client record, if it exists at all, lives in a separate spreadsheet; and the moment an enquiry becomes a client, the context of how they got there is gone. I wanted to build the smallest honest version of the thing the big support desks and CRMs each do half of: one place where the message and the person are the same record, so replying to a client and moving a deal forward happen in the same motion.',
+      'A service business runs on first conversations, a WhatsApp from a referral, an email asking about fees, a web-form enquiry at midnight, and almost none of them are set up to hold those conversations well. The enquiry lands in someone’s personal phone; the client record, if it exists at all, lives in a separate spreadsheet; and the moment an enquiry becomes a client, the context of how they got there is gone. I wanted to build the smallest honest version of the thing the big support desks and CRMs each do half of: one place where the message and the person are the same record, so replying to a client and moving a deal forward happen in the same motion.',
     system: [
       'A shared inbox that collapses WhatsApp, email and web-form conversations into one list, each thread marked with the channel it arrived on so you always know how to reply',
       'A thread view with the two things a team actually needs beside the messages: the contact’s details and pipeline stage, and internal notes the client never sees',
-      'Triage built for more than one person: assign a conversation, and set it open, pending or closed — where sending a reply moves it to pending on its own',
+      'Triage built for more than one person: assign a conversation, and set it open, pending or closed, where sending a reply moves it to pending on its own',
       'A CRM that is the same data seen differently: every conversation is attached to a contact that moves lead → qualified → active → won or lost, shown as a pipeline board and a per-contact history',
-      'Server-rendered throughout, so the triage controls are real forms that work without JavaScript — only the composer and the inbox filter are client-side',
+      'Server-rendered throughout, so the triage controls are real forms that work without JavaScript, only the composer and the inbox filter are client-side',
       'A demo seeded with a believable morning of enquiries, and a control that fabricates an inbound reply so the live-inbox behaviour can be seen without a real messaging integration'
     ],
     features: [
@@ -510,7 +699,7 @@ export const projects = [
       },
       {
         title: 'Triage like a team',
-        text: 'Assign a conversation and move it through open, pending and closed — sending a reply advances it automatically.'
+        text: 'Assign a conversation and move it through open, pending and closed, sending a reply advances it automatically.'
       },
       {
         title: 'The pipeline is built in',
@@ -520,7 +709,7 @@ export const projects = [
     decisions: [
       {
         title: 'The enquiry and the client are one record',
-        text: 'Rather than an inbox bolted to a separate CRM, a conversation belongs to a contact from the first message. Moving a deal and replying to a client act on the same row — which is the whole reason the tool exists.'
+        text: 'Rather than an inbox bolted to a separate CRM, a conversation belongs to a contact from the first message. Moving a deal and replying to a client act on the same row, which is the whole reason the tool exists.'
       },
       {
         title: 'Server-rendered, so triage works without JavaScript',
@@ -528,12 +717,12 @@ export const projects = [
       },
       {
         title: 'Simulate the inbound rather than fake the integration',
-        text: 'Real WhatsApp and email webhooks were out of scope for a demo, so instead of pretending they exist, there is an honest "simulate a client reply" control — and the README says exactly where a real provider would plug in.'
+        text: 'Real WhatsApp and email webhooks were out of scope for a demo, so instead of pretending they exist, there is an honest "simulate a client reply" control, and the README says exactly where a real provider would plug in.'
       }
     ],
     outcome: [
-      'The daily loop works end to end: open a thread, reply, triage, and advance the contact down the pipeline — on one record',
-      'The inbox and the CRM genuinely share data — a stage change on the contact page shows on the thread, and a reply shows on the pipeline',
+      'The daily loop works end to end: open a thread, reply, triage, and advance the contact down the pipeline, on one record',
+      'The inbox and the CRM genuinely share data, a stage change on the contact page shows on the thread, and a reply shows on the pipeline',
       'Seeded with realistic enquiries so the demo behaves like a real morning of client work, not an empty shell'
     ],
     outcomeNote:
@@ -542,18 +731,26 @@ export const projects = [
   {
     index: '05',
     slug: 'prospector',
+    highlights: [
+      'Reads structured data, meta tags and contact links',
+      'Scores every lead by how reachable it is',
+      'Shortlist, filter and export the list to CSV'
+    ],
     diagram: 'prospect',
-    title: 'Prospector — Lead-Research Scraper',
+    title: 'Prospector',
+    subtitle: 'Lead-research tool',
+    tagline: 'Paste a website, get a scored, exportable lead with real contact details.',
+    year: '2026',
     summary:
-      'A self-built lead-research tool: paste a business website and Prospector reads its public pages and pulls the name, contact details, location and socials into one clean, scored, exportable list — for the studio or agency doing its own outreach.',
+      'A self-built lead-research tool: paste a business website and Prospector reads its public pages and pulls the name, contact details, location and socials into one clean, scored, exportable list, for the studio or agency doing its own outreach.',
     metrics: [
-      { n: '5', label: 'signals read per page — JSON-LD, OG, email, phone, socials' },
+      { n: '5', label: 'signals read per page: JSON-LD, OG, email, phone, socials' },
       { n: '0–100', label: 'completeness score, weighted to contact details' },
-      { n: '0', label: 'third-party scraping APIs — the extractor is in the repo' },
+      { n: '0', label: 'third-party scraping APIs; the extractor is in the repo' },
       { n: 'CSV', label: 'the whole list exports in one click' }
     ],
     role:
-      'Self-initiated build — the extractor, the scoring, the workspace, the data model and the CSV export.',
+      'Self-initiated build: the extractor, the scoring, the workspace, the data model and the CSV export.',
     flow: ['Paste', 'Fetch', 'Extract', 'Score', 'Export'],
     stack: [
       'Next.js',
@@ -566,19 +763,19 @@ export const projects = [
       'Vercel'
     ],
     problem:
-      'A studio or agency doing its own outreach doesn’t need a sales platform with a per-seat licence and a CRM bolted on — it needs a short, clean list of businesses it could actually contact. Building that list by hand means opening twenty tabs and copying a name, an email and an Instagram handle off each one. The job here was the smallest honest version of that: paste the URLs, and let the tool do the reading — while being straight about the fact that real web pages are messy and half of them won’t give up an email.',
+      'A studio or agency doing its own outreach doesn’t need a sales platform with a per-seat licence and a CRM bolted on, it needs a short, clean list of businesses it could actually contact. Building that list by hand means opening twenty tabs and copying a name, an email and an Instagram handle off each one. The job here was the smallest honest version of that: paste the URLs, and let the tool do the reading, while being straight about the fact that real web pages are messy and half of them won’t give up an email.',
     system: [
       'A server-side extractor that fetches a page and reads the business behind it in priority order: JSON-LD structured data first, then Open Graph and meta tags, then the page itself for mailto and tel links and social profiles',
       'A completeness score from 0 to 100, weighted toward contact details, so the businesses you can actually reach rise to the top of the list',
       'A workspace that takes a batch of URLs at once, scrapes them with a little concurrency, and drops each result into a filterable, searchable table',
-      'A per-lead view showing every extracted field — and marking the ones that were not found as not found, rather than inventing them',
-      'A pipeline of its own — new, shortlisted, contacted, archived — plus a one-click CSV export of the whole list',
+      'A per-lead view showing every extracted field, and marking the ones that were not found as not found, rather than inventing them',
+      'A pipeline of its own, new, shortlisted, contacted, archived, plus a one-click CSV export of the whole list',
       'No headless browser and no scraping API: the extractor is about a hundred readable lines built on a lightweight HTML parser'
     ],
     features: [
       {
         title: 'It actually reads the page',
-        text: 'Structured data, Open Graph, and the page’s own mailto / tel and social links — parsed into fields server-side, not scraped blindly or run through a paid API.'
+        text: 'Structured data, Open Graph, and the page’s own mailto / tel and social links, parsed into fields server-side, not scraped blindly or run through a paid API.'
       },
       {
         title: 'Scored by what you can act on',
@@ -586,7 +783,7 @@ export const projects = [
       },
       {
         title: 'Honest about the gaps',
-        text: 'Web pages are inconsistent. A missing email is shown as “Not found”, never guessed — the score simply reflects how much was there.'
+        text: 'Web pages are inconsistent. A missing email is shown as “Not found”, never guessed, the score simply reflects how much was there.'
       },
       {
         title: 'Filter, shortlist, export',
@@ -600,7 +797,7 @@ export const projects = [
       },
       {
         title: 'No headless browser, on purpose',
-        text: 'A real Chromium would read JavaScript-rendered sites but cost speed, memory and complexity. A lightweight HTML parser covers most real business pages and keeps the whole tool small — the README names the trade-off.'
+        text: 'A real Chromium would read JavaScript-rendered sites but cost speed, memory and complexity. A lightweight HTML parser covers most real business pages and keeps the whole tool small, the README names the trade-off.'
       },
       {
         title: 'Record what was found, score the rest',
@@ -608,13 +805,34 @@ export const projects = [
       }
     ],
     outcome: [
-      'The extraction is real — pasting a live URL fetches and parses it on the spot, and the seeded rows are genuine extractions from real public pages',
+      'The extraction is real, pasting a live URL fetches and parses it on the spot, and the seeded rows are genuine extractions from real public pages',
       'Leads sort by how reachable they are, so the list is useful the moment it is built',
       'The whole list exports to CSV, which is the actual job of a research tool'
     ],
     outcomeNote:
       'Prospector is a self-initiated working demo, not a client deployment. It reads only public pages and is best pointed at sites that publish structured data; the counts describe what was built. The screenshots are of the running app.'
   }
+]
+
+/* The moving "built with" strip: every name here is in a project's
+   `stack` above or in proofTools below — nothing the work doesn't use. */
+export const stackMarquee = [
+  'React',
+  'Next.js',
+  'TypeScript',
+  'Node',
+  'PostgreSQL',
+  'n8n',
+  'Claude',
+  'Gemini',
+  'Tailwind CSS',
+  'Drizzle ORM',
+  'Vercel',
+  'Cloudflare Workers',
+  'Razorpay',
+  'Google Calendar',
+  'WhatsApp · MSG91',
+  'PWA · offline'
 ]
 
 export const proofTools = [
@@ -624,15 +842,15 @@ export const proofTools = [
   },
   {
     name: 'Claude',
-    note: 'For the judgement steps — reading messy input, drafting replies, summarising.'
+    note: 'For the judgement steps: reading messy input, drafting replies, summarising.'
   },
   {
     name: 'Postgres',
-    note: 'The system of record: real relations, constraints and room to grow — not a spreadsheet pretending to be a database.'
+    note: 'The system of record: real relations, constraints and room to grow, not a spreadsheet pretending to be a database.'
   },
   {
     name: 'React & Next.js',
-    note: 'The screens people use every day — dashboards, portals, booking flows — server-rendered where the project needs it.'
+    note: 'The screens people use every day: dashboards, portals, booking flows, server-rendered where the project needs it.'
   },
   {
     name: 'TypeScript',
@@ -640,7 +858,7 @@ export const proofTools = [
   },
   {
     name: 'Node & serverless',
-    note: 'The backend and APIs on Vercel or Cloudflare Workers — nothing to babysit, and it scales to zero when idle.'
+    note: 'The backend and APIs on Vercel or Cloudflare Workers, nothing to babysit, and it scales to zero when idle.'
   }
 ]
 
@@ -657,6 +875,7 @@ export const proofTools = [
 export const packages = [
   {
     name: 'Ops Automation Sprint',
+    explainer: 'ops-sprint',
     price: '₹40k – ₹80k',
     timeline: 'Live in 2 weeks',
     featured: true,
@@ -671,6 +890,7 @@ export const packages = [
   },
   {
     name: 'AI Assistant Build',
+    explainer: 'ai-assistant',
     price: '₹80k – ₹1.5L',
     timeline: 'Live in 3 weeks',
     featured: false,
@@ -685,6 +905,7 @@ export const packages = [
   },
   {
     name: 'Internal Tool / Dashboard',
+    explainer: 'internal-tool',
     price: '₹1.5L – ₹3L',
     timeline: 'Live in 3–4 weeks',
     featured: false,
@@ -769,7 +990,7 @@ export const process = [
 export const faq = [
   {
     q: 'How long does a build take?',
-    a: 'Most first engagements are an Ops Automation Sprint: fixed scope, live in two weeks. Larger systems — a booking platform, a full team operations layer — run three to five weeks depending on how many people and tools they touch.'
+    a: 'Most first engagements are an Ops Automation Sprint: fixed scope, live in two weeks. Larger systems (a booking platform, a full team operations layer) run three to five weeks depending on how many people and tools they touch.'
   },
   {
     q: 'What does it cost?',
@@ -785,7 +1006,7 @@ export const faq = [
   },
   {
     q: 'Do you work with clients outside India?',
-    a: 'Yes. The work is remote either way — mapping calls, async updates, a live walkthrough at handover. Timezone only changes when the calls happen.'
+    a: 'Yes. The work is remote either way, mapping calls, async updates, a live walkthrough at handover. Timezone only changes when the calls happen.'
   },
   {
     q: 'What do you need from me to start?',

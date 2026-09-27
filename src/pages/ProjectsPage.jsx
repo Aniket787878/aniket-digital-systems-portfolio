@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { projects } from '../data.js'
-import SystemDiagram from '../components/SystemDiagram.jsx'
+import { projects, films } from '../data.js'
+import LoopVideo from '../components/LoopVideo.jsx'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 
 const toList = (value) =>
@@ -9,55 +9,79 @@ const toList = (value) =>
 const toText = (value) => (typeof value === 'string' && value.trim() ? value.trim() : '')
 
 export default function ProjectsPage() {
-  useDocumentTitle('Projects — Aniket')
+  useDocumentTitle('Projects · Aniket')
   return (
     <section className="container page page-wide">
       <p className="eyebrow">Projects</p>
       <h1 className="page-title">Projects</h1>
       <p className="page-lede">
         Complete systems, each designed, built and shipped end to end by one
-        person — the app, the backend, the payments, the AI and the
+        person: the app, the backend, the payments, the AI and the
         infrastructure. Two run real businesses every day; Signet, Relay and
         Prospector are tools I built to work the same ideas in the open.
       </p>
-      <ul className="project-list">
-        {projects.map((project) => {
+      {/* A showcase, not a list: every project leads with its film. The
+          working demos play real captures on hover; the client platforms
+          play a schematic, and the badge on the media says which. */}
+      <ul className="showcase">
+        {projects.map((project, i) => {
           const stack = toList(project.stack)
           const summary = toText(project.summary)
-          const role = toText(project.role)
-          const timeline = toText(project.timeline)
           const index = toText(project.index)
+          const film = films[project.slug]
+          const real = film?.kind === 'real'
+          const metrics = (project.metrics || []).slice(0, 2)
+          const shown = stack.slice(0, 5)
 
           return (
-            <li key={project.slug}>
-              <Link to={`/projects/${project.slug}`}>
-                {/* The schematic carries its own description in the SVG's
-                    aria-label, so the row is legible to a screen reader
-                    without the heading repeating it. */}
-                <SystemDiagram className="case-index-thumb" variant={project.diagram} />
-                <div className="case-index-main">
-                  <h2>{toText(project.title) || 'Untitled project'}</h2>
-                  {summary && <p className="case-index-summary">{summary}</p>}
-                  {role && (
-                    <p className="case-index-role">
-                      <span className="case-index-role-label">Role</span>
-                      {role}
-                    </p>
+            <li key={project.slug} className={`showcase-item${i % 2 ? ' showcase-item-alt' : ''}`}>
+              <Link to={`/projects/${project.slug}`} className="showcase-card loop-video-host">
+                <div className={`showcase-media${real ? '' : ' is-schematic'}`}>
+                  {film && (
+                    <LoopVideo
+                      mode="hover"
+                      src={real ? film.clip : film.src}
+                      poster={real ? film.clipPoster : film.poster}
+                      className="showcase-video"
+                    />
                   )}
-                  {stack.length > 0 && (
-                    <div className="case-index-stack">
-                      {stack.map((tool) => (
-                        <span className="chip" key={tool}>
-                          {tool}
-                        </span>
+                  <span className={`showcase-badge${real ? ' is-real' : ''}`}>
+                    {real ? 'Real screens' : 'Schematic · client data never shown'}
+                  </span>
+                </div>
+                <div className="showcase-body">
+                  <div className="showcase-meta">
+                    {index && <span className="showcase-index">{index}</span>}
+                    <span className="showcase-kind">
+                      {real ? 'Working demo' : 'Production platform'}
+                    </span>
+                  </div>
+                  <h2 className="showcase-title">{toText(project.title) || 'Untitled project'}</h2>
+                  {summary && <p className="showcase-summary">{summary}</p>}
+                  {metrics.length > 0 && (
+                    <div className="showcase-metrics">
+                      {metrics.map((metric) => (
+                        <div key={metric.label}>
+                          <span className="showcase-metric-n">{metric.n}</span>
+                          <span className="showcase-metric-label">{metric.label}</span>
+                        </div>
                       ))}
                     </div>
                   )}
-                </div>
-                <div className="project-meta case-index-meta">
-                  {index && <span>{index}</span>}
-                  {timeline && <span>{timeline}</span>}
-                  {project.private && <span>Private Client System</span>}
+                  {shown.length > 0 && (
+                    <div className="showcase-stack">
+                      {shown.map((tool) => (
+                        <span className="chip" key={tool}>{tool}</span>
+                      ))}
+                      {stack.length > shown.length && (
+                        <span className="chip chip-more">+{stack.length - shown.length}</span>
+                      )}
+                    </div>
+                  )}
+                  <span className="arrow-link showcase-link">
+                    Read the case study
+                    <span className="arrow" aria-hidden="true">&rarr;</span>
+                  </span>
                 </div>
               </Link>
             </li>

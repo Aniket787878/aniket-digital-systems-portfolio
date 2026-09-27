@@ -29,5 +29,11 @@ export default [
         { allowConstantExport: true }
       ]
     }
+  },
+  /* Remotion compositions are rendered, never hot-reloaded by Vite, so the
+     fast-refresh export rule has nothing to protect there. */
+  {
+    files: ['remotion/**/*.{js,jsx}'],
+    rules: { 'react-refresh/only-export-components': 'off' }
   }
 ]

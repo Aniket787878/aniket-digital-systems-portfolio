@@ -1,43 +1,33 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { m } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { faq } from '../../data.js'
-import ArrowIcon from '../../components/ArrowIcon.jsx'
-import { fadeUp, reveal, revealStagger } from '../../motion/variants.js'
+import { reveal, revealStagger, fadeUp } from '../../motion/variants.js'
+import { PillLabel } from '../../components/ui.jsx'
 
 /* ---------------------------------------------------------------
-   4 — FAQ. Real disclosure buttons, one open at a time.
+   5 — FAQ, on the light ground. Real disclosure buttons, one open at
+   a time; the answer eases open rather than snapping.
    --------------------------------------------------------------- */
 export default function Faq() {
-  const [openIndex, setOpenIndex] = useState(null)
+  const [openIndex, setOpenIndex] = useState(0)
 
   return (
-    <section className="faq">
-      <div className="container faq-grid">
-        <m.div className="faq-intro" {...reveal}>
-          <p className="kicker">Frequently Asked Questions</p>
-          <h2 className="split-title">Answers to common questions</h2>
-          <p className="faq-lede">
-            Scope, cost, ownership and what I need from you before anything
-            starts.
-          </p>
-          <Link to="/contact" className="btn-pill">
-            Contact me
-            <span className="btn-pill-icon" aria-hidden="true">
-              <ArrowIcon />
-            </span>
-          </Link>
-        </m.div>
+    <section className="paper faq" id="faq">
+      <div className="container">
+        <m.header className="center-head" {...reveal}>
+          <PillLabel icon="search">FAQ</PillLabel>
+          <h2 className="h2">
+            Before you ask.
+            <br />
+            <span className="soft">Scope, cost and who owns what.</span>
+          </h2>
+        </m.header>
 
         <m.ul className="faq-list" {...revealStagger}>
           {faq.map((item, i) => {
             const isOpen = openIndex === i
             return (
-              <m.li
-                key={item.q}
-                className={`faq-item${isOpen ? ' faq-item-open' : ''}`}
-                variants={fadeUp}
-              >
+              <m.li key={item.q} className={`faq-item${isOpen ? ' is-open' : ''}`} variants={fadeUp}>
                 <h3>
                   <button
                     type="button"
@@ -47,29 +37,26 @@ export default function Faq() {
                     id={`faq-q-${i}`}
                     onClick={() => setOpenIndex(isOpen ? null : i)}
                   >
-                    <span className="faq-icon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" fill="none">
-                        <path
-                          d="M12 5v14M5 12h14"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </span>
-                    <span className="faq-q-text">{item.q}</span>
+                    <span>{item.q}</span>
+                    <span className="faq-icon" aria-hidden="true" />
                   </button>
                 </h3>
-                {isOpen && (
-                  <div
-                    className="faq-a"
-                    id={`faq-a-${i}`}
-                    role="region"
-                    aria-labelledby={`faq-q-${i}`}
-                  >
-                    <p>{item.a}</p>
-                  </div>
-                )}
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <m.div
+                      className="faq-a"
+                      id={`faq-a-${i}`}
+                      role="region"
+                      aria-labelledby={`faq-q-${i}`}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <p>{item.a}</p>
+                    </m.div>
+                  )}
+                </AnimatePresence>
               </m.li>
             )
           })}

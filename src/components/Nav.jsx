@@ -59,7 +59,14 @@ export default function Nav() {
     <header className={`nav${solid ? ' nav-scrolled' : ''}`}>
       <div className="nav-inner">
         <Link to="/" className="nav-brand">
-          Aniket<sup aria-hidden="true">&reg;</sup>
+          <span className="nav-mark" aria-hidden="true">
+            {/* A sunrise over a ridge: the Dusk mark. */}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3.5 10.5a4.5 4.5 0 0 1 9 0z" fill="#f5871e" />
+              <path d="M1.5 12.5h13" stroke="#ffc89a" strokeWidth="1.4" strokeLinecap="round" />
+            </svg>
+          </span>
+          Aniket
         </Link>
 
         <nav className="nav-links" aria-label="Primary">
@@ -77,8 +84,8 @@ export default function Nav() {
           {hasWhatsApp ? (
             <WhatsAppCta
               message={whatsappPrefill.nav}
-              label="WhatsApp"
-              className="btn-pill"
+              label="Let’s talk"
+              className="btn-saffron"
             />
           ) : (
             <Link to="/contact" className="btn-pill">
@@ -135,7 +142,7 @@ export default function Nav() {
           <WhatsAppCta
             message={whatsappPrefill.nav}
             label="Message me on WhatsApp"
-            className="btn-pill nav-panel-cta"
+            className="btn-saffron nav-panel-cta"
           />
           <Link to="/contact" className="btn-pill nav-panel-cta">
             Get in touch

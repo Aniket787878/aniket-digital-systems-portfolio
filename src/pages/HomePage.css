@@ -1,2192 +1,1892 @@
 /* ============================================================
-   Home — nine bands, in page order:
+   Home page — the Dusk system (docs/design-system.md), 2026-09-27.
 
-   1  Hero (full-bleed)   1b Proof strip (the stack)
-   2  Selected work       2b Capabilities
-   3  Process             4b Pricing
-   5b CTA band            4  FAQ
-   5  Closing gallery CTA
+   Derived from getstage.co, the reference Aniket approved, in his own
+   saffron: a dusk hero with parallax ridges, a light "paper" ground for
+   the explaining bands, a dark "night" ground for the cinematic ones.
 
-   The "b" numbers are the bands added in the second pass. They keep
-   the original numbering so this file still reads top-to-bottom in
-   the same order the page renders.
+   Still one file, imported once from HomePage.jsx (CLAUDE.md rule 4):
+   it loads after index.css, so its rules win every specificity tie.
    ============================================================ */
 
-.home {
+/* ---------- Grounds ---------- */
+
+.night {
+  background: var(--night);
+  color: var(--ink);
+}
+
+.paper {
+  background: var(--paper);
+  color: var(--ink-dark);
+}
+
+.paper h2,
+.paper h3,
+.paper a {
+  color: var(--ink-dark);
+}
+
+.paper a:hover {
+  color: var(--accent-deep);
+}
+
+.paper .tick-list li {
+  color: #34302b;
+}
+
+.night,
+.paper {
+  padding-block: clamp(5rem, 10vw, 8.5rem);
+}
+
+/* ---------- Headings ---------- */
+
+.h2 {
+  font-size: clamp(2.125rem, 4.4vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.045em;
+}
+
+.h3 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.paper .soft {
+  color: #a59d94;
+}
+
+.night .soft {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.center-head {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  max-width: 52rem;
+  margin: 0 auto clamp(3rem, 6vw, 4.75rem);
+  text-align: center;
 }
 
-/* Shared two-column section header: title left, lede right */
-.split-head {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(2rem, 5vw, 5rem);
-  align-items: start;
-  margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
-}
-
-.split-title {
-  font-family: var(--font-display);
-  font-size: var(--display-2);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-  max-width: 18ch;
-}
-
-.split-lede {
-  font-size: clamp(1.0625rem, 1.5vw, 1.375rem);
-  font-weight: 500;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  max-width: 44ch;
-  align-self: end;
+.center-lede {
+  max-width: 34em;
+  font-size: clamp(1rem, 1.4vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--muted-dark);
 }
 
 /* ============================================================
-   1 — Hero
+   1 — Dusk hero
    ============================================================ */
 
-.hero {
+.dusk-hero {
   position: relative;
   isolation: isolate;
-  min-height: 100svh;
-  display: flex;
-  align-items: center;
-  padding-block: calc(var(--nav-h) + clamp(2rem, 5vw, 4rem))
-    clamp(3rem, 6vw, 5rem);
   overflow: hidden;
-  /* The hero is a slab, not a background: rounding the bottom edge lets
-     the page ground show through at the corners, which is what separates
-     it from the section beneath. */
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  background: var(--night);
+  padding-top: calc(var(--nav-h) + clamp(2.5rem, 5.5vw, 4.5rem));
+  padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
 }
 
-/* Proof-led ground: the near-black page colour with a single soft saffron
-   glow bleeding down from the top, in place of the old photograph. No image
-   to decode, so there is nothing to fade in and no reduced-motion guard to
-   carry. */
-.hero-ground {
+.dusk-sky {
   position: absolute;
   inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  /* Subtle, off-centre wash — light falling from the top-left corner, not a
-     symmetric glow parked behind the headline. Kept faint so it reads as
-     considered lighting rather than a template gradient. */
-  background:
-    radial-gradient(
-      80% 55% at 12% -12%,
-      rgba(245, 135, 30, 0.1) 0%,
-      transparent 52%
-    ),
-    var(--bg);
+  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    #0b0b0c 0%,
+    #0f0a08 26%,
+    #1d1109 40%,
+    #3d1d0b 54%,
+    #7a3a12 66%,
+    #c8661c 77%,
+    #f0a05a 85%,
+    #f7b578 90%
+  );
 }
 
-.hero-content {
-  position: relative;
-  z-index: 1;
+.dusk-stars {
+  position: absolute;
+  inset: 0 0 45% 0;
+}
+
+.dusk-stars i {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff4e8;
+  animation: twinkle 4.5s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  from {
+    filter: brightness(0.6);
+    transform: scale(0.8);
+  }
+  to {
+    filter: brightness(1.4);
+    transform: scale(1.1);
+  }
+}
+
+/* The sun just below the horizon, backlighting the product card. */
+.dusk-sun {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  width: min(1400px, 140vw);
+  height: 620px;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 196, 130, 0.6),
+    rgba(245, 135, 30, 0.2) 55%,
+    transparent
+  );
+  filter: blur(12px);
+}
+
+.dusk-layer {
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.dusk-layer svg {
+  display: block;
   width: 100%;
+  height: 100%;
 }
 
-/* The copy block: badge, eyebrow, headline, sub, CTAs. Capped so the
-   headline breaks into a strong two/three-line stack rather than one long
-   ribbon on a wide screen. */
-.hero-lockup {
-  max-width: 60rem;
+.dusk-hero .dusk-far {
+  z-index: 1;
+  height: clamp(360px, 64vw, 920px);
 }
 
-.hero-eyebrow {
-  font-family: var(--font-sans);
-  font-size: clamp(1rem, 1.6vw, 1.25rem);
-  font-weight: 600;
-  color: var(--muted);
-  margin-bottom: var(--space-3);
+.dusk-hero .dusk-mid {
+  z-index: 2;
+  height: clamp(220px, 39vw, 560px);
 }
 
-.hero-sub {
-  margin-top: var(--space-5);
-  font-size: var(--text-lg);
-  line-height: 1.6;
-  color: var(--ink-soft);
-  max-width: 54ch;
+.dusk-hero .dusk-near {
+  z-index: 4;
+  height: clamp(110px, 17vw, 240px);
 }
 
-/* Not --display-1. That token tops out at 7rem, and at 7rem the phrase
-   "run themselves" measures 798px against a 608px column, so this headline
-   broke to three lines at every width above 960 — and to three again at
-   390. The cap below is the largest size whose longest line still fits the
-   column this composition allows: 798 x (84/112) = 599px against 608. The
-   floor is picked the same way against a 327px phone column. Change the
-   headline copy and both need re-measuring, not re-guessing. */
-.hero-title {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5.8vw, 5.25rem);
-  font-weight: 800;
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  color: var(--ink);
-}
-
-/* The proof block sits below the copy, full width. Two real figures in
-   cards, then the caveat that qualifies the number — never separated from
-   it (CLAUDE.md rule 6). */
-.hero-proof {
-  margin-top: clamp(2.75rem, 5vw, 4rem);
-}
-
-.hero-proof-row {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(0.875rem, 1.5vw, 1.25rem);
-}
-
-.hero-proof-card {
+.dusk-copy {
+  position: relative;
+  z-index: 5;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-3);
-  padding: clamp(1.25rem, 2.2vw, 1.75rem);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-}
-
-.hero-proof-num {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5vw, 3.25rem);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-}
-
-.hero-proof-text {
-  font-size: var(--text-base);
-  line-height: 1.55;
-  color: var(--muted);
-}
-
-.hero-proof-text strong {
-  color: var(--ink);
-  font-weight: 600;
-}
-
-/* The caveat that travels with the 750+ figure. Quiet, but never hidden:
-   an unqualified number is the thing this line exists to prevent. */
-.hero-proof-note {
-  margin-top: var(--space-4);
-  font-size: var(--text-sm);
-  line-height: 1.6;
-  color: var(--muted);
-  max-width: 78ch;
-}
-
-.hero-proof-link {
-  display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  margin-top: auto;
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--accent);
+  text-align: center;
 }
 
-.hero-proof-link .arrow {
-  transition: transform var(--dur-slow) var(--ease-out);
+.dusk-title {
+  margin-top: 1.5rem;
+  font-size: clamp(2.75rem, 7vw, 5.5rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.055em;
+  color: #fff;
 }
 
-.hero-proof-link:hover {
-  color: var(--accent-hover);
+.dusk-line {
+  display: block;
 }
 
-.hero-proof-link:hover .arrow {
-  transform: translateX(4px);
+.dusk-word {
+  display: inline-block;
+  will-change: transform, filter;
 }
 
-/* Holds the primary CTA and, once a WhatsApp number exists, the quiet
-   second path beside it. Spacing and the load animation sit here rather
-   than on the buttons so the pair rises as one object. */
-.hero-actions {
+.dusk-title-warm {
+  color: var(--peach);
+}
+
+.dusk-sub {
+  max-width: 34em;
+  margin-top: 1.5rem;
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.dusk-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2.25rem;
+}
+
+.dusk-footnote {
+  margin-top: 0.9rem;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* --- The product card rising out of the range --- */
+.dusk-card {
+  position: relative;
+  z-index: 3;
+  width: min(1100px, calc(100% - var(--container-pad) * 2));
+  margin: clamp(2.75rem, 5vw, 4rem) auto 0;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #111;
+  box-shadow:
+    0 0 0 8px rgba(255, 255, 255, 0.03),
+    0 70px 140px -40px rgba(0, 0, 0, 0.85);
+  transform-origin: 50% 100%;
+}
+
+.dusk-card-bar {
+  position: relative;
+  display: flex;
   align-items: center;
-  gap: var(--space-3) var(--space-5);
-  margin-top: var(--space-2);
+  height: 38px;
+  padding-inline: 14px;
+  background: #171614;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.hero-alt-cta {
-  color: var(--ink);
-  opacity: 0.82;
-  transition: opacity var(--dur-fast) ease;
+.dusk-card-dots {
+  display: flex;
+  gap: 7px;
 }
 
-.hero-alt-cta:hover {
-  opacity: 1;
+.dusk-card-dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3a3633;
 }
 
-/* The one survivor of the hero's numbered capability range, kept because
-   section 2b prints the same hashed index in its cards. The range itself
-   is gone: it repeated 2b word for word three bands later, and a four-item
-   feature list is not what a first screen is for. */
-.capability-hash {
-  color: var(--accent);
-  margin-right: 0.35rem;
+.dusk-card-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.58);
+  white-space: nowrap;
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(245, 135, 30, 0.2);
+  animation: status-pulse 2.4s ease-in-out infinite;
+}
+
+.dusk-card-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  background: #111;
 }
 
 /* ============================================================
-   2 — Selected work
+   1b — Statement and the one-minute explainer
    ============================================================ */
 
-.work {
-  padding-block: var(--section-pad);
+.statement {
+  padding-top: clamp(4rem, 8vw, 6.5rem);
 }
 
-/* --- Flagship platform cards: the two client systems, no shareable
-   screenshots, so they lead with figures, stack and a system map. --- */
-.work-flagships {
-  display: grid;
-  gap: clamp(1.25rem, 2.5vw, 1.75rem);
+.statement-inner {
+  max-width: 960px;
 }
 
-.work-flagship {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
+.statement-text {
+  font-size: clamp(1.5rem, 2.9vw, 2.3rem);
+  font-weight: 400;
+  line-height: 1.42;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.statement-text + .statement-text {
+  margin-top: 1.2em;
+}
+
+.scroll-word {
+  display: inline;
+}
+
+.word-chip {
+  display: inline-grid;
+  place-items: center;
+  width: 1.4em;
+  height: 1.4em;
+  margin-inline: 0.05em;
+  border-radius: 0.32em;
+  background: rgba(245, 135, 30, 0.18);
+  color: var(--peach);
+  vertical-align: -0.24em;
+}
+
+.explainer {
+  margin: clamp(3.5rem, 7vw, 5rem) 0 0;
+}
+
+.explainer-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
-  transition: border-color var(--dur-mid) ease,
-    transform var(--dur-mid) var(--ease-out);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #111;
+  box-shadow: 0 50px 120px -50px rgba(0, 0, 0, 0.9), 0 0 120px -50px rgba(245, 135, 30, 0.35);
 }
 
-.work-flagship:hover {
-  border-color: var(--line-strong);
-  transform: translateY(-3px);
+.explainer-frame video,
+.explainer-poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.work-flagship-body {
+.explainer-poster {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.explainer-poster img {
+  transition: transform 0.8s var(--ease-out), filter 0.8s var(--ease-out);
+}
+
+.explainer-poster:hover img {
+  transform: scale(1.02);
+  filter: brightness(0.85);
+}
+
+.explainer-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  padding-left: 4px;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: rgba(255, 255, 255, 0.94);
+  color: #161412;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  transition: transform var(--dur-mid) var(--ease-out);
+}
+
+.explainer-play::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  animation: play-ring 2.2s var(--ease-out) infinite;
+}
+
+@keyframes play-ring {
+  from {
+    transform: scale(0.85);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+.explainer-poster:hover .explainer-play {
+  transform: scale(1.07);
+}
+
+.explainer-caption {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-4);
-  padding: clamp(1.75rem, 3vw, 2.75rem);
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-top: 0.9rem;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.55);
 }
 
-.work-flagship-panel {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  padding: clamp(1.75rem, 3vw, 2.75rem);
-  background: linear-gradient(155deg, rgba(245, 135, 30, 0.06), var(--surface) 62%);
-  border-left: 1px solid var(--line);
+/* ============================================================
+   2 — Work (paper)
+   ============================================================ */
+
+.rows {
+  display: grid;
+  gap: clamp(5rem, 10vw, 8rem);
 }
 
-/* Alternate card mirrors the layout so the two do not read as a repeat. */
-.work-flagship-alt .work-flagship-body {
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+}
+
+.row-flip .row-panel {
   order: 2;
 }
 
-.work-flagship-alt .work-flagship-panel {
-  order: 1;
-  border-left: 0;
-  border-right: 1px solid var(--line);
+.row-panel {
+  display: block;
+  padding: clamp(1.1rem, 2.8vw, 2.5rem);
+  border-radius: 28px;
+  background: radial-gradient(120% 100% at 0% 0%, #ffdcbc 0%, #fbe6d2 38%, #efe8df 100%);
 }
 
-.work-flagship-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3vw, 2.125rem);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  color: var(--ink);
+.row-flip .row-panel {
+  background: radial-gradient(120% 100% at 100% 0%, #ffdcbc 0%, #fbe6d2 38%, #efe8df 100%);
 }
 
-.work-flagship-summary {
-  font-size: var(--text-base);
-  line-height: 1.65;
-  color: var(--muted);
-  max-width: 52ch;
-}
-
-.work-flagship-link {
-  margin-top: var(--space-2);
-  color: var(--accent);
-}
-
-.work-metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(1.5rem, 4vw, 2.75rem);
-}
-
-.work-metric {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.work-metric-n {
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-}
-
-.work-metric-label {
-  font-size: var(--text-sm);
-  line-height: 1.4;
-  color: var(--muted);
-  max-width: 22ch;
-}
-
-.work-panel-label {
-  font-family: var(--font-sans);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.work-flow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.work-flow-stage {
-  display: inline-block;
-  font-family: var(--font-sans);
-  font-size: var(--text-xs);
-  font-weight: 500;
-  color: var(--accent);
-  background: var(--accent-soft);
-  border: 1px solid rgba(245, 135, 30, 0.35);
-  border-radius: 999px;
-  padding: 0.3rem 0.75rem;
-}
-
-.work-panel-note {
-  font-size: var(--text-sm);
-  line-height: 1.6;
-  color: var(--ink-soft);
-  padding: var(--space-4);
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-}
-
-/* Second heading, above the working-demo grid. */
-.work-tools-head {
-  margin-top: clamp(3.5rem, 7vw, 6rem);
-}
-
-/* --- Working-demo grid: real screenshots of the running tools. --- */
-.work-tools {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(1.25rem, 2.5vw, 1.75rem);
-}
-
-.work-tool {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
+.row-frame {
   overflow: hidden;
-  color: var(--ink);
-  transition: border-color var(--dur-mid) ease,
-    transform var(--dur-mid) var(--ease-out);
+  border-radius: 14px;
+  background: #0f0f10;
+  border: 1px solid rgba(22, 20, 18, 0.08);
+  box-shadow: 0 30px 60px -28px rgba(90, 45, 10, 0.5);
+  transition: transform 0.6s var(--ease-out), box-shadow 0.6s var(--ease-out);
 }
 
-.work-tool:hover {
-  border-color: var(--line-strong);
+.row-panel:hover .row-frame {
   transform: translateY(-4px);
-  color: var(--ink);
+  box-shadow: 0 40px 70px -28px rgba(90, 45, 10, 0.55);
 }
 
-.media.work-tool-shot {
-  aspect-ratio: 16 / 10;
-  border-radius: 0;
-  border-bottom: 1px solid var(--line);
-  flex: none;
+.row-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 }
 
-.work-tool-body {
+.row-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-size: 0.8125rem;
+  color: #8a5a36;
+}
+
+.row-tag::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #c79a78;
+}
+
+.row-copy {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  flex: 1;
-  gap: var(--space-3);
-  padding: var(--space-5);
+  gap: 1.35rem;
 }
 
-.work-tool-title {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--ink);
+.row-lede {
+  max-width: 30em;
+  font-size: 1.125rem;
+  line-height: 1.55;
+  color: #4a4540;
 }
 
-.work-tool-summary {
-  font-size: var(--text-sm);
-  line-height: 1.6;
-  color: var(--muted);
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.work-tool-link {
-  margin-top: auto;
-  padding-top: var(--space-3);
-  color: var(--accent);
-  font-size: var(--text-sm);
-}
-
-.work-stack {
+.row-facts {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: 1rem clamp(2rem, 4vw, 3rem);
+  padding-top: 0.25rem;
 }
 
-/* index.css .chip carries its own margins for prose flow; inside a gap-based
-   stack those double up, so zero them here. */
-.work-stack .chip {
-  margin: 0;
-}
-
-/* Shared meta row / index / tags, kept from the earlier grid. */
-.work-meta {
+.row-facts > div {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3);
+  flex-direction: column-reverse;
 }
 
-.work-index {
-  font-family: var(--font-display);
-  font-size: var(--text-sm);
-  font-weight: 800;
-  color: var(--accent);
-}
-
-.work-tag {
-  font-family: var(--font-sans);
-  font-size: var(--text-xs);
+.row-facts dd {
+  font-size: 2.25rem;
   font-weight: 500;
-  color: var(--muted);
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  padding: 0.25rem 0.75rem;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  color: var(--ink-dark);
+  font-variant-numeric: tabular-nums;
 }
 
-.work-tag-flag {
-  color: var(--accent);
-  border-color: var(--accent);
-  background: var(--accent-soft);
+.row-facts dt {
+  max-width: 18ch;
+  margin-top: 0.45rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--muted-dark);
+}
+
+/* --- The three working demos --- */
+.cards {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin-top: clamp(5rem, 10vw, 8rem);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 10px;
+  border-radius: 22px;
+  background: #fff;
+  border: 1px solid #e7e1d9;
+  color: var(--ink-dark);
+  transition: transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out);
+}
+
+.paper .card:hover {
+  color: var(--ink-dark);
+  transform: translateY(-6px);
+  box-shadow: 0 34px 60px -30px rgba(90, 45, 10, 0.35);
+}
+
+.card-media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #0f0f10;
+}
+
+.card-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(12, 12, 12, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.1rem 0.9rem 0.8rem;
+}
+
+.card-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.55rem;
+}
+
+.card-title h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.card-title span {
+  font-size: 0.875rem;
+  color: var(--muted-dark);
+}
+
+.card-body p {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: #5a544e;
+}
+
+.card-body .text-link {
+  margin-top: auto;
+  padding-top: 0.4rem;
 }
 
 /* ============================================================
-   3 — Process. Hover fills the row and slides its image in.
-   Decorative only: the step text is fully readable without it.
+   2b — Product tour (night), pinned: a scroll-driven camera over the
+   real screens. Desktop with motion only; the Work cards stand in
+   everywhere else.
+   ============================================================ */
+
+.tour {
+  position: relative;
+  height: 600vh;
+  padding: 0;
+}
+
+.tour-pin {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  min-height: 680px;
+  overflow: hidden;
+}
+
+.tour .container {
+  max-width: calc(1400px + var(--container-pad) * 2);
+}
+
+.tour-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.6fr);
+  align-items: center;
+  gap: clamp(2rem, 4vw, 4.5rem);
+  width: 100%;
+  padding-top: var(--nav-h);
+}
+
+.tour-copy .h2 {
+  margin-top: 1.25rem;
+  color: #fff;
+}
+
+.tour-tools {
+  list-style: none;
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 2rem;
+}
+
+.tour-tools li {
+  padding: 0.55rem 0 0.55rem 1rem;
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  opacity: 0.42;
+  transition: opacity 0.4s ease, border-color 0.4s ease;
+}
+
+.tour-tools li.is-on {
+  opacity: 1;
+  border-left-color: var(--accent);
+}
+
+.tour-tool-name {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.tour-tool-sub {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.tour-caption {
+  min-height: 4.6em;
+  margin-top: 1.75rem;
+}
+
+.tour-caption p {
+  font-size: clamp(1.2rem, 1.7vw, 1.55rem);
+  line-height: 1.35;
+  letter-spacing: -0.025em;
+  color: #fff;
+}
+
+.tour-progress {
+  display: flex;
+  gap: 4px;
+  margin-top: 1.25rem;
+}
+
+.tour-bar {
+  position: relative;
+  flex: 1;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.tour-bar.is-gap {
+  margin-left: 10px;
+}
+
+.tour-bar.is-done {
+  background: var(--accent);
+}
+
+.tour-bar i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.tour-link {
+  margin-top: 1.75rem;
+  color: #fff;
+}
+
+.tour-link:hover {
+  color: var(--peach);
+}
+
+.tour-stage {
+  position: relative;
+}
+
+.tour-window {
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #111;
+  transform-origin: 50% 60%;
+  box-shadow:
+    0 70px 130px -45px rgba(0, 0, 0, 0.9),
+    0 0 160px -60px rgba(245, 135, 30, 0.5);
+}
+
+.tour-bar-top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding-inline: 14px;
+  background: #171614;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.tour-dots {
+  display: flex;
+  gap: 7px;
+}
+
+.tour-dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3a3633;
+}
+
+.tour-url {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 14px;
+  border-radius: 7px;
+  background: #0f0e0d;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.tour-view {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #0c0c0d;
+}
+
+.tour-layer {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.tour-shot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.tour-shot.is-on {
+  opacity: 1;
+}
+
+/* The spotlight: a saffron-edged cut-out, with everything around it
+   dimmed by one enormous spread shadow. It scales with the capture. */
+.tour-spot {
+  position: absolute;
+  border-radius: 10px;
+  pointer-events: none;
+  box-shadow:
+    0 0 0 2px rgba(245, 135, 30, 0.95),
+    0 0 28px rgba(245, 135, 30, 0.5),
+    0 0 0 4000px rgba(8, 6, 5, 0.55);
+}
+
+.tour-callout {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: 31%;
+  padding: 0.85rem 1rem 0.95rem;
+  border-radius: 14px;
+  background: rgba(20, 19, 18, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 50px -18px rgba(0, 0, 0, 0.8);
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+}
+
+.tour-callout-tag {
+  width: fit-content;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #1f0d00;
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.tour-callout-text {
+  line-height: 1.4;
+  color: #fff;
+}
+
+.tour-note {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+/* Which stands in for which: the tour on wide screens with motion, the
+   demo cards everywhere else. */
+@media (max-width: 1000px), (prefers-reduced-motion: reduce) {
+  .tour {
+    display: none;
+  }
+}
+
+@media (min-width: 1001px) and (prefers-reduced-motion: no-preference) {
+  .work .cards {
+    display: none;
+  }
+}
+
+/* ============================================================
+   2c — How it connects (paper)
+   ============================================================ */
+
+.connect {
+  padding-top: 0;
+}
+
+.connect-panel {
+  padding: clamp(1.25rem, 4vw, 3.5rem);
+  border-radius: 28px;
+  background:
+    radial-gradient(40% 60% at 50% 50%, rgba(245, 135, 30, 0.16), transparent 70%),
+    #fbf9f6;
+  border: 1px solid #ece6de;
+}
+
+.flow-graph {
+  position: relative;
+  aspect-ratio: 1100 / 520;
+  container-type: inline-size;
+}
+
+.flow-wires {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.flow-wire {
+  fill: none;
+  stroke: rgba(184, 86, 10, 0.38);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.flow-col {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.flow-node {
+  position: absolute;
+  width: 22.7%;
+  translate: 0 -50%;
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  padding: 0.8em 0.95em;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #e7e1d9;
+  box-shadow: 0 12px 26px -16px rgba(60, 30, 10, 0.4);
+  font-size: clamp(10px, 1.35cqw, 15px);
+}
+
+.flow-node-in {
+  left: 0;
+}
+
+.flow-node-out {
+  left: 77.3%;
+}
+
+.flow-node-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.3em;
+  height: 2.3em;
+  border-radius: 0.6em;
+  background: var(--accent-tint);
+  color: var(--accent-deep);
+}
+
+.flow-node-text strong {
+  display: block;
+  font-weight: 500;
+  color: var(--ink-dark);
+}
+
+.flow-node-text span {
+  font-size: 0.85em;
+  color: var(--muted-dark);
+}
+
+.flow-hub {
+  position: absolute;
+  left: 50%;
+  width: 14.6%;
+  translate: -50% -50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35em;
+  padding: 1.1em 0.8em;
+  border-radius: 18px;
+  background: var(--ink-dark);
+  color: #fff;
+  text-align: center;
+  font-size: clamp(10px, 1.3cqw, 14px);
+  box-shadow: 0 0 0 6px rgba(245, 135, 30, 0.12), 0 24px 50px -18px rgba(245, 135, 30, 0.65);
+}
+
+.flow-hub strong {
+  font-weight: 500;
+  font-size: 1.1em;
+}
+
+.flow-hub > span:last-child {
+  font-size: 0.82em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.flow-hub-mark {
+  display: grid;
+  place-items: center;
+  width: 2.8em;
+  height: 2.8em;
+  margin-bottom: 0.3em;
+  border-radius: 0.8em;
+  background: linear-gradient(160deg, #ff9a3d, var(--accent));
+  color: #1f0d00;
+  animation: hub-glow 3s ease-in-out infinite;
+}
+
+@keyframes hub-glow {
+  50% {
+    box-shadow: 0 0 0 8px rgba(245, 135, 30, 0.18);
+  }
+}
+
+.tick-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem 2rem;
+  margin-top: 2.25rem;
+}
+
+.tick-row li {
+  font-size: 0.9375rem;
+}
+
+/* ============================================================
+   3 — Process (night), pinned on wide screens
    ============================================================ */
 
 .process {
-  padding-block: var(--section-pad);
-}
-
-.process-steps-wrap {
   position: relative;
-  /* Shared x for the spine and its nodes; sits in each step's left padding,
-     clear of the index. */
-  --spine-x: clamp(0.85rem, 1.6vw, 1.15rem);
+  height: 340vh;
+  padding: 0;
 }
 
-/* The timeline spine: a faint full-height track with an accent fill that is
-   drawn top-to-bottom by scroll (scaleY set in Process.jsx). z-index lifts it
-   over the odd steps' opaque fill; it is a thin line in the left gutter, so it
-   never crosses the step text. overflow is visible so the node glow shows. */
-.process-spine {
-  position: absolute;
-  z-index: 2;
-  top: 1.9rem;
-  bottom: 1.9rem;
-  left: var(--spine-x);
-  width: 2px;
-  margin-left: -1px;
-  border-radius: 2px;
-  background: var(--line-strong);
-  pointer-events: none;
+.process-pin {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  min-height: 640px;
 }
 
-.process-spine-fill {
-  position: absolute;
-  inset: 0;
-  border-radius: 2px;
-  background: var(--accent);
-  transform-origin: top center;
-  transform: scaleY(0);
-  box-shadow: 0 0 8px rgba(245, 135, 30, 0.4);
+.process-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(3rem, 6vw, 6rem);
+  width: 100%;
 }
 
-/* One node per step, evenly spaced down the spine. `top` is set inline; the
-   dot is centred with margins (not transform) so Motion's scale/glow — which
-   drives the light-up as the fill passes — is free to own `transform`. */
-.process-dot {
-  position: absolute;
-  left: 50%;
-  width: 11px;
-  height: 11px;
-  margin: -5.5px 0 0 -5.5px;
-  border-radius: 50%;
-  background: var(--line-strong);
+.process-copy .h2 {
+  margin-top: 1.25rem;
+  color: #fff;
 }
 
 .process-steps {
+  position: relative;
   list-style: none;
-  display: grid;
-  gap: var(--space-3);
+  margin-top: 2.5rem;
 }
 
-.process-step {
+.process-steps::before,
+.process-steps::after {
+  content: '';
+  position: absolute;
+  left: 17px;
+  top: 18px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  height: calc(100% - 36px);
+}
+
+.process-steps::after {
+  background: var(--accent);
+  height: calc((100% - 36px) * var(--progress, 0.25));
+  transition: height 0.6s var(--ease-out);
+}
+
+.process-steps li {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 1.1rem;
+  padding: 0.85rem 0;
+  opacity: 0.45;
+  transition: opacity 0.4s ease;
+}
+
+.process-steps li.is-done {
+  opacity: 0.7;
+}
+
+.process-steps li.is-active {
+  opacity: 1;
+}
+
+.process-num {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #1c1b1a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  transition: background-color 0.4s, color 0.4s, border-color 0.4s, box-shadow 0.4s;
+}
+
+.is-done .process-num {
+  background: #3b2410;
+  border-color: rgba(245, 135, 30, 0.4);
+  color: var(--peach);
+}
+
+.is-active .process-num {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #1f0d00;
+  box-shadow: 0 0 0 6px rgba(245, 135, 30, 0.16);
+}
+
+.process-steps h3 {
+  padding-top: 0.35rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.process-steps p {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.62);
+  transition: max-height 0.5s var(--ease-out), opacity 0.4s ease, margin 0.4s;
+}
+
+.process-steps li.is-active p {
+  max-height: 6em;
+  margin-top: 0.35rem;
+  opacity: 1;
+}
+
+.process-stage {
   position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 15rem) minmax(0, 1fr);
   align-items: center;
-  gap: clamp(1rem, 2.5vw, 2.25rem);
-  /* Extra left padding clears the spine + node that live in the gutter. */
-  padding: clamp(1.25rem, 2.2vw, 1.75rem) clamp(1.25rem, 2.5vw, 2rem)
-    clamp(1.25rem, 2.2vw, 1.75rem) clamp(2.25rem, 4vw, 3rem);
-  border-radius: var(--radius-md);
-  background: transparent;
+  min-height: 460px;
+}
+
+.pv-window {
   overflow: hidden;
-  transition: background-color var(--dur-mid) ease;
+  border-radius: 16px;
+  background: #141312;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 50px 110px -40px rgba(0, 0, 0, 0.9), 0 0 100px -40px rgba(245, 135, 30, 0.3);
 }
 
-.process-step:nth-child(odd) {
-  background: var(--surface);
+.pv-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding-inline: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.process-step:hover {
+.pv-bar i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #3a3633;
+}
+
+.pv-bar span {
+  margin-left: 0.6rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.pv-body {
+  padding: 1.25rem;
+}
+
+.pv-body:has(.pv-shot) {
+  padding: 0;
+}
+
+.pv-shot {
+  display: block;
+  width: 100%;
+}
+
+.pv-map,
+.pv-flow,
+.pv-health {
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.pv-map li,
+.pv-flow li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.pv-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(245, 135, 30, 0.14);
+  color: var(--peach);
+}
+
+.pv-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.pv-text strong,
+.pv-flow strong,
+.pv-health strong {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.pv-flow strong,
+.pv-health strong {
+  flex: 1;
+}
+
+.pv-text span {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.pv-tag {
+  flex: none;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pv-tag-fix {
   background: var(--accent);
+  color: #1f0d00;
 }
 
-.process-index {
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3vw, 2.5rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  color: var(--ink);
-  line-height: 1;
+.pv-done {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #3ecf8e;
+  color: #062b1a;
 }
 
-.process-title {
-  font-family: var(--font-sans);
-  font-size: var(--text-lg);
-  font-weight: 700;
-  letter-spacing: 0;
-  color: var(--ink);
+.pv-health li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 0.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.process-text {
-  /* Pushed to the far edge of the row, which is where the hover image
-     then arrives — the image lands exactly where the text was. */
-  justify-self: end;
-  max-width: 38ch;
-  text-align: right;
-  font-size: var(--text-sm);
-  line-height: 1.6;
-  color: var(--muted);
-  transition: opacity var(--dur-mid) ease;
+.pv-health li > span:last-child {
+  font-size: 0.78rem;
+  color: #3ecf8e;
 }
 
-/* Only clear the text when there is actually something to clear it for.
-   The reveal panel is rendered only when data.js has a photograph for
-   the step, so without `:has()` an empty slot would blank the row on
-   hover and put nothing in its place. */
-.process-step:has(.process-media):hover .process-text {
-  opacity: 0;
+.pv-ok {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3ecf8e;
+  box-shadow: 0 0 0 3px rgba(62, 207, 142, 0.18);
 }
 
-.media.process-media {
-  position: absolute;
-  top: 8px;
-  bottom: 8px;
-  right: 8px;
-  width: clamp(9rem, 28%, 24rem);
-  border-radius: calc(var(--radius-md) - 8px);
-  opacity: 0;
-  transform: translateX(18px);
-  pointer-events: none;
-  transition: opacity var(--dur-mid) var(--ease-out),
-    transform var(--dur-mid) var(--ease-out);
+.pv-spark {
+  display: block;
+  width: 100%;
+  height: 64px;
+  margin-top: 1rem;
 }
 
-.process-step:hover .media.process-media {
-  opacity: 1;
-  transform: none;
+.pv-spark path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.pv-note {
+  margin-top: 0.6rem;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.process-stack {
+  display: none;
 }
 
 /* ============================================================
-   4 — FAQ
+   4 — Services (paper)
    ============================================================ */
 
-.faq {
-  padding-block: var(--section-pad);
-}
-
-.faq-grid {
+.price-grid {
+  list-style: none;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-  gap: clamp(2.5rem, 5vw, 5rem);
-  align-items: start;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  align-items: stretch;
 }
 
-.faq-intro .split-title {
-  /* 14ch forced "Answers to / common / questions" onto three lines. The
-     left column is far wider than that; let the title use it and balance
-     the wrap to two lines. */
-  max-width: 20ch;
-  text-wrap: balance;
+.price {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.9rem 1.75rem;
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid #e7e1d9;
+  transition: transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out);
 }
 
-.faq-lede {
-  margin-top: var(--space-5);
-  font-size: var(--text-base);
-  line-height: 1.65;
-  color: var(--muted);
-  max-width: 40ch;
-  margin-bottom: var(--space-6);
+.price:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 34px 60px -32px rgba(90, 45, 10, 0.35);
+}
+
+.price.is-featured {
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(160deg, #ffb36b, var(--accent) 40%, #ffd9b5) border-box;
+  box-shadow: 0 30px 60px -30px rgba(245, 135, 30, 0.45);
+}
+
+.price-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.price-top h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.price-badge {
+  flex: none;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: var(--accent-tint);
+  color: var(--accent-deep);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.price-for {
+  min-height: 3em;
+  margin-top: 0.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--muted-dark);
+}
+
+.price-amount {
+  margin-top: 1.4rem;
+  font-size: 2.25rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  color: var(--ink-dark);
+}
+
+.price-time {
+  margin-top: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--accent-deep);
+}
+
+.price-deliverable {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #eee8e1;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: #3d3833;
+}
+
+.price .tick-list {
+  gap: 0.6rem;
+  margin-top: 1.1rem;
+}
+
+.price .tick-list li {
+  font-size: 0.9rem;
+}
+
+.price .tick {
+  width: 19px;
+  height: 19px;
+}
+
+.price-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: auto;
+  padding-top: 1.75rem;
+}
+
+.price-actions .btn-saffron,
+.price-actions .btn-dark {
+  width: 100%;
+}
+
+.paper .price-actions .btn-dark,
+.paper .price-actions .btn-dark:hover {
+  color: #fff;
+}
+
+.paper .price-actions .btn-saffron,
+.paper .price-actions .btn-saffron:hover {
+  color: #1f0d00;
+}
+
+.watch-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.4rem;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink-dark);
+}
+
+.watch-icon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding-left: 2px;
+  border-radius: 50%;
+  background: var(--ink-dark);
+  color: #fff;
+  transition: background-color var(--dur-fast) ease;
+}
+
+.watch-link:hover {
+  color: var(--accent-deep);
+}
+
+.watch-link:hover .watch-icon {
+  background: var(--accent);
+}
+
+.care-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding: 1.35rem 1.6rem;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid #e7e1d9;
+}
+
+.care-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--accent-tint);
+  color: var(--accent-deep);
+}
+
+.care-card strong {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--ink-dark);
+}
+
+.care-card strong span {
+  margin-left: 0.5rem;
+  color: var(--accent-deep);
+}
+
+.care-card p {
+  margin-top: 0.3rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--muted-dark);
+}
+
+/* ============================================================
+   5 — FAQ (paper, continuing the Services ground)
+   ============================================================ */
+
+.services + .faq {
+  padding-top: 0;
 }
 
 .faq-list {
   list-style: none;
-  display: grid;
-  gap: var(--space-3);
+  max-width: 820px;
+  margin: 0 auto;
 }
 
 .faq-item {
-  background: var(--surface);
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  transition: border-color var(--dur-fast) ease;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid #e7e1d9;
+  transition: border-color var(--dur-mid) ease;
 }
 
-.faq-item:hover,
-.faq-item-open {
-  border-color: var(--accent);
+.faq-item + .faq-item {
+  margin-top: 0.6rem;
+}
+
+.faq-item.is-open {
+  border-color: #e6c3a2;
+}
+
+.faq-item h3 {
+  font: inherit;
+  letter-spacing: normal;
 }
 
 .faq-q {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: var(--space-4);
+  gap: 1.5rem;
   width: 100%;
-  padding: clamp(1.125rem, 2vw, 1.5rem) clamp(1.25rem, 2.5vw, 1.75rem);
-  background: none;
+  padding: 1.25rem 1.5rem;
   border: 0;
-  border-radius: var(--radius-md);
+  background: none;
   cursor: pointer;
   text-align: left;
   font-family: var(--font-sans);
-  font-size: var(--text-base);
-  font-weight: 700;
-  color: var(--ink);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink-dark);
 }
 
 .faq-icon {
+  position: relative;
   flex: none;
-  display: grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  color: var(--muted);
-  transition: transform var(--dur-mid) var(--ease-out),
-    color var(--dur-fast) ease;
+  width: 12px;
+  height: 12px;
+  color: var(--muted-dark);
 }
 
-.faq-icon svg {
-  width: 100%;
-  height: 100%;
+.faq-icon::before,
+.faq-icon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 12px;
+  height: 1.5px;
+  margin-top: -0.75px;
+  background: currentColor;
+  transition: transform var(--dur-mid) var(--ease-out);
 }
 
-/* The plus becomes a cross when the panel is open */
-.faq-item-open .faq-icon {
-  transform: rotate(45deg);
-  color: var(--accent);
+.faq-icon::after {
+  transform: rotate(90deg);
 }
 
-.faq-a {
-  padding: 0 clamp(1.25rem, 2.5vw, 1.75rem) clamp(1.25rem, 2.5vw, 1.75rem);
-  padding-left: calc(clamp(1.25rem, 2.5vw, 1.75rem) + 20px + var(--space-4));
+.is-open .faq-icon::after {
+  transform: rotate(0deg);
 }
 
 .faq-a p {
-  font-size: var(--text-base);
+  max-width: 62ch;
+  padding: 0 1.5rem 1.35rem;
+  font-size: 0.9375rem;
   line-height: 1.7;
-  color: var(--muted);
-  max-width: 60ch;
+  color: #5a544e;
 }
 
 /* ============================================================
-   5 — Closing gallery CTA. The fanned strip is decorative;
-   the heading and button carry the meaning.
+   2b — Testimonials (renders only once a real quote exists)
    ============================================================ */
-
-.gallery {
-  position: relative;
-  isolation: isolate;
-  /* The tall padding existed to give the fanned arc room to spread behind
-     the CTA. With too few projects the arc doesn't render (see Gallery.jsx),
-     so that height would just be dead space — fall back to the standard
-     section rhythm, and only reclaim the extra room when the arc is there. */
-  padding-block: var(--section-pad);
-  overflow: hidden;
-}
-
-.gallery:has(.gallery-stage) {
-  padding-block: clamp(5rem, 11vw, 10rem);
-}
-
-.gallery-stage {
-  /* Default so the arc is fully formed even if the scroll driver never
-     runs. `useArcOpen` overwrites this on the same element and it
-     inherits down to the cards. */
-  --open: 1;
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  display: grid;
-  place-items: center;
-  perspective: 1600px;
-}
-
-/* Scrim so the copy stays legible over whatever lands in the slots */
-.gallery-stage::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  /* Wider and heavier than it was for the photographs. The slots hold
-     project titles now, and text behind text competes in a way a blurred
-     photograph never did: at the old 42%/0.92 the middle two cards were
-     legible straight through the headline. The edges stay open so the
-     outer cards still read — the point of the section is the work. */
-  background: radial-gradient(
-      ellipse 54% 58% at 50% 44%,
-      rgba(16, 16, 16, 0.97) 0%,
-      rgba(16, 16, 16, 0.9) 40%,
-      rgba(16, 16, 16, 0.14) 100%
-    ),
-    linear-gradient(
-      to bottom,
-      var(--bg) 0%,
-      rgba(16, 16, 16, 0) 20%,
-      rgba(16, 16, 16, 0) 80%,
-      var(--bg) 100%
-    );
-}
-
-.gallery-fan {
-  position: relative;
-  width: 100%;
-  height: clamp(13rem, 26vw, 21rem);
-  transform-style: preserve-3d;
-}
-
-/* Cards are positioned purely by transform, not by flow: each one is
-   parked at the centre and then pushed out along the arc. `--sin` and
-   `--depth` come from the component; `--arc-r` stays here so the arc can
-   tighten on small screens without recomputing anything in JS.
-
-   `--open` (0 → 1, driven by scroll) scales the spread, the depth and the
-   rotation together, so the arc grows out of a flat stack. x keeps a
-   floor of 0.55 so the cards start as a legible cluster rather than an
-   unreadable pile at dead centre. */
-.gallery-slot {
-  --arc-r: clamp(15rem, 42vw, 47rem);
-  /* Scales the rotation only, never the spread — lets narrow screens
-     flatten the cards without collapsing the arc's width. */
-  --arc-tilt: 1;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: clamp(6.5rem, 12vw, 14.5rem);
-  aspect-ratio: 3 / 4;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
-  transform: translate(-50%, -50%)
-    translate3d(
-      calc(var(--arc-r) * var(--sin) * (0.55 + 0.45 * var(--open))),
-      0,
-      calc(var(--arc-r) * var(--depth) * var(--open))
-    )
-    rotateY(calc(var(--angle) * var(--open) * var(--arc-tilt)));
-}
-
-/* The cards hold text now, not photographs, so they need their own
-   ground and padding. Kept dark and low-contrast on purpose: this strip
-   sits behind the closing headline, and a reader should take it in as
-   texture first and read it only if they lean in. */
-.gallery-slot {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: clamp(0.75rem, 1.4vw, 1.35rem);
-  background: linear-gradient(160deg, var(--surface-2), var(--surface));
-  /* Cheap on the compositor, and it stops the card edges crawling
-     while the arc opens. */
-  backface-visibility: hidden;
-}
-
-.gallery-card-index {
-  font-family: var(--font-display);
-  font-size: clamp(0.75rem, 1.1vw, 0.9rem);
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  color: var(--accent);
-}
-
-.gallery-card-title {
-  font-family: var(--font-display);
-  font-size: clamp(0.8rem, 1.25vw, 1.1rem);
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-}
-
-/* Pushed to the foot of the card so the titles align on a baseline
-   across the fan regardless of how many lines each one runs to. */
-.gallery-card-stack {
-  margin-top: auto;
-  font-size: clamp(0.6rem, 0.85vw, 0.75rem);
-  line-height: 1.5;
-  color: var(--muted);
-}
-
-.gallery-content {
-  position: relative;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.gallery-title {
-  font-family: var(--font-display);
-  font-size: var(--display-2);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-  max-width: 16ch;
-}
-
-.gallery-lede {
-  margin-top: var(--space-5);
-  font-size: var(--text-base);
-  line-height: 1.65;
-  color: var(--ink-soft);
-  max-width: 52ch;
-}
-
-.gallery-cta {
-  margin-top: var(--space-6);
-}
-
-
-/* ============================================================
-   1b — Proof strip. The stack, named, directly under the hero.
-
-   Reads as a band rather than a section: it belongs to the hero's
-   claim, so it gets a tight top pad and no display heading.
-   ============================================================ */
-
-.proof {
-  padding-block: clamp(2.75rem, 6vw, 4.5rem) clamp(1rem, 2vw, 2rem);
-}
-
-/* --- "Built with" strip: a quiet, static credential row under the hero,
-   in place of the auto-scrolling marquee. Bordered top and bottom, centred. --- */
-.builtwith {
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-
-.builtwith-inner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-3) clamp(1rem, 2.5vw, 2rem);
-  padding-block: clamp(1.5rem, 3vw, 2rem);
-}
-
-.builtwith-label {
-  font-family: var(--font-sans);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.builtwith-list {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-2) var(--space-3);
-}
-
-.builtwith-item {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--ink-soft);
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  padding: 0.4rem 0.9rem;
-}
-
-/* Who-it's-for on the left, how-it's-built on the right — the two read as
-   a pair and together span the band, so the stack grid below doesn't sit
-   under a lopsided left-hugging column. Stacks on narrow screens. */
-.proof-head {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-  gap: clamp(1.5rem, 4vw, 4rem);
-  align-items: end;
-  margin-bottom: clamp(2rem, 4vw, 3rem);
-}
-
-/* The "who this is for" line, moved down out of the hero. It is the
-   loudest thing in this band on purpose: it qualifies the reader before
-   the stack list asks them to care what it is built from. */
-.proof-lede {
-  font-family: var(--font-display);
-  font-size: clamp(1.25rem, 2vw, 1.75rem);
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: -0.015em;
-  color: var(--ink);
-  max-width: 30ch;
-}
-
-.proof-intro {
-  font-size: clamp(1.0625rem, 1.5vw, 1.375rem);
-  font-weight: 500;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  max-width: 40ch;
-}
-
-@media (max-width: 760px) {
-  .proof-head {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-5);
-    align-items: start;
-  }
-
-  .proof-lede {
-    max-width: 46ch;
-  }
-}
-
-.proof-grid {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: clamp(1.5rem, 3vw, 3rem);
-}
-
-.proof-item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding-block: clamp(1.125rem, 2vw, 1.5rem);
-  border-top: 1px solid var(--line-strong);
-}
-
-.proof-name {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-
-.proof-note {
-  font-size: var(--text-sm);
-  line-height: 1.6;
-  color: var(--muted);
-  max-width: 34ch;
-}
-
-/* ============================================================
-   2b — Capabilities. The hero names the four areas; here they
-   get the blurb and the concrete items behind them.
-   ============================================================ */
-
-.caps {
-  padding-block: var(--section-pad);
-}
-
-.caps-grid {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(1.25rem, 2.5vw, 2rem);
-}
-
-.caps-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  height: 100%;
-  padding: clamp(1.75rem, 3vw, 2.75rem);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  transition: background-color var(--dur-mid) ease,
-    border-color var(--dur-mid) ease;
-}
-
-.caps-card:hover {
-  background: var(--surface-2);
-  border-color: var(--line-strong);
-}
-
-.caps-index {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 700;
-  color: var(--ink);
-}
-
-.caps-title {
-  font-family: var(--font-display);
-  font-size: var(--display-3);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-}
-
-.caps-blurb {
-  font-size: var(--text-base);
-  line-height: 1.65;
-  color: var(--muted);
-  max-width: 46ch;
-}
-
-.caps-tags {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: auto;
-  padding-top: var(--space-4);
-}
-
-.caps-tag {
-  font-family: var(--font-sans);
-  font-size: var(--text-xs);
-  font-weight: 500;
-  color: var(--muted);
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  padding: 0.25rem 0.75rem;
-}
-
-/* ============================================================
-   4b — Pricing. Three offers, priced.
-   ============================================================ */
-
-.pricing {
-  padding-block: var(--section-pad);
-}
-
-.pricing-grid {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(1.25rem, 2.5vw, 2rem);
-  align-items: stretch;
-}
-
-.pricing-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  height: 100%;
-  padding: clamp(1.75rem, 3vw, 2.5rem);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  transition: border-color var(--dur-mid) ease,
-    background-color var(--dur-mid) ease;
-}
-
-.pricing-card:hover {
-  background: var(--surface-2);
-  border-color: var(--line-strong);
-}
-
-/* The Sprint is the front door — it gets the accent outline so the eye
-   lands there first, not a different price treatment. */
-.pricing-card-featured {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-}
-
-.pricing-card-featured:hover {
-  border-color: var(--accent-hover);
-  background: var(--accent-soft);
-}
-
-.pricing-flag {
-  align-self: flex-start;
-  font-family: var(--font-sans);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--accent-ink-strong);
-  background: var(--accent);
-  border-radius: 999px;
-  padding: 0.25rem 0.75rem;
-}
-
-.pricing-name {
-  font-family: var(--font-display);
-  font-size: var(--display-3);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-}
-
-.pricing-price {
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 2.4vw, 2rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--accent);
-  line-height: 1.1;
-}
-
-.pricing-timeline {
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.pricing-for,
-.pricing-deliverable {
-  font-size: var(--text-sm);
-  line-height: 1.6;
-  color: var(--muted);
-}
-
-.pricing-deliverable {
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--line-strong);
-}
-
-.pricing-list {
-  list-style: none;
-  display: grid;
-  gap: var(--space-2);
-}
-
-.pricing-list li {
-  position: relative;
-  padding-left: 1.1rem;
-  font-size: var(--text-sm);
-  line-height: 1.55;
-  color: var(--ink-soft);
-}
-
-.pricing-list li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.55em;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
-.pricing-cta {
-  margin-top: auto;
-  padding-top: var(--space-5);
-  color: var(--accent);
-}
-
-.pricing-care {
-  margin-top: clamp(1.5rem, 3vw, 2.25rem);
-  padding: clamp(1.25rem, 2.2vw, 1.75rem) clamp(1.25rem, 2.5vw, 2rem);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
-  line-height: 1.65;
-  color: var(--muted);
-}
-
-.pricing-care strong {
-  color: var(--ink);
-  font-weight: 700;
-}
-
-/* Guarantee strip (gap G8) — promises already made elsewhere, surfaced
-   where the buyer decides. Three columns of check + title + line. */
-.pricing-guarantees {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(1.25rem, 3vw, 2.5rem);
-  margin-top: clamp(2rem, 4vw, 3rem);
-  padding-top: clamp(1.75rem, 3.5vw, 2.5rem);
-  border-top: 1px solid var(--line-strong);
-}
-
-.pricing-guarantee {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  grid-template-areas: 'check title' '. text';
-  column-gap: var(--space-3);
-  row-gap: var(--space-2);
-  align-items: center;
-}
-
-.pricing-guarantee-check {
-  grid-area: check;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--accent-soft);
-  color: var(--accent);
-  display: grid;
-  place-items: center;
-}
-
-.pricing-guarantee-check svg {
-  width: 14px;
-  height: 14px;
-}
-
-.pricing-guarantee-title {
-  grid-area: title;
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-
-.pricing-guarantee-text {
-  grid-area: text;
-  font-size: var(--text-sm);
-  line-height: 1.6;
-  color: var(--muted);
-}
-
-/* ============================================================
-   5b — CTA band. An inset accent slab that breaks the long
-   middle of the page before the FAQ.
-   ============================================================ */
-
-.cta-band {
-  padding-block: clamp(1rem, 2vw, 2rem) var(--section-pad);
-}
-
-.cta-band-inner {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: clamp(3rem, 7vw, 6rem) clamp(1.5rem, 5vw, 5rem);
-  border-radius: var(--radius-lg);
-  background: var(--accent);
-  color: var(--accent-ink-strong);
-}
-
-/* Aurora — slow drifting light over the saffron block, giving the one
-   full-colour band on the page some depth instead of a flat fill. It is
-   orange-on-orange and low-contrast on purpose, so the dark copy stays
-   perfectly readable; it holds still under reduced motion. */
-.cta-band-aurora {
-  position: absolute;
-  inset: -25%;
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(38% 48% at 22% 30%, rgba(255, 190, 105, 0.6), transparent 62%),
-    radial-gradient(34% 44% at 80% 24%, rgba(255, 120, 20, 0.5), transparent 60%),
-    radial-gradient(46% 56% at 62% 82%, rgba(255, 210, 140, 0.45), transparent 62%);
-  filter: blur(24px);
-  animation: cta-aurora 16s ease-in-out infinite alternate;
-}
-
-.cta-band-inner > :not(.cta-band-aurora) {
-  position: relative;
-  z-index: 1;
-}
-
-@keyframes cta-aurora {
-  from {
-    transform: translate3d(-4%, -2%, 0) scale(1.05) rotate(-2deg);
-  }
-  to {
-    transform: translate3d(4%, 3%, 0) scale(1.16) rotate(2deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cta-band-aurora {
-    animation: none;
-  }
-}
-
-/* Compact tool item for the proof-strip marquee. */
-.proof-marquee-item {
-  display: inline-flex;
-  align-items: baseline;
-  gap: var(--space-3);
-  padding: 0 clamp(1.25rem, 3vw, 2.5rem);
-  border-right: 1px solid var(--line);
-  white-space: nowrap;
-}
-
-.proof-marquee-item .proof-name {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--text-lg);
-  color: var(--ink);
-}
-
-.proof-marquee-item .proof-note {
-  font-size: var(--text-sm);
-  color: var(--muted);
-}
-
-/* .kicker is accent-on-dark by default, which would vanish here.
-
-   The three text colours below are held at or above 0.85 alpha rather
-   than the 0.6–0.7 that would look right on a dark ground: dark ink on
-   this orange only clears 4.5:1 once it stops letting the orange
-   through. At 0.7 the kicker measures 3.9:1 and fails AA outright. */
-.cta-band-kicker {
-  color: var(--accent-ink-strong);
-}
-
-.cta-band-title {
-  font-family: var(--font-display);
-  font-size: var(--display-2);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  color: var(--accent-ink-strong);
-  max-width: 18ch;
-  /* Even out the two lines instead of leaving a long first line over a
-     short orphan; supported browsers only, harmless where it isn't. */
-  text-wrap: balance;
-}
-
-/* Keeps a hyphenated compound ("20-minute") from breaking at its hyphen. */
-.cta-band-title .nowrap {
-  white-space: nowrap;
-}
-
-.cta-band-lede {
-  margin-top: var(--space-5);
-  font-size: var(--text-base);
-  line-height: 1.65;
-  color: rgba(26, 9, 0, 0.85);
-  max-width: 52ch;
-  text-wrap: balance;
-}
-
-.cta-band-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-3) var(--space-5);
-  margin-top: var(--space-6);
-}
-
-/* Dark ink on the orange slab, matching the lede beside it. */
-.cta-band-alt {
-  color: var(--accent-ink-strong);
-}
-
-/* The pill's icon is accent-on-white — invisible against this slab.
-   Flip it to the dark ink so the arrow still reads. */
-.cta-band-cta .btn-pill-icon {
-  background: var(--accent-ink-strong);
-  color: #ffffff;
-}
-
-.cta-band-cta:hover .btn-pill-icon {
-  background: #2b1000;
-}
-
-/* The price anchor, demoted under the free-audit offer. Same dark-ink
-   treatment as the lede so it clears AA on the orange slab. */
-.cta-band-anchor {
-  margin-top: var(--space-6);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--accent-ink-strong);
-  max-width: 52ch;
-}
-
-.cta-band-availability {
-  margin-top: var(--space-3);
-  font-size: var(--text-sm);
-  color: rgba(26, 9, 0, 0.85);
-  max-width: 46ch;
-}
-
-/* ============================================================
-   3b — Testimonials. A slot, not a fake logo wall. Empty state is
-   an honest panel; once data.js carries a real quote it becomes a
-   card grid. Both read on the dark ground.
-   ============================================================ */
-
-.voices {
-  padding-block: var(--section-pad);
-}
-
-.voices .kicker {
-  margin-bottom: var(--space-6);
-}
 
 .voices-grid {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
-  gap: var(--space-5);
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 1.25rem;
 }
 
-.voice-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-  padding: clamp(1.5rem, 3vw, 2.25rem);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
+.voice {
+  padding: 1.75rem;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid #e7e1d9;
 }
 
-.voice-quote {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: -0.02em;
-  color: var(--ink);
+.voice blockquote {
+  font-size: 1.1875rem;
+  line-height: 1.5;
+  color: var(--ink-dark);
 }
 
-.voice-attr {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-top: auto;
+.voice-by {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: var(--muted-dark);
 }
 
-.voice-name {
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  font-weight: 700;
-  color: var(--ink);
-}
-
-.voice-role {
-  font-size: var(--text-sm);
-  color: var(--muted);
-}
-
-/* Empty state — one panel, honest about what is and isn't here yet.
-
-   It fills the whole content band rather than sitting as a small card
-   floating against a wide void: a two-column editorial split, the lead
-   statement on the left and the supporting note + actions on the right.
-   Below the split breakpoint it stacks into a single readable column. */
-.voices-empty {
-  display: grid;
-  gap: var(--space-5) clamp(2rem, 5vw, 5rem);
-  padding: clamp(1.75rem, 4vw, 3rem);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-left: 2px solid var(--accent);
-  border-radius: var(--radius-md);
-}
-
-.voices-empty-lead {
-  font-family: var(--font-display);
-  font-size: var(--display-3);
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  margin: 0;
-}
-
-.voices-empty-body {
-  font-size: var(--text-base);
-  line-height: 1.7;
-  color: var(--ink-soft);
-  /* Kept readable even when the column is wide. */
-  max-width: 46ch;
-}
-
-.voices-empty-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4) var(--space-6);
-}
-
-/* Two columns once there is room; the lead spans both rows on the left
-   so the note and its actions stack tidily on the right. */
-@media (min-width: 48rem) {
-  .voices-empty {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-items: start;
-  }
-
-  .voices-empty-lead {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-  }
-
-  .voices-empty-body {
-    grid-column: 2;
-    grid-row: 1;
-  }
-
-  .voices-empty-actions {
-    grid-column: 2;
-    grid-row: 2;
-    align-self: end;
-  }
+.voice-by strong {
+  display: block;
+  font-weight: 500;
+  color: var(--ink-dark);
 }
 
 /* ============================================================
-   Motion — hero copy rises on load
+   6 — Closing CTA, back at dusk
    ============================================================ */
 
-@keyframes hero-rise {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* The hero entrance is driven by Framer Motion in Hero.jsx (heroContainer /
-   heroItem variants), which also respects prefers-reduced-motion through the
-   one <MotionConfig reducedMotion="user">. No CSS entrance here, so the two
-   never fight over opacity. */
-
-/* ============================================================
-   Responsive — the ladder, widest first.
-
-   Breakpoints are placed where a layout actually breaks rather
-   than at device names: 1280 (support column crowds the headline),
-   1080 (three-across work cards would be too narrow), 960 (two
-   columns stop earning their keep), 810 (nav collapses — kept in
-   step with index.css), 640 (phone), 480 (small phone), 380
-   (narrowest phones still sold).
-   ============================================================ */
-
-/* Nothing wider needs help — .container caps at --container-max. */
-
-@media (max-width: 1280px) {
-  .process-step {
-    grid-template-columns: 3px auto minmax(0, 12rem) minmax(0, 1fr);
-  }
-}
-
-@media (max-width: 1080px) {
-  .split-head {
-    gap: clamp(1.5rem, 4vw, 3rem);
-  }
-
-  .process-step {
-    grid-template-columns: 3px auto minmax(0, 10rem) minmax(0, 1fr);
-  }
-
-  /* Less room beside the text, so the hover image gets narrower */
-  .media.process-media {
-    width: clamp(8rem, 24%, 16rem);
-  }
-
-  .faq-grid {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
-    gap: clamp(2rem, 4vw, 3rem);
-  }
-}
-
-/* --- Two columns stop earning their keep --- */
-@media (max-width: 960px) {
-  .split-head,
-  .faq-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  /* The cover crop stops leaving an empty half here: at this width the frame
-     is mostly face, so the copy runs full width and the scrim does the
-     contrast work the composition was doing above 960. */
-  .hero-grid {
-    max-width: 100%;
-  }
-
-  .hero-scrim {
-    background: linear-gradient(
-      to bottom,
-      rgba(16, 16, 16, 0.62) 0%,
-      rgba(16, 16, 16, 0.36) 24%,
-      rgba(16, 16, 16, 0.74) 62%,
-      rgba(16, 16, 16, 0.95) 100%
-    );
-  }
-
-  .split-lede {
-    align-self: start;
-    max-width: 52ch;
-  }
-
-  .split-title {
-    max-width: 22ch;
-  }
-
-  .hero-support {
-    gap: var(--space-3);
-    max-width: 44ch;
-  }
-
-  .work-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .work-card {
-    max-width: 44rem;
-  }
-
-  /* Below 960 the featured card stops being a side-by-side split and stacks
-     like every other card, so the schematic never gets squeezed to a sliver.
-     Compound selector to match the base rule's specificity. */
-  .work-card.work-card-featured {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
-  }
-
-  .work-card-featured .media.work-media {
-    aspect-ratio: 16 / 10;
-    height: auto;
-  }
-
-  .work-card-featured .work-body {
-    padding: var(--space-6) clamp(0.75rem, 1.5vw, 1.25rem) 0;
-  }
-
-  /* Same call as the work cards: below this the second column is too
-     narrow for a blurb plus its tag row. */
-  .caps-grid,
-  .pricing-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .caps-card,
-  .pricing-card {
-    max-width: 44rem;
-  }
-
-  .faq-intro .split-title {
-    max-width: 20ch;
-  }
-
-  .faq-lede {
-    max-width: 52ch;
-  }
-
-  /* No room to sit an image beside the copy, so the row keeps its
-     text at full width and simply tints on hover. */
-  .media.process-media {
-    display: none;
-  }
-
-  .process-step:hover .process-text {
-    opacity: 1;
-  }
-}
-
-/* --- Nav collapses here too (see index.css) --- */
-@media (max-width: 810px) {
-  /* Own the screen. The copy is bottom-anchored, so every pixel the hero
-     does not spend on text is headroom the portrait gets to use. */
-  .hero {
-    min-height: 100svh;
-    padding-block: calc(var(--nav-h) + var(--space-3))
-      clamp(2.5rem, 6vw, 3.5rem);
-  }
-
-  /* Below this width the photograph stops being a full-bleed ground and
-     becomes a band across the top. Note the band starts here at 810 but the
-     portrait crop only arrives at 600 (see Hero.jsx): between the two, the
-     band is landscape and so is the frame that fills it.
-
-     Stretched to the full height it could not win: the box is about
-     0.45:1 and even the 4:5 crop the <source> hands a phone is 0.8, so
-     a cover fit still ate a third of the width and put his face directly
-     behind the headline. Given its own 54% of the height the box lands
-     near 0.86:1, the crop very nearly fits it whole, and the copy gets
-     the bottom half to itself. The mask is what keeps the seam from
-     reading as an edge: the picture dissolves into the ground rather
-     than stopping on a line. */
-  .hero-photo {
-    /* The portrait is 720x900 (exactly 4:5). Giving the band that aspect and
-       starting it just under the nav shows the whole head — crown, full hair,
-       face — with clean headroom above it, instead of cover cropping the top
-       against the nav. Capped so tall content still fits; the mask dissolves
-       the bottom into the ground as before. */
-    top: calc(var(--nav-h) - 0.75rem);
-    height: min(56%, 100% - 23rem);
-    bottom: auto;
-    object-position: center top;
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 58%,
-      rgba(0, 0, 0, 0.55) 82%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 58%,
-      rgba(0, 0, 0, 0.55) 82%,
-      transparent 100%
-    );
-  }
-
-  /* The horizontal ramp was for a composition with an empty left half.
-     There is no empty half here, so the scrim is purely vertical: light
-     over the face, solid under the copy. */
-  .hero-scrim {
-    background: linear-gradient(
-      to bottom,
-      rgba(16, 16, 16, 0.58) 0%,
-      rgba(16, 16, 16, 0.18) 26%,
-      rgba(16, 16, 16, 0.62) 52%,
-      rgba(16, 16, 16, 0.94) 74%,
-      rgba(16, 16, 16, 0.97) 100%
-    );
-  }
-
-  .hero-title {
-    line-height: 1;
-  }
-
-  .proof-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .process-step {
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: start;
-    row-gap: var(--space-2);
-    column-gap: var(--space-4);
-  }
-
-  .process-index {
-    line-height: 1.1;
-  }
-
-  .process-text {
-    grid-column: 2;
-    justify-self: start;
-    text-align: left;
-    max-width: none;
-  }
-
-  .faq-a {
-    padding-left: clamp(1.25rem, 2.5vw, 1.75rem);
-  }
-
-  /* Pull the vanishing point closer as the arc shrinks. Radius drives
-     both spread and depth, so a narrower arc loses depth just as fast as
-     it loses width — and once the perspective gain drops below the
-     foreshortening from the rotation, the outer cards start reading
-     *smaller* than the centre ones and the curve turns inside out. */
-  .gallery-stage {
-    perspective: 900px;
-  }
-
-  .gallery-slot {
-    --arc-r: clamp(13rem, 44vw, 26rem);
-    width: clamp(5rem, 15vw, 8.5rem);
-  }
-
-  /* Below this the cards are about 90px wide, and a project title set in
-     them wraps to five or six lines of still-legible text sitting
-     directly behind the lede. Two pieces of copy competing for the same
-     pixels is worse than no copy: the fan keeps its index numbers and
-     goes back to being texture, which is all it can be at this size. */
-  .gallery-card-title,
-  .gallery-card-stack {
-    display: none;
-  }
-
-  .gallery-card-index {
-    font-size: 0.8rem;
-  }
-}
-
-/* --- Phone --- */
-@media (max-width: 640px) {
-  .work-card {
-    padding: 8px 8px var(--space-5);
-    border-radius: var(--radius-sm);
-  }
-
-  .media.work-media {
-    aspect-ratio: 3 / 2;
-    border-radius: calc(var(--radius-sm) - 8px);
-  }
-
-  .work-body {
-    gap: var(--space-2);
-    padding: var(--space-5) var(--space-2) 0;
-  }
-
-  .work-card .arrow-link {
-    padding-top: var(--space-4);
-  }
-
-  .proof-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .proof-note {
-    max-width: none;
-  }
-
-  /* Cards get the smaller radius and tighter padding across the board
-     — at this width the 24px corner eats into the text column. */
-  .caps-card,
-  .pricing-card,
-  .pricing-care {
-    padding: var(--space-5);
-    border-radius: var(--radius-sm);
-  }
-
-  .pricing-guarantees {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-5);
-  }
-
-  .cta-band-inner {
-    padding: clamp(2.5rem, 9vw, 3.5rem) var(--space-5);
-    border-radius: var(--radius-md);
-  }
-
-  .faq-item {
-    border-radius: var(--radius-sm);
-  }
-
-  .faq-q {
-    gap: var(--space-3);
-    padding: var(--space-4) var(--space-5);
-    font-size: var(--text-sm);
-    border-radius: var(--radius-sm);
-    align-items: flex-start;
-  }
-
-  .faq-icon {
-    margin-top: 2px;
-  }
-
-  .faq-a {
-    padding: 0 var(--space-5) var(--space-5);
-  }
-
-  /* Flatten the arc — a strong rotation reads as broken on a narrow
-     screen rather than as depth.
-
-     Tune the arc variables rather than re-declaring `transform`: that
-     shorthand also carries the translate(-50%, -50%) that centres each
-     card, so overriding it wholesale drops all eight onto a single
-     point. */
-  /* Wider radius and narrower cards than the eight-photo fan needed. Four
-     cards at the old 12rem sat edge to edge and merged into one slab
-     behind the copy — a photograph fan reads as separate cards because
-     the pictures differ, four identical dark panels do not. Spreading
-     them puts real ground between the cards so the arc reads as an arc,
-     and the outermost pair running past the viewport edge is fine: this
-     is atmosphere, and the section is clipped. */
-  .gallery-slot {
-    --arc-r: 15.5rem;
-    --arc-tilt: 0.6;
-    width: clamp(4rem, 19vw, 6rem);
-  }
-
-  .gallery-lede {
-    font-size: var(--text-sm);
-  }
-}
-
-@media (max-width: 480px) {
-  /* Own the first screen. This was min-height: 0, which left the hero at
-     its content height — 699px on a 844px phone — so the fold landed a
-     third of the way into the proof strip and the hero read as cut off.
-     svh (not vh) is the height with the browser chrome showing, which is
-     the state the page actually loads in.
-
-     Landscape phones are handled separately at the bottom of this file:
-     that rule comes later and still drops the hero to content height, so
-     this does not trap anyone in a 100svh hero on a short screen. */
-  .hero {
-    min-height: 100svh;
-  }
-
-  .hero-eyebrow {
-    margin-bottom: var(--space-3);
-  }
-
-  /* Stack the hero pair: each button claims its own row at 20rem, and
-     the text alternative sits under it rather than beside it. */
-  .hero-actions {
-    width: 100%;
-  }
-
-  .hero-cta,
-  .faq-intro .btn-pill,
-  .cta-band-cta,
-  .gallery-cta {
-    width: 100%;
-    max-width: 20rem;
-    justify-content: space-between;
-  }
-
-  .process-step {
-    padding: var(--space-5) var(--space-4);
-    border-radius: var(--radius-sm);
-  }
-
-  .process-index {
-    font-size: 1.375rem;
-  }
-
-  .process-title {
-    font-size: var(--text-base);
-  }
-
-  .split-title,
-  .gallery-title {
-    max-width: none;
-  }
-}
-
-/* --- Narrowest phones still sold (~320–380px) --- */
-@media (max-width: 380px) {
-  .process-step {
-    column-gap: var(--space-3);
-  }
-
-  /* 272px of column at 320px wide. "run themselves" needs 798 x (fs/112),
-     so anything above 38px wraps to a third line. */
-  .hero-title {
-    font-size: 2.125rem;
-  }
-
-  .work-tag {
-    font-size: 0.6875rem;
-    padding: 0.2rem 0.55rem;
-  }
-}
-
-/* --- Short landscape (phone on its side, split-screen tablet) --- */
-@media (max-height: 560px) and (max-width: 1080px) {
-  .hero {
-    min-height: 0;
-  }
-
-  /* A phone on its side is about 2.6:1. There is no band worth cutting out
-     of that, so the photograph goes back to being a full-bleed ground and
-     the scrim carries the contrast, exactly as it does above 810. */
-  .hero-photo {
-    height: 100%;
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-}
-
-/* ============================================================
-   Warm-glass pass — glassmorphism + soft depth + hero warmth,
-   in the site's own dark/saffron system (inspired by, not cloned).
-   ============================================================ */
-
-/* Glass cards: a top-lit translucent panel with a light-edge highlight and a
-   soft shadow for depth. No backdrop-filter — the page ground is flat, so a
-   blur would cost GPU for nothing; the translucency + highlight carry it. */
-.work-card,
-.caps-card,
-.pricing-card {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.06),
-    rgba(255, 255, 255, 0.022)
-  );
-  box-shadow: 0 22px 45px -30px rgba(0, 0, 0, 0.75),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07);
-}
-
-.work-card:hover,
-.caps-card:hover,
-.pricing-card:hover {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.09),
-    rgba(255, 255, 255, 0.035)
-  );
-  box-shadow: 0 30px 55px -28px rgba(0, 0, 0, 0.8),
-    inset 0 1px 0 rgba(255, 255, 255, 0.11);
-}
-
-/* The featured card gets a warmer, saffron-tinted glow to set it apart. */
-.pricing-card-featured,
-.work-card-featured {
-  box-shadow: 0 26px 55px -28px rgba(245, 135, 30, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-/* Availability line — a quiet editorial meta label, not a SaaS status pill.
-   No glass, no blinking dot, no off-brand green: a small letter-spaced line
-   with a static saffron marker, in the site's own type language. */
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  width: fit-content;
-  margin-bottom: var(--space-5);
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.hero-badge-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
-/* Hand-drawn annotation near the primary CTA — personality, desktop only. */
-.hero-annotation {
-  position: absolute;
-  left: calc(100% + 1.25rem);
-  top: 50%;
-  transform: translateY(-50%) rotate(-6deg);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--accent);
-  font-family: var(--font-display);
-  font-size: var(--text-base);
-  font-weight: 600;
-  font-style: italic;
-  white-space: nowrap;
-  pointer-events: none;
-}
-
-.hero-annotation svg {
-  width: 46px;
-  height: 30px;
-  color: var(--accent);
-}
-
-@media (max-width: 1080px) {
-  .hero-annotation {
-    display: none;
-  }
-}
-
-/* Anchor the hand-drawn annotation to the actions row. */
-.hero-actions {
+.dusk-cta {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--night);
+  padding-block: clamp(6rem, 12vw, 9.5rem) clamp(9rem, 17vw, 14rem);
 }
 
-/* The two hero proof cards stack on narrow phones, where side by side
-   leaves each too tight for its figure and its line of copy. */
-@media (max-width: 560px) {
-  .hero-proof-row {
-    grid-template-columns: minmax(0, 1fr);
-  }
+.dusk-sky-low {
+  background: linear-gradient(
+    180deg,
+    #0b0b0c 0%,
+    #140c08 34%,
+    #3a1b0b 60%,
+    #8a4213 80%,
+    #e08a45 94%
+  );
 }
 
-/* Flagship cards stop being a two-column split, and the tools grid steps
-   down, once the columns get too narrow for their content. */
-@media (max-width: 900px) {
-  .work-flagship {
+.dusk-sky-low .dusk-sun {
+  bottom: -18%;
+  height: 460px;
+}
+
+.dusk-cta .dusk-far {
+  z-index: 1;
+  height: clamp(200px, 30vw, 420px);
+}
+
+.dusk-cta .dusk-near {
+  z-index: 2;
+  height: clamp(90px, 12vw, 170px);
+}
+
+.dusk-cta-inner {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.dusk-cta-title {
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 1000px) {
+  .row,
+  .process-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  /* Stack in DOM order (body then panel) on both cards; the visual mirror
-     only makes sense side by side. */
-  .work-flagship-body,
-  .work-flagship-alt .work-flagship-body,
-  .work-flagship-panel,
-  .work-flagship-alt .work-flagship-panel {
+  .row-flip .row-panel {
     order: 0;
   }
 
-  .work-flagship-panel,
-  .work-flagship-alt .work-flagship-panel {
-    border-left: 0;
-    border-right: 0;
-    border-top: 1px solid var(--line);
+  .price-grid {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 560px;
+    margin-inline: auto;
   }
 
-  .work-tools {
+  .care-card {
+    max-width: 560px;
+    margin-inline: auto;
+  }
+
+  .cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 620px) {
-  .work-tools {
+/* Phones, and anyone who asked for less motion: the process stacks
+   instead of pinning. */
+@media (max-width: 1000px) {
+  .process {
+    height: auto;
+    padding-block: clamp(5rem, 10vw, 8.5rem);
+  }
+
+  .process-pin {
+    position: static;
+    height: auto;
+    min-height: 0;
+  }
+
+  .process-steps,
+  .process-stage {
+    display: none;
+  }
+
+  .process-stack {
+    display: block;
+    margin-top: 2rem;
+  }
+}
+
+.process.is-static {
+  height: auto;
+  padding-block: clamp(5rem, 10vw, 8.5rem);
+}
+
+.process.is-static .process-pin {
+  position: static;
+  height: auto;
+  min-height: 0;
+}
+
+.process.is-static .process-steps,
+.process.is-static .process-stage {
+  display: none;
+}
+
+.process.is-static .process-stack {
+  display: block;
+  margin-top: 2rem;
+}
+
+.process-stack-item {
+  padding: 2rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.process-stack-item h3 {
+  margin-top: 1rem;
+  font-size: 1.375rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.process-stack-item p {
+  margin-top: 0.4rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.process-stack-item .process-visual {
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .cards {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .work-metrics {
-    gap: var(--space-5);
+  .dusk-card-title {
+    display: none;
+  }
+
+  /* The flow graph becomes a stack: inputs, the hub, outputs. */
+  .flow-graph {
+    aspect-ratio: auto;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .flow-wires {
+    display: none;
+  }
+
+  .flow-col {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .flow-node,
+  .flow-hub {
+    position: static;
+    width: auto;
+    translate: none;
+    font-size: 13px;
+  }
+
+  .flow-hub {
+    margin: 0.5rem auto;
+    padding: 1rem 1.5rem;
+  }
+
+  .tick-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dusk-actions > * {
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dusk-stars i,
+  .flow-hub-mark,
+  .explainer-play::after,
+  .live-dot,
+  .status-dot {
+    animation: none;
   }
 }

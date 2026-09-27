@@ -1,0 +1,114 @@
+[
+  {
+    "file": "01.png",
+    "caption": "Every enquiry — WhatsApp, email, web — in one inbox",
+    "target": {
+      "x": 487,
+      "y": 67,
+      "w": 49,
+      "h": 24
+    },
+    "focus": {
+      "x": 160,
+      "y": 57,
+      "w": 360,
+      "h": 843
+    }
+  },
+  {
+    "file": "02.png",
+    "caption": "Open a thread — the client’s details sit alongside",
+    "target": {
+      "x": 160,
+      "y": 102,
+      "w": 360,
+      "h": 95
+    },
+    "focus": {
+      "x": 520,
+      "y": 57,
+      "w": 760,
+      "h": 843
+    }
+  },
+  {
+    "file": "03.png",
+    "caption": "Reply in seconds — the thread moves to pending",
+    "target": {
+      "x": 868,
+      "y": 849,
+      "w": 116,
+      "h": 36
+    },
+    "focus": {
+      "x": 520,
+      "y": 57,
+      "w": 760,
+      "h": 843
+    }
+  },
+  {
+    "file": "04.png",
+    "caption": "Leave notes your team sees — clients never do",
+    "target": {
+      "x": 880,
+      "y": 849,
+      "w": 104,
+      "h": 36
+    },
+    "focus": {
+      "x": 520,
+      "y": 57,
+      "w": 760,
+      "h": 843
+    }
+  },
+  {
+    "file": "05.png",
+    "caption": "Client replies — it lands straight back in the thread",
+    "target": {
+      "x": 826,
+      "y": 172,
+      "w": 154,
+      "h": 26
+    },
+    "focus": {
+      "x": 520,
+      "y": 57,
+      "w": 760,
+      "h": 843
+    }
+  },
+  {
+    "file": "06.png",
+    "caption": "Move the enquiry forward: Lead → Qualified",
+    "target": {
+      "x": 961,
+      "y": 254,
+      "w": 278,
+      "h": 38
+    },
+    "focus": {
+      "x": 160,
+      "y": 57,
+      "w": 1120,
+      "h": 454
+    }
+  },
+  {
+    "file": "07.png",
+    "caption": "Your whole pipeline on one board",
+    "target": {
+      "x": 180,
+      "y": 94,
+      "w": 66,
+      "h": 16
+    },
+    "focus": {
+      "x": 160,
+      "y": 57,
+      "w": 1120,
+      "h": 412
+    }
+  }
+]

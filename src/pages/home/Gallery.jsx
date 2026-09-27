@@ -133,7 +133,7 @@ export default function Gallery() {
         <h2 className="gallery-title">Curious what else I&rsquo;ve built?</h2>
         <p className="gallery-lede">
           The full set of booking flows, intake systems, dashboards and
-          automations &mdash; with the problem each one started from.
+          automations, with the problem each one started from.
         </p>
         <Link to="/projects" className="btn-pill gallery-cta">
           See more projects

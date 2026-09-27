@@ -316,7 +316,7 @@ function Booking() {
 
       {/* Row 3 — the bug, held at low contrast so it reads as history. */}
       <T x={52} y={trackY(2) - 8} size={11.5} fill={C.muted} weight={400}>
-        What it replaced — 14:15 and 15:30 both lost
+        What it replaced: 14:15 and 15:30 both lost
       </T>
       <g opacity="0.45">
         <Track y={trackY(2)} />
@@ -355,7 +355,7 @@ function Booking() {
         A blocked candidate resumes one gap after the thing
       </T>
       <T x={52} y={416} size={12} fill={C.muted} weight={400}>
-        that blocked it ends — not a whole session later.
+        that blocked it ends, not a whole session later.
       </T>
 
       <ArrowR x={562} y={252} len={22} />
@@ -384,7 +384,7 @@ function Booking() {
       {/* The last node box ends at 408, so these two baselines are the
           only room left in the panel. A third line would collide. */}
       <T x={616} y={426} size={11.5} fill={C.muted} weight={400}>
-        The row is the booking —
+        The row is the booking:
       </T>
       <T x={616} y={442} size={11.5} fill={C.muted} weight={400}>
         everything after it is best-effort.
@@ -661,7 +661,7 @@ function Platform() {
         )
       })}
       <T x={52} y={452} size={12} fill={C.muted} weight={400}>
-        Installable app — works offline, records the session on the device.
+        Installable app. Works offline, records the session on the device.
       </T>
     </g>
   )
@@ -758,10 +758,10 @@ function Journey() {
       </T>
 
       <T x={52} y={420} size={12} fill={C.muted} weight={400}>
-        Gated portal — an account exists only after triage, a screening call and payment.
+        Gated portal: an account exists only after triage, a screening call and payment.
       </T>
       <T x={52} y={442} size={12} fill={C.muted} weight={400}>
-        Four role-scoped views: client, family, therapist, admin — family sees program shape only.
+        Four role-scoped views: client, family, therapist, admin. Family sees program shape only.
       </T>
     </g>
   )
@@ -804,7 +804,7 @@ function Signature() {
         Full document text
       </T>
       <T x={52} y={274} size={12} fill={C.muted} weight={400}>
-        Every signature — drawn or typed
+        Every signature (drawn or typed)
       </T>
       <T x={52} y={296} size={12} fill={C.muted} weight={400}>
         Each signer, timestamp and IP
@@ -821,7 +821,7 @@ function Signature() {
 
       {/* Bottom — the audit trail. */}
       <line x1={52} y1={340} x2={848} y2={340} stroke={C.strokeSoft} strokeWidth="1.5" />
-      <T x={52} y={372} caps>Audit trail — every event logged</T>
+      <T x={52} y={372} caps>Audit trail: every event logged</T>
       {[
         { label: 'created', x: 32, w: 78 },
         { label: 'viewed', x: 128, w: 74 },
@@ -886,7 +886,7 @@ function Relay() {
         </g>
       ))}
       <T x={52} y={410} size={12} fill={C.muted} weight={400}>
-        The inbox and the CRM are the same record — reply to a message and move the deal on the same contact.
+        The inbox and the CRM are the same record: reply to a message and move the deal on the same contact.
       </T>
     </g>
   )
@@ -949,7 +949,7 @@ function Prospect() {
       {/* Bottom — the honesty rule + export. */}
       <line x1={52} y1={344} x2={848} y2={344} stroke={C.strokeSoft} strokeWidth="1.5" />
       <T x={52} y={378} size={12} fill={C.muted} weight={400}>
-        A field that isn&rsquo;t found is left blank, never invented — the score reflects what was actually there.
+        A field that isn&rsquo;t found is left blank, never invented; the score reflects what was actually there.
       </T>
       <T x={52} y={400} size={12} fill={C.muted} weight={400}>
         Filter, shortlist, and export the whole list as CSV.
@@ -965,15 +965,15 @@ function Prospect() {
 const WIDE = '0 0 900 480'
 
 const VARIANTS = {
-  platform: { vb: WIDE, draw: Platform, label: 'Schematic: a practice-management app where every feature crosses four layers — page, typed query hook, serverless action gated by a capability check, and a server route or n8n workflow — reaching Google Calendar, messaging, payments and an on-device session-to-note pipeline.' },
-  journey: { vb: WIDE, draw: Journey, label: 'Schematic: an online recovery platform running three layers at once — a self-paced course of 12 modules across four movements, live individual, group and family care, and an always-on Get Help safety layer — with a clinical gate that pauses the course until a required therapist session happens.' },
+  platform: { vb: WIDE, draw: Platform, label: 'Schematic: a practice-management app where every feature crosses four layers (page, typed query hook, serverless action gated by a capability check, and a server route or n8n workflow) reaching Google Calendar, messaging, payments and an on-device session-to-note pipeline.' },
+  journey: { vb: WIDE, draw: Journey, label: 'Schematic: an online recovery platform running three layers at once: a self-paced course of 12 modules across four movements, live individual, group and family care, and an always-on Get Help safety layer, with a clinical gate that pauses the course until a required therapist session happens.' },
   booking: { vb: WIDE, draw: Booking, label: 'Schematic: one therapist’s day, showing a 15-minute turnaround padding an existing calendar booking on both sides, and the next slot resuming one gap after that booking ends rather than a whole session later.' },
   approval: { vb: WIDE, draw: Approval, label: 'Schematic: a consent form signed on the client’s phone, routed for supervisor approval, producing a signed PDF filed automatically.' },
   operations: { vb: WIDE, draw: Operations, label: 'Schematic: a task board with a named owner and due date on every card, over a bar chart of workload per person.' },
   assistant: { vb: WIDE, draw: Assistant, label: 'Schematic: an incoming request classified and drafted by Claude against stored project context, held at a human approval gate before sending.' },
-  signature: { vb: WIDE, draw: Signature, label: 'Schematic: a consent-and-contract signing tool — compose from a template, sign by drawing or typing with consent, seal the document with a SHA-256 hash over its text and every signature, and verify it on a public page that recomputes the seal. An append-only audit trail of created, viewed, signed and completed events is printed onto the certificate page of the sealed PDF.' },
-  relay: { vb: WIDE, draw: Relay, label: 'Schematic: a shared client inbox and CRM — WhatsApp, email and web-form conversations collapse into one thread with reply, internal-note, assign and status triage, tied to a contact record that moves along a lead, qualified, active, won or lost pipeline. The inbox and the CRM are the same record.' },
-  prospect: { vb: WIDE, draw: Prospect, label: 'Schematic: a lead-research tool — paste one or more business URLs, fetch each page server-side, and extract the business behind it from JSON-LD structured data, Open Graph and meta tags, and mailto, tel and social links. Each lead is scored by contactability and moves through new, shortlisted and contacted; a field that is not found is left blank, and the list exports as CSV.' }
+  signature: { vb: WIDE, draw: Signature, label: 'Schematic: a consent-and-contract signing tool: compose from a template, sign by drawing or typing with consent, seal the document with a SHA-256 hash over its text and every signature, and verify it on a public page that recomputes the seal. An append-only audit trail of created, viewed, signed and completed events is printed onto the certificate page of the sealed PDF.' },
+  relay: { vb: WIDE, draw: Relay, label: 'Schematic: a shared client inbox and CRM: WhatsApp, email and web-form conversations collapse into one thread with reply, internal-note, assign and status triage, tied to a contact record that moves along a lead, qualified, active, won or lost pipeline. The inbox and the CRM are the same record.' },
+  prospect: { vb: WIDE, draw: Prospect, label: 'Schematic: a lead-research tool: paste one or more business URLs, fetch each page server-side, and extract the business behind it from JSON-LD structured data, Open Graph and meta tags, and mailto, tel and social links. Each lead is scored by contactability and moves through new, shortlisted and contacted; a field that is not found is left blank, and the list exports as CSV.' }
 }
 
 export default function SystemDiagram({ variant, className = '' }) {

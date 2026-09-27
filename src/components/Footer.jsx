@@ -24,7 +24,7 @@ export default function Footer() {
             Good systems should feel like less work, not more software.
           </p>
           <p className="footer-desc">
-            I build AI and operations automation for service businesses —
+            I build AI and operations automation for service businesses: 
             bookings, client intake, follow-ups and team coordination, running
             in one place instead of across WhatsApp threads and spreadsheets.
           </p>
@@ -32,7 +32,7 @@ export default function Footer() {
             <WhatsAppCta
               message={whatsappPrefill.footer}
               label="Message me on WhatsApp"
-              className="btn-pill"
+              className="btn-saffron"
             />
             {hasWhatsApp ? (
               <Link to="/contact" className="arrow-link footer-alt-cta">

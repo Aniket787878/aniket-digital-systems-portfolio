@@ -17,6 +17,7 @@ export default function SplitText({
   className,
   standalone = true,
   wordStagger = 0.045,
+  accent = [],
 }) {
   const M = m[as]
   const words = String(text).split(' ')
@@ -40,6 +41,7 @@ export default function SplitText({
         <m.span
           key={i}
           aria-hidden="true"
+          className={accent.includes(i) ? 'text-accent' : undefined}
           variants={word}
           style={{ display: 'inline-block', willChange: 'transform' }}
         >

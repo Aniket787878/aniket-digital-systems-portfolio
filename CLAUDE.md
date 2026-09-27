@@ -34,6 +34,19 @@ never in the first-load bundle. A `SafeMount` boundary drops it silently if
 WebGL is unavailable, leaving the photograph. Keep it lazy: the three.js
 chunk is ~220KB gzip and must never re-enter the main bundle.
 
+**Product films.** Every video on the site is rendered from `remotion/` by
+`bash scripts/render-videos.sh [slug|hero]` into `public/videos/` (films,
+`clips/` loops, `posters/`). The three working demos are **real captures**:
+PNGs of the running apps plus a `steps.json` (caption, clicked element,
+zoom region) in `public/walkthroughs/<slug>/`; the film only adds camera,
+pointer and captions. The two client platforms are **schematics** —
+wireframes of the real flow in `remotion/platformScenes.jsx`, labelled as
+such on every frame, on the card and in the caption, because their real
+screens hold client records. Never swap one kind for the other without
+changing the label (`films[slug].kind` in `data.js`). Remotion is a dev
+dependency only; nothing from it ships in the site bundle. Renders need a
+scale giving even pixel sizes (H.264), hence 0.8 for the card loops.
+
 **Live on Vercel**, deploying from `main` on every push (team `aniket-s1`,
 project `aniket-portfolio`). `vercel.json` holds the SPA rewrite — delete it and
 every deep link 404s on refresh. Runbook: `docs/deploy.md`.
@@ -51,23 +64,20 @@ every deep link 404s on refresh. Runbook: `docs/deploy.md`.
 Break any of these and nothing errors — it just renders wrong.
 
 1. **`--container-max` is the CONTENT width, not the border box.** `.container`
-   and `.nav-inner` use `max-width: calc(var(--container-max) + var(--container-pad) * 2)`.
-   The other reading leaves 1272px of content on a 1920px screen. Values are
-   1600 / 40, measured off the design reference.
+   uses `max-width: calc(var(--container-max) + var(--container-pad) * 2)`.
+   Values are 1200 / clamp(1.5rem .. 2.5rem) since the Dusk pass (was 1600,
+   which spread every band into islands of text). The nav is a floating pill
+   sized to its content, not the container.
 2. **`index.css` imports before `App.jsx` in `main.jsx`.** Reverse it and every
    page stylesheet loads ahead of the base sheet, so `index.css` wins every
    specificity *tie* — a page override that ties simply does nothing.
-3. **The hero is a proof-led text composition (redesigned 2026-09-27).** The
-   fold leads with the claim and two real proof figures (750+ clients / 11
-   therapists, and 5 systems shipped) in cards over a dark ground with a soft
-   saffron glow — no photograph and no 3D accent. `Hero.jsx` is driven by
-   Framer Motion; do **not** add a CSS entrance animation beside it (the two
-   fight over opacity). The `hero-*.jpg` files stay in `public/` and `Hero3D`
-   stays in the tree so the photographic hero *can* be brought back on request,
-   but nothing references them now — don't "restore" the photo hero unprompted.
-   If the photo hero is ever reinstated: it was a `<picture>` (not a CSS
-   background) whose `600px` `<source>` had to match the `media` on the
-   `index.html` preloads, or the phone downloads both frames and shows one.
+3. **The hero ground is the dusk scene (Dusk pass, 2026-09-27).** `Hero.jsx`
+   draws the sky (CSS gradient + seeded stars) and three SVG ridges from
+   `components/dusk/terrain.js`; the far and mid ridges parallax with scroll,
+   the product showreel sits between the mid and near ridges, and the near
+   ridge is filled with `--night` so it melts into the next band. Motion is
+   Framer Motion only; do not add a CSS entrance animation beside it (the two
+   fight over opacity). The `hero-*.jpg` files and `Hero3D` are unused.
 4. **`HomePage.css` stays one file.** Do not split it per section. Its rules beat
    `index.css` on source order alone (see 2), and a single import from a single
    place is what pins that order regardless of component evaluation order.
@@ -83,15 +93,23 @@ what is missing. No placeholder testimonials, no made-up metrics, no stock photo
 presented as a product screenshot. All 16 images in `data.js` are Unsplash
 placeholders and are marked as such.
 
-## Design reference
+## Design system: "Dusk" (read before any visual change)
 
-The Framer template at https://extended-experiences-754918.framer.app/ —
-specifically its **header and footer**. `threeui.com` is *not* this site; it was
-only cited as a source of 3D ideas.
+`docs/design-system.md` is the source of truth. It is derived from
+**getstage.co**, the reference Aniket approved twice (PRs #14, #15), rebuilt in
+his saffron: a dusk hero with parallax ridges, a warm light "paper" ground for
+the explaining bands, a dark "night" ground for the cinematic ones, Inter only
+at weight 500, saffron as punctuation, motion that explains a mechanism.
 
-When a visual difference is reported in loose terms ("compressed", "structure is
-different"), **open the reference and measure both at matching viewports before
-changing anything.** Guessing has cost a full cycle of work.
+What he has rejected, in his words: "too simple", then "looks like a kids
+website, jumbled". Heavy display type, stacked effects (glows, chips, grids and
+marquees at once) and walls of tags read as jumbled; bare text-only bands read
+as too simple. One idea per band, with the real product films carrying the
+visuals. **No em dashes in visible copy.**
+
+The older Framer references (`docs/reference/folioblox.html`) are superseded.
+When a visual difference is reported in loose terms, open getstage.co and
+measure both at matching viewports before changing anything.
 
 ## Conventions
 

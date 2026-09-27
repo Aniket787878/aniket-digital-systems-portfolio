@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
-import { projects, site, images, proofTools } from '../data.js'
+import { films, projects, site, images, proofTools } from '../data.js'
 import SystemDiagram from '../components/SystemDiagram.jsx'
 import AnimatedFlow from '../components/AnimatedFlow.jsx'
 import Media from '../components/Media.jsx'
@@ -36,21 +36,12 @@ const toolNote = (tool) => {
   return hit ? hit.note : ''
 }
 
-/* Projects with a rendered overview video in public/videos/. */
-const PROJECT_VIDEOS = new Set([
-  'therapist-pwa',
-  'udaan',
-  'signet',
-  'relay',
-  'prospector',
-])
-
 export default function ProjectDetailPage() {
   const { slug } = useParams()
   const position = projects.findIndex((item) => item.slug === slug)
   const project = position === -1 ? null : projects[position]
 
-  useDocumentTitle(project ? `${project.title} — Aniket` : 'Project not found — Aniket')
+  useDocumentTitle(project ? `${project.title} · Aniket` : 'Project not found · Aniket')
 
   if (!project) {
     return (
@@ -68,6 +59,9 @@ export default function ProjectDetailPage() {
   const timeline = toText(project.timeline)
   const stack = toList(project.stack)
   const flow = toList(project.flow)
+  const film = films[project.slug]
+  // Silent, so autoplay is allowed — but not for anyone who asked for less motion.
+  const autoPlay = !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
   const build = toList(project.system)
   const outcome = toList(project.outcome)
   const outcomeNote = toText(project.outcomeNote)
@@ -92,7 +86,7 @@ export default function ProjectDetailPage() {
     : []
   const availability = toText(site && site.availability)
 
-  const eyebrow = [toText(project.index), project.private ? 'Private Client System' : '']
+  const eyebrow = [toText(project.subtitle), films[project.slug]?.kind === 'real' ? 'Working demo' : 'Production platform']
     .filter(Boolean)
     .join(' · ')
 
@@ -127,25 +121,27 @@ export default function ProjectDetailPage() {
         </dl>
       )}
 
-      {/* The flow, in motion. An illustrative loop of the real stages —
-          captioned as an animation, not a screen recording, so it is never
-          read as footage of the running product. */}
-      {PROJECT_VIDEOS.has(project.slug) ? (
+      {/* The film. Two kinds (data.js `films`), and the caption says which:
+          the working demos are real captures of the running app; the client
+          platforms are a labelled schematic, never read as footage. */}
+      {film ? (
         <figure className="case-video-figure">
           <video
             className="case-video"
-            src={`/videos/${project.slug}.mp4`}
-            autoPlay
+            src={film.src}
+            poster={film.poster}
+            autoPlay={autoPlay}
             muted
             loop
             playsInline
             controls
             preload="metadata"
-            aria-label={`Animated overview of ${title}`}
+            aria-label={`${film.kind === 'real' ? 'Walkthrough' : 'Schematic film'} of ${title}`}
           />
           <figcaption className="case-caption">
-            An animated overview of the system — illustrative, not a recording
-            of the running app.
+            {film.kind === 'real'
+              ? 'A walkthrough of the running app. Every screen is a real capture; only the camera moves, pointer and captions are added.'
+              : 'A schematic of the real flow. The client’s screens hold client records, so they are drawn as wireframes rather than shown.'}
           </figcaption>
         </figure>
       ) : (
@@ -153,7 +149,7 @@ export default function ProjectDetailPage() {
           <figure className="case-flow-figure">
             <AnimatedFlow stages={flow} />
             <figcaption className="case-caption">
-              The flow in motion — an illustration of the stages, not a
+              The flow in motion, an illustration of the stages, not a
               recording of the running app.
             </figcaption>
           </figure>
@@ -377,7 +373,7 @@ export default function ProjectDetailPage() {
         <h2 className="case-cta-title">Have something like this to build?</h2>
         <p className="case-cta-body">
           Tell me what you are trying to build and where it is stuck. I will map the whole
-          thing — product, app, payments, backend, AI, infrastructure — and tell you what
+          thing (product, app, payments, backend, AI, infrastructure) and tell you what
           it takes to ship it.
         </p>
         {availability && <p className="case-cta-note">{availability}</p>}

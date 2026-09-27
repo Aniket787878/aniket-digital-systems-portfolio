@@ -1,142 +1,99 @@
 import { Link } from 'react-router-dom'
 import { m } from 'motion/react'
-import { projects, images } from '../../data.js'
-import { fadeUp, stagger, revealStagger } from '../../motion/variants.js'
-import { spotlightMove } from '../../motion/interactions.js'
-import SplitText from '../../motion/SplitText.jsx'
+import { projects, films } from '../../data.js'
+import { reveal, revealStagger, fadeUp } from '../../motion/variants.js'
+import LoopVideo from '../../components/LoopVideo.jsx'
+import Counter from '../../motion/Counter.jsx'
+import Icon from '../../components/icons.jsx'
+import { PillLabel, TickList } from '../../components/ui.jsx'
 
 /* ---------------------------------------------------------------
-   2 — Selected work, matched to the approved redesign concept.
-
-   The split is honest, not cosmetic: the two client platforms have no
-   shareable screenshots (client records), so they lead as large
-   "flagship" cards carrying their real figures, stack and a system map.
-   The three self-built tools DO have real screenshots of their running
-   UI (images.projects), so they sit in a demo grid showing that UI.
+   2 — Work, on the light ground. The two client platforms get the
+   getstage-style feature row: the film on a saffron-tinted panel,
+   the copy beside it with a tick list and real counts. The three
+   working demos follow as cards that play real captures on hover.
+   Every film says which kind it is (data.js `films`).
    --------------------------------------------------------------- */
 export default function Work() {
-  const platforms = projects.filter((p) => !images.projects[p.slug])
-  const tools = projects.filter((p) => images.projects[p.slug])
+  const platforms = projects.filter((p) => films[p.slug]?.kind === 'schematic')
+  const tools = projects.filter((p) => films[p.slug]?.kind === 'real')
 
   return (
-    <section className="work">
+    <section className="paper work" id="work">
       <div className="container">
-        <m.div className="split-head" {...revealStagger}>
-          <m.div variants={stagger}>
-            <m.p className="kicker" variants={fadeUp}>Flagship builds</m.p>
-            <SplitText
-              as="h2"
-              className="split-title"
-              text="Two production platforms, built solo"
-              standalone={false}
-            />
-          </m.div>
-          <m.p className="split-lede" variants={fadeUp}>
-            Not a service list &mdash; proof. The whole stack, from the
-            client&rsquo;s screen to the self-hosted database, designed and
-            shipped end to end by one person.
-          </m.p>
-        </m.div>
+        <m.header className="center-head" {...reveal}>
+          <PillLabel icon="layers">Work</PillLabel>
+          <h2 className="h2">
+            Two platforms in daily use.
+            <br />
+            <span className="soft">Three tools built in the open.</span>
+          </h2>
+        </m.header>
 
-        <m.div className="work-flagships" {...revealStagger}>
+        <div className="rows">
           {platforms.map((project, i) => (
             <m.article
               key={project.slug}
-              className={`work-flagship spotlight${i % 2 ? ' work-flagship-alt' : ''}`}
-              onPointerMove={spotlightMove}
-              variants={fadeUp}
+              className={`row${i % 2 ? ' row-flip' : ''}`}
+              {...reveal}
             >
-              <div className="work-flagship-body">
-                <div className="work-meta">
-                  <span className="work-index">{project.index}</span>
-                  <span className="work-tag work-tag-flag">Production platform</span>
+              <Link to={`/projects/${project.slug}`} className="row-panel" aria-label={`${project.title} case study`}>
+                <div className="row-frame">
+                  <LoopVideo
+                    src={films[project.slug].src}
+                    poster={films[project.slug].poster}
+                    className="row-video"
+                  />
                 </div>
-                <h3 className="work-flagship-title">{project.title}</h3>
-                <p className="work-flagship-summary">{project.summary}</p>
+                <span className="row-tag">Schematic film &middot; client data never shown</span>
+              </Link>
 
-                {project.metrics && (
-                  <div className="work-metrics">
-                    {project.metrics.slice(0, 2).map((metric) => (
-                      <div key={metric.label} className="work-metric">
-                        <span className="work-metric-n">{metric.n}</span>
-                        <span className="work-metric-label">{metric.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="work-stack">
-                  {project.stack.slice(0, 6).map((tech) => (
-                    <span key={tech} className="chip">{tech}</span>
+              <div className="row-copy">
+                <PillLabel icon={i === 0 ? 'calendar' : 'lock'}>{project.subtitle}</PillLabel>
+                <h3 className="h3">{project.title}</h3>
+                <p className="row-lede">{project.tagline}</p>
+                <TickList items={project.highlights} />
+                <dl className="row-facts">
+                  {project.metrics.slice(0, 2).map((metric) => (
+                    <div key={metric.label}>
+                      <dt>{metric.label}</dt>
+                      <dd>
+                        <Counter value={metric.n} />
+                      </dd>
+                    </div>
                   ))}
-                </div>
-
-                <Link to={`/projects/${project.slug}`} className="arrow-link work-flagship-link">
-                  Read the case study
-                  <span className="arrow" aria-hidden="true">&rarr;</span>
+                </dl>
+                <Link to={`/projects/${project.slug}`} className="text-link">
+                  Read the case study <Icon name="arrow" size={16} />
                 </Link>
-              </div>
-
-              <div className="work-flagship-panel">
-                <span className="work-panel-label">System map</span>
-                <div className="work-flow">
-                  {project.flow.map((stage) => (
-                    <span key={stage} className="work-flow-stage">{stage}</span>
-                  ))}
-                </div>
-                {project.system && project.system[0] && (
-                  <p className="work-panel-note">{project.system[0]}</p>
-                )}
               </div>
             </m.article>
           ))}
-        </m.div>
+        </div>
 
-        <m.div className="split-head work-tools-head" {...revealStagger}>
-          <m.div variants={stagger}>
-            <m.p className="kicker" variants={fadeUp}>Working demos</m.p>
-            <SplitText
-              as="h2"
-              className="split-title"
-              text="Tools I built to prove the mechanism"
-              standalone={false}
-            />
-          </m.div>
-          <m.p className="split-lede" variants={fadeUp}>
-            Self-initiated, running apps &mdash; not mockups. Every screenshot
-            below is the real UI. Each rebuilds from scratch a thing the big
-            platforms sell as a black box.
-          </m.p>
-        </m.div>
-
-        <m.ul className="work-tools" {...revealStagger}>
+        <m.ul className="cards" {...revealStagger}>
           {tools.map((project) => (
-            <m.li key={project.slug} className="work-tool-item" variants={fadeUp}>
-              <Link
-                to={`/projects/${project.slug}`}
-                className="work-tool spotlight"
-                onPointerMove={spotlightMove}
-              >
-                <div className="media work-tool-shot">
-                  <img
-                    src={images.projects[project.slug]}
-                    alt=""
-                    className="media-img"
-                    loading="lazy"
+            <m.li key={project.slug} variants={fadeUp}>
+              <Link to={`/projects/${project.slug}`} className="card loop-video-host">
+                <div className="card-media">
+                  <LoopVideo
+                    mode="hover"
+                    src={films[project.slug].clip}
+                    poster={films[project.slug].clipPoster}
+                    className="card-video"
                   />
+                  <span className="card-badge">
+                    <Icon name="play" size={10} /> Real screens
+                  </span>
                 </div>
-                <div className="work-tool-body">
-                  <span className="work-tag">Working demo</span>
-                  <h3 className="work-tool-title">{project.title}</h3>
-                  <p className="work-tool-summary">{project.summary}</p>
-                  <div className="work-stack">
-                    {project.stack.slice(0, 3).map((tech) => (
-                      <span key={tech} className="chip">{tech}</span>
-                    ))}
+                <div className="card-body">
+                  <div className="card-title">
+                    <h3>{project.title}</h3>
+                    <span>{project.subtitle}</span>
                   </div>
-                  <span className="arrow-link work-tool-link">
-                    View the build
-                    <span className="arrow" aria-hidden="true">&rarr;</span>
+                  <p>{project.tagline}</p>
+                  <span className="text-link">
+                    View the build <Icon name="arrow" size={16} />
                   </span>
                 </div>
               </Link>

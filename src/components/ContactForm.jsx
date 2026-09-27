@@ -66,6 +66,18 @@ export default function ContactForm() {
     mailSubject
   )}&body=${encodeURIComponent(mailBody)}`
 
+  /* WhatsApp is the buyer's live channel, so offer it as a second escape
+     hatch whenever a send fails — the lead still reaches me now, even though
+     the form's own inbox (the n8n webhook) may not be wired up yet. It opens
+     the chat prefilled with the same details the email carries. */
+  const whatsappLeadHref = showWhatsapp
+    ? whatsappIsUrl
+      ? whatsapp
+      : `https://wa.me/${whatsappDigits}?text=${encodeURIComponent(
+          `Hi Aniket — automation enquiry.\n\n${mailBody}`
+        )}`
+    : null
+
   async function handleSubmit(event) {
     event.preventDefault()
 
@@ -167,6 +179,20 @@ export default function ContactForm() {
             Email it instead <span aria-hidden="true">&rarr;</span>
           </a>
         </p>
+        {whatsappLeadHref && (
+          <p>
+            Or send it on{' '}
+            <a
+              className="u-link"
+              href={whatsappLeadHref}
+              target="_blank"
+              rel="noreferrer"
+            >
+              WhatsApp
+            </a>{' '}
+            — it opens with your message ready to send.
+          </p>
+        )}
         <p>
           Or write to{' '}
           <a className="u-link" href={`mailto:${site.email}`}>
@@ -282,8 +308,21 @@ export default function ContactForm() {
             That didn&rsquo;t send.{' '}
             <a className="u-link" href={mailtoHref}>
               Open it as an email
-            </a>{' '}
-            instead — everything you typed is already in it.
+            </a>
+            {whatsappLeadHref && (
+              <>
+                {' '}or{' '}
+                <a
+                  className="u-link"
+                  href={whatsappLeadHref}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  send it on WhatsApp
+                </a>
+              </>
+            )}{' '}
+            — everything you typed is already in it.
           </p>
         )}
       </form>

@@ -73,12 +73,14 @@
   inset: 0;
   z-index: -1;
   border-radius: inherit;
+  /* Subtle, off-centre wash — light falling from the top-left corner, not a
+     symmetric glow parked behind the headline. Kept faint so it reads as
+     considered lighting rather than a template gradient. */
   background:
     radial-gradient(
-      120% 70% at 50% -10%,
-      rgba(245, 135, 30, 0.16) 0%,
-      rgba(245, 135, 30, 0.05) 34%,
-      transparent 62%
+      80% 55% at 12% -12%,
+      rgba(245, 135, 30, 0.1) 0%,
+      transparent 52%
     ),
     var(--bg);
 }
@@ -1916,44 +1918,28 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-/* Honest credential/availability badge — a glass pill with a live pulse. */
+/* Availability line — a quiet editorial meta label, not a SaaS status pill.
+   No glass, no blinking dot, no off-brand green: a small letter-spaced line
+   with a static saffron marker, in the site's own type language. */
 .hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.6rem;
   width: fit-content;
-  margin-bottom: var(--space-4);
-  padding: 0.5rem 0.95rem;
-  border-radius: 999px;
+  margin-bottom: var(--space-5);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--ink-soft);
-  background: rgba(255, 255, 255, 0.06);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.13);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .hero-badge-dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: #34d399;
-  animation: badge-pulse 2.6s ease-out infinite;
-}
-
-@keyframes badge-pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55);
-  }
-  70% {
-    box-shadow: 0 0 0 9px rgba(52, 211, 153, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
-  }
+  background: var(--accent);
 }
 
 /* Hand-drawn annotation near the primary CTA — personality, desktop only. */

@@ -1265,7 +1265,76 @@ a:hover {
   color: var(--ink-soft);
 }
 
-/* ---------- Detail: the stack, with its reasoning ---------- */
+/* ---------- Detail: the tools, folded away for developers ---------- */
+
+.case-tech {
+  margin-top: var(--space-8);
+  max-width: var(--measure);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0 var(--space-5);
+}
+
+.case-tech-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 52px;
+  font-size: var(--text-sm);
+  color: var(--muted);
+  cursor: pointer;
+  list-style: none;
+}
+
+.case-tech-summary::-webkit-details-marker {
+  display: none;
+}
+
+.case-tech-summary::after {
+  content: '+';
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.case-tech[open] .case-tech-summary::after {
+  content: '\2212';
+}
+
+.case-tech-summary:hover {
+  color: var(--ink);
+}
+
+.case-tech[open] {
+  padding-bottom: var(--space-5);
+}
+
+/* Inside the panel the tools are a compact row of tags, not the tall
+   name-and-reason table they used to be. */
+.case-tech .case-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.case-tech .case-stack-item,
+.case-tech .case-stack-item:first-child {
+  display: block;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.case-tech .case-stack-name {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.case-tech .case-stack-note {
+  display: none;
+}
 
 .case-stack {
   display: grid;

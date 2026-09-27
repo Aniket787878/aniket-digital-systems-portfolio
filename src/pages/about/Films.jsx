@@ -29,14 +29,14 @@ export default function Films() {
           <h2 className="h2" id="about-films-title">
             Five builds, on film.
             <br />
-            <span className="soft">Real screens, or schematics where client data lives.</span>
+            <span className="soft">Real screens, or drawings where client records are private.</span>
           </h2>
         </m.header>
 
         <m.ul className="about-films-row" {...revealStagger}>
           {withFilm.map((p) => {
             const f = films[p.slug]
-            const kind = f.kind === 'real' ? 'Real screens' : 'Schematic film'
+            const kind = f.kind === 'real' ? 'Real screens' : 'Illustrated film'
             return (
               <m.li key={p.slug} className="about-film" variants={fadeUp}>
                 <button

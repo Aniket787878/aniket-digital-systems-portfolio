@@ -159,7 +159,7 @@ function AutomateVisual() {
     ['bell', 'Remind 24 hours before']
   ]
   return (
-    <Window title="workflow / booking-confirmed">
+    <Window title="New booking, handled">
       <ol className="pv-flow">
         {steps.map(([icon, label], i) => (
           <m.li

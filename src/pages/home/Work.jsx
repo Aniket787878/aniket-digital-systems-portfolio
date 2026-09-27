@@ -45,7 +45,7 @@ export default function Work() {
                     className="row-video"
                   />
                 </div>
-                <span className="row-tag">Schematic film &middot; client data never shown</span>
+                <span className="row-tag">Illustrated film &middot; client records never shown</span>
               </Link>
 
               <div className="row-copy">

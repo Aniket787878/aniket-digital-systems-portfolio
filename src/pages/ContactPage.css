@@ -1,143 +1,237 @@
 /* ============================================================
-   Contact — real lead form posting to the n8n webhook.
-   Mirrors HomePage.css discipline: design tokens, no
-   !important, no libraries, responsive.
+   Contact page, in the Dusk system (docs/design-system.md).
+   The sky, stars, sun and ridge layers (.dusk-*), the grounds
+   (.night / .paper), .h2, .soft, the pill labels and the buttons come
+   from index.css and HomePage.css; this sheet only lays out the three
+   contact bands and the form. It loads after HomePage.css (App imports
+   HomePage first), so a tie here wins. All classes prefixed `contact-`.
+   Inter at 500 only, like the rest of the Dusk pages.
    ============================================================ */
 
-/* ---------- Layout: header + two-column body ---------- */
+/* ---------- 1. Dusk header with the ways to reach me ---------- */
 
-/* Title left, intro right — spans the band like the home bands do. */
-.contact-head {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(2rem, 5vw, 5rem);
-  align-items: end;
+.contact-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--night);
+  padding-top: calc(var(--nav-h) + clamp(2.5rem, 6vw, 5rem));
+  /* Room under the cards for the near ridge to show before the paper. */
+  padding-bottom: clamp(5rem, 10vw, 8.5rem);
 }
 
-.contact-head-lead {
-  min-width: 0;
+.contact-hero .dusk-far {
+  z-index: 1;
+  height: clamp(220px, 34vw, 480px);
 }
 
-.contact-head .eyebrow {
-  display: block;
-  margin-bottom: var(--space-3);
+.contact-hero .dusk-near {
+  z-index: 2;
+  height: clamp(90px, 12vw, 170px);
 }
 
-.contact-head .page-title {
-  margin-bottom: 0;
-}
-
-.contact-head .page-lede {
-  margin: 0;
-  max-width: 58ch;
-}
-
-/* Context on the left, the form sized to a comfortable reading width on
-   the right, so the two together fill the band. */
-.contact-body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 40rem);
-  gap: clamp(2rem, 5vw, 5rem);
-  align-items: start;
-  margin-top: var(--space-9);
-}
-
-.contact-context {
-  min-width: 0;
-}
-
-.contact-main {
-  min-width: 0;
-}
-
-/* The form/panel no longer stacks under a column, it sits beside one. */
-.contact-main .contact-form,
-.contact-main .contact-panel {
-  margin-top: 0;
-}
-
-/* ---------- Availability + "what happens next" ---------- */
-
-.contact-availability {
-  margin-top: 0;
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  line-height: 1.6;
-  color: var(--accent);
-  max-width: var(--measure);
-}
-
-/* The direct route, above the form and above "what happens next" —
-   anyone who scrolled this far has already decided to make contact. */
-.contact-direct {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-4) var(--space-5);
-  margin-top: var(--space-6);
-}
-
-.contact-direct-note {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  line-height: 1.6;
-  color: var(--muted);
-  max-width: 34ch;
-}
-
-.contact-next {
-  margin-top: var(--space-7);
-  padding-top: var(--space-6);
-  border-top: 1px solid var(--line);
-}
-
-.contact-next-title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--text-xl);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-
-.contact-next-list {
-  list-style: none;
-  margin-top: var(--space-5);
-  display: grid;
-  /* Wraps to the space the context column actually has, rather than being
-     pinned to three columns that get crushed when it narrows. */
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
-  gap: var(--space-5);
-}
-
-.contact-next-list li {
+.contact-hero-inner {
+  position: relative;
+  z-index: 5;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  align-items: center;
+  text-align: center;
 }
 
-.contact-next-step {
-  font-family: var(--font-sans);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  line-height: 1;
-  color: var(--accent);
+/* The availability line is a full sentence, so let the pill wrap. */
+.contact-hero .glass-pill {
+  max-width: 100%;
+  text-align: left;
+  line-height: 1.45;
 }
 
-.contact-next-label {
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  font-weight: 600;
-  line-height: 1.4;
+.contact-title {
+  max-width: 17em;
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.contact-title .dusk-title-warm {
+  display: block;
+}
+
+.contact-sub {
+  max-width: 36em;
+}
+
+/* The routes: glass cards resting on the range, quickest first. */
+.contact-routes {
+  list-style: none;
+  display: grid;
+  /* One row of however many routes exist (3 today, 4 once a booking link
+     is set): auto-fit left a lone card on a second row at tablet width. */
+  grid-template-columns: repeat(var(--routes, 3), minmax(0, 1fr));
+  gap: 1rem;
+  width: 100%;
+  max-width: 64rem;
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  text-align: left;
+}
+
+.contact-routes li {
+  display: flex;
+  min-width: 0;
+}
+
+.contact-route {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1.4rem 1.4rem 1.25rem;
+  border-radius: 16px;
+  background: rgba(20, 20, 22, 0.74);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   color: var(--ink);
+  transition: transform var(--dur-mid) var(--ease-out), border-color var(--dur-fast) ease,
+    background-color var(--dur-fast) ease;
 }
 
-.contact-next-list p {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
+.contact-route:hover {
+  color: var(--ink);
+  transform: translateY(-2px);
+  border-color: rgba(255, 200, 154, 0.38);
+}
+
+.contact-route:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.contact-route.is-primary {
+  border-color: rgba(245, 135, 30, 0.55);
+  background: linear-gradient(180deg, rgba(245, 135, 30, 0.2), rgba(20, 20, 22, 0.76) 70%);
+}
+
+.contact-route.is-primary:hover {
+  border-color: var(--accent);
+}
+
+.contact-route-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.contact-route-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--peach);
+}
+
+.contact-route.is-primary .contact-route-icon {
+  background: var(--accent);
+  color: #1f0d00;
+}
+
+.contact-route-tag {
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(245, 135, 30, 0.16);
+  color: var(--peach);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.contact-route-title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.contact-route-text {
+  flex: 1;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.contact-route-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+  min-width: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--peach);
+}
+
+.contact-route-cue > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.contact-route-cue svg {
+  flex: none;
+  transition: transform var(--dur-mid) var(--ease-out);
+}
+
+.contact-route:hover .contact-route-cue svg {
+  transform: translateX(3px);
+}
+
+/* ---------- 2. Write it out: the form as a white card ---------- */
+
+.contact-write-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.contact-write-copy {
+  position: sticky;
+  top: calc(var(--nav-h) + 2rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.contact-write-lede {
+  max-width: 40ch;
+  font-size: 1.0625rem;
   line-height: 1.6;
-  color: var(--muted);
+  color: #4a453f;
+}
+
+.contact-write-points {
+  margin-top: 0.5rem;
+}
+
+.contact-card {
+  min-width: 0;
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid #ece6de;
+  box-shadow: 0 1px 0 rgba(22, 20, 18, 0.04), 0 30px 60px -30px rgba(122, 58, 18, 0.35);
+  color: var(--ink-dark);
+  /* The site runs a dark color-scheme; without this the native radio
+     dots and the textarea resize grip paint dark on the white card. */
+  color-scheme: light;
+  --error: #a5433a;
 }
 
 /* Polite live region for the form's sending / success transitions.
@@ -155,53 +249,65 @@
 }
 
 .contact-form {
-  margin-top: var(--space-8);
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-  background: var(--surface);
-  border-radius: var(--radius-md);
-  padding: clamp(1.75rem, 4vw, 3rem);
-  --error: #a5433a;
+  gap: 1.5rem;
 }
 
 .contact-field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 0.5rem;
 }
 
-.contact-label {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--ink);
+.contact-label,
+.contact-legend {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink-dark);
 }
 
 .contact-optional {
-  font-weight: 400;
-  color: var(--muted);
+  font-weight: 500;
+  color: var(--muted-dark);
 }
 
+.contact-hint {
+  margin-top: -0.2rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--muted-dark);
+}
+
+/* 1rem type: iOS zooms into anything smaller on focus. */
 .contact-input,
 .contact-textarea {
+  width: 100%;
   font-family: var(--font-sans);
-  font-size: var(--text-base);
-  line-height: 1.8;
-  color: var(--ink);
-  background: var(--surface-3);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xs);
-  padding: 0.75rem 1rem;
-  transition: border-color var(--dur-fast) ease,
-    background-color var(--dur-fast) ease;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--ink-dark);
+  background: #faf8f5;
+  border: 1px solid #e3ddd5;
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
+  transition: border-color var(--dur-fast) ease, background-color var(--dur-fast) ease,
+    box-shadow var(--dur-fast) ease;
+}
+
+.contact-input::placeholder,
+.contact-textarea::placeholder {
+  color: #8a837b;
 }
 
 .contact-input:focus,
 .contact-textarea:focus {
   outline: none;
   border-color: var(--accent);
-  background: var(--surface);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(245, 135, 30, 0.14);
 }
 
 /* Keyboard users get a ring the pointer path does not paint.
@@ -210,14 +316,13 @@
 .contact-textarea:focus-visible,
 .contact-radio input:focus-visible,
 .contact-submit:focus-visible,
-.contact-panel a:focus-visible,
-.contact-error a:focus-visible {
-  outline: 2px solid var(--accent);
+.contact-card a:focus-visible {
+  outline: 2px solid var(--accent-deep);
   outline-offset: 3px;
 }
 
 .contact-textarea {
-  min-height: 10.8rem;
+  min-height: 9rem;
   resize: vertical;
 }
 
@@ -225,129 +330,110 @@
   border: 0;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
+  min-width: 0;
 }
 
 .contact-legend {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: var(--space-1);
+  padding: 0;
+  margin-bottom: 0.6rem;
+}
+
+/* Budget as four choices you tap, not a column of bare radios. */
+.contact-radios {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
 }
 
 .contact-radio {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  color: var(--ink);
+  gap: 0.65rem;
+  min-width: 0;
+  padding: 0.8rem 0.95rem;
+  border-radius: 12px;
+  border: 1px solid #e3ddd5;
+  background: #faf8f5;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--ink-dark);
   cursor: pointer;
+  transition: border-color var(--dur-fast) ease, background-color var(--dur-fast) ease;
+}
+
+.contact-radio:hover {
+  border-color: #cfc6bb;
+}
+
+.contact-radio:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-tint);
 }
 
 .contact-radio input {
-  width: 1.125rem;
-  height: 1.125rem;
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0;
   accent-color: var(--accent);
 }
 
 .contact-submit {
   align-self: flex-start;
-  margin-top: var(--space-2);
+  margin-top: 0.25rem;
 }
 
 .contact-submit[aria-busy='true'] {
   cursor: progress;
+  opacity: 0.8;
 }
 
 .contact-error {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
+  font-size: 0.9375rem;
   line-height: 1.6;
   color: var(--error);
 }
 
-.contact-panel {
-  margin-top: var(--space-8);
-  background: var(--surface);
-  border-radius: var(--radius-md);
-  padding: clamp(1.75rem, 4vw, 3rem);
+.paper .contact-error a {
+  color: var(--error);
 }
 
+.contact-privacy {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #efe9e2;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--muted-dark);
+}
+
+/* The success message and the no-form fallback sit in the same card. */
 .contact-panel-title {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: var(--display-3);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--ink);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  color: var(--ink-dark);
 }
 
 .contact-panel p {
-  margin-top: var(--space-4);
-  font-family: var(--font-sans);
-  font-size: var(--text-lg);
-  line-height: 1.6;
-  color: var(--muted);
+  margin-top: 1rem;
   max-width: 46ch;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: #4a453f;
 }
 
-/* Below this the form can't keep a comfortable width beside the context,
-   so the two stack: context first (it leads the pitch), then the form. */
-@media (max-width: 1024px) {
-  .contact-body {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-8);
-  }
-}
-
-@media (max-width: 760px) {
-  .contact-head {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-5);
-    align-items: start;
-  }
-}
-
-@media (max-width: 810px) {
-  .contact-next-list {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
-}
-
-@media (max-width: 480px) {
-  .contact-form,
-  .contact-panel {
-    padding: 1.5rem;
-  }
-
-  .contact-submit {
-    width: 100%;
-  }
-}
-
-/* ---------- Direct routes, standing in for the form ----------
-   Shown while VITE_LEAD_WEBHOOK_URL is unset (see ContactForm.jsx). */
 .contact-direct-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--space-6);
+  gap: 0.75rem;
+  margin-top: 1.5rem;
 }
 
-@media (max-width: 480px) {
-  .contact-direct-actions > * {
-    flex: 1 1 100%;
-    justify-content: space-between;
-  }
-}
-
-/* The contact form's honeypot (ContactForm.jsx): off-screen, not
-   display:none, so a bot still sees an input to fill. */
+/* The honeypot (ContactForm.jsx): off-screen, not display:none, so a bot
+   still sees an input to fill. */
 .contact-hp {
   position: absolute;
   left: -10000px;
@@ -356,10 +442,463 @@
   overflow: hidden;
 }
 
-.contact-privacy {
-  margin-top: var(--space-4);
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
+/* ---------- 3. What happens next: a step list + one card ---------- */
+
+.contact-next-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.contact-next-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.contact-next-rail {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.contact-next-tab {
+  --dot: 44px;
+  --pad: 1rem;
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--dot) minmax(0, 1fr);
+  gap: 1.1rem;
+  padding: var(--pad);
+  border-radius: 16px;
+  border: 1px solid transparent;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color var(--dur-mid) ease, border-color var(--dur-mid) ease;
+}
+
+/* The line to the next dot: a grey track (::before) and a saffron fill
+   (::after) that grows down it once this step is behind you. Runs from
+   just under this dot to just above the next one, across the rail gap. */
+.contact-next-tab:not(:last-of-type)::before,
+.contact-next-tab:not(:last-of-type)::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--pad) + var(--dot) / 2 - 1px);
+  top: calc(var(--pad) + var(--dot) + 6px);
+  bottom: calc(-0.5rem - var(--pad) + 6px);
+  width: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.contact-next-tab:not(:last-of-type)::after {
+  background: var(--accent);
+  transform-origin: top;
+  transform: scaleY(0);
+  transition: transform 0.5s var(--ease-out);
+}
+
+.contact-next-tab.is-done::after {
+  transform: scaleY(1);
+}
+
+.contact-next-tab:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.contact-next-tab.is-active {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
+.contact-next-tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.contact-next-dot {
+  display: grid;
+  place-items: center;
+  width: var(--dot);
+  height: var(--dot);
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  background: var(--night);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  transition: background-color var(--dur-mid) ease, border-color var(--dur-mid) ease,
+    color var(--dur-mid) ease;
+}
+
+.contact-next-tab:hover .contact-next-dot {
+  border-color: var(--accent);
+  color: var(--peach);
+}
+
+.contact-next-tab.is-done .contact-next-dot {
+  border-color: var(--accent);
+  background: rgba(245, 135, 30, 0.14);
+  color: var(--peach);
+}
+
+.contact-next-tab.is-active .contact-next-dot {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #1f0d00;
+}
+
+.contact-next-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+  padding-top: 0.55rem;
+}
+
+.contact-next-label {
+  font-size: 1.1875rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.72);
+  transition: color var(--dur-mid) ease;
+}
+
+.contact-next-text {
+  max-width: 46ch;
+  font-size: 0.9375rem;
   line-height: 1.6;
   color: var(--muted);
+  transition: color var(--dur-mid) ease;
+}
+
+.contact-next-tab:hover .contact-next-label,
+.contact-next-tab.is-active .contact-next-label {
+  color: #fff;
+}
+
+.contact-next-tab.is-active .contact-next-text {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* The design system's panel: a saffron-tinted field with a card on it.
+   The field stays put; only the card inside changes. All three cards
+   share one grid cell, so the field is as tall as the tallest. */
+.contact-next-stage {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  min-height: 20rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border-radius: 24px;
+  background: linear-gradient(160deg, rgba(245, 135, 30, 0.2), rgba(245, 135, 30, 0.05) 70%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.contact-next-panel {
+  grid-area: 1 / 1;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  visibility: hidden;
+}
+
+.contact-next-panel.is-active {
+  visibility: visible;
+}
+
+.contact-art {
+  width: 100%;
+  max-width: 24rem;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--night-2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+  color: var(--ink);
+}
+
+.contact-art-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.contact-art-bar svg {
+  color: var(--peach);
+}
+
+.contact-art-body {
+  padding: 1.25rem 1.1rem;
+}
+
+.contact-art-mail {
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.contact-art-mail li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.75rem;
+  align-items: center;
+  padding: 0.8rem 0.9rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.contact-art-tick {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #1f0d00;
+}
+
+.contact-art-who {
+  font-size: 0.9375rem;
+  color: #fff;
+}
+
+.contact-art-when {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+.contact-art-call {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.contact-art-ring {
+  flex: none;
+  width: 84px;
+  height: 84px;
+  transform: rotate(-90deg);
+}
+
+.contact-art-ring circle {
+  fill: none;
+  stroke-width: 5;
+}
+
+.contact-art-ring-bg {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.contact-art-ring-fg {
+  stroke: var(--accent);
+  stroke-linecap: round;
+}
+
+.contact-art-ring text {
+  transform: rotate(90deg);
+  transform-origin: 40px 40px;
+  font-size: 15px;
+  font-weight: 500;
+  fill: #fff;
+}
+
+.contact-art-list {
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+
+.contact-art-list li::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 0.55rem;
+  border-radius: 50%;
+  background: var(--accent);
+  vertical-align: 0.15em;
+}
+
+.contact-art-doc > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  font-size: 0.9375rem;
+}
+
+.contact-art-doc > div:last-child {
+  border-bottom: 0;
+}
+
+.contact-art-doc dt {
+  color: var(--muted);
+}
+
+.contact-art-doc dd {
+  text-align: right;
+  color: #fff;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 960px) {
+  .contact-write-grid,
+  .contact-next-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact-write-copy {
+    position: static;
+  }
+
+  .contact-routes[data-count='4'] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contact-route {
+    padding: 1.15rem 1.1rem 1.1rem;
+  }
+
+  /* The picture leads the list here, so tapping a step changes something
+     still on screen rather than a card below the fold. */
+  .contact-next-stage {
+    order: -1;
+  }
+
+  .contact-card {
+    max-width: 40rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .contact-hero {
+    padding-top: calc(var(--nav-h) + 2rem);
+  }
+
+  .contact-title {
+    font-size: clamp(1.875rem, 8.4vw, 2.5rem);
+  }
+
+  .contact-hero .dusk-sub {
+    margin-top: 1.25rem;
+    font-size: 1rem;
+  }
+
+  .contact-routes,
+  .contact-routes[data-count='4'] {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  /* On a phone each route is a row: icon on the left, words beside it. */
+  .contact-route {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    column-gap: 0.9rem;
+    row-gap: 0.25rem;
+    align-items: start;
+    padding: 1rem 1rem 1rem 1rem;
+  }
+
+  .contact-route-top {
+    display: contents;
+  }
+
+  .contact-route-icon {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+  }
+
+  /* The tag sits on the card's top edge, so the title keeps the width. */
+  .contact-route-tag {
+    position: absolute;
+    top: -0.7rem;
+    right: 0.9rem;
+    background: #3a200c;
+    border: 1px solid rgba(245, 135, 30, 0.55);
+  }
+
+  .contact-route-title,
+  .contact-route-text,
+  .contact-route-cue {
+    grid-column: 2;
+  }
+
+  .contact-route-title {
+    font-size: 1.0625rem;
+  }
+
+  .contact-route-text {
+    font-size: 0.875rem;
+  }
+
+  .contact-route-cue {
+    margin-top: 0.35rem;
+    font-size: 0.875rem;
+  }
+
+  .contact-next-tab {
+    --dot: 38px;
+    --pad: 0.75rem;
+    gap: 0.9rem;
+  }
+
+  .contact-next-copy {
+    padding-top: 0.4rem;
+  }
+
+  .contact-next-label {
+    font-size: 1.0625rem;
+  }
+
+  .contact-next-stage {
+    min-height: 0;
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-card {
+    padding: 1.25rem;
+    border-radius: 20px;
+  }
+
+  .contact-radios {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact-submit {
+    width: 100%;
+  }
+
+  .contact-direct-actions > * {
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-route,
+  .contact-route:hover {
+    transform: none;
+  }
 }

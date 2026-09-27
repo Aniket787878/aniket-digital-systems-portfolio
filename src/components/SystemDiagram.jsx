@@ -363,9 +363,9 @@ function Booking() {
       <Panel x={596} y={56} w={272} h={392} />
       <T x={616} y={84} caps>On confirm</T>
       {[
-        { label: 'Slot re-checked', sub: 'against Google free/busy' },
-        { label: 'Client upserted', sub: 'keyed on last 10 phone digits' },
-        { label: 'Booking row written', sub: 'then the calendar event' },
+        { label: 'Slot re-checked', sub: 'against Google Calendar' },
+        { label: 'Client found or added', sub: 'matched by phone number' },
+        { label: 'Booking saved', sub: 'then added to the calendar' },
         { label: 'Confirmation + reminders', sub: 'WhatsApp and email', accent: true }
       ].map((node, i) => (
         <g key={node.label}>
@@ -608,26 +608,26 @@ function Assistant() {
    fixed grid, so it cannot drift out of step with the prose. */
 function Platform() {
   const layers = [
-    { label: 'Page', sub: 'what a person taps' },
-    { label: 'Typed query hook', sub: 'one per feature' },
-    { label: 'Serverless action', sub: 'under the handler cap', accent: true },
-    { label: 'Server route / n8n', sub: 'data service or workflow' }
+    { label: 'Screen', sub: 'what a person taps' },
+    { label: 'Request', sub: 'asks for one thing' },
+    { label: 'Permission check', sub: 'is this allowed?', accent: true },
+    { label: 'Private server', sub: 'records and automations' }
   ]
   const NODE_W = 180
   const STEP = 218 // node width + arrow gap
 
   const reach = [
-    { label: 'Google Calendar', sub: 'booking, via n8n' },
-    { label: 'WhatsApp & SMS', sub: 'MSG91 templates' },
-    { label: 'Payments', sub: 'bank gateway, UPI' },
-    { label: 'Session → note', sub: 'on-device, then AI' }
+    { label: 'Google Calendar', sub: 'bookings and Meet links' },
+    { label: 'WhatsApp & SMS', sub: 'confirmations, reminders' },
+    { label: 'Payments', sub: 'cards, bank and UPI' },
+    { label: 'Session → note', sub: 'recorded, then AI' }
   ]
   const PANEL_W = 195
   const PSTEP = 213
 
   return (
     <g>
-      <T x={52} y={88} caps>One request, four layers</T>
+      <T x={52} y={88} caps>Every tap, four steps</T>
       {layers.map((l, i) => {
         const x = 32 + i * STEP
         return (
@@ -639,13 +639,13 @@ function Platform() {
       })}
       {/* The capability check sits on the flow into the server layer — the
           one place who-can-do-what is decided, drawn as the accent step. */}
-      <Chip x={498} y={186} w={124} label="capability check" accent />
+      <Chip x={498} y={186} w={124} label="who may do this" accent />
       <T x={560} y={220} size={11} anchor="middle" fill={C.muted} weight={400}>
         who may edit, force-book, see the whole client book
       </T>
 
       <line x1={52} y1={252} x2={848} y2={252} stroke={C.strokeSoft} strokeWidth="1.5" />
-      <T x={52} y={286} caps>Where the server layer reaches</T>
+      <T x={52} y={286} caps>What the private server connects to</T>
       {reach.map((r, i) => {
         const x = 32 + i * PSTEP
         return (
@@ -776,10 +776,10 @@ function Journey() {
    screenshots, which sit in the screenshot slot below the schematic. */
 function Signature() {
   const steps = [
-    { label: 'Compose', sub: 'template + signers' },
+    { label: 'Write', sub: 'template + who signs' },
     { label: 'Sign', sub: 'draw / type + consent' },
-    { label: 'Seal', sub: 'SHA-256 over the record', accent: true },
-    { label: 'Verify', sub: 'public, live check' }
+    { label: 'Seal', sub: 'a fingerprint of it all', accent: true },
+    { label: 'Check', sub: 'public, live' }
   ]
   const NODE_W = 180
   const STEP = 218
@@ -812,16 +812,16 @@ function Signature() {
 
       {/* Right — verification: recompute and compare. */}
       <Panel x={568} y={196} w={300} h={112} fill={C.panelHi} />
-      <T x={588} y={224} caps>Verify, anytime</T>
+      <T x={588} y={224} caps>Check, anytime</T>
       <T x={588} y={250} size={11.5} fill={C.muted} weight={400}>
         Recompute the seal, compare.
       </T>
-      <Chip x={588} y={264} w={128} label="match = authentic" accent />
-      <Chip x={726} y={264} w={124} label="mismatch = tampered" />
+      <Chip x={588} y={264} w={128} label="match = genuine" accent />
+      <Chip x={726} y={264} w={124} label="no match = changed" />
 
       {/* Bottom — the audit trail. */}
       <line x1={52} y1={340} x2={848} y2={340} stroke={C.strokeSoft} strokeWidth="1.5" />
-      <T x={52} y={372} caps>Audit trail: every event logged</T>
+      <T x={52} y={372} caps>History: every step recorded</T>
       {[
         { label: 'created', x: 32, w: 78 },
         { label: 'viewed', x: 128, w: 74 },
@@ -866,13 +866,13 @@ function SharedInbox() {
       {/* Inbox → thread → contact. */}
       <Node x={244} y={92} w={168} h={136} label="Shared inbox" sub="one list, every source" />
       <ArrowR x={412} y={160} len={38} />
-      <Node x={450} y={120} w={190} h={80} label="Thread + triage" sub="reply · note · assign" />
+      <Node x={450} y={120} w={190} h={80} label="Conversation" sub="reply · note · assign" />
       <ArrowR x={640} y={160} len={38} />
       <Node x={678} y={120} w={190} h={80} label="Contact record" sub="the same person" accent />
 
       {/* The pipeline, built in. */}
       <line x1={52} y1={272} x2={848} y2={272} stroke={C.strokeSoft} strokeWidth="1.5" />
-      <T x={52} y={304} caps>One pipeline, built in</T>
+      <T x={52} y={304} caps>Client stages, built in</T>
       {[
         { label: 'Lead', x: 32 },
         { label: 'Qualified', x: 196 },
@@ -900,9 +900,9 @@ function SharedInbox() {
    real screenshots, which sit below the schematic. */
 function Prospect() {
   const steps = [
-    { label: 'Paste URL', sub: 'one or many' },
-    { label: 'Fetch page', sub: 'server-side' },
-    { label: 'Extract', sub: 'the business behind it', accent: true },
+    { label: 'Paste website', sub: 'one or many' },
+    { label: 'Read page', sub: 'on the spot' },
+    { label: 'Pick out', sub: 'the business details', accent: true },
     { label: 'Scored lead', sub: 'ranked by reach' }
   ]
   const NODE_W = 180
@@ -910,7 +910,7 @@ function Prospect() {
 
   return (
     <g>
-      <T x={52} y={72} caps>From a URL to a lead</T>
+      <T x={52} y={72} caps>From a website to a lead</T>
       {steps.map((s, i) => {
         const x = 32 + i * STEP
         return (
@@ -925,18 +925,18 @@ function Prospect() {
       <Panel x={32} y={196} w={430} h={120} />
       <T x={52} y={224} caps>What it reads, in order</T>
       <T x={52} y={250} size={12} fill={C.muted} weight={400}>
-        JSON-LD structured data
+        Details published for search engines
       </T>
       <T x={52} y={272} size={12} fill={C.muted} weight={400}>
-        Open Graph &amp; meta tags
+        The page title and description
       </T>
       <T x={52} y={294} size={12} fill={C.muted} weight={400}>
-        mailto / tel links, social profiles
+        Email, phone and social links
       </T>
 
       {/* Right — scoring. */}
       <Panel x={478} y={196} w={390} h={120} fill={C.panelHi} />
-      <T x={498} y={224} caps>Scored by contactability</T>
+      <T x={498} y={224} caps>Scored by how easy to reach</T>
       <rect x={498} y={244} width={250} height={8} rx={4} fill={C.ground} />
       <rect x={498} y={244} width={158} height={8} rx={4} fill={C.accent} />
       <T x={760} y={252} size={11} fill={C.muted} weight={400}>
@@ -965,15 +965,15 @@ function Prospect() {
 const WIDE = '0 0 900 480'
 
 const VARIANTS = {
-  platform: { vb: WIDE, draw: Platform, label: 'Schematic: a practice-management app where every feature crosses four layers (page, typed query hook, serverless action gated by a capability check, and a server route or n8n workflow) reaching Google Calendar, messaging, payments and an on-device session-to-note pipeline.' },
-  journey: { vb: WIDE, draw: Journey, label: 'Schematic: an online recovery platform running three layers at once: a self-paced course of 12 modules across four movements, live individual, group and family care, and an always-on Get Help safety layer, with a clinical gate that pauses the course until a required therapist session happens.' },
-  booking: { vb: WIDE, draw: Booking, label: 'Schematic: one therapist’s day, showing a 15-minute turnaround padding an existing calendar booking on both sides, and the next slot resuming one gap after that booking ends rather than a whole session later.' },
-  approval: { vb: WIDE, draw: Approval, label: 'Schematic: a consent form signed on the client’s phone, routed for supervisor approval, producing a signed PDF filed automatically.' },
-  operations: { vb: WIDE, draw: Operations, label: 'Schematic: a task board with a named owner and due date on every card, over a bar chart of workload per person.' },
-  assistant: { vb: WIDE, draw: Assistant, label: 'Schematic: an incoming request classified and drafted by Claude against stored project context, held at a human approval gate before sending.' },
-  signature: { vb: WIDE, draw: Signature, label: 'Schematic: a consent-and-contract signing tool: compose from a template, sign by drawing or typing with consent, seal the document with a SHA-256 hash over its text and every signature, and verify it on a public page that recomputes the seal. An append-only audit trail of created, viewed, signed and completed events is printed onto the certificate page of the sealed PDF.' },
-  'shared-inbox': { vb: WIDE, draw: SharedInbox, label: 'Schematic: a shared client inbox and CRM: WhatsApp, email and web-form conversations collapse into one thread with reply, internal-note, assign and status triage, tied to a contact record that moves along a lead, qualified, active, won or lost pipeline. The inbox and the CRM are the same record.' },
-  prospect: { vb: WIDE, draw: Prospect, label: 'Schematic: a lead-research tool: paste one or more business URLs, fetch each page server-side, and extract the business behind it from JSON-LD structured data, Open Graph and meta tags, and mailto, tel and social links. Each lead is scored by contactability and moves through new, shortlisted and contacted; a field that is not found is left blank, and the list exports as CSV.' }
+  platform: { vb: WIDE, draw: Platform, label: 'Diagram: a practice-management app where every feature crosses four layers (page, typed query hook, serverless action gated by a capability check, and a server route or n8n workflow) reaching Google Calendar, messaging, payments and an on-device session-to-note pipeline.' },
+  journey: { vb: WIDE, draw: Journey, label: 'Diagram: an online recovery platform running three layers at once: a self-paced course of 12 modules across four movements, live individual, group and family care, and an always-on Get Help safety layer, with a clinical gate that pauses the course until a required therapist session happens.' },
+  booking: { vb: WIDE, draw: Booking, label: 'Diagram: one therapist’s day, showing a 15-minute turnaround padding an existing calendar booking on both sides, and the next slot resuming one gap after that booking ends rather than a whole session later.' },
+  approval: { vb: WIDE, draw: Approval, label: 'Diagram: a consent form signed on the client’s phone, routed for supervisor approval, producing a signed PDF filed automatically.' },
+  operations: { vb: WIDE, draw: Operations, label: 'Diagram: a task board with a named owner and due date on every card, over a bar chart of workload per person.' },
+  assistant: { vb: WIDE, draw: Assistant, label: 'Diagram: an incoming request classified and drafted by Claude against stored project context, held at a human approval gate before sending.' },
+  signature: { vb: WIDE, draw: Signature, label: 'Diagram: a consent-and-contract signing tool: compose from a template, sign by drawing or typing with consent, seal the document with a SHA-256 hash over its text and every signature, and verify it on a public page that recomputes the seal. An append-only audit trail of created, viewed, signed and completed events is printed onto the certificate page of the sealed PDF.' },
+  'shared-inbox': { vb: WIDE, draw: SharedInbox, label: 'Diagram: a shared client inbox and CRM: WhatsApp, email and web-form conversations collapse into one thread with reply, internal-note, assign and status triage, tied to a contact record that moves along a lead, qualified, active, won or lost pipeline. The inbox and the CRM are the same record.' },
+  prospect: { vb: WIDE, draw: Prospect, label: 'Diagram: a lead-research tool: paste one or more business URLs, fetch each page server-side, and extract the business behind it from JSON-LD structured data, Open Graph and meta tags, and mailto, tel and social links. Each lead is scored by contactability and moves through new, shortlisted and contacted; a field that is not found is left blank, and the list exports as CSV.' }
 }
 
 export default function SystemDiagram({ variant, className = '' }) {

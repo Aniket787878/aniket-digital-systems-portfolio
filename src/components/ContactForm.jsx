@@ -1,10 +1,11 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { site, budgetBands, whatsappPrefill } from '../data.js'
 import { useCurrency } from '../currency.js'
 import { hasBooking } from '../booking.js'
 import BookingCta from './BookingCta.jsx'
 import WhatsAppCta from './WhatsAppCta.jsx'
+import Icon from './icons.jsx'
 import { WEBHOOK_URL, formConnected } from '../leadWebhook.js'
 
 
@@ -88,20 +89,32 @@ function LeadForm() {
   const [status, setStatus] = useState('idle')
 
   const inFlight = useRef(false)
+  const successRef = useRef(null)
   const sending = status === 'sending'
+
+  /* The thank-you panel is far shorter than the form it replaces, so on a
+     phone it can land above the screen, leaving the visitor looking at the
+     next band with no sign it worked. Bring it back into view. */
+  useEffect(() => {
+    const panel = successRef.current
+    if (status !== 'success' || !panel) return
+    if (panel.getBoundingClientRect().top < 0) {
+      panel.scrollIntoView({ block: 'center' })
+    }
+  }, [status])
 
   /* Nothing the visitor typed should be lost if the send fails.
      This link hands the same message to their own mail client. */
   const mailSubject = name
-    ? `Automation enquiry: ${name}`
-    : 'Automation enquiry'
+    ? `Website enquiry: ${name}`
+    : 'Website enquiry'
   const mailBody = [
     `Name: ${name}`,
     `Email: ${email}`,
-    company ? `Company: ${company}` : null,
-    budgetBand ? `Budget: ${budgetLabel(budgetBand)}` : null,
+    company ? `Business: ${company}` : null,
+    budgetBand ? `Rough budget: ${budgetLabel(budgetBand)}` : null,
     '',
-    'The workflow to automate:',
+    'What takes up too much of our week:',
     workflowBroken
   ]
     .filter((line) => line !== null)
@@ -118,7 +131,7 @@ function LeadForm() {
     ? whatsappIsUrl
       ? whatsapp
       : `https://wa.me/${whatsappDigits}?text=${encodeURIComponent(
-          `Hi Aniket, automation enquiry.\n\n${mailBody}`
+          `Hi Aniket, I filled in the form on your site.\n\n${mailBody}`
         )}`
     : null
 
@@ -184,7 +197,7 @@ function LeadForm() {
 
   if (status === 'success') {
     body = (
-      <div className="contact-panel">
+      <div className="contact-panel" ref={successRef}>
         <h2 className="contact-panel-title">Got it.</h2>
         <p>I&rsquo;ll reply within 24 hours, usually sooner.</p>
         {showWhatsapp && (
@@ -208,13 +221,14 @@ function LeadForm() {
       <form className="contact-form" onSubmit={handleSubmit}>
         <div className="contact-field">
           <label className="contact-label" htmlFor="contact-name">
-            Name
+            Your name
           </label>
           <input
             className="contact-input"
             id="contact-name"
             name="name"
             type="text"
+            autoComplete="name"
             required
             maxLength={100}
             value={name}
@@ -224,13 +238,14 @@ function LeadForm() {
 
         <div className="contact-field">
           <label className="contact-label" htmlFor="contact-email">
-            Email
+            Your email <span className="contact-optional">so I can reply</span>
           </label>
           <input
             className="contact-input"
             id="contact-email"
             name="email"
             type="email"
+            autoComplete="email"
             required
             value={email}
             onChange={(event) => setEmail(event.target.value)}
@@ -255,13 +270,14 @@ function LeadForm() {
 
         <div className="contact-field">
           <label className="contact-label" htmlFor="contact-company">
-            Company <span className="contact-optional">(optional)</span>
+            Your business <span className="contact-optional">(optional)</span>
           </label>
           <input
             className="contact-input"
             id="contact-company"
             name="company"
             type="text"
+            autoComplete="organization"
             maxLength={100}
             value={company}
             onChange={(event) => setCompany(event.target.value)}
@@ -270,15 +286,18 @@ function LeadForm() {
 
         <div className="contact-field">
           <label className="contact-label" htmlFor="contact-workflow">
-            What&apos;s the manual/repetitive workflow you&apos;d want
-            automated?
+            What takes up too much of your week?
           </label>
+          <p className="contact-hint" id="contact-workflow-hint">
+            A couple of sentences is plenty. No need to know what the fix is.
+          </p>
           <textarea
             className="contact-textarea"
             id="contact-workflow"
             name="workflow_broken"
-            rows={6}
-            placeholder="What's the manual/repetitive workflow you'd want automated?"
+            rows={5}
+            aria-describedby="contact-workflow-hint"
+            placeholder="For example: we answer the same booking questions on WhatsApp all day, then copy every booking into a spreadsheet by hand."
             required
             minLength={20}
             maxLength={1000}
@@ -288,35 +307,42 @@ function LeadForm() {
         </div>
 
         <fieldset className="contact-fieldset">
-          <legend className="contact-legend">Budget band</legend>
-          {bands.map((option) => (
-            <label className="contact-radio" key={option.value}>
-              <input
-                type="radio"
-                name="budget_band"
-                value={option.value}
-                required
-                checked={budgetBand === option.value}
-                onChange={(event) => setBudgetBand(event.target.value)}
-              />
-              {option.label}
-            </label>
-          ))}
+          <legend className="contact-legend">Rough budget</legend>
+          <div className="contact-radios">
+            {bands.map((option) => (
+              <label className="contact-radio" key={option.value}>
+                <input
+                  type="radio"
+                  name="budget_band"
+                  value={option.value}
+                  required
+                  checked={budgetBand === option.value}
+                  onChange={(event) => setBudgetBand(event.target.value)}
+                />
+                <span>{option.label}</span>
+              </label>
+            ))}
+          </div>
         </fieldset>
 
         <button
-          className="btn btn-primary contact-submit"
+          className="btn-saffron contact-submit"
           type="submit"
           disabled={sending}
           aria-busy={sending}
         >
-          {sending ? 'Sending…' : 'Send it →'}
+          {sending ? 'Sending…' : 'Send message'}
+          {!sending && (
+            <span className="btn-pill-icon" aria-hidden="true">
+              <Icon name="arrow" size={16} />
+            </span>
+          )}
         </button>
 
         {status === 'invalid' && (
           <p className="contact-error" role="alert">
-            Add your name, your email and a couple of lines about the workflow,
-            then send.
+            Add your name, your email and a couple of sentences about what
+            takes up your week, then send.
           </p>
         )}
 
@@ -362,9 +388,9 @@ function LeadForm() {
 function PrivacyNote() {
   return (
     <p className="contact-privacy">
-      What happens to what you send:{' '}
+      How I look after what you send:{' '}
       <Link className="u-link" to="/privacy">
-        privacy
+        privacy note
       </Link>
       .
     </p>

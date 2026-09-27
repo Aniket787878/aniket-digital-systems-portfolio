@@ -264,7 +264,7 @@ function BuildArt({ on }) {
 
 function HandoverArt({ on }) {
   const items = [
-    ['Code in your repository', true],
+    ['Set up in your name', true],
     ['Automations on your accounts', true],
     ['Walkthrough with your team', true],
     ['Care Plan, if you want one', false]

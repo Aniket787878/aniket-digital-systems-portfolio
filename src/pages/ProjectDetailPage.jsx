@@ -90,7 +90,7 @@ export default function ProjectDetailPage() {
     : []
   const availability = toText(site && site.availability)
 
-  const eyebrow = [toText(project.subtitle), films[project.slug]?.kind === 'real' ? 'Working demo' : 'Production platform']
+  const eyebrow = [toText(project.subtitle), films[project.slug]?.kind === 'real' ? 'Working demo' : 'Client project']
     .filter(Boolean)
     .join(' · ')
 
@@ -140,12 +140,12 @@ export default function ProjectDetailPage() {
             playsInline
             controls={!autoPlay}
             preload="metadata"
-            aria-label={`${film.kind === 'real' ? 'Walkthrough' : 'Schematic film'} of ${title}`}
+            aria-label={`${film.kind === 'real' ? 'Walkthrough' : 'Illustrated film'} of ${title}`}
           />
           <figcaption className="case-caption">
             {film.kind === 'real'
-              ? 'A walkthrough of the running app. Every screen is a real capture; only the framing, zoom and captions are added.'
-              : 'A schematic of the real flow. The client’s screens hold client records, so they are drawn as wireframes rather than shown.'}
+              ? 'A walkthrough of the working app. Every screen is real; only the framing, zoom and captions are added.'
+              : 'A drawing of the real flow. The real screens hold private client records, so they are drawn rather than shown.'}
           </figcaption>
         </figure>
       ) : (
@@ -153,8 +153,8 @@ export default function ProjectDetailPage() {
           <figure className="case-flow-figure">
             <AnimatedFlow stages={flow} />
             <figcaption className="case-caption">
-              The flow in motion, an illustration of the stages, not a
-              recording of the running app.
+              The steps in motion: an illustration, not a recording of the
+              working app.
             </figcaption>
           </figure>
         )
@@ -167,14 +167,14 @@ export default function ProjectDetailPage() {
       <figure className="case-banner-figure">
         <SystemDiagram className="case-banner" variant={project.diagram} />
         <figcaption className="case-caption">
-          Schematic of the system as built. Not a screenshot.
+          A drawing of how the system fits together. Not a screenshot.
           {/* Below 810px the diagram stops shrinking (its labels would hit
               ~4px) and scrolls sideways at a legible size instead. Without
               this line the cut-off right edge reads as a broken image rather
               than "there is more this way". Hidden on wide screens where the
               whole diagram is already visible. */}
           <span className="case-scroll-hint" aria-hidden="true">
-            Scroll the diagram to see the full system &rarr;
+            Scroll sideways to see the whole drawing &rarr;
           </span>
         </figcaption>
       </figure>
@@ -278,7 +278,7 @@ export default function ProjectDetailPage() {
 
       {surfaces.length > 0 && (
         <section className="case-section case-section-wide">
-          <h2 className="case-section-title">One codebase, every point of view</h2>
+          <h2 className="case-section-title">One system, a view for everyone</h2>
           <div className="case-features">
             {surfaces.map((s, i) => (
               <div className="case-feature" key={i}>
@@ -293,7 +293,7 @@ export default function ProjectDetailPage() {
 
       {decisions.length > 0 && (
         <section className="case-section">
-          <h2 className="case-section-title">Decisions that shaped it</h2>
+          <h2 className="case-section-title">Why it works this way</h2>
           <dl className="case-decisions">
             {decisions.map((d, i) => (
               <div className="case-decision" key={i}>
@@ -305,15 +305,13 @@ export default function ProjectDetailPage() {
         </section>
       )}
 
-      {/* Stack with the reasoning attached, rather than a row of chips.
-          A logo-ish list of tools is the part of a case study everyone
-          writes and nobody reads; the reason a tool was chosen over the
-          obvious alternative is the part a technical reader is actually
-          scanning for, and the part a client uses to decide whether
-          they are buying judgement or a preference. */}
+      {/* The tools, for developers only. Everything else on this page is
+          written for a business owner (Aniket, 2026-09-28: "easy reading
+          that a layman can understand"), so the programming names sit in
+          a panel that stays closed unless someone asks for it. */}
       {stack.length > 0 && (
-        <section className="case-section">
-          <h2 className="case-section-title">The stack, and why</h2>
+        <details className="case-tech">
+          <summary className="case-tech-summary">Technical details, for developers</summary>
           <dl className="case-stack">
             {stack.map((tool) => {
               const note = toolNote(tool)
@@ -325,7 +323,7 @@ export default function ProjectDetailPage() {
               )
             })}
           </dl>
-        </section>
+        </details>
       )}
 
       {/* The one slot on the site where a real screenshot belongs. It

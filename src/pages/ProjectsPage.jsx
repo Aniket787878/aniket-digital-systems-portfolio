@@ -47,7 +47,7 @@ export default function ProjectsPage() {
                     />
                   )}
                   <span className={`showcase-badge${real ? ' is-real' : ''}`}>
-                    {real ? 'Real screens' : 'Schematic · client data never shown'}
+                    {real ? 'Real screens' : 'Illustrated · client records never shown'}
                   </span>
                 </div>
                 <div className="showcase-body">

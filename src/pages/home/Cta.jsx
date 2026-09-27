@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
 import { m } from 'motion/react'
-import { site, whatsappPrefill } from '../../data.js'
+import { site, whatsappPrefill, packages } from '../../data.js'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
+import BookingCta from '../../components/BookingCta.jsx'
+import { hasBooking } from '../../booking.js'
+import { useCurrency, inCurrency } from '../../currency.js'
 import { Ridge } from '../../components/dusk/Mountains.jsx'
 import { ridge, starField } from '../../components/dusk/terrain.js'
 import { hasWhatsApp } from '../../whatsapp.js'
@@ -16,6 +19,13 @@ const STARS = starField(40, 19)
    began. The free audit is the ask (docs/research/06, gap G5).
    --------------------------------------------------------------- */
 export default function Cta() {
+  const currency = useCurrency()
+  const entry = packages[0]
+  const anchor = site.pricingAnchor
+    .replace('{offer}', entry.name)
+    .replace('{price}', inCurrency(entry.price, currency))
+    .replace('{timeline}', entry.timeline.toLowerCase())
+
   return (
     <section className="dusk-cta">
       <div className="dusk-sky dusk-sky-low" aria-hidden="true">
@@ -39,7 +49,7 @@ export default function Cta() {
       <m.div className="container dusk-cta-inner" {...reveal}>
         <p className="glass-pill">
           <span className="status-dot" aria-hidden="true" />
-          Free 20-minute audit
+          {hasBooking ? 'Free 15-minute call' : 'Free 15-minute audit'}
         </p>
         <h2 className="dusk-title dusk-cta-title">
           Have a process
@@ -51,18 +61,27 @@ export default function Cta() {
           straight what automating it would take and whether it is worth doing.
         </p>
         <div className="dusk-actions">
-          {hasWhatsApp ? (
-            <WhatsAppCta message={whatsappPrefill.audit} label="Book the free audit" className="btn-saffron" />
+          {hasBooking ? (
+            <>
+              <BookingCta className="btn-saffron" />
+              <WhatsAppCta message={whatsappPrefill.cta} label="WhatsApp me" className="btn-light" />
+            </>
           ) : (
-            <Link to="/contact" className="btn-saffron">
-              Book the free audit
-            </Link>
+            <>
+              {hasWhatsApp ? (
+                <WhatsAppCta message={whatsappPrefill.audit} label="Book the free audit" className="btn-saffron" />
+              ) : (
+                <Link to="/contact" className="btn-saffron">
+                  Book the free audit
+                </Link>
+              )}
+              <Link to="/contact" className="btn-light">
+                Send a message
+              </Link>
+            </>
           )}
-          <Link to="/contact" className="btn-light">
-            Send a message
-          </Link>
         </div>
-        <p className="dusk-footnote">{site.pricingAnchor}</p>
+        <p className="dusk-footnote">{anchor}</p>
       </m.div>
     </section>
   )

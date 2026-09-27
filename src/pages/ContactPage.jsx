@@ -1,6 +1,9 @@
 import ContactForm from '../components/ContactForm.jsx'
+import { formConnected } from '../leadWebhook.js'
 import WhatsAppCta from '../components/WhatsAppCta.jsx'
+import BookingCta from '../components/BookingCta.jsx'
 import { hasWhatsApp } from '../whatsapp.js'
+import { hasBooking } from '../booking.js'
 import { site, whatsappPrefill } from '../data.js'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 import './ContactPage.css'
@@ -14,7 +17,7 @@ const NEXT_STEPS = [
   },
   {
     step: '02',
-    label: 'A 20-minute call',
+    label: 'A 15-minute call',
     detail:
       'We walk through how the work moves today: who touches it, where it stalls, what it costs you in hours.'
   },
@@ -37,11 +40,11 @@ export default function ContactPage() {
           <h1 className="page-title">Tell me which part is breaking</h1>
         </div>
         <p className="page-lede">
-          I build AI and operations automation for service businesses:
-          clinics, studios, agencies and consultancies. If your bookings,
-          client intake, follow-ups or team coordination are running on
-          WhatsApp threads, spreadsheets and copy-paste, describe the one that
-          eats the most time. That is enough to start.
+          I build the systems clinics and care practices run on: booking,
+          intake, follow-ups and AI notes, for therapy, physio, wellness and
+          dental practices, and the agencies that serve them. If yours are
+          running on WhatsApp threads, spreadsheets and copy-paste, tell me the
+          one that eats the most time. That is enough to start.
         </p>
       </div>
 
@@ -56,13 +59,16 @@ export default function ContactPage() {
           )}
 
           {/* Someone who reached this page has already decided to talk. Give
-              them the fast route before asking them to fill anything in. */}
-          {hasWhatsApp && (
+              them the fast route before asking them to fill anything in.
+              Only beside a live form: without one, ContactForm renders these
+              same routes in its place, and twice would be noise. */}
+          {formConnected && (hasBooking || hasWhatsApp) && (
             <div className="contact-direct">
+              <BookingCta className="btn-pill btn-pill-accent" />
               <WhatsAppCta
                 message={whatsappPrefill.contact}
                 label="Message me on WhatsApp"
-                className="btn-pill btn-pill-accent"
+                className={hasBooking ? 'btn-pill' : 'btn-pill btn-pill-accent'}
               />
               <p className="contact-direct-note">
                 Usually the quickest way to reach me. The form works just as

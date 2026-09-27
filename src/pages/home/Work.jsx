@@ -24,9 +24,9 @@ export default function Work() {
         <m.header className="center-head" {...reveal}>
           <PillLabel icon="layers">Work</PillLabel>
           <h2 className="h2">
-            Two platforms in daily use.
+            One platform in daily use, one in pre-launch.
             <br />
-            <span className="soft">Three tools built in the open.</span>
+            <span className="soft">Three tools I built myself.</span>
           </h2>
         </m.header>
 

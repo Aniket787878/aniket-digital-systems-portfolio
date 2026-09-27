@@ -20,7 +20,7 @@ export default function Statement() {
         <ScrollWords
           className="statement-text"
           parts={[
-            'Most service businesses run on',
+            'Most clinics and care practices run on',
             { icon: 'whatsapp' },
             'WhatsApp threads,',
             { icon: 'sheet' },

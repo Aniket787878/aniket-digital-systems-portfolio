@@ -233,6 +233,40 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
+/* One line of proof under the buttons, linking to the case study, with
+   the caveat that qualifies its numbers directly beneath (house rule:
+   no number without its note). Quiet on purpose: the headline leads. */
+.dusk-proof {
+  max-width: 40rem;
+  margin: 1.6rem auto 0;
+}
+
+.dusk-proof-link {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.dusk-proof-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--peach);
+  white-space: nowrap;
+}
+
+.dusk-proof-link:hover .dusk-proof-cta {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.dusk-proof-note {
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.45);
+}
+
 /* --- The product card rising out of the range --- */
 .dusk-card {
   position: relative;
@@ -585,9 +619,12 @@
    everywhere else.
    ============================================================ */
 
+/* 250vh: one screen for the pin plus 150vh of scroll for the six beats
+   (data.js screenTour). Was 600vh for nine beats, which put the prices
+   five screens further down the page. */
 .tour {
   position: relative;
-  height: 600vh;
+  height: 250vh;
   padding: 0;
 }
 
@@ -1293,6 +1330,83 @@
    4 — Services (paper)
    ============================================================ */
 
+/* Services follows Work on the same paper ground: one band, not two,
+   so the gap between them is a section break rather than a full band. */
+.work + .services {
+  padding-top: clamp(2rem, 4vw, 3rem);
+}
+
+/* The guarantee sits with the prices it qualifies. */
+.guarantee {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 40em;
+  padding: 0.55rem 1rem;
+  border-radius: 12px;
+  background: var(--accent-tint);
+  color: var(--accent-deep);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.guarantee svg {
+  flex: none;
+}
+
+.currency-toggle {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid #e7e1d9;
+}
+
+.currency-toggle button {
+  min-width: 4.75rem;
+  padding: 0.4rem 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--muted-dark);
+}
+
+.currency-toggle button.is-on {
+  background: var(--ink-dark);
+  color: #fff;
+}
+
+/* The entry offer: the same card, laid out as one wide row above the
+   three larger builds. */
+.price.price-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 0.7fr);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  align-items: center;
+  height: auto;
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+}
+
+.price-entry .price-for {
+  min-height: 0;
+}
+
+.price-entry .price-deliverable {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.price-entry .price-actions {
+  margin-top: 0;
+  padding-top: 0;
+}
+
 .price-grid {
   list-style: none;
   display: grid;
@@ -1495,12 +1609,8 @@
 }
 
 /* ============================================================
-   5 — FAQ (paper, continuing the Services ground)
+   5 — FAQ (paper)
    ============================================================ */
-
-.services + .faq {
-  padding-top: 0;
-}
 
 .faq-list {
   list-style: none;
@@ -1689,6 +1799,18 @@
     grid-template-columns: minmax(0, 1fr);
     max-width: 560px;
     margin-inline: auto;
+  }
+
+  .price.price-entry {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 560px;
+    margin-inline: auto;
+    align-items: stretch;
+  }
+
+  .price-entry .price-deliverable {
+    padding-top: 1.25rem;
+    border-top: 1px solid #eee8e1;
   }
 
   .care-card {

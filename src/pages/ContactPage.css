@@ -329,3 +329,37 @@
     width: 100%;
   }
 }
+
+/* ---------- Direct routes, standing in for the form ----------
+   Shown while VITE_LEAD_WEBHOOK_URL is unset (see ContactForm.jsx). */
+.contact-direct-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+@media (max-width: 480px) {
+  .contact-direct-actions > * {
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+}
+
+/* The contact form's honeypot (ContactForm.jsx): off-screen, not
+   display:none, so a bot still sees an input to fill. */
+.contact-hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.contact-privacy {
+  margin-top: var(--space-4);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--muted);
+}

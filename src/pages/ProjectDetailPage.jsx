@@ -1,5 +1,9 @@
 import { useParams, Link } from 'react-router-dom'
-import { films, projects, site, images, proofTools } from '../data.js'
+import { films, projects, site, images, proofTools, whatsappPrefill } from '../data.js'
+import BookingCta from '../components/BookingCta.jsx'
+import WhatsAppCta from '../components/WhatsAppCta.jsx'
+import { hasBooking } from '../booking.js'
+import { hasWhatsApp } from '../whatsapp.js'
 import SystemDiagram from '../components/SystemDiagram.jsx'
 import AnimatedFlow from '../components/AnimatedFlow.jsx'
 import Media from '../components/Media.jsx'
@@ -370,17 +374,40 @@ export default function ProjectDetailPage() {
       )}
 
       <section className="case-cta">
-        <h2 className="case-cta-title">Have something like this to build?</h2>
+        <h2 className="case-cta-title">Want this running in your practice?</h2>
         <p className="case-cta-body">
-          Tell me what you are trying to build and where it is stuck. I will map the whole
-          thing (product, app, payments, backend, AI, infrastructure) and tell you what
-          it takes to ship it.
+          Tell me which part of your week is still on WhatsApp threads and
+          spreadsheets: bookings, intake, follow-ups or notes. In 15 minutes I will
+          tell you what automating it would take, what it costs and the date it goes
+          live.
         </p>
         {availability && <p className="case-cta-note">{availability}</p>}
-        <Link to="/contact" className="btn btn-primary">
-          Start a conversation
-          <span aria-hidden="true">&rarr;</span>
-        </Link>
+        {/* Booking link set: the call first, WhatsApp second. Not set:
+            WhatsApp if there is a number, and the contact page as before. */}
+        <div className="case-cta-actions">
+          <BookingCta className="btn-pill btn-pill-accent" />
+          {hasBooking ? (
+            <WhatsAppCta
+              message={whatsappPrefill.contact}
+              label="Message me on WhatsApp"
+              className="btn-pill"
+            />
+          ) : (
+            <>
+              {hasWhatsApp && (
+                <WhatsAppCta
+                  message={whatsappPrefill.contact}
+                  label="Message me on WhatsApp"
+                  className="btn-pill btn-pill-accent"
+                />
+              )}
+              <Link to="/contact" className="btn btn-primary">
+                Start a conversation
+                <span aria-hidden="true">&rarr;</span>
+              </Link>
+            </>
+          )}
+        </div>
       </section>
     </article>
   )

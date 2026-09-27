@@ -126,8 +126,10 @@ export const explainers = {
 }
 
 /* ------------------------------------------------------------------
-   The product tour on the home page: nine moments across the three
-   working demos. Every image is a real 2x capture of the running app
+   The product tour on the home page: six moments, two per working demo.
+   (It was nine over 600vh of scroll; cut to six when the band shrank to
+   250vh, so each beat still gets about a quarter screen of scroll to push
+   in, hold and pull out. A beat added here costs scroll speed.) Every image is a real 2x capture of the running app
    (public/walkthroughs/); `spot` is the region the camera zooms into and
    highlights, in the 1440x900 CSS-pixel space the captures were taken at.
    ------------------------------------------------------------------ */
@@ -147,25 +149,11 @@ export const screenTour = [
     caption: 'Reply in one click, and the thread moves itself to pending.'
   },
   {
-    slug: 'relay',
-    url: 'relay.app/inbox',
-    file: '/walkthroughs/relay/03.png',
-    spot: { x: 1000, y: 62, w: 268, h: 300 },
-    caption: 'The client and their pipeline stage sit beside every thread.'
-  },
-  {
     slug: 'signet',
     url: 'signet.app/sign',
     file: '/walkthroughs/signet/05.png',
     spot: { x: 332, y: 504, w: 775, h: 380 },
     caption: 'Your client signs with a finger. No account to create.'
-  },
-  {
-    slug: 'signet',
-    url: 'signet.app/documents',
-    file: '/walkthroughs/signet/06.png',
-    spot: { x: 880, y: 417, w: 380, h: 260 },
-    caption: 'Sealed with a SHA-256 fingerprint of the text and every signature.'
   },
   {
     slug: 'signet',
@@ -180,13 +168,6 @@ export const screenTour = [
     file: '/walkthroughs/prospector/03.png',
     spot: { x: 176, y: 58, w: 1088, h: 208 },
     caption: 'Paste a few websites. Each one is read live, on the spot.'
-  },
-  {
-    slug: 'prospector',
-    url: 'prospector.app/workspace',
-    file: '/walkthroughs/prospector/03.png',
-    spot: { x: 176, y: 382, w: 1088, h: 180 },
-    caption: 'Real contact details, scored by how reachable each lead is.'
   },
   {
     slug: 'prospector',
@@ -206,15 +187,43 @@ export const heroReel = {
 
 export const site = {
   name: 'Digital Systems Builder',
+
+  /* The site's public origin, no trailing slash. ONE place: vite.config.js
+     reads it at build time to write the canonical link, og:url, og:image,
+     the JSON-LD, robots.txt and sitemap.xml. When the branded domain
+     resolves, change this line and redeploy. (aniketbuilds.com does not
+     resolve yet, so the live Vercel URL stands in.) */
+  origin: 'https://aniket-portfolio-six-bice.vercel.app',
+
+  /* The 15-minute call link (Cal.com). ONE place: while this is empty every
+     primary button falls back to WhatsApp / the contact page. Paste the link
+     here and "Book a 15-min call" becomes the primary button in the hero,
+     nav, services, contact page and case-study CTA, with WhatsApp demoted to
+     the second button. See components/BookingCta.jsx. */
+  bookingUrl: '',
+
+  /* Positioning, in one place. Clinics and care practices first (therapy,
+     physio, wellness, dental), the agencies that serve them second. The
+     hero, the meta description and the OG card all read from here. */
+  headline: ['The system your clinic runs on.', 'Built end to end. Solo.'],
+  subtitle:
+    'Booking, intake, follow-ups and AI notes, built and run by one person, live in weeks. For clinics and care practices, and the agencies that serve them.',
   tagline:
-    'I build complete production systems end to end, the site, the app, the payments, the backend, the AI and the infrastructure, for founders who need the whole thing built and shipped by one person, not a team to manage.',
+    'Booking, intake, follow-ups and AI notes for clinics and care practices, built and run by one person, live in weeks.',
+
+  /* Shown beside the prices. A promise, so it lives with the data it
+     qualifies rather than in a component. */
+  guarantee:
+    'Fixed price, fixed date. If it isn’t live by the date in writing, you don’t pay the second half.',
+
   email: 'aniket.html@gmail.com',
   whatsapp: '+91 9136582842', // digits are stripped in whatsapp.js for the wa.me link
-  location: 'India · working with clients worldwide',
+  location: 'Based in India · working remotely worldwide',
   availability:
     'Taking on two new builds a month. Next start slot is usually one to two weeks out.',
-  pricingAnchor:
-    'Most engagements start with an Ops Automation Sprint: fixed scope, from ₹40,000, live in two weeks.',
+  /* A template, filled from the first entry in `packages` (the entry
+     offer) in the visitor's currency, so the price is stated once. */
+  pricingAnchor: 'The usual starting point is an {offer}: one workflow, end to end, {price}, {timeline}.',
 
   /* The hero's proof, lifted from project 01 and condensed.
 
@@ -229,6 +238,18 @@ export const site = {
     slug: 'therapist-pwa',
     linkLabel: 'See the system'
   }
+}
+
+/* Title, description and share card for index.html. vite.config.js writes
+   these into the <head> at build time, together with site.origin. */
+export const seo = {
+  title: 'Clinic systems, built end to end · Aniket',
+  description:
+    'Booking, intake, follow-ups and AI notes for clinics and care practices (therapy, physio, wellness, dental) and the agencies that serve them. Built and run by one person, live in weeks.',
+  ogTitle: 'The system your clinic runs on. Built end to end, solo.',
+  ogImage: '/og.png',
+  ogImageAlt:
+    'The system your clinic runs on. Built end to end, solo. Aniket builds booking, intake, follow-ups and AI notes for clinics.'
 }
 
 /*
@@ -248,7 +269,7 @@ export const founder = {
   /* One honest paragraph. Asserts only what the case studies, pricing and
      process on the rest of the site already stand behind. */
   intro:
-    'I build the operations software service businesses actually run on: booking, intake, follow-ups and team coordination, so the work stops living in WhatsApp threads and spreadsheets. It started with the systems a multi-practitioner wellness practice needed to stop drowning in admin, and it is the same shape of problem in a studio, an agency or a consultancy. You work with the person who builds it, and you own what ships.',
+    'I build the software clinics and care practices actually run on: booking, intake, follow-ups and AI notes, so the work stops living in WhatsApp threads and spreadsheets. It started with the system an eleven-therapist clinic needed to stop drowning in admin, and it is the same shape of problem in a physio, wellness or dental practice, and for the agencies that serve them. You work with the person who builds it, and you own what ships.',
 
   /* Aniket's own story — how he got here, what he did before — is his to
      write. Left empty on purpose rather than invented; the About page
@@ -259,7 +280,7 @@ export const founder = {
      path here. Until then the About page shows the honest placeholder well. */
   photo: '',
 
-  basedIn: 'India · working with clients worldwide',
+  basedIn: 'Based in India · working remotely worldwide',
 
   /* What a buyer actually gets from a solo builder rather than an agency —
      the real edge behind the model decision in docs/research/06. Each line
@@ -287,7 +308,7 @@ export const founder = {
      stays out. */
   quickFacts: [
     { label: 'Based', value: 'India · remote worldwide' },
-    { label: 'Focus', value: 'Bookings, intake, follow-ups, team ops' },
+    { label: 'Focus', value: 'Clinic booking, intake, follow-ups, AI notes' },
     { label: 'Core stack', value: 'React · TypeScript · Node · Postgres · n8n · Claude' },
     { label: 'Availability', value: 'Two new builds a month' }
   ]
@@ -319,8 +340,8 @@ export const whatsappPrefill = {
   /* The free-audit entry point (docs/research/06, gap G5) — highest-intent
      top-of-funnel opener, in the buyer's voice. */
   audit:
-    'Hi Aniket, I’d like to book the free 20-minute automation audit. The part of our week that eats the most time is:',
-  /* `{offer}` is replaced with the package name by Pricing.jsx. */
+    'Hi Aniket, I’d like to book the free 15-minute automation audit. The part of our week that eats the most time is:',
+  /* `{offer}` is replaced with the package name by home/Services.jsx. */
   pricing: 'Hi Aniket, I’d like to know more about the {offer} for my business.',
   cta: 'Hi Aniket, there’s a part of our week I’d like to stop doing by hand. Can we talk?',
   contact: 'Hi Aniket, I have a process I’d like to automate. Do you have 20 minutes?',
@@ -333,7 +354,7 @@ export const projects = [
     index: '01',
     slug: 'therapist-pwa',
     highlights: [
-      'Session recordings become draft clinical notes in about a minute',
+      'Session recordings become a draft clinical note shortly after the session',
       'A booking desk synced to Google Calendar and WhatsApp',
       'Consent signed, sealed as a PDF and countersigned in a queue'
     ],
@@ -375,7 +396,7 @@ export const projects = [
       'A busy clinic was running on a pile of disconnected tools, a calendar here, a spreadsheet of clients there, session notes typed up from memory after hours, follow-ups slipping through the cracks. Nothing talked to anything else, so the same client could be double-booked, a note could go missing, and nobody could see the whole picture in one place. What the practice needed was a single system its whole team runs on, from the first enquiry to the follow-up, without anyone re-keying the same details five times, and without client records ever sitting somewhere they should not.',
     system: [
       'Three apps in one repo: the staff CRM, the public forms clients fill in (enquiry, screening, consent, booking), and a client-facing recovery-companion PWA, all fronting a private data service, so client data never lives in the browser tier',
-      'The flagship: a session-recording → clinical-note pipeline on Google Gemini that replaces a paid tool at a fraction of the cost, the browser records in 60-second chunks queued in IndexedDB with retries, each is transcribed and its audio dropped, and on stop the full transcript is written into a draft note the therapist reviews',
+      'The flagship: a session-recording → clinical-note pipeline on Google Gemini: the browser records in 60-second chunks queued in IndexedDB with retries, each is transcribed and its audio dropped, and on stop the full transcript is written into a draft note the therapist reviews',
       'Guardrails around the AI, because it fails quietly otherwise: each chunk is a complete audio file (a headerless one makes the model invent dialogue), a degenerate-loop check catches the transcriber repeating itself, and a note that is not well-formed English fails loudly so the therapist re-drafts instead of trusting a fabrication',
       'A booking desk that runs each action through visual n8n workflows to Google Calendar / Meet and WhatsApp, with real-time availability, three session modes (in person, telephonic, online) and recurring bookings capped and gated server-side',
       'Around 1,200 client records with therapist assignment, case notes, rolling AI case summaries regenerated after each note, and group sessions with a shared note read into every attendee’s file, visibility scoped per therapist and enforced on the server, down to a notes-locked flag',
@@ -384,7 +405,7 @@ export const projects = [
     features: [
       {
         title: 'Session recording → AI clinical note',
-        text: 'The therapist records; a chunked Gemini pipeline transcribes as it goes and drafts a clinical note within about a minute of Stop, with loop- and hallucination-guards that fail loudly rather than invent a note.'
+        text: 'The therapist records; a chunked Gemini pipeline transcribes as it goes and drafts a clinical note shortly after the session ends, with loop- and hallucination-guards that fail loudly rather than invent a note.'
       },
       {
         title: 'Booking desk',
@@ -550,7 +571,7 @@ export const projects = [
       'The course, the live care and the safety layer run as one program instead of three disconnected things',
       'The clinical rules are enforced by the system, not left to memory, a locked lesson is genuinely locked, everywhere',
       'A hard privacy wall between family and client is guaranteed by the data model, not by people being careful',
-      'Live on staging, built and run end to end by one person'
+      'Deployed on staging; not yet in use with clients'
     ],
     outcomeNote:
       'Module, session, stage and gate counts are real counts from the build. Everything else describes the platform’s design from the builder’s seat, directional, not an audited outcome.'
@@ -863,22 +884,42 @@ export const proofTools = [
 ]
 
 /*
-  The three productized offers from docs/system/02-service-catalog.md, in the
-  order they are meant to be sold: the Sprint is the front door, the other
-  two are what a Sprint client buys next.
+  The productized offers, in the order they are meant to be sold: the
+  Quick-Win is the entry offer (one workflow, low risk, a fast first yes),
+  the Sprint is what a Quick-Win client buys next, and the other two are
+  the larger builds. The first entry is the one `site.pricingAnchor` names.
 
-  Prices here and `site.pricingAnchor` above are the same numbers stated
-  twice — the anchor names Offer A's floor. If a band moves, move both,
-  or the site will disagree with itself. The catalog says B and C are
-  quoted on calls, so they carry ranges rather than a "from".
+  Prices are per currency. USD is the default for visitors outside India;
+  INR is shown to visitors whose browser language or timezone says India,
+  or who flip the toggle (src/currency.js). The existing INR bands are
+  unchanged from docs/system/02-service-catalog.md.
 */
 export const packages = [
   {
+    name: 'Automation Quick-Win',
+    explainer: null,
+    price: {
+      usd: '$490',
+      inr: '₹25,000' // TODO: placeholder, Aniket to confirm
+    },
+    timeline: 'Live in 5 days',
+    entry: true,
+    featured: true,
+    forWho: 'One job that eats an hour a day and should just happen on its own.',
+    deliverable:
+      'One workflow, end to end, on the tools you already use. For example: web form → CRM → instant reply → team alert.',
+    includes: [
+      'A 15-minute call to pick the workflow',
+      'Built, tested and live in 5 days',
+      'A short walkthrough so you own it'
+    ]
+  },
+  {
     name: 'Ops Automation Sprint',
     explainer: 'ops-sprint',
-    price: '₹40k – ₹80k',
+    price: { usd: '$1,500 – $2,500', inr: '₹40k – ₹80k' },
     timeline: 'Live in 2 weeks',
-    featured: true,
+    featured: false,
     forWho: 'Drowning in manual data entry, form handling and follow-ups.',
     deliverable:
       '3–5 automations connecting the tools you already pay for, built in n8n and handed over self-hosted.',
@@ -891,7 +932,7 @@ export const packages = [
   {
     name: 'AI Assistant Build',
     explainer: 'ai-assistant',
-    price: '₹80k – ₹1.5L',
+    price: { usd: '$2,500 – $4,500', inr: '₹80k – ₹1.5L' },
     timeline: 'Live in 3 weeks',
     featured: false,
     forWho: 'A team answering the same questions and lookups over and over.',
@@ -906,7 +947,7 @@ export const packages = [
   {
     name: 'Internal Tool / Dashboard',
     explainer: 'internal-tool',
-    price: '₹1.5L – ₹3L',
+    price: { usd: '$4,000 – $8,000', inr: '₹1.5L – ₹3L' },
     timeline: 'Live in 3–4 weeks',
     featured: false,
     forWho: 'Running the business out of a spreadsheet with no source of truth.',
@@ -923,9 +964,28 @@ export const packages = [
 /* The retainer layer. Offered after a build ships, never instead of one. */
 export const carePlan = {
   name: 'Care Plan',
-  price: '₹15k – ₹30k / month',
+  price: { usd: '$250 – $500 / month', inr: '₹15k – ₹30k / month' },
   blurb:
     'Once a system is live: monitoring, broken automations fixed inside 24 hours, a few hours of improvements each month, and first call on new builds.'
+}
+
+/* Budget bands on the contact form, per currency, lined up with the
+   offers above. The INR values are the ones the n8n workflow and
+   docs/specs/contact-form.md already know; the USD values are new and are
+   passed through as-is (the workflow only prints the band). */
+export const budgetBands = {
+  usd: [
+    { value: 'usd:<1.5k', label: 'Under $1,500' },
+    { value: 'usd:1.5k-5k', label: '$1,500 – $5,000' },
+    { value: 'usd:5k+', label: '$5,000+' },
+    { value: 'not_sure', label: 'Not sure yet' }
+  ],
+  inr: [
+    { value: '<50k', label: 'Under ₹50k' },
+    { value: '50k-2L', label: '₹50k – ₹2L' },
+    { value: '2L+', label: '₹2L+' },
+    { value: 'not_sure', label: 'Not sure yet' }
+  ]
 }
 
 export const capabilities = [
@@ -987,18 +1047,27 @@ export const process = [
   }
 ]
 
+/* An answer may be a string, or { usd, inr } where it quotes a price, so
+   it follows the same currency toggle as the price cards. */
 export const faq = [
   {
     q: 'How long does a build take?',
-    a: 'Most first engagements are an Ops Automation Sprint: fixed scope, live in two weeks. Larger systems (a booking platform, a full team operations layer) run three to five weeks depending on how many people and tools they touch.'
+    a: 'An Automation Quick-Win is live in 5 days. An Ops Automation Sprint is live in two weeks. Larger systems (a booking platform, a full clinic operations layer) run three to five weeks depending on how many people and tools they touch.'
   },
   {
     q: 'What does it cost?',
-    a: 'The sprint starts at ₹40,000 for a fixed scope. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me.'
+    a: {
+      usd: 'The Quick-Win is a fixed $490 for one workflow, end to end. A Sprint runs $1,500 to $2,500. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me.',
+      inr: 'The Quick-Win is a fixed ₹25,000 for one workflow, end to end. A Sprint runs ₹40,000 to ₹80,000. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me.'
+    }
   },
   {
-    q: 'Do I need to already use n8n, Airtable or Supabase?',
-    a: 'No. I pick the stack to fit the team, not the other way around. If you are already on Make or Google Sheets and it works, I will build on top of it rather than charge you to migrate.'
+    q: 'Do I need to already use a particular tool?',
+    a: 'No. I pick the stack to fit the practice, not the other way around. If your team already runs on a calendar, a CRM or Google Sheets that works, I build on top of it rather than charge you to migrate.'
+  },
+  {
+    q: 'What if it isn’t live on the date?',
+    a: 'Every build has a fixed price and a live date in writing. Half is paid up front and half on delivery. If it isn’t live by that date, you don’t pay the second half.'
   },
   {
     q: 'Who owns the system afterwards?',
@@ -1006,11 +1075,11 @@ export const faq = [
   },
   {
     q: 'Do you work with clients outside India?',
-    a: 'Yes. The work is remote either way, mapping calls, async updates, a live walkthrough at handover. Timezone only changes when the calls happen.'
+    a: 'Yes, anywhere. The work is remote either way: a short call to map it, async updates, a live walkthrough at handover. Timezone only changes when the calls happen.'
   },
   {
-    q: 'What do you need from me to start?',
-    a: 'An honest description of the process that is currently annoying you, and thirty minutes with whoever actually runs it day to day. That conversation usually tells us both whether automation is the right answer.'
+    q: 'Is client data safe?',
+    a: 'Client records stay on your own accounts and servers, and access is checked on the server, not just hidden in the screen. The clinic system on this site keeps its data behind a private service the browser never touches.'
   }
 ]
 

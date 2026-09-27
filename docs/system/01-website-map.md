@@ -57,7 +57,7 @@ misspelled `Refrence files/` (now `docs/reference/folioblox.html`).
 | `/` | `src/pages/HomePage.jsx` + `src/pages/home/` | Done | `HomePage.jsx` is composition only; one file per band — see *Home page composition* below |
 | `/projects` | `src/pages/ProjectsPage.jsx` | Done | Reads `src/data.js` |
 | `/projects/:slug` | `src/pages/ProjectDetailPage.jsx` | Done | Renders `problem`, `system`, `outcome` and `outcomeNote` |
-| `/about` | `src/pages/AboutPage.jsx` | Done | The identity layer that puts a real person behind the work (see `docs/research/06`; the solo framing there was superseded 2026-09-27). Renders from `founder`; photo and story are honest empty slots until Aniket supplies them |
+| `/about` | `src/pages/AboutPage.jsx` | Done | The identity layer that puts a real person behind the work (see `docs/research/06`; the solo framing there was superseded 2026-09-27). Composition only, bands in `src/pages/about/`: portrait hero (dusk monogram card until `founder.photo` is set), a five-step stepper (`founder.steps`), the toolbox grouped by outcome (`toolbox`), the five project films in the site's dialog player, then the home closing CTA. Story renders only once `founder.story` is written |
 | `/contact` | `src/pages/ContactPage.jsx` | Done | Renders `ContactForm.jsx` |
 | `*` | `src/pages/NotFoundPage.jsx` | Done | Real 404 with a CTA, wired to `path="*"` in `App.jsx` |
 
@@ -130,7 +130,8 @@ always import `site.email`.
 | `capabilities` | `{ index, title, blurb, items[] }[]` | One consumer now: the Capabilities band (2b), which renders all four fields. The hero used to repeat `index` + `title` as a numbered range; that duplicated 2b word for word and cost the hero 179px it did not have, so it is gone |
 | `packages` | `{ name, price, timeline, featured, forWho, deliverable, includes[] }[]` | The three offers from `02-service-catalog.md`, in selling order. Sprint is `featured` |
 | `carePlan` | `{ name, price, blurb }` | Retainer line under the pricing grid |
-| `founder` | `{ name, role, intro, story, photo, basedIn, principles[], quickFacts[] }` | The `/about` identity layer. `story` and `photo` are **empty slots** — the page renders labelled placeholders until Aniket fills them. Nothing invented |
+| `founder` | `{ name, role, intro, story, photo, basedIn, steps[], principles[], quickFacts[] }` | The `/about` identity layer. `photo` is empty until a real file lands in `public/` (set `photo: '/aniket.jpg'`; the page shows a drawn dusk monogram card meanwhile). `story` renders only when written. `steps` restate promises made elsewhere on the site. `principles` is currently unused by the page. Nothing invented |
+| `toolbox` | `[{ key, outcome, tools[{ name, note }] }]` | The `/about` toolbox, sorted by what each tool does for the client. Notes reuse `proofTools` where one exists |
 | `testimonials` | `{ quote, name, role, business }[]` | **Empty on purpose** — the Testimonials band (3b) renders an honest "references on request" state until a real, attributed quote lands. No placeholder quotes (CLAUDE.md) |
 | `images` | `{ process{}, projects{}, gallery[] }` | **All placeholders.** See *Images* below |
 

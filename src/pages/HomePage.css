@@ -1943,8 +1943,10 @@
     align-items: flex-start;
   }
 
+  /* Sized to their labels, side by side where they fit, rather than
+     stretched edge to edge: full-width bars read heavy on a phone. */
   .dusk-actions > * {
-    flex: 1 1 100%;
+    flex: 0 1 auto;
   }
 }
 

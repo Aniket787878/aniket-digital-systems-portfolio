@@ -1,251 +1,984 @@
 /* ============================================================
-   About page — puts the builder behind the work on the site.
-   Tokens only: no new colors, fonts, radii or spacing values.
-   All classes prefixed `about-`.
+   About page, in the Dusk system (docs/design-system.md).
+   Grounds (.night / .paper), .h2, .soft, the pill label and the
+   buttons come from index.css and HomePage.css; this sheet only lays
+   out the About bands. It loads after HomePage.css (App imports
+   HomePage first), so a tie here wins. All classes prefixed `about-`.
    ============================================================ */
 
-/* Header: title on the left, intro on the right, aligned along the
-   baseline. Fills the band the same way the home bands do. */
-.about-head {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(2rem, 5vw, 5rem);
-  align-items: end;
+.about-band-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 
-.about-head-lead {
+/* ---------- 1. Portrait hero ---------- */
+
+.about-hero {
+  padding-top: calc(var(--nav-h) + clamp(3rem, 7vw, 5.5rem));
+  padding-bottom: clamp(4rem, 8vw, 6.5rem);
+}
+
+.about-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.about-hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
   min-width: 0;
 }
 
-.about-head .eyebrow {
+.about-title {
+  font-size: clamp(2.25rem, 4.4vw, 3.75rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+}
+
+.about-title-warm {
   display: block;
-  margin-bottom: var(--space-3);
+  color: var(--peach);
+  /* keeps "on." from sitting alone on the last line */
+  text-wrap: balance;
 }
 
-.about-head .page-title {
-  margin-bottom: 0;
-}
-
-.about-head .page-lede {
-  margin: 0;
+.about-lede,
+.about-story {
   max-width: 54ch;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
 }
 
-/* Body: wide reading column + a narrow meta rail. The rail is DOM-first
-   (leads on a phone) but pinned to the right column on wide screens. */
-.about-body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 19rem);
-  gap: clamp(2rem, 5vw, 5rem);
-  align-items: start;
-  margin-top: var(--space-9);
+.about-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
 }
 
-.about-main {
-  grid-column: 1;
-  grid-row: 1;
-  min-width: 0;
-}
-
-.about-side {
-  grid-column: 2;
-  grid-row: 1;
-  display: grid;
-  gap: var(--space-6);
-}
-
-.about-photo {
-  aspect-ratio: 4 / 5;
-  border-radius: var(--radius-md);
-}
-
+/* Three quiet facts under the buttons: a ruled row, not chips. */
 .about-facts {
   display: grid;
-  gap: 0;
-}
-
-/* Stacked label-over-value: reads cleanly in the narrow rail and keeps
-   the long "Core stack" value from being crushed into a 1fr sliver. */
-.about-fact {
-  display: grid;
-  gap: var(--space-1);
-  padding-block: var(--space-4);
-  border-bottom: 1px solid var(--line);
-}
-
-.about-fact:first-child {
-  padding-top: 0;
-}
-
-.about-fact:last-child {
-  border-bottom: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  width: 100%;
+  margin-top: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line-strong);
 }
 
 .about-fact dt {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--accent);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
 }
 
 .about-fact dd {
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  line-height: 1.6;
-  color: var(--ink-soft);
-}
-
-/* Section heading shared by story / principles. */
-.about-h2 {
-  font-family: var(--font-display);
-  font-size: var(--display-3);
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  font-size: 0.9375rem;
+  line-height: 1.45;
   color: var(--ink);
-  margin-bottom: var(--space-5);
 }
 
-.about-principles {
-  margin-top: var(--space-9);
+.about-hero-portrait {
+  justify-self: end;
+  width: 100%;
+  max-width: 27rem;
 }
 
-/* Story leads the main column; the body wrapper already sets the top gap. */
-.about-main > .about-story {
-  margin-top: 0;
+/* The portrait card. 4:5, panel radius. */
+.about-portrait {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--night-2);
+  box-shadow: 0 0 0 1px var(--line-strong), 0 40px 80px -40px rgba(0, 0, 0, 0.8);
+  isolation: isolate;
 }
 
-.about-story-body {
-  font-size: var(--text-base);
-  line-height: 1.8;
-  color: var(--ink-soft);
-  max-width: var(--measure);
+.about-portrait-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 25%;
 }
 
-/* Honest empty slot for the not-yet-written story — recessive, dashed,
-   clearly a placeholder rather than copy. */
-.about-story-slot {
-  max-width: var(--measure);
-  padding: var(--space-5) var(--space-6);
-  border: 1px dashed var(--line-strong);
-  border-radius: var(--radius-sm);
-  font-size: var(--text-base);
-  line-height: 1.7;
+/* A photo gets a soft night fade at the foot so the caption reads. */
+.about-portrait.has-photo::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 40%;
+  background: linear-gradient(180deg, transparent, rgba(11, 11, 12, 0.85));
+  z-index: 1;
+}
+
+.about-portrait-art {
+  position: absolute;
+  inset: 0;
+}
+
+.about-portrait-sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    #0b0b0c 0%,
+    #140c08 28%,
+    #3a1b0b 52%,
+    #8a4213 70%,
+    #e08a45 84%,
+    #f7a55a 100%
+  );
+}
+
+.about-portrait-sky i {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.about-portrait-sun {
+  position: absolute;
+  left: 50%;
+  bottom: 12%;
+  width: 70%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 200, 154, 0.55), rgba(245, 135, 30, 0) 65%);
+}
+
+/* Layers are a little wider than the card so the pointer parallax never
+   shows an edge. */
+.about-portrait-layer {
+  position: absolute;
+  left: -4%;
+  width: 108%;
+  bottom: 0;
+}
+
+.about-portrait-layer svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.about-portrait-far {
+  height: 52%;
+}
+
+.about-portrait-near {
+  height: 30%;
+  bottom: -1px;
+}
+
+/* The monogram rises between the far and near ridges, the way the brand
+   film sits between the ridges in the home hero. */
+.about-portrait-mark {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18%;
+  text-align: center;
+  font-size: clamp(9rem, 18vw, 15rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: var(--peach);
+  opacity: 0.92;
+}
+
+.about-portrait-caption {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  max-width: calc(100% - 2rem);
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.6rem;
+  /* A night glass tab, so the caption reads over the bright horizon
+     and over any photo. */
+  padding: 0.55rem 0.9rem;
+  border-radius: 12px;
+  background: rgba(11, 11, 12, 0.72);
+  border: 1px solid var(--line-strong);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.about-portrait-name {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.about-portrait-role {
+  font-size: 0.875rem;
   color: var(--muted);
 }
 
-.about-principle-list {
-  list-style: none;
+.about-portrait-place {
+  flex-basis: 100%;
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+/* ---------- 2. Steps ---------- */
+
+.about-steps-rail {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-5);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
 }
 
-.about-principle {
-  padding: clamp(1.5rem, 3vw, 2rem);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
+/* The line runs between the first and last dot centres; the saffron fill
+   grows along it to the active step. */
+.about-steps-track {
+  position: absolute;
+  top: 21px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: #ddd7cf;
+  border-radius: 2px;
 }
 
-.about-principle-title {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  margin-bottom: var(--space-3);
+.about-steps-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  border-radius: inherit;
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+  transition: transform 0.6s var(--ease-out);
 }
 
-.about-principle-text {
-  font-size: var(--text-base);
-  line-height: 1.7;
-  color: var(--ink-soft);
+.about-steps-tab {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0 0.25rem 0.25rem;
+  background: none;
+  border: 0;
+  font: inherit;
+  color: var(--muted-dark);
+  cursor: pointer;
 }
 
-/* Closing CTA — mirrors the case-study closing slab. */
-.about-cta {
-  margin-top: var(--space-9);
-  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 3rem);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
+.about-steps-dot {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid #ddd7cf;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted-dark);
+  transition: background-color var(--dur-mid) ease, border-color var(--dur-mid) ease,
+    color var(--dur-mid) ease, transform var(--dur-mid) var(--ease-out);
 }
 
-.about-cta-title {
-  font-family: var(--font-display);
-  font-size: var(--display-3);
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  max-width: 20ch;
+.about-steps-label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: color var(--dur-mid) ease;
 }
 
-.about-cta-body {
-  margin-top: var(--space-4);
-  font-size: var(--text-base);
-  line-height: 1.8;
-  color: var(--ink-soft);
-  max-width: var(--measure);
+.about-steps-tab:hover .about-steps-dot {
+  border-color: var(--accent);
+  color: var(--accent-deep);
 }
 
-.about-cta-actions {
+.about-steps-tab.is-done .about-steps-dot {
+  border-color: var(--accent);
+  color: var(--accent-deep);
+  background: var(--accent-tint);
+}
+
+.about-steps-tab.is-active .about-steps-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink-strong);
+  transform: scale(1.08);
+}
+
+.about-steps-tab.is-active .about-steps-label {
+  color: var(--ink-dark);
+}
+
+.about-steps-tab:focus-visible {
+  outline: none;
+}
+
+.about-steps-tab:focus-visible .about-steps-dot {
+  outline: 2px solid var(--accent-deep);
+  outline-offset: 3px;
+}
+
+/* All panels share one grid cell: the stage is as tall as the tallest
+   step, so the page below never jumps. */
+.about-steps-stage {
+  display: grid;
+}
+
+.about-steps-panel {
+  grid-area: 1 / 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  visibility: hidden;
+}
+
+.about-steps-panel.is-active {
+  visibility: visible;
+}
+
+.about-steps-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.1rem;
+}
+
+.about-steps-count {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--accent-deep);
+}
+
+.about-steps-title {
+  font-size: clamp(1.625rem, 2.8vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.about-steps-text {
+  max-width: 46ch;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: #4a453f;
+}
+
+.about-steps-gets {
+  margin-top: 0.25rem;
+}
+
+.about-steps-nav {
   display: flex;
   flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.about-steps-btn {
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-3) var(--space-5);
-  margin-top: var(--space-6);
+  gap: 0.5rem;
+  height: 44px;
+  padding: 0 1.1rem;
+  border-radius: 12px;
+  border: 1px solid #d8d1c8;
+  background: transparent;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--ink-dark);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+}
+
+.about-steps-btn:hover:not(:disabled) {
+  border-color: var(--ink-dark);
+}
+
+.about-steps-btn.is-next {
+  background: var(--ink-dark);
+  border-color: var(--ink-dark);
+  color: #fff;
+}
+
+.about-steps-btn.is-next:hover {
+  background: #000;
+}
+
+.about-steps-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.about-steps-btn:focus-visible {
+  outline: 2px solid var(--accent-deep);
+  outline-offset: 2px;
+}
+
+.about-steps-back {
+  display: inline-grid;
+  transform: rotate(180deg);
+}
+
+/* The artifact: a white card floating on a saffron-tinted field, the
+   design system's "panel". */
+.about-steps-art {
+  display: grid;
+  place-items: center;
+  min-height: 21rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border-radius: 24px;
+  background: var(--accent-tint);
+}
+
+.about-art-card {
+  width: 100%;
+  max-width: 24rem;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 0 rgba(22, 20, 18, 0.04), 0 24px 48px -24px rgba(122, 58, 18, 0.35);
+  overflow: hidden;
+  color: var(--ink-dark);
+}
+
+.about-art-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.1rem;
+  border-bottom: 1px solid #efe9e2;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--muted-dark);
+}
+
+.about-art-bar svg {
+  color: var(--accent-deep);
+}
+
+.about-art-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem 1.1rem 1.2rem;
+}
+
+.about-art-bubble {
+  align-self: flex-end;
+  max-width: 88%;
+  padding: 0.8rem 1rem;
+  border-radius: 14px 14px 4px 14px;
+  background: #fdf0e3;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.about-art-status {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8125rem;
+  color: var(--muted-dark);
+}
+
+.about-art-status svg {
+  color: var(--accent-deep);
+}
+
+.about-art-call {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.about-art-ring {
+  flex: none;
+  width: 84px;
+  height: 84px;
+  transform: rotate(-90deg);
+}
+
+.about-art-ring circle {
+  fill: none;
+  stroke-width: 5;
+}
+
+.about-art-ring-bg {
+  stroke: #f1ebe4;
+}
+
+.about-art-ring-fg {
+  stroke: var(--accent);
+  stroke-linecap: round;
+}
+
+.about-art-ring text {
+  transform: rotate(90deg);
+  transform-origin: 40px 40px;
+  font-size: 15px;
+  font-weight: 500;
+  fill: var(--ink-dark);
+}
+
+.about-art-list {
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+  font-size: 0.9375rem;
+}
+
+.about-art-list li::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 0.55rem;
+  border-radius: 50%;
+  background: var(--accent);
+  vertical-align: 0.15em;
+}
+
+.about-art-doc {
+  display: grid;
+}
+
+.about-art-doc > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px dashed #e6ded5;
+  font-size: 0.9375rem;
+}
+
+.about-art-doc dt {
+  color: var(--muted-dark);
+}
+
+.about-art-doc dd {
+  text-align: right;
+  font-weight: 500;
+}
+
+.about-art-bars {
+  list-style: none;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.about-art-bars li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.35rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.about-art-bar-track {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  height: 8px;
+  border-radius: 999px;
+  background: #f4eee7;
+  overflow: hidden;
+}
+
+.about-art-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transform-origin: left;
+}
+
+.about-art-bar-time {
+  color: var(--muted-dark);
+}
+
+.about-art-checks {
+  list-style: none;
+  display: grid;
+  gap: 0.8rem;
+  font-size: 0.9375rem;
+}
+
+.about-art-checks li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.about-art-tick {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+}
+
+.about-art-checks .is-optional {
+  color: var(--muted-dark);
+}
+
+.about-art-checks .is-optional .about-art-tick {
+  background: transparent;
+  border: 1.5px dashed var(--accent);
+  color: var(--accent-deep);
+}
+
+/* ---------- 3. Toolbox ---------- */
+
+.about-toolbox-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.about-toolbox-list {
+  display: grid;
+  border-top: 1px solid var(--line-strong);
+}
+
+.about-toolbox-row {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1.35rem 0.25rem;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line-strong);
+  font: inherit;
+  text-align: left;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color var(--dur-mid) ease;
+}
+
+.about-toolbox-num {
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.about-toolbox-outcome {
+  font-size: clamp(1.125rem, 1.8vw, 1.375rem);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.about-toolbox-arrow {
+  display: inline-grid;
+  opacity: 0;
+  transform: translateX(-6px);
+  color: var(--accent);
+  transition: opacity var(--dur-mid) ease, transform var(--dur-mid) var(--ease-out);
+}
+
+.about-toolbox-row:hover,
+.about-toolbox-row.is-active {
+  color: var(--ink);
+}
+
+.about-toolbox-row.is-active .about-toolbox-num {
+  color: var(--accent);
+}
+
+.about-toolbox-row.is-active .about-toolbox-arrow {
+  opacity: 1;
+  transform: none;
+}
+
+.about-toolbox-row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  border-radius: 8px;
+}
+
+.about-toolbox-panel {
+  position: sticky;
+  top: calc(var(--nav-h) + 2rem);
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
+  border-radius: 24px;
+  background: var(--night-2);
+  border: 1px solid var(--line);
+}
+
+.about-toolbox-tools {
+  list-style: none;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.about-toolbox-tools li + li {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.about-toolbox-name {
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+}
+
+.about-toolbox-note {
+  font-size: 0.9875rem;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 44ch;
+}
+
+/* ---------- 4. Films ---------- */
+
+.about-films-row {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.about-film {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.about-film:nth-child(-n + 2) {
+  grid-column: span 3;
+}
+
+.about-film-media {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--paper-2);
+  cursor: pointer;
+}
+
+.about-film-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--ease-out);
+}
+
+.about-film-media:hover img {
+  transform: scale(1.03);
+}
+
+.about-film-media:focus-visible {
+  outline: 2px solid var(--accent-deep);
+  outline-offset: 3px;
+}
+
+.about-film-play {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink-strong);
+  transition: transform var(--dur-mid) var(--ease-out);
+}
+
+.about-film-media:hover .about-film-play {
+  transform: scale(1.08);
+}
+
+.about-film-kind {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(11, 11, 12, 0.72);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.about-film-body h3 {
+  font-size: 1.1875rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.about-film-body p {
+  margin: 0.2rem 0 0.6rem;
+  font-size: 0.9375rem;
+  color: var(--muted-dark);
+}
+
+.paper .about-film-body .text-link {
+  color: var(--accent-deep);
 }
 
 /* ---------- Responsive ---------- */
 
-/* Body rail drops under the reading column before it gets too pinched. */
-@media (max-width: 900px) {
-  .about-body {
+@media (max-width: 960px) {
+  .about-hero-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-7);
   }
 
-  .about-main,
-  .about-side {
-    grid-column: 1;
+  /* Portrait leads on a tablet or phone: a face first, then the words. */
+  .about-hero-portrait {
+    order: -1;
+    justify-self: start;
+    max-width: 24rem;
   }
 
-  .about-main {
-    grid-row: 2;
-  }
-
-  .about-side {
-    grid-row: 1;
-    /* Photo + facts read as a row again when they have the full width. */
-    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
-    align-items: start;
-    gap: clamp(1.5rem, 4vw, 3rem);
-  }
-}
-
-/* Header stacks; title over intro. */
-@media (max-width: 760px) {
-  .about-head {
+  .about-steps-panel,
+  .about-toolbox-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-5);
-    align-items: start;
+  }
+
+  .about-toolbox-panel {
+    position: static;
+  }
+
+  .about-films-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .about-film,
+  .about-film:nth-child(-n + 2) {
+    grid-column: span 1;
   }
 }
 
 @media (max-width: 640px) {
-  .about-side {
-    grid-template-columns: minmax(0, 1fr);
+  .about-hero-portrait {
+    max-width: none;
   }
 
-  .about-photo {
-    /* Portrait would eat a phone screen; flatten toward a banner crop. */
-    aspect-ratio: 3 / 2;
-    max-width: 20rem;
+  /* A 4:5 portrait would fill a phone screen and push the words below
+     the fold; crop it wide from the top instead. */
+  .about-portrait {
+    aspect-ratio: 16 / 10;
   }
 
-  .about-principle-list {
+  .about-portrait-mark {
+    font-size: 6.5rem;
+    bottom: 36%;
+  }
+
+  .about-portrait-caption {
+    left: 0.75rem;
+    bottom: 0.75rem;
+    max-width: calc(100% - 1.5rem);
+    padding: 0.45rem 0.75rem;
+  }
+
+  .about-portrait-name {
+    font-size: 0.9375rem;
+  }
+
+  .about-portrait-role {
+    font-size: 0.8125rem;
+  }
+
+  .about-portrait-near {
+    height: 34%;
+  }
+
+  .about-facts {
     grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  .about-fact {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .about-fact dt {
+    margin: 0;
+  }
+
+  .about-steps-dot {
+    width: 38px;
+    height: 38px;
+    font-size: 0.8125rem;
+  }
+
+  .about-steps-track {
+    top: 18px;
+  }
+
+  .about-steps-label {
+    font-size: 0.8125rem;
+  }
+
+  .about-steps-art {
+    min-height: 0;
+    padding: 1.25rem;
+  }
+
+  .about-steps-btn {
+    height: 40px;
+    padding: 0 0.95rem;
+    font-size: 0.875rem;
+    border-radius: 10px;
+  }
+
+  /* Films: a swipeable row inside its own box, so the page never scrolls
+     sideways. It bleeds to the screen edge and snaps card by card. */
+  .about-films-row {
+    display: flex;
+    gap: 1rem;
+    margin-inline: calc(var(--container-pad) * -1);
+    padding-inline: var(--container-pad);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--container-pad);
+    scrollbar-width: none;
+  }
+
+  .about-films-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .about-film,
+  .about-film:nth-child(-n + 2) {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
   }
 }

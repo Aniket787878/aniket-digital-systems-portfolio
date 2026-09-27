@@ -1,125 +1,93 @@
 import { Link } from 'react-router-dom'
-import Media from '../components/Media.jsx'
+import { m } from 'motion/react'
 import WhatsAppCta from '../components/WhatsAppCta.jsx'
 import BookingCta from '../components/BookingCta.jsx'
-import { hasWhatsApp } from '../whatsapp.js'
+import Icon from '../components/icons.jsx'
+import { PillLabel } from '../components/ui.jsx'
 import { hasBooking } from '../booking.js'
-import { founder, site, whatsappPrefill } from '../data.js'
+import { founder, whatsappPrefill } from '../data.js'
+import { heroContainer, heroItem, fadeIn } from '../motion/variants.js'
 import { useDocumentTitle } from '../useDocumentTitle.js'
+import Portrait from './about/Portrait.jsx'
+import Steps from './about/Steps.jsx'
+import Toolbox from './about/Toolbox.jsx'
+import Films from './about/Films.jsx'
+import Cta from './home/Cta.jsx'
 import './AboutPage.css'
 
 /*
-  About — the person behind the work (docs/research/06): this page exists
-  to put a real human on the site.
+  About: the person behind the work (docs/research/06). Composition only,
+  one idea per band, alternating the Dusk grounds like the home page:
 
-  Everything renders from `founder` in data.js: honest facts where they
-  exist, labelled slots where they don't. The photo well and the story
-  slot both stay visible while empty, so dropping the real content in
-  later changes pixels, not layout — the same rule as the image
-  placeholders elsewhere on the site. Nothing here is invented.
+    1. Portrait hero (night)   who he is, in one short paragraph
+    2. Steps (paper)           a stepper from first message to handover
+    3. Toolbox (night)         the stack, sorted by what it does for you
+    4. Films (paper)           the five builds, one tap each
+    5. Cta (dusk)              the home page's closing band, reused
+
+  Everything renders from data.js (`founder`, `toolbox`, `projects`,
+  `films`). Nothing here is invented: the photo and the personal story
+  are empty until Aniket supplies them, and the page reads complete
+  without either (see `founder.photo` for the one-line portrait swap).
 */
 export default function AboutPage() {
   useDocumentTitle('About · Aniket')
-  const hasStory = founder.story.trim().length > 0
+  const story = founder.story.trim()
 
   return (
-    <section className="container page page-wide about">
-      {/* Two-column header so the title and intro span the band instead of
-          stacking in a left column against an empty right half. */}
-      <div className="about-head">
-        <div className="about-head-lead">
-          <p className="eyebrow">About</p>
-          <h1 className="page-title">
-            Who builds it, and how
-          </h1>
-        </div>
-        <p className="page-lede">{founder.intro}</p>
-      </div>
-
-      {/* Body as content + meta rail, so the page fills the band with
-          balanced gutters instead of a single left-hugging column. The
-          rail is DOM-first so it leads on a phone (photo, then facts),
-          but sits on the right on wide screens. */}
-      <div className="about-body">
-        <aside className="about-side">
-          <Media
-            src={founder.photo}
-            alt={founder.photo ? founder.name : ''}
-            label="Photo of Aniket"
-            className="about-photo"
-          />
-
-          <dl className="about-facts">
-            {founder.quickFacts.map((fact) => (
-              <div key={fact.label} className="about-fact">
-                <dt>{fact.label}</dt>
-                <dd>{fact.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </aside>
-
-        <div className="about-main">
-          <div className="about-story">
-            <h2 className="about-h2">How I got here</h2>
-            {hasStory ? (
-              <p className="about-story-body">{founder.story}</p>
-            ) : (
-              /* Empty slot, said out loud rather than papered over with
-                 invented biography. */
-              <p className="about-story-slot">
-                The longer version (the practice this grew out of, and
-                the builds since) is going here shortly.
-              </p>
+    <>
+      <section className="night about-hero" aria-labelledby="about-title">
+        <div className="container about-hero-grid">
+          <m.div className="about-hero-copy" variants={heroContainer} initial="hidden" animate="show">
+            <m.div variants={heroItem}>
+              <PillLabel icon="spark" className="on-night">About</PillLabel>
+            </m.div>
+            <m.h1 className="about-title" id="about-title" variants={heroItem}>
+              I&rsquo;m {founder.name}.
+              <br />
+              <span className="about-title-warm">I build the systems service businesses run on.</span>
+            </m.h1>
+            <m.p className="about-lede" variants={heroItem}>
+              {founder.intro}
+            </m.p>
+            {story && (
+              <m.p className="about-story" variants={heroItem}>
+                {story}
+              </m.p>
             )}
-          </div>
-
-          <div className="about-principles">
-            <h2 className="about-h2">What working with me is like</h2>
-            <ul className="about-principle-list">
-              {founder.principles.map((p) => (
-                <li key={p.title} className="about-principle">
-                  <h3 className="about-principle-title">{p.title}</h3>
-                  <p className="about-principle-text">{p.text}</p>
-                </li>
+            <m.div className="about-hero-actions" variants={heroItem}>
+              {hasBooking ? (
+                <BookingCta className="btn-saffron" />
+              ) : (
+                <Link to="/contact" className="btn-saffron">
+                  Tell me what is breaking
+                  <span className="btn-pill-icon" aria-hidden="true">
+                    <Icon name="arrow" size={16} />
+                  </span>
+                </Link>
+              )}
+              <WhatsAppCta message={whatsappPrefill.contact} label="WhatsApp me" className="btn-light" />
+            </m.div>
+            <m.dl className="about-facts" variants={heroItem}>
+              {founder.quickFacts.map((fact) => (
+                <div key={fact.label} className="about-fact">
+                  <dt>{fact.label}</dt>
+                  <dd>{fact.value}</dd>
+                </div>
               ))}
-            </ul>
-          </div>
-        </div>
-      </div>
+            </m.dl>
+          </m.div>
 
-      <div className="about-cta">
-        <h2 className="about-cta-title">Tell me which part is breaking.</h2>
-        <p className="about-cta-body">
-          {site.availability} If your business&rsquo;s bookings, intake,
-          follow-ups or payments are running on WhatsApp threads and
-          spreadsheets, that&rsquo;s the conversation to start.
-        </p>
-        <div className="about-cta-actions">
-          <BookingCta className="btn-pill btn-pill-accent" />
-          {hasWhatsApp && (
-            <WhatsAppCta
-              message={whatsappPrefill.contact}
-              label="Message me on WhatsApp"
-              className={hasBooking ? 'btn-pill' : 'btn-pill btn-pill-accent'}
-            />
-          )}
-          <Link to="/contact" className="btn-pill">
-            Get in touch
-            <span className="btn-pill-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M5 12h14m0 0-6-6m6 6-6 6"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-          </Link>
+          <m.div className="about-hero-portrait" variants={fadeIn} initial="hidden" animate="show">
+            <Portrait photo={founder.photo} name={founder.name} role={founder.role} />
+          </m.div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <Steps />
+      <Toolbox />
+      <Films />
+      <Cta />
+    </>
   )
 }

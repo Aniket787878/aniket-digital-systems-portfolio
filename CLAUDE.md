@@ -78,7 +78,8 @@ Break any of these and nothing errors — it just renders wrong.
 3. **The hero ground is the dusk scene (Dusk pass, 2026-09-27).** `Hero.jsx`
    draws the sky (CSS gradient + seeded stars) and three SVG ridges from
    `components/dusk/terrain.js`; the far and mid ridges parallax with scroll,
-   the product showreel sits between the mid and near ridges, and the near
+   the one-minute brand explainer sits between the mid and near ridges
+   (phones get its poster; the app showreel lives in the Statement band), and the near
    ridge is filled with `--night` so it melts into the next band. Motion is
    Framer Motion only; do not add a CSS entrance animation beside it (the two
    fight over opacity). The `hero-*.jpg` files and `Hero3D` are unused.

@@ -4,9 +4,15 @@ import { C, SANS, TRACK, BrowserChrome, Wordmark, useFonts, splitTitle, tween, r
 import { DuskScene } from './DuskScene.jsx'
 import { KineticText, PillLabel } from './KineticText.jsx'
 import { SCENES } from './platformScenes.jsx'
+import { DEMO_SCENES } from './demoScenes.jsx'
 
 /*
-  The film for the two client platforms. Their real screens hold client
+  The film for the two client platforms, and (with DEMO_SCENES) for the
+  three working demos, so all five films tell their story the same way.
+  For the demos the window holds the real captures and every label says
+  "Working demo · real screens" instead of "Schematic".
+
+  The platform film. Their real screens hold client
   records, so they cannot be shown; this is a schematic instead, and it
   says so on every frame. The stages, labels and mechanics are the real
   ones from data.js; only the screens are drawn, in a deliberately
@@ -19,7 +25,8 @@ import { SCENES } from './platformScenes.jsx'
 export const P_INTRO = 90
 export const P_STAGE = 96
 export const P_OUTRO = 150
-export const platformLength = (slug) => P_INTRO + SCENES[slug].length * P_STAGE + P_OUTRO
+const scenesFor = (slug) => SCENES[slug] || DEMO_SCENES[slug]
+export const platformLength = (slug) => P_INTRO + scenesFor(slug).length * P_STAGE + P_OUTRO
 
 const WIN = { x: 700, y: 170, w: 1120, h: 720 }
 const CAVEAT = 'Row counts from a live clinic system.'
@@ -28,7 +35,8 @@ export function PlatformFilm({ slug }) {
   useFonts()
   const frame = useCurrentFrame()
   const project = projects.find((p) => p.slug === slug) || { title: slug }
-  const scenes = SCENES[slug]
+  const scenes = scenesFor(slug)
+  const real = !SCENES[slug]
   const [name, sub] = splitTitle(project)
   const total = platformLength(slug)
   const stagesEnd = P_INTRO + scenes.length * P_STAGE
@@ -64,7 +72,7 @@ export function PlatformFilm({ slug }) {
         {frame < P_INTRO + 10 && (
           <AbsoluteFill style={{ alignItems: 'center', paddingTop: 200, textAlign: 'center' }}>
             <div style={{ opacity: rise(frame, 4) * (1 - tween(frame, 46, 60)) }}>
-              <PillLabel dark size={28}>Production platform</PillLabel>
+              <PillLabel dark size={28}>{real ? 'Working demo' : 'Production platform'}</PillLabel>
             </div>
             <div style={{ marginTop: 26 }}>
               <KineticText text={name} start={8} size={136} align="center" exit={48} />
@@ -180,7 +188,7 @@ export function PlatformFilm({ slug }) {
         }}
       >
         <span style={{ width: 10, height: 10, borderRadius: '50%', background: C.accent }} />
-        Schematic · client data never shown
+        {real ? 'Working demo · real screens' : 'Schematic · client data never shown'}
       </div>
 
       <div style={{ position: 'absolute', left: 0, bottom: 0, height: 4, width: `${interpolate(frame, [0, total], [0, 100], clamp)}%`, background: C.accent }} />

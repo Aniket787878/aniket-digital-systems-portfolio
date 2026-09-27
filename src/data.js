@@ -54,7 +54,9 @@ export const images = {
    Two kinds, and the site says which on every one:
    - 'real'      The three self-built demos. Every pixel inside the window is
                  a capture of the running app (public/walkthroughs/); only
-                 the camera, pointer and captions are added.
+                 the framing, zoom and captions are added. Since 2026-09-27
+                 the film is told like the platform films (Platform-<slug>:
+                 title, stage rail, window, sign-off), over real captures.
    - 'schematic' The two client platforms. Their screens hold client
                  records, so the film is a labelled wireframe of the real
                  flow and never presents itself as a recording.

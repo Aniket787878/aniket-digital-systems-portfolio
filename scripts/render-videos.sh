@@ -43,7 +43,8 @@ explainer() { # composition, output name, poster frame, crf
 
 for slug in consent-signer shared-inbox lead-research; do
   [ -n "$ONLY" ] && [ "$ONLY" != "$slug" ] && continue
-  film "Walkthrough-$slug" "$slug" 190
+  # the site film: told like the platform films, over the real captures
+  film "Platform-$slug" "$slug" 160
   loop "Clip-$slug" "$OUT/clips/$slug.mp4" 0.8
   # frame 0 is the loop's wide frame, so the poster and the first frame match
   npx remotion still "$ENTRY" "Clip-$slug" "$OUT/posters/$slug-clip.jpg" --frame=0 \

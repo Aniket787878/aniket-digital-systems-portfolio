@@ -78,8 +78,8 @@ export default function Work() {
                 <div className="card-media">
                   <LoopVideo
                     mode="hover"
-                    src={films[project.slug].clip}
-                    poster={films[project.slug].clipPoster}
+                    src={films[project.slug].framed}
+                    poster={films[project.slug].framedPoster}
                     className="card-video"
                   />
                   <span className="card-badge">

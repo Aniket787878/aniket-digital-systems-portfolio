@@ -1,8 +1,9 @@
-import { AbsoluteFill, Img, staticFile, useCurrentFrame, interpolate } from 'remotion'
+import { AbsoluteFill, useCurrentFrame, interpolate } from 'remotion'
 import { C, SANS, BrowserChrome, Wordmark, useFonts, tween, clamp } from './shared.jsx'
 import { DuskScene } from './DuskScene.jsx'
 import { StageRail } from './PlatformFilm.jsx'
-import { WALKTHROUGHS, URLS } from './walkthroughs.js'
+import { URLS } from './walkthroughs.js'
+import { DEMO_STEPS, WIN, CHROME, Capture, demoSteps } from './demoScenes.jsx'
 
 /*
   The card loop for the three working demos, framed like the platform
@@ -15,49 +16,19 @@ import { WALKTHROUGHS, URLS } from './walkthroughs.js'
 
 export const F_STAGE = 96
 
-/* Short rail labels for the steps each card shows (1-based, as in the
-   file names). The captions under the window come from steps.json. */
-export const FRAMED = {
-  'consent-signer': [
-    [1, 'Documents'],
-    [2, 'Template'],
-    [5, 'Sign'],
-    [6, 'Seal'],
-    [7, 'Verify'],
-    [8, 'Tamper check'],
-  ],
-  'shared-inbox': [
-    [1, 'Inbox'],
-    [2, 'Thread'],
-    [3, 'Reply'],
-    [4, 'Notes'],
-    [6, 'Stage'],
-    [7, 'Pipeline'],
-  ],
-  'lead-research': [
-    [1, 'Workspace'],
-    [2, 'Paste sites'],
-    [3, 'Research'],
-    [4, 'Score'],
-    [6, 'Contacts'],
-    [8, 'Export'],
-  ],
-}
+/* Same steps and labels as the full demo films (demoScenes.jsx). */
+export const FRAMED = DEMO_STEPS
 
 export const framedLength = (slug) => FRAMED[slug].length * F_STAGE
 
-const WIN = { x: 700, y: 170, w: 1120, h: 720 }
-const CHROME = 48
 
 export function FramedClip({ slug }) {
   useFonts()
   const frame = useCurrentFrame()
-  const steps = FRAMED[slug].map(([n, stage]) => ({ ...WALKTHROUGHS[slug][n - 1], stage }))
+  const steps = demoSteps(slug)
   const idx = Math.min(steps.length - 1, Math.floor(frame / F_STAGE))
   const f = frame - idx * F_STAGE
   const total = framedLength(slug)
-  const imgW = WIN.w
-  const imgH = (imgW * 900) / 1440
 
   return (
     <AbsoluteFill style={{ background: C.bg, fontFamily: SANS, overflow: 'hidden' }}>
@@ -104,35 +75,7 @@ export function FramedClip({ slug }) {
                     )
                   : interpolate(sf, [-2, 10, F_STAGE - 8, F_STAGE + 4], [0, 1, 1, 0], clamp)
               if (o <= 0) return null
-              /* Push in toward the step's focus region (from steps.json), so
-                 the real screen stays legible at card size. Capped at 1.45x
-                 so the reader never loses where on the page they are. */
-              const k = imgW / 1440
-              const fc = s.focus || { x: 0, y: 0, w: 1440, h: 900 }
-              const vw = WIN.w
-              const vh = WIN.h - CHROME
-              const Z = Math.max(1, Math.min(1.45, vw / (fc.w * k), vh / (fc.h * k)))
-              const z = 1 + (Z - 1) * tween(sf, 10, 56)
-              const cx = (fc.x + fc.w / 2) * k
-              const cy = (fc.y + fc.h / 2) * k
-              const tx = Math.min(0, Math.max(vw - imgW * z, vw / 2 - cx * z))
-              const ty = Math.min(0, Math.max(vh - imgH * z, vh / 2 - cy * z))
-              return (
-                <Img
-                  key={s.file}
-                  src={staticFile(`walkthroughs/${slug}/${s.file}`)}
-                  style={{
-                    position: 'absolute',
-                    left: 0,
-                    top: 0,
-                    width: imgW,
-                    height: imgH,
-                    opacity: o,
-                    transform: `translate(${tx.toFixed(2)}px, ${ty.toFixed(2)}px) scale(${z.toFixed(4)})`,
-                    transformOrigin: '0 0',
-                  }}
-                />
-              )
+              return <Capture key={s.file} slug={slug} step={s} f={sf} opacity={o} />
             })}
           </div>
         </div>

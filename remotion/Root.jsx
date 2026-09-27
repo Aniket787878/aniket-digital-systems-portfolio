@@ -5,6 +5,7 @@ import { Clip, clipLength } from './Clip.jsx'
 import { FramedClip, FRAMED, framedLength } from './FramedClip.jsx'
 import { WALKTHROUGHS } from './walkthroughs.js'
 import { SCENES } from './platformScenes.jsx'
+import { DEMO_SCENES } from './demoScenes.jsx'
 import { ExplainerBrand, BRAND_LEN } from './explainers/ExplainerBrand.jsx'
 import { ExplainerOpsSprint, OPS_LEN } from './explainers/ExplainerOpsSprint.jsx'
 import { ExplainerAiAssistant, AI_LEN } from './explainers/ExplainerAiAssistant.jsx'
@@ -27,7 +28,8 @@ export const CARD_PICKS = {
 /*
   Compositions, rendered by scripts/render-videos.sh:
     Walkthrough-<slug>  1920x1080 case-study film, real captures
-    Platform-<slug>     1920x1080 schematic film for the client platforms
+    Platform-<slug>     1920x1080 story film: schematic for the platforms,
+                        real captures for the demos (the site's films)
     Clip-<slug>         1440x900 silent loop (raw viewport), kept for reuse
     Framed-<slug>       1920x1080 framed card loop for the three demos
     HeroReel            1440x900 silent loop for the home hero
@@ -49,7 +51,7 @@ export const RemotionRoot = () => (
         defaultProps={{ slug }}
       />
     ))}
-    {Object.keys(SCENES).map((slug) => (
+    {[...Object.keys(SCENES), ...Object.keys(DEMO_SCENES)].map((slug) => (
       <Composition
         key={`p-${slug}`}
         id={`Platform-${slug}`}

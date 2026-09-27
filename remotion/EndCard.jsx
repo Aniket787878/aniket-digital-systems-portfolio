@@ -47,12 +47,14 @@ export const CTA = 'Book a free 20-minute audit'
 
 /*
   frame     local frame (0 = the end card starts; the dusk is already up)
-  headline  optional big line shown first, e.g. "One person.\n{End to end.}"
+  headline  optional big line shown first, e.g. "Enquiries answered.\n{Follow-ups sent.}"
+  headlineSize  overrides the headline's type size (a four-line headline needs
+            less than the default to fit the frame)
   hold      frames the headline holds before the card replaces it
   price     overrides the price line (the brand film says "from ₹40,000")
   note      overrides the timeline line
 */
-export function EndCard({ frame, offerKey = 'sprint', headline, hold = 70, price, note, riseFrom = 0 }) {
+export function EndCard({ frame, offerKey = 'sprint', headline, headlineSize, hold = 70, price, note, riseFrom = 0 }) {
   const { width: W, height: H } = useVideoConfig()
   const tall = H > W
   const o = offer(offerKey)
@@ -68,7 +70,7 @@ export function EndCard({ frame, offerKey = 'sprint', headline, hold = 70, price
 
       {headline && (
         <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: tall ? 380 : 170 }}>
-          <KineticText text={headline} frame={frame} start={16} stagger={5} exit={16 + hold} size={tall ? 132 : 140} align="center" lineHeight={1.02} />
+          <KineticText text={headline} frame={frame} start={16} stagger={5} exit={16 + hold} size={headlineSize || (tall ? 132 : 140)} align="center" lineHeight={1.02} />
         </AbsoluteFill>
       )}
 

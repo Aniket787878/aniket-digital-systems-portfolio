@@ -64,7 +64,7 @@ export function PlatformFilm({ slug }) {
         {frame < P_INTRO + 10 && (
           <AbsoluteFill style={{ alignItems: 'center', paddingTop: 200, textAlign: 'center' }}>
             <div style={{ opacity: rise(frame, 4) * (1 - tween(frame, 46, 60)) }}>
-              <PillLabel dark size={28}>Production platform · built solo</PillLabel>
+              <PillLabel dark size={28}>Production platform</PillLabel>
             </div>
             <div style={{ marginTop: 26 }}>
               <KineticText text={name} start={8} size={136} align="center" exit={48} />
@@ -146,7 +146,7 @@ export function PlatformFilm({ slug }) {
               })}
             </div>
             <div style={{ marginTop: 64 }}>
-              <KineticText text="Designed, built and run {by one person.}" start={signAt + 20} stagger={3} size={64} align="center" />
+              <KineticText text={'Enquiries answered. Bookings confirmed.\n{Follow-ups sent. Without anyone typing.}'} start={signAt + 20} stagger={3} size={64} align="center" lineHeight={1.12} />
             </div>
             <div style={{ marginTop: 26, maxWidth: 1400, fontSize: 26, lineHeight: 1.45, color: C.inkSoft, opacity: rise(frame, signAt + 40) }}>
               {needsCaveat && <div style={{ color: C.peach }}>{CAVEAT}</div>}
@@ -194,7 +194,7 @@ function StageRail({ scenes, idx, f, local }) {
   const fill = Math.max(0, Math.min(scenes.length - 1, idx + tween(f, P_STAGE - 14, P_STAGE + 6, easeInOut)))
   return (
     <div style={{ position: 'absolute', left: 110, top, width: 540 }}>
-      <div style={{ fontSize: 24, fontWeight: 500, letterSpacing: '-0.01em', color: C.peach, marginBottom: 34, marginTop: -70 }}>How it runs, end to end</div>
+      <div style={{ fontSize: 24, fontWeight: 500, letterSpacing: '-0.01em', color: C.peach, marginBottom: 34, marginTop: -70 }}>How it runs, step by step</div>
       {/* spine */}
       <div style={{ position: 'absolute', left: 19, top: 20, width: 2, height: gap * (scenes.length - 1), background: 'rgba(242,240,237,0.14)' }} />
       <div style={{ position: 'absolute', left: 19, top: 20, width: 2, height: gap * (local < 0 ? 0 : fill), background: C.accent }} />

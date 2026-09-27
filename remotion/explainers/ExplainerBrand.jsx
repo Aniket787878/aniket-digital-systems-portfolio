@@ -16,7 +16,7 @@ import { ChatBubble, Toast, EmailCard, SheetCard, CalendarCard, StickyNote, Chip
     2  paper  the chaos piles up: "Every enquiry, re-typed by hand."
     3  paper  "What if it ran itself?" the fragments snap into a flow that runs
     4  paper  proof: real captures of three running apps, then the counts
-    5  dusk   "One person. End to end." and the offer
+    5  dusk   "Enquiries answered… Without anyone typing." and the offer
 */
 
 /* Paper-world beats (frames local to the paper world). */
@@ -126,7 +126,8 @@ export function ExplainerBrand() {
         <EndCard
           frame={frame - OUTRO}
           offerKey="sprint"
-          headline={'One person.\n{End to end.}'}
+          headline={'Enquiries answered.\nBookings confirmed.\n{Follow-ups sent.}\n{Without anyone typing.}'}
+          headlineSize={H > W ? 88 : 112}
           hold={78}
           price="from ₹40,000"
           note="Live in 2 weeks. Fixed scope, fixed price."
@@ -383,7 +384,7 @@ function ChaosAndFlow({ L, W, H, f }) {
 const COUNTS = [
   { n: 1200, fmt: (v) => v.toLocaleString('en-IN'), suffix: '+', label: 'client records', caveat: true },
   { n: 11, fmt: (v) => String(v), suffix: '', label: 'therapists on one system', caveat: true },
-  { n: 5, fmt: (v) => String(v), suffix: '', label: 'systems shipped end to end', caveat: false },
+  { n: 5, fmt: (v) => String(v), suffix: '', label: 'systems shipped', caveat: false },
 ]
 
 function Counters({ L, f, tall }) {

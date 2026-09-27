@@ -107,7 +107,7 @@ export function Walkthrough({ slug }) {
               <Wordmark size={48} />
             </div>
             <div style={{ marginTop: 56 }}>
-              <KineticText text={`${name}, built end to end\n{by one person.}`} start={signAt} stagger={4} size={104} align="center" lineHeight={1.04} />
+              <KineticText text={'Enquiries answered. Bookings confirmed.\n{Follow-ups sent. Without anyone typing.}'} start={signAt} stagger={4} size={80} align="center" lineHeight={1.08} />
             </div>
             <div style={{ marginTop: 30, fontSize: 30, fontWeight: 500, letterSpacing: '-0.02em', color: C.inkSoft, opacity: rise(frame, signAt + 22) }}>
               Every screen in this film is the running app. Nothing is mocked up.

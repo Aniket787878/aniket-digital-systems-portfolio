@@ -12,7 +12,7 @@ Principle: **automate the admin, keep the human parts human.** First messages,
 sales calls and proposals stay personal. Everything around them — lists,
 drafts, reminders, follow-ups, onboarding, testimonial asks — runs itself.
 
-Bonus: the system runs on your own products (Prospector, Relay, Signet) and
+Bonus: the system runs on your own products (the Lead Research Tool, Shared Inbox CRM and Consent & Contract Signer) and
 your own n8n. "My sales pipeline runs on the systems I sell" is itself proof.
 
 ---
@@ -22,7 +22,7 @@ your own n8n. "My sales pipeline runs on the systems I sell" is itself proof.
 ```mermaid
 flowchart LR
   subgraph FIND
-    A[Prospector scrape<br/>300 clinics/studios] --> B[(Leads table<br/>status: New)]
+    A[Lead research scrape<br/>300 clinics/studios] --> B[(Leads table<br/>status: New)]
     B --> C[WF1 Enrich & Score<br/>Claude drafts opener]
   end
   subgraph REACH
@@ -36,13 +36,13 @@ flowchart LR
     J[Demo clinic + demo bot] --> K[WF5 Demo Follow-up]
     K --> H
     F -->|reply| H
-    H --> L[(Relay CRM<br/>one inbox)]
+    H --> L[(Shared Inbox CRM<br/>one inbox)]
   end
   subgraph CONVERT
     L --> M[Cal.com free audit]
     M --> N[WF6 Call Prep<br/>questionnaire + brief + reminders]
     N --> O[20-min call]
-    O --> P[WF7 Proposal<br/>PDF → Signet → Razorpay 50%]
+    O --> P[WF7 Proposal<br/>PDF → Consent signer → Razorpay 50%]
   end
   subgraph DELIVER
     P -->|paid| Q[WF8 Onboarding<br/>welcome, access form, Plane project]
@@ -60,10 +60,10 @@ flowchart LR
 Plain-text version:
 
 ```
-FIND        Prospector ─► Leads table ─► WF1 score + draft opener
+FIND        Lead research ─► Leads table ─► WF1 score + draft opener
 REACH       WF2 9am queue ─► YOU send 20 personal msgs ─► WF3 auto follow-ups
-CAPTURE     form · ads · demo bot · replies ─► WF4 intake ─► Relay CRM
-CONVERT     Cal.com audit ─► WF6 prep + reminders ─► call ─► WF7 proposal ─► Signet ─► Razorpay
+CAPTURE     form · ads · demo bot · replies ─► WF4 intake ─► Shared inbox CRM
+CONVERT     Cal.com audit ─► WF6 prep + reminders ─► call ─► WF7 proposal ─► Consent signer ─► Razorpay
 DELIVER     WF8 onboarding ─► build ─► go-live
 GROW        WF9 report + testimonial + referral ─► retainer ─► intros loop back to CAPTURE
 MEASURE     WF10 Sunday scoreboard
@@ -77,7 +77,7 @@ Every lead has exactly one `status`. Every workflow moves it forward.
 
 | Status | Means | Moved by |
 |---|---|---|
-| `new` | Scraped / added, untouched | Prospector import |
+| `new` | Scraped / added, untouched | Lead research import |
 | `ready` | Scored + opener drafted | WF1 |
 | `contacted` | First message sent | You (tap "sent" in queue) |
 | `followup_1/2/3` | Day 3 / 7 / 14 sent | WF3 |
@@ -91,11 +91,11 @@ Every lead has exactly one `status`. Every workflow moves it forward.
 
 ### Leads table fields
 `id · business · owner_name · category · city · website · phone · email ·
-instagram · source (prospector/form/ads/demo/referral/warm) · score (0–100) ·
+instagram · source (lead-research/form/ads/demo/referral/warm) · score (0–100) ·
 pain_hint · opener_draft · status · last_touch_at · next_touch_at · channel ·
 call_at · proposal_value · won_value · notes`
 
-Start in **Google Sheets or Airtable** (fastest). Move to Relay/Postgres once
+Start in **Google Sheets or Airtable** (fastest). Move to the Shared Inbox CRM/Postgres once
 there are >300 rows or a second person.
 
 ---
@@ -104,7 +104,7 @@ there are >300 rows or a second person.
 
 ### WF1 — Enrich & Score  (Schedule: daily 07:00)
 1. Read leads with `status = new` (limit 50).
-2. HTTP GET the website → strip to text (or reuse Prospector's extract).
+2. HTTP GET the website → strip to text (or reuse the Lead Research Tool's extract).
 3. Score: +30 has WhatsApp/phone booking only, +20 no online booking link,
    +15 Instagram active, +15 multiple practitioners, +10 has email, +10 in target city.
 4. Claude: *"Write a 3-sentence WhatsApp opener to the owner of {business}.
@@ -162,7 +162,7 @@ WhatsApp confirmation (+ a sped-up "reminder" 2 minutes later).
 Inputs: lead, offer tier, price, go-live date, 3 bullet scope, their numbers.
 1. Fill a one-page template (Google Doc → PDF): their problem in their words,
    what gets built, fixed price, 50/50 terms, live date, what's excluded.
-2. Send for signature via **Signet** (your own tool).
+2. Send for signature via the **Consent & Contract Signer** (your own tool).
 3. On signed → Razorpay payment link for 50%.
 4. Unsigned after 48h → nudge; after 7 days → you call.
 5. `status = proposal_sent` → `won` on payment.
@@ -201,14 +201,14 @@ offer/price.
 
 | Job | Tool | Cost |
 |---|---|---|
-| Lead lists | Prospector (yours) + Google Maps manual | ₹0 |
-| CRM / inbox | Google Sheet → Relay (yours) | ₹0 |
+| Lead lists | Lead Research Tool (yours) + Google Maps manual | ₹0 |
+| CRM / inbox | Google Sheet → Shared Inbox CRM (yours) | ₹0 |
 | Automations | n8n (self-hosted) | server you have |
 | AI drafts / briefs | Claude API | a few hundred ₹/month |
 | Booking calls | Cal.com (free) | ₹0 |
 | WhatsApp | Personal business number for 1:1 · MSG91/WhatsApp API for templates & demo | per message |
 | Email | Google Workspace on a separate outreach domain | ~₹150/mo/user + domain |
-| E-signature | Signet (yours) | ₹0 |
+| E-signature | Consent & Contract Signer (yours) | ₹0 |
 | Payments | Razorpay payment links | 2% fee |
 | Projects | Plane (self-hosted, yours) | ₹0 |
 | Videos | Loom free | ₹0 |
@@ -227,7 +227,7 @@ the current week needs.
 | 2 | **WF4 intake** live on the site (set `VITE_LEAD_WEBHOOK_URL`) · WF2 digest (even a simple version) | Start outreach, nothing lost |
 | 3 | WF1 scoring + Claude openers · WF3 email follow-ups | Volume goes up, follow-ups are where replies come from |
 | 4 | WF6 call prep | Calls are starting |
-| 5–6 | WF7 proposal + Signet + Razorpay · WF8 onboarding | First client closes |
+| 5–6 | WF7 proposal + consent signer + Razorpay · WF8 onboarding | First client closes |
 | 7+ | WF9 proof loop · WF10 scoreboard | Turn client 1 into clients 2 and 3 |
 
 ---

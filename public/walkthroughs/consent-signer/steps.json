@@ -1,0 +1,120 @@
+[
+  {
+    "file": "01.png",
+    "caption": "Every consent form and contract, tracked in one place",
+    "target": {
+      "x": 1119,
+      "y": 129,
+      "w": 141,
+      "h": 40
+    },
+    "focus": {
+      "x": 156,
+      "y": 105,
+      "w": 1128,
+      "h": 351
+    }
+  },
+  {
+    "file": "02.png",
+    "caption": "Start from a ready clinic consent template",
+    "target": {
+      "x": 180,
+      "y": 229,
+      "w": 191,
+      "h": 38
+    },
+    "focus": {
+      "x": 156,
+      "y": 205,
+      "w": 736,
+      "h": 184
+    }
+  },
+  {
+    "file": "03.png",
+    "caption": "Add your client as a signer, no account needed",
+    "target": {
+      "x": 900,
+      "y": 459,
+      "w": 360,
+      "h": 40
+    },
+    "focus": {
+      "x": 876,
+      "y": 177,
+      "w": 408,
+      "h": 702
+    }
+  },
+  {
+    "file": "04.png",
+    "caption": "A private signing link is ready to send",
+    "target": {
+      "x": 1207,
+      "y": 353,
+      "w": 52,
+      "h": 26
+    },
+    "focus": {
+      "x": 856,
+      "y": 219,
+      "w": 452,
+      "h": 210
+    }
+  },
+  {
+    "file": "05.png",
+    "caption": "Your client reads, signs with a finger and consents",
+    "target": {
+      "x": 356,
+      "y": 820,
+      "w": 140,
+      "h": 40
+    },
+    "focus": {
+      "x": 332,
+      "y": 504,
+      "w": 775,
+      "h": 380
+    }
+  },
+  {
+    "file": "06.png",
+    "caption": "Sealed with a tamper-proof fingerprint and audit trail",
+    "target": {
+      "x": 905,
+      "y": 611,
+      "w": 330,
+      "h": 42
+    },
+    "focus": {
+      "x": 856,
+      "y": 131,
+      "w": 428,
+      "h": 854
+    }
+  },
+  {
+    "file": "07.png",
+    "caption": "Anyone can verify it's authentic and unchanged",
+    "target": null,
+    "focus": {
+      "x": 433,
+      "y": 94,
+      "w": 574,
+      "h": 318
+    }
+  },
+  {
+    "file": "08.png",
+    "caption": "Any edit after signing is caught instantly",
+    "target": null,
+    "focus": {
+      "x": 429,
+      "y": 90,
+      "w": 582,
+      "h": 130
+    }
+  }
+]

@@ -54,7 +54,7 @@ The old decision optimized for the warmest, easiest buyer (wellness clinics Anik
 already knew) and framed him as booking/intake automation for service businesses. It
 was made before weighting what he has actually shipped:
 
-- **Udaan** — a full online clinical care platform (12-week IOP): ten-stage patient
+- **Care Journey Platform** — a full online clinical care platform (12-week IOP): ten-stage patient
   journey, gated curriculum engine, signed-URL video, four role-scoped portals, a
   query-layer privacy boundary, Razorpay + Cal.com + n8n, deployed to Cloudflare
   Workers over a Tailscale tunnel to self-hosted Postgres. Next.js 16 / React 19 /
@@ -77,11 +77,11 @@ under it.
 
 ### Open follow-through from this reposition
 
-- [ ] Rebuild `heroProof` + the `projects` array around Udaan and the Mindset
+- [ ] Rebuild `heroProof` + the `projects` array around the Care Journey Platform and the Mindset
       platform once client confidentiality is cleared (see below).
 - [ ] Reconcile the rest of the page (capabilities blurbs, package framing, FAQ)
       so it stops reading as "automation freelancer for small service businesses."
-- [ ] Confidentiality: Udaan is a branded product for a paying client; the Mindset
+- [ ] Confidentiality: the Care Journey Platform is a branded product for a paying client; the Mindset
       platform holds real PHI. Public case studies describe architecture and
       capabilities only — no real client names, no live URLs/credentials, no
       screenshots of client records.

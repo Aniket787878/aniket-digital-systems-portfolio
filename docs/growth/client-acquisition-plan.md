@@ -111,7 +111,7 @@ holds mental-health records.
 - Goal: 2–4 intro calls from this alone.
 
 ### B. Direct outreach (from week 3) — the main engine
-**Build the list with your own tool.** Prospector already extracts name,
+**Build the list with your own tool.** The Lead Research Tool already extracts name,
 email, phone and socials from business websites. Target 1–2 cities, 300
 businesses in your lane. Score for "has a website but books via WhatsApp/phone".
 
@@ -195,7 +195,7 @@ Switch on only after outreach has produced at least 5 calls and 1 close.
 |---|---|---|
 | 1 | Demo clinic + reminders live; testimonial asked | You can book a fake slot and get a WhatsApp |
 | 2 | Loom, AI assistant demo, portfolio fixes; warm-network 50 messages | 50 sent, first calls booked |
-| 3–4 | Prospector list of 300; 20 outreach/day; marketplace profiles; 3 posts/week | 200 touches, 6+ calls |
+| 3–4 | Lead Research Tool list of 300; 20 outreach/day; marketplace profiles; 3 posts/week | 200 touches, 6+ calls |
 | 5–6 | First client delivered fast; case study #2; ads test *if* converting | 1–2 paying clients |
 | 7–10 | Scale outreach, ask every client for 2 intros, raise prices after client 3 | 3 clients + 1 retainer |
 | 11–13 | Double down on the channel that produced the calls; drop the rest | Repeatable weekly pipeline |

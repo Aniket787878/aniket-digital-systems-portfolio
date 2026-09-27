@@ -34,16 +34,17 @@ export const images = {
 
   projects: {
     'therapist-pwa': '',
-    udaan: '',
-    /* The first real screenshots on the site — Signet, Relay and Prospector
-       are self-built tools, so unlike the two client systems their running
-       UI can actually be shown. Signet: the sealed document with its audit
-       trail. Relay: a live inbox thread with the contact and pipeline
-       alongside. Prospector: the lead workspace after a live scrape. All
-       captured from the running apps. */
-    signet: '/signet-sealed.png',
-    relay: '/relay-inbox.png',
-    prospector: '/prospector-workspace.png'
+    'care-journey': '',
+    /* The first real screenshots on the site — the consent signer, the
+       shared inbox and the lead research tool are self-built, so unlike the
+       two client systems their running UI can actually be shown. The
+       signer: the sealed document with its audit trail. The inbox: a live
+       thread with the contact and pipeline alongside. The research tool:
+       the lead workspace after a live scrape. All captured from the
+       running apps. */
+    'consent-signer': '/consent-signer-sealed.png',
+    'shared-inbox': '/shared-inbox.png',
+    'lead-research': '/lead-research-workspace.png'
   }
 }
 
@@ -51,7 +52,7 @@ export const images = {
    PRODUCT FILMS — rendered from remotion/ by scripts/render-videos.sh.
 
    Two kinds, and the site says which on every one:
-   - 'real'      Signet, Relay, Prospector. Every pixel inside the window is
+   - 'real'      The three self-built demos. Every pixel inside the window is
                  a capture of the running app (public/walkthroughs/); only
                  the camera, pointer and captions are added.
    - 'schematic' The two client platforms. Their screens hold client
@@ -65,31 +66,31 @@ export const films = {
     src: '/videos/therapist-pwa.mp4',
     poster: '/videos/posters/therapist-pwa.jpg'
   },
-  udaan: {
+  'care-journey': {
     kind: 'schematic',
-    src: '/videos/udaan.mp4',
-    poster: '/videos/posters/udaan.jpg'
+    src: '/videos/care-journey.mp4',
+    poster: '/videos/posters/care-journey.jpg'
   },
-  signet: {
+  'consent-signer': {
     kind: 'real',
-    src: '/videos/signet.mp4',
-    poster: '/videos/posters/signet.jpg',
-    clip: '/videos/clips/signet.mp4',
-    clipPoster: '/videos/posters/signet-clip.jpg'
+    src: '/videos/consent-signer.mp4',
+    poster: '/videos/posters/consent-signer.jpg',
+    clip: '/videos/clips/consent-signer.mp4',
+    clipPoster: '/videos/posters/consent-signer-clip.jpg'
   },
-  relay: {
+  'shared-inbox': {
     kind: 'real',
-    src: '/videos/relay.mp4',
-    poster: '/videos/posters/relay.jpg',
-    clip: '/videos/clips/relay.mp4',
-    clipPoster: '/videos/posters/relay-clip.jpg'
+    src: '/videos/shared-inbox.mp4',
+    poster: '/videos/posters/shared-inbox.jpg',
+    clip: '/videos/clips/shared-inbox.mp4',
+    clipPoster: '/videos/posters/shared-inbox-clip.jpg'
   },
-  prospector: {
+  'lead-research': {
     kind: 'real',
-    src: '/videos/prospector.mp4',
-    poster: '/videos/posters/prospector.jpg',
-    clip: '/videos/clips/prospector.mp4',
-    clipPoster: '/videos/posters/prospector-clip.jpg'
+    src: '/videos/lead-research.mp4',
+    poster: '/videos/posters/lead-research.jpg',
+    clip: '/videos/clips/lead-research.mp4',
+    clipPoster: '/videos/posters/lead-research-clip.jpg'
   }
 }
 
@@ -135,44 +136,44 @@ export const explainers = {
    ------------------------------------------------------------------ */
 export const screenTour = [
   {
-    slug: 'relay',
-    url: 'relay.app/inbox',
-    file: '/walkthroughs/relay/03.png',
+    slug: 'shared-inbox',
+    url: 'shared-inbox.app/inbox',
+    file: '/walkthroughs/shared-inbox/03.png',
     spot: { x: 160, y: 100, w: 362, h: 570 },
     caption: 'WhatsApp, email and web enquiries land in one shared inbox.'
   },
   {
-    slug: 'relay',
-    url: 'relay.app/inbox',
-    file: '/walkthroughs/relay/03.png',
+    slug: 'shared-inbox',
+    url: 'shared-inbox.app/inbox',
+    file: '/walkthroughs/shared-inbox/03.png',
     spot: { x: 521, y: 62, w: 480, h: 372 },
     caption: 'Reply in one click, and the thread moves itself to pending.'
   },
   {
-    slug: 'signet',
-    url: 'signet.app/sign',
-    file: '/walkthroughs/signet/05.png',
+    slug: 'consent-signer',
+    url: 'consent-signer.app/sign',
+    file: '/walkthroughs/consent-signer/05.png',
     spot: { x: 332, y: 504, w: 775, h: 380 },
     caption: 'Your client signs with a finger. No account to create.'
   },
   {
-    slug: 'signet',
-    url: 'signet.app/verify',
-    file: '/walkthroughs/signet/08.png',
+    slug: 'consent-signer',
+    url: 'consent-signer.app/verify',
+    file: '/walkthroughs/consent-signer/08.png',
     spot: { x: 429, y: 90, w: 582, h: 130 },
     caption: 'Change one character afterwards and the public check fails.'
   },
   {
-    slug: 'prospector',
-    url: 'prospector.app/workspace',
-    file: '/walkthroughs/prospector/03.png',
+    slug: 'lead-research',
+    url: 'lead-research.app/workspace',
+    file: '/walkthroughs/lead-research/03.png',
     spot: { x: 176, y: 58, w: 1088, h: 208 },
     caption: 'Paste a few websites. Each one is read live, on the spot.'
   },
   {
-    slug: 'prospector',
-    url: 'prospector.app/leads',
-    file: '/walkthroughs/prospector/06.png',
+    slug: 'lead-research',
+    url: 'lead-research.app/leads',
+    file: '/walkthroughs/lead-research/06.png',
     spot: { x: 164, y: 115, w: 760, h: 280 },
     caption: 'Anything missing is marked Not found, never guessed.'
   }
@@ -182,7 +183,7 @@ export const screenTour = [
 export const heroReel = {
   src: '/videos/hero-reel.mp4',
   poster: '/videos/posters/hero-reel.jpg',
-  caption: 'Relay, Signet and Prospector, real screens from the running apps.'
+  caption: 'A shared inbox, a consent signer and a lead research tool, real screens from the running apps.'
 }
 
 export const site = {
@@ -225,20 +226,6 @@ export const site = {
   /* A template, filled from the first entry in `packages` (the entry
      offer) in the visitor's currency, so the price is stated once. */
   pricingAnchor: 'The usual starting point is an {offer}: one workflow, end to end, {price}, {timeline}.',
-
-  /* The hero's proof, lifted from project 01 and condensed.
-
-     It lives here rather than in Hero.jsx for one reason: it states a
-     number, and the house rule is that no number appears without the
-     caveat that qualifies it. Keeping claim and note in the same object
-     makes them awkward to separate by accident. If project 01's outcome
-     is ever restated, restate this with it. */
-  heroProof: {
-    claim: 'An 11-therapist clinic already runs its day on one.',
-    note: 'The therapist count is a row count from the clinic’s live production database, not an estimate.',
-    slug: 'therapist-pwa',
-    linkLabel: 'See the system'
-  }
 }
 
 /* Title, description and share card for index.html. vite.config.js writes
@@ -454,15 +441,15 @@ export const projects = [
   },
   {
     index: '02',
-    slug: 'udaan',
+    slug: 'care-journey',
     highlights: [
       'A ten-stage journey from first enquiry to enrolled client',
       'Clinical gates that lock the course until a real session happens',
       'A privacy wall between family and client, enforced in the data'
     ],
     diagram: 'journey',
-    title: 'Udaan',
-    subtitle: 'Online recovery-care platform',
+    title: 'Care Journey Platform',
+    subtitle: 'Online recovery-care program',
     tagline: 'A 12-week recovery program: course, live therapy and an always-on safety layer in one gated portal.',
     year: '2026',
     summary:
@@ -579,16 +566,16 @@ export const projects = [
   },
   {
     index: '03',
-    slug: 'signet',
+    slug: 'consent-signer',
     highlights: [
       'Clinic, studio and agency templates, signed on any phone',
       'A SHA-256 seal over the text and every signature',
       'A public page that proves the document is unchanged'
     ],
     diagram: 'signature',
-    title: 'Signet',
-    subtitle: 'Consent & contract signing',
-    tagline: 'E-signatures with a real audit trail and a tamper-evident seal anyone can verify.',
+    title: 'Consent & Contract Signer',
+    subtitle: 'E-signatures with an audit trail',
+    tagline: 'Signed on any phone, sealed against tampering, and verifiable by anyone on a public page.',
     year: '2026',
     summary:
       'A self-built e-signature tool for service businesses: send a consent form or contract, collect a signature that carries a real audit trail, and get back a sealed, tamper-evident PDF, without an enterprise contract or a login for the person signing.',
@@ -664,19 +651,19 @@ export const projects = [
       'It is the first project on this site with real product screenshots rather than a schematic standing in for one'
     ],
     outcomeNote:
-      'Signet is a self-initiated working demo, not a client deployment, so there are no usage numbers here, because there are no users yet. The counts above describe what was built. The screenshots are of the running app.'
+      'This signer is a self-initiated working demo, not a client deployment, so there are no usage numbers here, because there are no users yet. The counts above describe what was built. The screenshots are of the running app.'
   },
   {
     index: '04',
-    slug: 'relay',
+    slug: 'shared-inbox',
     highlights: [
       'WhatsApp, email and web enquiries in one shared inbox',
       'Reply, leave a note or assign without leaving the thread',
       'Every conversation tied to a stage in the pipeline'
     ],
-    diagram: 'relay',
-    title: 'Relay',
-    subtitle: 'Shared inbox & CRM',
+    diagram: 'shared-inbox',
+    title: 'Shared Inbox CRM',
+    subtitle: 'Every enquiry and the pipeline in one app',
     tagline: 'WhatsApp, email and web enquiries in one shared inbox, tied to a pipeline.',
     year: '2026',
     summary:
@@ -748,23 +735,23 @@ export const projects = [
       'Seeded with realistic enquiries so the demo behaves like a real morning of client work, not an empty shell'
     ],
     outcomeNote:
-      'Relay is a self-initiated working demo, not a client deployment. Inbound channels are simulated, so the counts above describe what was built, not real message volumes. The screenshots are of the running app.'
+      'This shared inbox is a self-initiated working demo, not a client deployment. Inbound channels are simulated, so the counts above describe what was built, not real message volumes. The screenshots are of the running app.'
   },
   {
     index: '05',
-    slug: 'prospector',
+    slug: 'lead-research',
     highlights: [
       'Reads structured data, meta tags and contact links',
       'Scores every lead by how reachable it is',
       'Shortlist, filter and export the list to CSV'
     ],
     diagram: 'prospect',
-    title: 'Prospector',
-    subtitle: 'Lead-research tool',
+    title: 'Lead Research Tool',
+    subtitle: 'Scored leads from any business website',
     tagline: 'Paste a website, get a scored, exportable lead with real contact details.',
     year: '2026',
     summary:
-      'A self-built lead-research tool: paste a business website and Prospector reads its public pages and pulls the name, contact details, location and socials into one clean, scored, exportable list, for the studio or agency doing its own outreach.',
+      'A self-built lead-research tool: paste a business website and the tool reads its public pages and pulls the name, contact details, location and socials into one clean, scored, exportable list, for the studio or agency doing its own outreach.',
     metrics: [
       { n: '5', label: 'signals read per page: JSON-LD, OG, email, phone, socials' },
       { n: '0–100', label: 'completeness score, weighted to contact details' },
@@ -832,7 +819,7 @@ export const projects = [
       'The whole list exports to CSV, which is the actual job of a research tool'
     ],
     outcomeNote:
-      'Prospector is a self-initiated working demo, not a client deployment. It reads only public pages and is best pointed at sites that publish structured data; the counts describe what was built. The screenshots are of the running app.'
+      'This research tool is a self-initiated working demo, not a client deployment. It reads only public pages and is best pointed at sites that publish structured data; the counts describe what was built. The screenshots are of the running app.'
   }
 ]
 

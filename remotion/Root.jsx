@@ -11,16 +11,16 @@ import { ExplainerInternalTool, TOOL_LEN } from './explainers/ExplainerInternalT
 
 /* The hero reel: the strongest beats of each working demo, back to back. */
 export const HERO_REEL = [
-  { slug: 'relay', pick: [2, 3, 7] },
-  { slug: 'signet', pick: [2, 5, 7] },
-  { slug: 'prospector', pick: [3, 5, 6] },
+  { slug: 'shared-inbox', pick: [2, 3, 7] },
+  { slug: 'consent-signer', pick: [2, 5, 7] },
+  { slug: 'lead-research', pick: [3, 5, 6] },
 ]
 
 /* Card previews: a short silent loop per tool. */
 export const CARD_PICKS = {
-  signet: [2, 5, 6, 8],
-  relay: [1, 3, 5, 7],
-  prospector: [2, 3, 5, 6],
+  'consent-signer': [2, 5, 6, 8],
+  'shared-inbox': [1, 3, 5, 7],
+  'lead-research': [2, 3, 5, 6],
 }
 
 /*

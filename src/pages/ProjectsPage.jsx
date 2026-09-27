@@ -17,8 +17,9 @@ export default function ProjectsPage() {
       <p className="page-lede">
         Complete systems, each designed, built and shipped end to end. The
         clinic platform runs an eleven-therapist practice every
-        day; Udaan, a recovery-care platform, is in pre-launch. Signet, Relay
-        and Prospector are tools I built to work the same ideas.
+        day; the care journey platform, for online recovery care, is in
+        pre-launch. The consent signer, the shared inbox and the lead
+        research tool are tools I built to work the same ideas.
       </p>
       {/* A showcase, not a list: every project leads with its film. The
           working demos play real captures on hover; the client platforms

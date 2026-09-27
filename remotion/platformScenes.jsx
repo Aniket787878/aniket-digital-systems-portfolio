@@ -382,7 +382,7 @@ function PwaFollow({ f }) {
   )
 }
 
-/* ---------- Udaan ---------- */
+/* ---------- Care journey platform ---------- */
 
 function UdDiscover({ f }) {
   return (
@@ -606,12 +606,12 @@ export const SCENES = {
     { stage: 'Consent', tag: 'Signed, then sealed as a PDF', url: 'forms.clinic/consent', caption: 'Consent is signed, sealed as a PDF server-side, stored and countersigned.', Screen: PwaConsent },
     { stage: 'Follow up', tag: 'Tasks + WhatsApp', url: 'crm.clinic/tasks', caption: 'Follow-ups run themselves: owned tasks, WhatsApp reminders, desktop push.', Screen: PwaFollow },
   ],
-  udaan: [
-    { stage: 'Discover', tag: 'Public site', url: 'udaan.care', caption: 'A calm public site explains the three parts of the program.', Screen: UdDiscover },
-    { stage: 'Triage', tag: 'Creates a lead, not an account', url: 'udaan.care/triage', caption: 'The triage form creates a lead, not an account.', Screen: UdTriage },
-    { stage: 'Screen', tag: 'Coordinator books a call', url: 'admin.udaan.care/leads', caption: 'A coordinator books the screening call from the pipeline.', Screen: UdScreen },
-    { stage: 'Assess', tag: 'Clinician signs off', url: 'admin.udaan.care/assessment', caption: 'A clinician assesses fit before anything can be paid for.', Screen: UdAssess },
-    { stage: 'Pay', tag: 'Verified server-side', url: 'udaan.care/checkout', caption: 'Payment is verified server-side; only then is a portal account made.', Screen: UdPay },
-    { stage: 'Enrol', tag: 'Gated course + crisis help', url: 'portal.udaan.care', caption: 'The course unlocks as the work gets done, gated on real sessions.', Screen: UdEnrol },
+  'care-journey': [
+    { stage: 'Discover', tag: 'Public site', url: 'care-journey.app', caption: 'A calm public site explains the three parts of the program.', Screen: UdDiscover },
+    { stage: 'Triage', tag: 'Creates a lead, not an account', url: 'care-journey.app/triage', caption: 'The triage form creates a lead, not an account.', Screen: UdTriage },
+    { stage: 'Screen', tag: 'Coordinator books a call', url: 'admin.care-journey.app/leads', caption: 'A coordinator books the screening call from the pipeline.', Screen: UdScreen },
+    { stage: 'Assess', tag: 'Clinician signs off', url: 'admin.care-journey.app/assessment', caption: 'A clinician assesses fit before anything can be paid for.', Screen: UdAssess },
+    { stage: 'Pay', tag: 'Verified server-side', url: 'care-journey.app/checkout', caption: 'Payment is verified server-side; only then is a portal account made.', Screen: UdPay },
+    { stage: 'Enrol', tag: 'Gated course + crisis help', url: 'portal.care-journey.app', caption: 'The course unlocks as the work gets done, gated on real sessions.', Screen: UdEnrol },
   ],
 }

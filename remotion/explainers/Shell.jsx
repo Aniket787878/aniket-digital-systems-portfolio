@@ -8,13 +8,13 @@ import { Icon } from '../icons.jsx'
 /*
   The frame every short explainer shares: it opens on the dusk scene with a
   one-line hook, a paper sheet rises over it for the explaining, and the
-  sheet slides away to reveal the dusk again for the offer.
+  sheet slides away to reveal the dusk again for the contact card.
 
     paperAt   global frame the sheet starts rising
     paperEnd  paper-local frame the sheet starts sliding away
     children  a function of the paper-local frame
 */
-export function Shell({ hook, hookSub, hookIcon, paperAt, paperEnd, offerKey, children }) {
+export function Shell({ hook, hookSub, hookIcon, paperAt, paperEnd, children }) {
   useFonts()
   const frame = useCurrentFrame()
   const outroAt = paperAt + paperEnd
@@ -24,7 +24,7 @@ export function Shell({ hook, hookSub, hookIcon, paperAt, paperEnd, offerKey, ch
         <Hook text={hook} sub={hookSub} icon={hookIcon} until={paperAt} />
       </Sequence>
       <Sequence from={outroAt}>
-        <EndCard frame={frame - outroAt} offerKey={offerKey} />
+        <EndCard frame={frame - outroAt} />
       </Sequence>
       <Sequence from={paperAt} durationInFrames={paperEnd + 44}>
         <Sheet end={paperEnd}>{children}</Sheet>

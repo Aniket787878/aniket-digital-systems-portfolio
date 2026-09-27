@@ -37,7 +37,7 @@ const LINES = [
 
 export function ExplainerOpsSprint() {
   return (
-    <Shell hook="11:04 pm." hookSub="A new enquiry. Your team is asleep." hookIcon="moon" paperAt={PAPER_AT} paperEnd={PAPER_END} offerKey="sprint">
+    <Shell hook="11:04 pm." hookSub="A new enquiry. Your team is asleep." hookIcon="moon" paperAt={PAPER_AT} paperEnd={PAPER_END}>
       {(f) => <Paper f={f} />}
     </Shell>
   )

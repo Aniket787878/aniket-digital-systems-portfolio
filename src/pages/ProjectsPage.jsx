@@ -41,8 +41,8 @@ export default function ProjectsPage() {
                   {film && (
                     <LoopVideo
                       mode="hover"
-                      src={real ? film.clip : film.src}
-                      poster={real ? film.clipPoster : film.poster}
+                      src={real ? film.framed : film.src}
+                      poster={real ? film.framedPoster : film.poster}
                       className="showcase-video"
                     />
                   )}

@@ -423,6 +423,7 @@
 }
 
 .row-frame {
+  position: relative; /* anchors LoopVideo's loading spinner */
   overflow: hidden;
   border-radius: 14px;
   background: #0f0f10;

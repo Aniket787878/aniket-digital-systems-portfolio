@@ -58,7 +58,7 @@ misspelled `Refrence files/` (now `docs/reference/folioblox.html`).
 | `/projects` | `src/pages/ProjectsPage.jsx` | Done | Reads `src/data.js` |
 | `/projects/:slug` | `src/pages/ProjectDetailPage.jsx` | Done | Renders `problem`, `system`, `outcome` and `outcomeNote` |
 | `/about` | `src/pages/AboutPage.jsx` | Done | The identity layer that puts a real person behind the work (see `docs/research/06`; the solo framing there was superseded 2026-09-27). Composition only, bands in `src/pages/about/`: portrait hero (dusk monogram card until `founder.photo` is set), a five-step stepper (`founder.steps`), the toolbox grouped by outcome (`toolbox`), the five project films in the site's dialog player, then the home closing CTA. Story renders only once `founder.story` is written |
-| `/contact` | `src/pages/ContactPage.jsx` | Done | Renders `ContactForm.jsx` |
+| `/contact` | `src/pages/ContactPage.jsx` | Done | Three bands (`src/pages/contact/`): dusk header with the ways to reach me, the `ContactForm.jsx` card on paper, a "what happens next" stepper on night |
 | `*` | `src/pages/NotFoundPage.jsx` | Done | Real 404 with a CTA, wired to `path="*"` in `App.jsx` |
 
 **Every route resets the scroll offset — `src/components/ScrollToTop.jsx`.**

@@ -148,16 +148,17 @@ Branded domain (set `site.origin` in `data.js`; canonical, OG, JSON-LD,
 robots.txt and sitemap.xml are generated from it by the `siteMeta` plugin in
 `vite.config.js`) · `site.bookingUrl` (Cal.com; setting it makes "Book a
 15-min call" the primary button everywhere) · Quick-Win INR price (placeholder
-₹25,000) · `VITE_LEAD_WEBHOOK_URL` · case-study numbers · testimonial · CV PDF
+₹25,000) · case-study numbers · testimonial · CV PDF
 and a real headshot (the `/about` page now exists and renders labelled slots for
 both) · real screenshots.
 
 Resolved 2026-09-11: real email (`aniket.html@gmail.com`) and WhatsApp number
 (`+91 9136582842`) are set, so every WhatsApp CTA is live.
 
-The site itself is built and deployed. Of what's left, `VITE_LEAD_WEBHOOK_URL` is
-the costly one: it is now the **only** dead lead path (WhatsApp works), and
-until it is set the contact form is not rendered at all: `/contact` shows the
-direct routes (booking link if set, WhatsApp, email) instead, so no lead is lost
-to a form that cannot send. Because `VITE_*` is baked in at build time, setting it
-needs a redeploy.
+Resolved 2026-09-27: the contact form is live. It posts to `/api/lead`, which
+`vercel.json` rewrites (server-side, so the n8n host never reaches the
+browser) to the "Portfolio — Lead intake" n8n workflow: Google Sheet "Portfolio
+leads", Gmail alert and auto-reply, an error-alert workflow, and a 09:30 IST
+reminder for leads unanswered after 24h (see `n8n/README.md`).
+`VITE_LEAD_WEBHOOK_URL`, if set, overrides the rewrite; set it for local dev,
+where the rewrite does not exist.

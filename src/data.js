@@ -221,7 +221,7 @@ export const site = {
   whatsapp: '+91 9136582842', // digits are stripped in whatsapp.js for the wa.me link
   location: 'Based in India · working remotely worldwide',
   availability:
-    'Taking on two new builds a month. Next start slot is usually one to two weeks out.',
+    'Taking on new projects. Next start slot is usually one to two weeks out.',
   /* A template, filled from the first entry in `packages` (the entry
      offer) in the visitor's currency, so the price is stated once. */
   pricingAnchor: 'The usual starting point is an {offer}: one workflow, end to end, {price}, {timeline}.',
@@ -311,7 +311,7 @@ export const founder = {
     { label: 'Based', value: 'India · remote worldwide' },
     { label: 'Focus', value: 'Booking, intake, follow-ups, payments, AI' },
     { label: 'Core stack', value: 'React · TypeScript · Node · Postgres · n8n · Claude' },
-    { label: 'Availability', value: 'Two new builds a month' }
+    { label: 'Availability', value: 'Taking new projects' }
   ]
 }
 

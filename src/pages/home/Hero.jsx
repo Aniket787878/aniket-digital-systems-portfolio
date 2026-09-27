@@ -99,7 +99,7 @@ export default function Hero() {
           transition={{ duration: 0.6, ease: EASE }}
         >
           <span className="status-dot" aria-hidden="true" />
-          Available for new projects &middot; two builds a month
+          Available for new projects
         </m.p>
 
         <h1 className="dusk-title" aria-label={`${LINE_1} ${LINE_2}`}>

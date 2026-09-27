@@ -33,7 +33,7 @@ export const images = {
   },
 
   projects: {
-    'mindset-workspace': '',
+    'therapist-pwa': '',
     udaan: '',
     /* The first real screenshots on the site — Signet, Relay and Prospector
        are self-built tools, so unlike the two client systems their running
@@ -69,7 +69,7 @@ export const site = {
   heroProof: {
     claim: 'Seven hundred and fifty clients, eleven therapists, one app the whole clinic runs on.',
     note: 'From a live practice-management platform — the client and therapist counts are row counts from its production database, not an estimate.',
-    slug: 'mindset-workspace',
+    slug: 'therapist-pwa',
     linkLabel: 'See the system'
   }
 }
@@ -174,9 +174,9 @@ export const whatsappPrefill = {
 export const projects = [
   {
     index: '01',
-    slug: 'mindset-workspace',
+    slug: 'therapist-pwa',
     diagram: 'platform',
-    title: 'Mindset Workspace PWA App',
+    title: 'Therapist PWA App',
     summary:
       'A full practice-management app for a multi-therapist mental-health clinic — the one place a client is booked, seen, recorded, documented, billed and followed up. It installs like a phone app, works offline, and records each session on the device.',
     metrics: [

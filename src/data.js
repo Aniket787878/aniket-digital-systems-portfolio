@@ -120,6 +120,78 @@ export const explainers = {
   }
 }
 
+/* ------------------------------------------------------------------
+   The product tour on the home page: nine moments across the three
+   working demos. Every image is a real 2x capture of the running app
+   (public/walkthroughs/); `spot` is the region the camera zooms into and
+   highlights, in the 1440x900 CSS-pixel space the captures were taken at.
+   ------------------------------------------------------------------ */
+export const screenTour = [
+  {
+    slug: 'relay',
+    url: 'relay.app/inbox',
+    file: '/walkthroughs/relay/03.png',
+    spot: { x: 160, y: 100, w: 362, h: 570 },
+    caption: 'WhatsApp, email and web enquiries land in one shared inbox.'
+  },
+  {
+    slug: 'relay',
+    url: 'relay.app/inbox',
+    file: '/walkthroughs/relay/03.png',
+    spot: { x: 521, y: 62, w: 480, h: 372 },
+    caption: 'Reply in one click, and the thread moves itself to pending.'
+  },
+  {
+    slug: 'relay',
+    url: 'relay.app/inbox',
+    file: '/walkthroughs/relay/03.png',
+    spot: { x: 1000, y: 62, w: 268, h: 300 },
+    caption: 'The client and their pipeline stage sit beside every thread.'
+  },
+  {
+    slug: 'signet',
+    url: 'signet.app/sign',
+    file: '/walkthroughs/signet/05.png',
+    spot: { x: 332, y: 504, w: 775, h: 380 },
+    caption: 'Your client signs with a finger. No account to create.'
+  },
+  {
+    slug: 'signet',
+    url: 'signet.app/documents',
+    file: '/walkthroughs/signet/06.png',
+    spot: { x: 880, y: 417, w: 380, h: 260 },
+    caption: 'Sealed with a SHA-256 fingerprint of the text and every signature.'
+  },
+  {
+    slug: 'signet',
+    url: 'signet.app/verify',
+    file: '/walkthroughs/signet/08.png',
+    spot: { x: 429, y: 90, w: 582, h: 130 },
+    caption: 'Change one character afterwards and the public check fails.'
+  },
+  {
+    slug: 'prospector',
+    url: 'prospector.app/workspace',
+    file: '/walkthroughs/prospector/03.png',
+    spot: { x: 176, y: 58, w: 1088, h: 208 },
+    caption: 'Paste a few websites. Each one is read live, on the spot.'
+  },
+  {
+    slug: 'prospector',
+    url: 'prospector.app/workspace',
+    file: '/walkthroughs/prospector/03.png',
+    spot: { x: 176, y: 382, w: 1088, h: 180 },
+    caption: 'Real contact details, scored by how reachable each lead is.'
+  },
+  {
+    slug: 'prospector',
+    url: 'prospector.app/leads',
+    file: '/walkthroughs/prospector/06.png',
+    spot: { x: 164, y: 115, w: 760, h: 280 },
+    caption: 'Anything missing is marked Not found, never guessed.'
+  }
+]
+
 /* The hero showreel: the strongest beats of the three working demos. */
 export const heroReel = {
   src: '/videos/hero-reel.mp4',

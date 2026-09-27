@@ -5,6 +5,26 @@ twice (PRs #14, #15), rebuilt in his own saffron (bhagwa) brand instead of
 Stage's lavender. Shared by the site (`src/`) and the films (`remotion/`),
 so a video and the page it sits on read as one product.
 
+## Whose taste this is
+
+Not one app website copied. The system is built from how Aniket works and
+what he has approved:
+
+- **His medium is systems, so the site shows mechanisms.** Flows that draw
+  themselves, steps that advance, screens that zoom to the part that matters.
+  (His own n8n canvases are the visual root of the FlowGraph.)
+- **He proves, he does not claim** ("never invent content"), so the real
+  product screens carry the page, the way Paco Coursey's portfolio lets the
+  products be the evidence.
+- **Motion with a purpose**, in the spirit of Cyd Stumpel's and Emil
+  Kowalski's work: every animation guides the eye to the next piece of proof.
+- **One camera take** (the Codrops "scroll-driven world" idea): the page reads
+  as a single continuous move from the dusk sky, down through the work, into
+  the product screens and back out to dusk at the close.
+- **Identity:** saffron (bhagwa) dusk over Himalayan ridges, a nod to Udaan
+  ("flight") and to where he works from.
+- **Structure and polish** from getstage.co, which he approved twice.
+
 ## Principles
 
 1. **Two grounds.** A dark dusk ground for the cinematic moments (hero, work,
@@ -63,3 +83,6 @@ Radii: 999 (pills) · 24 (panels) · 16 (cards) · 12 (media).
 - Process: sticky; the active step follows scroll position.
 - Flow: wires draw (stroke-dashoffset) and pulses travel along them.
 - Numbers count up once in view.
+- Product tour: pinned; a scroll-driven camera over the real 2x captures.
+  Each beat goes wide and tilted, pushes in to a saffron-edged spotlight,
+  shows a callout, then pulls back out; screens swap on the wide frame.

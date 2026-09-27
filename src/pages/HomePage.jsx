@@ -1,6 +1,7 @@
 import Hero from './home/Hero.jsx'
 import Statement from './home/Statement.jsx'
 import Work from './home/Work.jsx'
+import Tour from './home/Tour.jsx'
 import Connect from './home/Connect.jsx'
 import Testimonials from './home/Testimonials.jsx'
 import Process from './home/Process.jsx'
@@ -28,6 +29,7 @@ export default function HomePage() {
       <Hero />
       <Statement />
       <Work />
+      <Tour />
       <Connect />
       <Testimonials />
       <Process />

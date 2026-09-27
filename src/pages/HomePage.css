@@ -641,6 +641,269 @@
 }
 
 /* ============================================================
+   2b — Product tour (night), pinned: a scroll-driven camera over the
+   real screens. Desktop with motion only; the Work cards stand in
+   everywhere else.
+   ============================================================ */
+
+.tour {
+  position: relative;
+  height: 600vh;
+  padding: 0;
+}
+
+.tour-pin {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  min-height: 680px;
+  overflow: hidden;
+}
+
+.tour .container {
+  max-width: calc(1400px + var(--container-pad) * 2);
+}
+
+.tour-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.6fr);
+  align-items: center;
+  gap: clamp(2rem, 4vw, 4.5rem);
+  width: 100%;
+  padding-top: var(--nav-h);
+}
+
+.tour-copy .h2 {
+  margin-top: 1.25rem;
+  color: #fff;
+}
+
+.tour-tools {
+  list-style: none;
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 2rem;
+}
+
+.tour-tools li {
+  padding: 0.55rem 0 0.55rem 1rem;
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  opacity: 0.42;
+  transition: opacity 0.4s ease, border-color 0.4s ease;
+}
+
+.tour-tools li.is-on {
+  opacity: 1;
+  border-left-color: var(--accent);
+}
+
+.tour-tool-name {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.tour-tool-sub {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.tour-caption {
+  min-height: 4.6em;
+  margin-top: 1.75rem;
+}
+
+.tour-caption p {
+  font-size: clamp(1.2rem, 1.7vw, 1.55rem);
+  line-height: 1.35;
+  letter-spacing: -0.025em;
+  color: #fff;
+}
+
+.tour-progress {
+  display: flex;
+  gap: 4px;
+  margin-top: 1.25rem;
+}
+
+.tour-bar {
+  position: relative;
+  flex: 1;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.tour-bar.is-gap {
+  margin-left: 10px;
+}
+
+.tour-bar.is-done {
+  background: var(--accent);
+}
+
+.tour-bar i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.tour-link {
+  margin-top: 1.75rem;
+  color: #fff;
+}
+
+.tour-link:hover {
+  color: var(--peach);
+}
+
+.tour-stage {
+  position: relative;
+}
+
+.tour-window {
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #111;
+  transform-origin: 50% 60%;
+  box-shadow:
+    0 70px 130px -45px rgba(0, 0, 0, 0.9),
+    0 0 160px -60px rgba(245, 135, 30, 0.5);
+}
+
+.tour-bar-top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding-inline: 14px;
+  background: #171614;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.tour-dots {
+  display: flex;
+  gap: 7px;
+}
+
+.tour-dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3a3633;
+}
+
+.tour-url {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 14px;
+  border-radius: 7px;
+  background: #0f0e0d;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.tour-view {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #0c0c0d;
+}
+
+.tour-layer {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.tour-shot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.tour-shot.is-on {
+  opacity: 1;
+}
+
+/* The spotlight: a saffron-edged cut-out, with everything around it
+   dimmed by one enormous spread shadow. It scales with the capture. */
+.tour-spot {
+  position: absolute;
+  border-radius: 10px;
+  pointer-events: none;
+  box-shadow:
+    0 0 0 2px rgba(245, 135, 30, 0.95),
+    0 0 28px rgba(245, 135, 30, 0.5),
+    0 0 0 4000px rgba(8, 6, 5, 0.55);
+}
+
+.tour-callout {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: 31%;
+  padding: 0.85rem 1rem 0.95rem;
+  border-radius: 14px;
+  background: rgba(20, 19, 18, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 50px -18px rgba(0, 0, 0, 0.8);
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+}
+
+.tour-callout-tag {
+  width: fit-content;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #1f0d00;
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.tour-callout-text {
+  line-height: 1.4;
+  color: #fff;
+}
+
+.tour-note {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+/* Which stands in for which: the tour on wide screens with motion, the
+   demo cards everywhere else. */
+@media (max-width: 1000px), (prefers-reduced-motion: reduce) {
+  .tour {
+    display: none;
+  }
+}
+
+@media (min-width: 1001px) and (prefers-reduced-motion: no-preference) {
+  .work .cards {
+    display: none;
+  }
+}
+
+/* ============================================================
    2c — How it connects (paper)
    ============================================================ */
 

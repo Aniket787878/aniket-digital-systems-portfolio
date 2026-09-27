@@ -1,13 +1,12 @@
 import Hero from './home/Hero.jsx'
 import ProofStrip from './home/ProofStrip.jsx'
 import Work from './home/Work.jsx'
-import Testimonials from './home/Testimonials.jsx'
 import Capabilities from './home/Capabilities.jsx'
 import Process from './home/Process.jsx'
 import Pricing from './home/Pricing.jsx'
+import Testimonials from './home/Testimonials.jsx'
 import CtaBand from './home/CtaBand.jsx'
 import Faq from './home/Faq.jsx'
-import Gallery from './home/Gallery.jsx'
 
 /* The page's stylesheet stays a single file, imported once, here.
 
@@ -19,7 +18,7 @@ import Gallery from './home/Gallery.jsx'
 import './HomePage.css'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 
-/* Ten bands, in render order. Each is one file in ./home, and each maps
+/* Nine bands, in render order. Each is one file in ./home, and each maps
    to the band of the same name in HomePage.css. */
 export default function HomePage() {
   useDocumentTitle('Aniket — Digital Systems Builder')
@@ -28,13 +27,12 @@ export default function HomePage() {
       <Hero />
       <ProofStrip />
       <Work />
-      <Testimonials />
       <Capabilities />
       <Process />
       <Pricing />
+      <Testimonials />
       <CtaBand />
       <Faq />
-      <Gallery />
     </div>
   )
 }

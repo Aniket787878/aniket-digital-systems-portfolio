@@ -26,7 +26,7 @@ const INPUTS = [
 ]
 
 const OUTPUTS = [
-  { icon: 'database', label: 'CRM record', sub: 'created' },
+  { icon: 'database', label: 'Client record', sub: 'created' },
   { icon: 'whatsapp', label: 'Auto-reply', sub: 'in seconds' },
   { icon: 'bell', label: 'Team alert', sub: 'right person' },
   { icon: 'chart', label: 'Weekly report', sub: 'on its own' }
@@ -108,7 +108,7 @@ export default function FlowGraph({ className = '' }) {
           <Icon name="spark" size={22} />
         </span>
         <strong>Your system</strong>
-        <span>n8n · Claude · Postgres</span>
+        <span>On your own accounts</span>
       </m.div>
 
       <div className="flow-col flow-col-out">

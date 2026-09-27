@@ -1,99 +1,147 @@
 import { Link } from 'react-router-dom'
 import { m } from 'motion/react'
 import { projects, images } from '../../data.js'
-import SystemDiagram from '../../components/SystemDiagram.jsx'
 import { fadeUp, stagger, revealStagger } from '../../motion/variants.js'
 import { spotlightMove } from '../../motion/interactions.js'
 import SplitText from '../../motion/SplitText.jsx'
 
 /* ---------------------------------------------------------------
-   2 — Selected work. Real case studies, each headed by a schematic
-   of the system it describes; the card is the link.
+   2 — Selected work, matched to the approved redesign concept.
+
+   The split is honest, not cosmetic: the two client platforms have no
+   shareable screenshots (client records), so they lead as large
+   "flagship" cards carrying their real figures, stack and a system map.
+   The three self-built tools DO have real screenshots of their running
+   UI (images.projects), so they sit in a demo grid showing that UI.
    --------------------------------------------------------------- */
 export default function Work() {
+  const platforms = projects.filter((p) => !images.projects[p.slug])
+  const tools = projects.filter((p) => images.projects[p.slug])
+
   return (
     <section className="work">
       <div className="container">
         <m.div className="split-head" {...revealStagger}>
           <m.div variants={stagger}>
-            <m.p className="kicker" variants={fadeUp}>Selected Work</m.p>
+            <m.p className="kicker" variants={fadeUp}>Flagship builds</m.p>
             <SplitText
               as="h2"
               className="split-title"
-              text="Problems, turned into systems"
+              text="Two production platforms, built solo"
               standalone={false}
             />
           </m.div>
           <m.p className="split-lede" variants={fadeUp}>
-            Production systems built and shipped end to end by one person — the
-            app, the backend, the payments, the AI and the infrastructure. The
-            client systems run real businesses every day; Signet, Relay and
-            Prospector are tools I built to work the same ideas in the open.
+            Not a service list &mdash; proof. The whole stack, from the
+            client&rsquo;s screen to the self-hosted database, designed and
+            shipped end to end by one person.
           </m.p>
         </m.div>
 
-        {/* The first card is featured full-width in a horizontal split, which
-            leads with the flagship real-client system and — not incidentally —
-            resolves the orphan an odd number of cards would leave in a plain
-            two-column grid (5 cards → 2 + 2 + 1). */}
-        <m.ul className="work-grid" {...revealStagger}>
-          {projects.map((project, i) => {
-            const featured = i === 0
-            /* The three self-built tools have real screenshots of their
-               running UI in data.js (images.projects); the two client
-               platforms do not — client records can't be shown — so those
-               keep the honest schematic. */
-            const shot = images.projects[project.slug]
-            return (
-              <m.li
-                key={project.slug}
-                className={`work-item${featured ? ' work-item-featured' : ''}`}
-                variants={fadeUp}
-              >
-                <Link
-                  to={`/projects/${project.slug}`}
-                  className={`work-card spotlight${featured ? ' work-card-featured' : ''}`}
-                  onPointerMove={spotlightMove}
-                >
-                  {shot ? (
-                    <div className="media work-media">
-                      <img
-                        src={shot}
-                        alt=""
-                        className="media-img"
-                        loading="lazy"
-                      />
-                    </div>
-                  ) : (
-                    <SystemDiagram className="work-media" variant={project.diagram} />
-                  )}
-                  <div className="work-body">
-                    <div className="work-meta">
-                      <span className="work-index">{project.index}</span>
-                      {featured && <span className="work-tag work-tag-flag">Flagship build</span>}
-                      {project.private && (
-                        <span className="work-tag">Private client</span>
-                      )}
-                      {/* Optional, like every other field in data.js — an entry with
-                          no stated timeline rendered an empty pill here. ProjectsPage
-                          already guarded it; this did not. */}
-                      {project.timeline && (
-                        <span className="work-tag">{project.timeline}</span>
-                      )}
-                    </div>
-                    <h3 className="work-title">{project.title}</h3>
-                    <p className="work-summary">{project.summary}</p>
-                    <span className="arrow-link">
-                      View system
-                      <span className="arrow" aria-hidden="true">
-                        &rarr;
-                      </span>
-                    </span>
+        <m.div className="work-flagships" {...revealStagger}>
+          {platforms.map((project, i) => (
+            <m.article
+              key={project.slug}
+              className={`work-flagship spotlight${i % 2 ? ' work-flagship-alt' : ''}`}
+              onPointerMove={spotlightMove}
+              variants={fadeUp}
+            >
+              <div className="work-flagship-body">
+                <div className="work-meta">
+                  <span className="work-index">{project.index}</span>
+                  <span className="work-tag work-tag-flag">Production platform</span>
+                </div>
+                <h3 className="work-flagship-title">{project.title}</h3>
+                <p className="work-flagship-summary">{project.summary}</p>
+
+                {project.metrics && (
+                  <div className="work-metrics">
+                    {project.metrics.slice(0, 2).map((metric) => (
+                      <div key={metric.label} className="work-metric">
+                        <span className="work-metric-n">{metric.n}</span>
+                        <span className="work-metric-label">{metric.label}</span>
+                      </div>
+                    ))}
                   </div>
+                )}
+
+                <div className="work-stack">
+                  {project.stack.slice(0, 6).map((tech) => (
+                    <span key={tech} className="chip">{tech}</span>
+                  ))}
+                </div>
+
+                <Link to={`/projects/${project.slug}`} className="arrow-link work-flagship-link">
+                  Read the case study
+                  <span className="arrow" aria-hidden="true">&rarr;</span>
                 </Link>
-              </m.li>
-            )
-          })}
+              </div>
+
+              <div className="work-flagship-panel">
+                <span className="work-panel-label">System map</span>
+                <div className="work-flow">
+                  {project.flow.map((stage) => (
+                    <span key={stage} className="work-flow-stage">{stage}</span>
+                  ))}
+                </div>
+                {project.system && project.system[0] && (
+                  <p className="work-panel-note">{project.system[0]}</p>
+                )}
+              </div>
+            </m.article>
+          ))}
+        </m.div>
+
+        <m.div className="split-head work-tools-head" {...revealStagger}>
+          <m.div variants={stagger}>
+            <m.p className="kicker" variants={fadeUp}>Working demos</m.p>
+            <SplitText
+              as="h2"
+              className="split-title"
+              text="Tools I built to prove the mechanism"
+              standalone={false}
+            />
+          </m.div>
+          <m.p className="split-lede" variants={fadeUp}>
+            Self-initiated, running apps &mdash; not mockups. Every screenshot
+            below is the real UI. Each rebuilds from scratch a thing the big
+            platforms sell as a black box.
+          </m.p>
+        </m.div>
+
+        <m.ul className="work-tools" {...revealStagger}>
+          {tools.map((project) => (
+            <m.li key={project.slug} className="work-tool-item" variants={fadeUp}>
+              <Link
+                to={`/projects/${project.slug}`}
+                className="work-tool spotlight"
+                onPointerMove={spotlightMove}
+              >
+                <div className="media work-tool-shot">
+                  <img
+                    src={images.projects[project.slug]}
+                    alt=""
+                    className="media-img"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="work-tool-body">
+                  <span className="work-tag">Working demo</span>
+                  <h3 className="work-tool-title">{project.title}</h3>
+                  <p className="work-tool-summary">{project.summary}</p>
+                  <div className="work-stack">
+                    {project.stack.slice(0, 3).map((tech) => (
+                      <span key={tech} className="chip">{tech}</span>
+                    ))}
+                  </div>
+                  <span className="arrow-link work-tool-link">
+                    View the build
+                    <span className="arrow" aria-hidden="true">&rarr;</span>
+                  </span>
+                </div>
+              </Link>
+            </m.li>
+          ))}
         </m.ul>
       </div>
     </section>

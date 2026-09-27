@@ -1831,3 +1831,166 @@ a:hover {
     border-radius: var(--radius-sm);
   }
 }
+
+/* ============================================================
+   Animated flow — an illustrative motion graphic of a project's
+   stages (components/AnimatedFlow.jsx). CSS-only loop, so it plays
+   in the preview pane where rAF does not fire; frozen to a resting
+   lit state under reduced motion. Tokens only — no new values.
+   ============================================================ */
+
+.aflow {
+  /* Loop length scales with the number of stages so a long flow does not
+     race and a short one does not crawl. */
+  --aflow-dur: calc(var(--aflow-count, 5) * 0.8s);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: clamp(1.75rem, 4vw, 2.75rem) clamp(1rem, 3vw, 2.5rem);
+  overflow: hidden;
+}
+
+.aflow-track {
+  position: relative;
+}
+
+/* The connecting rail sits behind the nodes, inset by half a column so it
+   runs between the first and last dot centres rather than the full width. */
+.aflow-line {
+  position: absolute;
+  top: 11px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  margin-inline: calc(100% / var(--aflow-count) / 2);
+  background: var(--line-strong);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.aflow-line-fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  animation: aflow-fill var(--aflow-dur) var(--ease-out) infinite;
+}
+
+.aflow-nodes {
+  position: relative;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(var(--aflow-count), minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.aflow-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+  min-width: 0;
+}
+
+.aflow-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 2px solid var(--line-strong);
+  animation: aflow-ping var(--aflow-dur) var(--ease-out) infinite;
+  animation-delay: calc(var(--aflow-i) / var(--aflow-count) * var(--aflow-dur));
+}
+
+.aflow-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--muted);
+  animation: aflow-lit var(--aflow-dur) var(--ease-out) infinite;
+  animation-delay: calc(var(--aflow-i) / var(--aflow-count) * var(--aflow-dur));
+}
+
+@keyframes aflow-fill {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  80% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+@keyframes aflow-ping {
+  0%,
+  100% {
+    background: var(--surface-2);
+    border-color: var(--line-strong);
+    box-shadow: 0 0 0 0 rgba(245, 135, 30, 0);
+  }
+  8% {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 7px rgba(245, 135, 30, 0.18);
+  }
+  32% {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 0 rgba(245, 135, 30, 0);
+  }
+}
+
+@keyframes aflow-lit {
+  0%,
+  100% {
+    color: var(--muted);
+  }
+  8%,
+  24% {
+    color: var(--ink);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aflow-line-fill {
+    animation: none;
+    transform: scaleX(1);
+    opacity: 1;
+  }
+
+  .aflow-dot {
+    animation: none;
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+
+  .aflow-label {
+    animation: none;
+    color: var(--ink-soft);
+  }
+}
+
+@media (max-width: 620px) {
+  /* A six-stage row cannot stay horizontal on a phone; let the nodes wrap
+     into a flexible grid so labels stay legible. */
+  .aflow-nodes {
+    grid-template-columns: repeat(auto-fit, minmax(4.5rem, 1fr));
+    gap: var(--space-4) var(--space-2);
+  }
+
+  .aflow-line {
+    display: none;
+  }
+}
+
+/* Case page: the animated flow figure sits above the schematic. */
+.case-flow-figure {
+  margin-top: var(--space-7);
+}

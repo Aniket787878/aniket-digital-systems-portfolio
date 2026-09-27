@@ -134,7 +134,7 @@ export default function ProjectDetailPage() {
             muted
             loop
             playsInline
-            controls
+            controls={!autoPlay}
             preload="metadata"
             aria-label={`${film.kind === 'real' ? 'Walkthrough' : 'Schematic film'} of ${title}`}
           />

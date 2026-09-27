@@ -1,21 +1,19 @@
-import { useState } from 'react'
 import { m } from 'motion/react'
 import { explainers, explainersReady } from '../../data.js'
 import ScrollWords from '../../motion/ScrollWords.jsx'
-import Icon from '../../components/icons.jsx'
+import LoopVideo from '../../components/LoopVideo.jsx'
 import { reveal } from '../../motion/variants.js'
 
 const film = explainers.brand
 
 /* ---------------------------------------------------------------
    1b — Statement + the one-minute explainer. The problem, lit word by
-   word as it scrolls past, then the film that answers it. The film
-   waits behind its poster until asked to play: it has a story to
-   tell, so it starts at the start.
+   word as it scrolls past, then the film that answers it. No player:
+   the film plays itself, silent and looping, while it is on screen
+   (LoopVideo: poster only until it nears the viewport, and never
+   autoplays under reduced motion).
    --------------------------------------------------------------- */
 export default function Statement() {
-  const [playing, setPlaying] = useState(false)
-
   return (
     <section className="statement night">
       <div className="container statement-inner">
@@ -41,23 +39,14 @@ export default function Statement() {
         {explainersReady && (
           <m.figure className="explainer" {...reveal}>
             <div className="explainer-frame">
-              {playing ? (
-                <video src={film.src} poster={film.poster} controls autoPlay playsInline />
-              ) : (
-                <button
-                  type="button"
-                  className="explainer-poster"
-                  onClick={() => setPlaying(true)}
-                  aria-label={`Play: ${film.title}`}
-                >
-                  <img src={film.poster} alt="" loading="lazy" />
-                  <span className="explainer-play" aria-hidden="true">
-                    <Icon name="play" size={26} />
-                  </span>
-                </button>
-              )}
-            </div>
-            <figcaption className="explainer-caption">
+            <LoopVideo
+              src={film.src}
+              poster={film.poster}
+              className="explainer-video"
+              label={film.title}
+            />
+          </div>
+          <figcaption className="explainer-caption">
               <span>{film.title}</span>
               <span>The problem, the system, the result</span>
             </figcaption>

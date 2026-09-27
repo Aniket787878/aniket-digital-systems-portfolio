@@ -477,7 +477,10 @@
 
 .row-facts {
   display: flex;
-  flex-wrap: wrap;
+  /* Always two facts. No wrap: WebKit measures each a few px wider than
+     Chromium, which on a 375px phone pushed the second onto its own line
+     in Safari only. The labels wrap inside each fact instead. */
+  flex-wrap: nowrap;
   gap: 1rem clamp(2rem, 4vw, 3rem);
   padding-top: 0.25rem;
 }

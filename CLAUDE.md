@@ -162,3 +162,23 @@ leads", Gmail alert and auto-reply, an error-alert workflow, and a 09:30 IST
 reminder for leads unanswered after 24h (see `n8n/README.md`).
 `VITE_LEAD_WEBHOOK_URL`, if set, overrides the rewrite; set it for local dev,
 where the rewrite does not exist.
+
+## Models: Opus designs and writes the briefs, cheaper models execute
+
+- **Main session (Opus) = designer + prompt engineer.** It owns design direction
+  (look, feel, UX, design systems), decisions, resolving disagreements between
+  agents, merging, and final review. It writes the brief every subagent runs on.
+- **Subagents run on cheaper models. Always set the Agent `model` parameter
+  explicitly:** `haiku` for search, exploration and audits; `sonnet` for
+  implementation from a written brief, tests and verification; `opus` only for
+  genuinely judgement-heavy subagent work (security, clinical safety, design
+  direction), and say so when you use it.
+- **Invest in the brief, not the model.** State the goal and spec, the files the
+  agent owns and must not touch, concrete values (colours, sizes, timings,
+  states, motion, copy), house rules, acceptance checks (build, tests, contrast),
+  and the shape of a short final report.
+- **Design stays with Opus.** Hand design to a cheaper model only when the spec
+  is precise enough that it is executing, not deciding; Opus does a design pass
+  over the merged result.
+- **Parallel agents get separate worktrees and non-overlapping file ownership.**
+  Opus merges and resolves conflicts.

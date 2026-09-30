@@ -163,7 +163,7 @@ export default function AiShowcase() {
             One front desk. The whole <span className="stage-serif">day.</span>
           </h2>
           <p className="stage-lede">
-            It answers questions, books and moves appointments, sends reminders and follows up after visits, at eight in
+            It answers questions, books and moves appointments, and writes the reminders and after-visit follow-ups, at eight in
             the morning or ten at night, with nobody sitting at the desk.
           </p>
         </m.div>

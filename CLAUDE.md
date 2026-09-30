@@ -127,6 +127,12 @@ measure both at matching viewports before changing anything.
 
 - Files are mixed CRLF/LF. Match the file you are editing; don't reflow it.
 - Comments explain *why*, especially where the code looks wrong but isn't.
+- **Web scraping: Crawl4AI is the default** (Aniket's choice, 2026-09-30). Run
+  `bash scripts/setup-crawl4ai.sh` once per container, then `crawl <url>`
+  (clean markdown; `--out FILE`, `--raw`, and `--undetected` for sites that
+  block a normal headless browser). It runs inside the sandbox, so it only
+  reaches hosts the environment's network policy allows; for a host that
+  policy blocks, fall back to the Firecrawl connector and say so.
 - Verify before claiming. Screenshots may be unavailable — use geometry probes
   (`getBoundingClientRect`), `gl.readPixels`, computed-style diffs.
 - **Two traps in that probe environment.** Both have produced false bug reports:

@@ -167,8 +167,10 @@ measure both at matching viewports before changing anything.
   policy blocks, fall back to the Firecrawl connector and say so.
 - **Subagents: pick the cheapest model that can do the job** (Aniket's
   choice, 2026-09-30). Pass `model` on every launch: `haiku` for read-only
-  reviews of prepared material, `sonnet` for code, audits and creative
-  direction, Opus only for the lead session. Capture shared inputs (the
+  reviews of prepared material, `sonnet` for code, audits and research,
+  `opus` (Opus 5.5) for the lead session, for design and creative direction,
+  and for the Remotion films (`remotion/`): the visual work is where the
+  stronger model shows, so it is not the place to save. Capture shared inputs (the
   site, docs) once with a script and hand agents the path, so no two agents
   crawl the same thing; code-writing agents work in a worktree and never
   push.

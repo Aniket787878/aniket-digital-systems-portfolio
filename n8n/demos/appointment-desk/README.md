@@ -38,7 +38,7 @@ SOFTWARE.
 
 ## What it does, in plain words
 
-1. **Patient chats** (n8n Chat Trigger, or WhatsApp through MSG91 for one allowlisted number, or WhatsApp Business Cloud later, disabled).
+1. **Patient chats** in the n8n Chat Trigger. The two WhatsApp paths (MSG91 for one allowlisted number, and WhatsApp Business Cloud) are built but **disabled**; the demo runs on n8n chat only.
 2. A **keyword screen** checks for emergency wording (chest pain, can't breathe, self-harm and so on). If it hits, the patient gets a fixed "call 112 / go to the nearest emergency department" reply, the model is never called, and a row goes to the Handoffs sheet.
 3. Otherwise the **AI agent** takes over. It answers fees, hours, address, payment and cancellation questions from a small FAQ inside its system prompt, and uses Google Calendar tools to check free slots, book, reschedule, cancel and mark confirmed. After every booking action it writes a row to the "Bookings log" sheet.
 4. **Clinical questions** ("my knee is swollen, what should I take?") are refused, logged to the Handoffs sheet, and the patient is told a team member will follow up and to call 112 or their doctor if it is severe.
@@ -66,9 +66,9 @@ Added:
 - Google Sheets log of every booking action ("Bookings log") and of every handoff ("Handoffs").
 - Identity check before reschedule or cancel (mobile number must match the calendar event).
 
-## WhatsApp through MSG91 (allowlisted demo path)
+## WhatsApp through MSG91 (allowlisted path, disabled)
 
-A third entry path lets the demo run on WhatsApp through an existing MSG91 account, without exposing it to the public.
+A third entry path lets the demo run on WhatsApp through an existing MSG91 account, without exposing it to the public. **It is disabled** (the inbound webhook and the MSG91 send node are switched off, 2026-09-30): the demo is shown through n8n chat and screenshots only. To use it, enable those two nodes and follow the steps below.
 
 - **Inbound:** node "MSG91 inbound webhook" (POST). Point MSG91's inbound-message webhook at `https://<your-n8n-host>/webhook/appointment-desk-msg91-REPLACE_WITH_RANDOM_SUFFIX` once the workflow is active. The path has a random suffix so it cannot be guessed. n8n answers MSG91 with HTTP 200 straight away in every case.
 - **Hard allowlist:** the next node, "Sender allowlist (edit ALLOWED_SENDER here)", strips the sender to digits and compares it with one constant, `ALLOWED_SENDER = "919136582842"`, in the first lines of the code. Any other sender, or any non-text message (image, document, contact, delivery report), stops there: no reply, no model call, and nothing written anywhere, because the node outputs only `{allowed:false}`. To use another number, change that one line.

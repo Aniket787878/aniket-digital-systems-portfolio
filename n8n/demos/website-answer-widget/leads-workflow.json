@@ -1,0 +1,272 @@
+{
+  "name": "Portfolio demo · Website Answer Widget leads",
+  "nodes": [
+    {
+      "id": "beed462f-4071-4f1b-a8c3-a0662b5a85ea",
+      "name": "Widget lead form",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "website-answer-widget-lead-REPLACE_WITH_RANDOM_SUFFIX",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "REPLACE_WITH_WEBHOOK_ID"
+    },
+    {
+      "id": "4a190dd2-86c1-427d-acec-9fcb1e3a453c",
+      "name": "Check and tidy the lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "jsCode": "// Plain text only, short fields, a phone number with 8 to 15 digits.\n// Anything else is rejected before it reaches the sheet.\nconst b = $input.first().json.body || {};\nconst txt = (v, n) => String(v ?? \"\").replace(/[<>]/g, \"\").replace(/\\s+/g, \" \").trim().slice(0, n);\nconst name = txt(b.name, 80);\nconst phone = String(b.phone ?? \"\").replace(/[^0-9+]/g, \"\").slice(0, 16);\nconst digits = phone.replace(/\\D/g, \"\").length;\nconst valid = name.length >= 2 && digits >= 8 && digits <= 15;\nreturn [{ json: { valid, name, phone, question: txt(b.question, 300), page: txt(b.page, 120) } }];"
+      }
+    },
+    {
+      "id": "6f7df06e-9051-402a-8127-a3a1e9896967",
+      "name": "Valid lead?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "v1",
+              "leftValue": "={{ $json.valid }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "rightValue": ""
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "13a3d5ec-3394-4aef-a19b-b3354f857450",
+      "name": "Add to Leads sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        660,
+        -100
+      ],
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "REPLACE_WITH_DEMO_LEADS_SHEET_ID"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Leads"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $now.toISO() }}",
+            "name": "={{ $json.name }}",
+            "phone": "={{ $json.phone }}",
+            "question": "={{ $json.question }}",
+            "page": "={{ $json.page }}",
+            "source": "Website Answer Widget"
+          },
+          "schema": [
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "question",
+              "displayName": "question",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "page",
+              "displayName": "page",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "source",
+              "displayName": "source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "f48308b0-b9b7-42c8-a824-567190416756",
+      "name": "Reply: saved",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        880,
+        -100
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"ok\": true }",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "23f2b961-ddb0-4cb9-8315-ccfd1524a739",
+      "name": "Reply: check the details",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        660,
+        120
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"ok\": false, \"error\": \"Please add your name and a phone number.\" }",
+        "options": {
+          "responseCode": 400
+        }
+      }
+    },
+    {
+      "id": "754627a5-cf7b-4968-809c-6b3ca0f6dff9",
+      "name": "Sticky Note 34929d10",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        -320
+      ],
+      "parameters": {
+        "content": "## Website Answer Widget: lead capture\nWhen the chat widget cannot answer, it offers a short form (name, phone). This webhook checks the fields and adds a row to the **Leads** tab of a dummy-data sheet, so the front desk can call back in the morning.\n\nAnswers come from **Portfolio demo · Practice Knowledge Assistant**. Demo only, dummy data, inactive.",
+        "color": 4,
+        "width": 520,
+        "height": 220
+      }
+    }
+  ],
+  "connections": {
+    "Widget lead form": {
+      "main": [
+        [
+          {
+            "node": "Check and tidy the lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check and tidy the lead": {
+      "main": [
+        [
+          {
+            "node": "Valid lead?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid lead?": {
+      "main": [
+        [
+          {
+            "node": "Add to Leads sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reply: check the details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to Leads sheet": {
+      "main": [
+        [
+          {
+            "node": "Reply: saved",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Portfolio demo (dummy data, inactive). The chat widget's 'leave your number' form posts here; the lead is checked and added to the Leads tab of a demo sheet."
+  }
+}

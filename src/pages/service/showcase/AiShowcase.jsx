@@ -1,390 +1,334 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { Link } from 'react-router-dom'
-import { m, AnimatePresence, useReducedMotion } from 'motion/react'
+import { m, AnimatePresence, useInView, useReducedMotion, useScroll, useTransform } from 'motion/react'
 import './stage.css'
 import './ai.css'
-import { EXCHANGES, OPENING_LINE, TOOL_CARDS } from './ai/script.js'
-import ToolIcon from './ai/icons.jsx'
-
-const EASE = [0.22, 1, 0.36, 1]
-const WORD_MS = 28
-const CLOCK_START = 9 * 3600 + 41 * 60 // 09:41:00, a fake running clock for the rail only
-
-function formatClock(totalSeconds) {
-  const s = totalSeconds % 86400
-  const h = String(Math.floor(s / 3600)).padStart(2, '0')
-  const m2 = String(Math.floor((s % 3600) / 60)).padStart(2, '0')
-  const sec = String(Math.floor(s % 60)).padStart(2, '0')
-  return `${h}:${m2}:${sec}`
-}
-
-/* Reply text into paragraphs / "- " bullet lists, the only markdown-ish
-   shape the recorded replies use. */
-function formatReply(text) {
-  const blocks = []
-  let bullets = null
-  for (const line of text.split('\n')) {
-    if (line.startsWith('- ')) {
-      bullets = bullets || []
-      bullets.push(line.slice(2))
-    } else {
-      if (bullets) {
-        blocks.push({ type: 'list', items: bullets })
-        bullets = null
-      }
-      if (line.trim() !== '') blocks.push({ type: 'p', text: line })
-    }
-  }
-  if (bullets) blocks.push({ type: 'list', items: bullets })
-  return blocks
-}
-
-/* Renders up to `wordCount` words of the reply, so mid-stream text keeps
-   the same paragraph/bullet shape as the finished reply. */
-function StreamedReply({ text, wordCount }) {
-  const blocks = useMemo(() => formatReply(text), [text])
-  let remaining = wordCount
-  const out = []
-  for (const [bi, block] of blocks.entries()) {
-    if (remaining <= 0) break
-    if (block.type === 'p') {
-      const words = block.text.split(' ')
-      const shown = words.slice(0, remaining).join(' ')
-      remaining -= words.length
-      out.push(<p key={bi}>{shown}</p>)
-    } else {
-      const items = []
-      for (const item of block.items) {
-        if (remaining <= 0) break
-        const words = item.split(' ')
-        const shown = words.slice(0, remaining).join(' ')
-        remaining -= words.length
-        items.push(shown)
-      }
-      out.push(
-        <ul key={bi}>
-          {items.map((it, ii) => (
-            <li key={ii}>{it}</li>
-          ))}
-        </ul>
-      )
-    }
-  }
-  return <>{out}</>
-}
-
-function FullReply({ text }) {
-  const blocks = formatReply(text)
-  return (
-    <>
-      {blocks.map((block, i) =>
-        block.type === 'p' ? (
-          <p key={i}>{block.text}</p>
-        ) : (
-          <ul key={i}>
-            {block.items.map((it, ii) => (
-              <li key={ii}>{it}</li>
-            ))}
-          </ul>
-        )
-      )}
-    </>
-  )
-}
-
-function wordCountOf(text) {
-  return text.split('\n').filter((l) => l.trim() !== '').reduce((n, l) => n + l.replace(/^- /, '').split(' ').length, 0)
-}
+import { CLOCK_MS, DAY_END, DAY_LABEL, DAY_START, MOMENTS, SCHEDULES, TALLY, minutesOf } from './ai/day.js'
+import FlowCanvas from './ai/FlowCanvas.jsx'
+import { NODES } from './ai/graph.js'
+import Chat from './ai/Chat.jsx'
+import Glyph from './ai/icons.jsx'
 
 /* --------------------------------------------------------------
-   "Ask the front desk": a replay, word by word, of real recorded
-   replies from the Appointment Desk demo (n8n/demos/appointment-desk),
-   with a "What it did" rail that lights up as each reply's tool calls
-   are replayed. No network calls, nothing generated live, see
-   ai/script.js for the source of every line.
+   "A day at the front desk": seven recorded, successful runs from
+   the demo clinic, replayed as one day. The whole piece is a pure
+   function of (moment, t): one animation-frame clock advances t, and
+   the chat, the wires, the tool results, the day clock and the tally
+   are all read off the schedule in ai/day.js. Pausing stops t;
+   reduced motion pins t at the end of the moment.
    -------------------------------------------------------------- */
+
+const EASE = [0.22, 1, 0.36, 1]
+const N = MOMENTS.length
+const reveal = {
+  hidden: { opacity: 0, y: 12, filter: 'blur(10px)' },
+  show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.9, ease: EASE } },
+}
+
+const WIDE = '(min-width: 1024px)'
+const subscribeWide = (cb) => {
+  const mq = window.matchMedia(WIDE)
+  mq.addEventListener('change', cb)
+  return () => mq.removeEventListener('change', cb)
+}
+const useWide = () =>
+  useSyncExternalStore(
+    subscribeWide,
+    () => window.matchMedia(WIDE).matches,
+    () => true
+  )
+
+const hhmm = (min) => `${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`
+const along = (min) => `${((min - DAY_START) / (DAY_END - DAY_START)) * 100}%`
+const easeOut = (x) => 1 - Math.pow(1 - x, 3)
+
+/* Everything the flow shows at time t of moment idx. */
+function derive(idx, t) {
+  const lit = new Set()
+  const flash = new Set()
+  const results = {}
+  const pulses = []
+  for (const p of SCHEDULES[idx].pulses) {
+    if (t < p.start) continue
+    lit.add(p.edge)
+    if (t < p.end) pulses.push(p)
+    else if (t < p.end + 1100) flash.add(p.toDesk ? 'desk' : p.edge)
+    if (p.result && t >= p.end) results[p.edge] = p.result
+  }
+  return { lit, flash, results, pulses, t, channel: MOMENTS[idx].channel, active: t >= CLOCK_MS }
+}
+
+const doneThrough = (idx, t) => (t >= SCHEDULES[idx].doneAt ? idx : idx - 1)
+
+const HOUR_TICKS = [8, 11, 14, 17, 20, 23]
+
 export default function AiShowcase() {
   const reduce = useReducedMotion()
-  const chatRef = useRef(null)
-  const timers = useRef([])
-  const liveRegionRef = useRef(null)
+  const wide = useWide()
+  const sectionRef = useRef(null)
+  const tlRef = useRef(null)
+  const stageRef = useRef(null)
+  const inView = useInView(stageRef, { amount: 0.35 })
 
-  const [messages, setMessages] = useState([{ role: 'clinic', id: 'greet', text: OPENING_LINE }])
-  const [typing, setTyping] = useState(false)
-  const [streamId, setStreamId] = useState(null)
-  const [streamWords, setStreamWords] = useState(0)
-  const [played, setPlayed] = useState({})
-  const clockRef = useRef(CLOCK_START) // fake running clock for the rail's log lines only
-  const [toolState, setToolState] = useState(() =>
-    Object.fromEntries(TOOL_CARDS.map((t) => [t.key, { status: 'idle', logs: [] }]))
-  )
-  const [wire, setWire] = useState(null) // { key, token }
-  const [announce, setAnnounce] = useState('')
-  const seqRef = useRef(0) // monotonic counter: unique ids and a little timing jitter, no Date.now/Math.random in render scope
-  const nextSeq = () => {
-    seqRef.current += 1
-    return seqRef.current
-  }
+  const [play, setPlay] = useState({ idx: 0, from: 0, t: 0 })
+  const [userPlaying, setUserPlaying] = useState(true)
+  const [hover, setHover] = useState(false)
+  const [kbFocus, setKbFocus] = useState(false)
 
-  const streaming = streamId !== null || typing
+  const running = !reduce && userPlaying && inView && !hover && !kbFocus
+  const t = reduce ? Infinity : play.t
+  const { idx } = play
+  const moment = MOMENTS[idx]
+  const sched = SCHEDULES[idx]
 
-  const clearTimers = () => {
-    timers.current.forEach((t) => clearTimeout(t))
-    timers.current = []
-  }
-  const after = (ms, fn) => {
-    const t = setTimeout(fn, ms)
-    timers.current.push(t)
-    return t
-  }
-
-  useEffect(() => () => clearTimers(), [])
-
-  // Auto-scroll the chat area only (never the page) on new content.
   useEffect(() => {
-    const el = chatRef.current
-    if (el) el.scrollTop = el.scrollHeight
-  }, [messages, streamWords, typing])
-
-  function fireTool(call, delay) {
-    after(delay, () => {
-      // 1-4s of fake elapsed time per action; the low bits of the sequence
-      // counter give a bit of variety without calling Math.random.
-      clockRef.current += 1 + (nextSeq() % 4)
-      const ts = formatClock(clockRef.current)
-      setToolState((prev) => {
-        const card = prev[call.key]
-        const logs = [{ line: call.line, ts }, ...card.logs].slice(0, 3)
-        return { ...prev, [call.key]: { status: 'lit', logs } }
+    if (!running) return undefined
+    let raf
+    let last = performance.now()
+    const frame = (now) => {
+      const dt = Math.min(100, now - last)
+      last = now
+      setPlay((s) => {
+        const next = s.t + dt
+        if (next < SCHEDULES[s.idx].total) return { ...s, t: next }
+        return { idx: (s.idx + 1) % N, from: s.idx, t: 0 }
       })
-      if (!reduce) setWire({ key: call.key, token: nextSeq() })
-      after(2500, () => {
-        setToolState((prev) => ({ ...prev, [call.key]: { ...prev[call.key], status: 'done' } }))
-      })
-      if (!reduce) after(700, () => setWire(null))
-    })
+      raf = requestAnimationFrame(frame)
+    }
+    raf = requestAnimationFrame(frame)
+    return () => cancelAnimationFrame(raf)
+  }, [running])
+
+  // On narrow screens the timeline scrolls sideways inside itself: keep
+  // the current moment in view (this never scrolls the page).
+  useEffect(() => {
+    const box = tlRef.current
+    const dot = box?.querySelectorAll('.ai-tl-dot')[idx]
+    if (!box || !dot || box.scrollWidth <= box.clientWidth) return
+    const left = dot.offsetLeft - box.clientWidth / 2
+    box.scrollTo({ left, behavior: reduce ? 'auto' : 'smooth' })
+  }, [idx, reduce])
+
+  // A paused jump shows the whole moment at once; a playing one plays it.
+  const jump = (i) => setPlay((s) => ({ idx: i, from: s.idx, t: running ? 0 : Infinity }))
+
+  // Keyboard focus pauses the replay (so it holds still while read);
+  // mouse clicks do not, and neither does the play button itself.
+  const onFocus = (e) => {
+    if (e.target.matches(':focus-visible') && !e.target.closest('.ai-play')) setKbFocus(true)
+  }
+  const onBlur = (e) => {
+    if (!sectionRef.current?.contains(e.relatedTarget)) setKbFocus(false)
   }
 
-  function playExchange(exchange) {
-    if (streaming) return
-    const visitorMsg = { role: 'visitor', id: `${exchange.id}-in-${nextSeq()}`, text: exchange.input }
-    setMessages((prev) => [...prev, visitorMsg])
-    setTyping(true)
+  // The flow window starts tilted and settles a little as it arrives.
+  const { scrollYProgress } = useScroll({ target: stageRef, offset: ['start end', 'center center'] })
+  const rotateX = useTransform(scrollYProgress, [0, 1], [8, 4])
+  const rotateY = useTransform(scrollYProgress, [0, 1], [-10, -5])
 
-    // 700-1100ms typing pause (300ms under reduced motion, no stream after).
-    const typingMs = reduce ? 300 : 700 + (nextSeq() % 5) * 80
-    after(typingMs, () => {
-      setTyping(false)
-      const replyId = `${exchange.id}-out-${nextSeq()}`
-      const total = wordCountOf(exchange.reply)
+  // Day clock: rolls from the previous moment's time to this one's.
+  const cur = minutesOf(moment.time)
+  const prev = minutesOf(MOMENTS[play.from].time)
+  const k = easeOut(Math.min(1, t / CLOCK_MS))
+  const clock = Math.round(prev + (cur - prev) * k)
 
-      if (exchange.safetyScreen) {
-        setMessages((prev) => [...prev, { role: 'tag', id: `${replyId}-tag`, text: 'Safety screen · fixed reply, AI not used' }])
-      }
+  const flow = derive(idx, t)
+  const through = doneThrough(idx, t)
+  const tally = { q: 0, b: 0, r: 0, f: 0 }
+  for (let i = 0; i <= through; i++) for (const [key, v] of Object.entries(MOMENTS[i].tally)) tally[key] += v
+  const recent = MOMENTS.slice(0, through + 1).slice(-3).reverse()
 
-      if (reduce) {
-        setMessages((prev) => [...prev, { role: 'clinic', id: replyId, text: exchange.reply, done: true }])
-        exchange.tools.forEach((call) => fireTool(call, 0))
-        setPlayed((p) => ({ ...p, [exchange.id]: true }))
-        setAnnounce(exchange.reply)
-        return
-      }
-
-      setMessages((prev) => [...prev, { role: 'clinic', id: replyId, text: exchange.reply, done: false }])
-      setStreamId(replyId)
-      setStreamWords(0)
-
-      // Tools fire while the reply streams, staggered if there is more than one.
-      exchange.tools.forEach((call, i) => fireTool(call, 260 + i * 550))
-
-      let word = 0
-      const tick = () => {
-        word += 1
-        setStreamWords(word)
-        if (word < total) {
-          after(WORD_MS, tick)
-        } else {
-          setMessages((prev) => prev.map((m2) => (m2.id === replyId ? { ...m2, done: true } : m2)))
-          setStreamId(null)
-          setPlayed((p) => ({ ...p, [exchange.id]: true }))
-          setAnnounce(exchange.reply)
-        }
-      }
-      after(WORD_MS, tick)
-    })
-  }
-
-  function startOver() {
-    clearTimers()
-    setMessages([{ role: 'clinic', id: 'greet', text: OPENING_LINE }])
-    setTyping(false)
-    setStreamId(null)
-    setStreamWords(0)
-    setPlayed({})
-    clockRef.current = CLOCK_START
-    setToolState(Object.fromEntries(TOOL_CARDS.map((t) => [t.key, { status: 'idle', logs: [] }])))
-    setWire(null)
-    setAnnounce('')
-  }
-
-  const visibleExchanges = EXCHANGES.filter((e) => !e.requires || played[e.requires])
-  const wireCardIndex = wire ? TOOL_CARDS.findIndex((t) => t.key === wire.key) : -1
-  const wireY = wireCardIndex >= 0 ? 12 + wireCardIndex * 26 : 0
+  const used = [moment.channel, ...new Set(moment.turns.flatMap((tn) => tn.tools.map((x) => x.node)))]
+  const status = reduce ? 'replay' : running ? 'replaying' : 'paused'
+  const motionProps = reduce ? {} : { initial: 'hidden', whileInView: 'show', viewport: { once: true, amount: 0.25 } }
 
   return (
-    <section className="stage ai-desk" aria-labelledby="ai-desk-title" style={{ '--glow-x': '40%', '--glow-y': '55%' }}>
+    <section
+      className="stage ai-day"
+      aria-labelledby="ai-day-title"
+      ref={sectionRef}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      style={{ '--glow-x': '62%', '--glow-y': '58%' }}
+    >
       <div className="stage-glow" aria-hidden="true" />
-      <div className="container ai-desk-in">
-        <div className="ai-desk-head">
+      <div className="container">
+        <m.div className="ai-day-head" variants={reveal} {...motionProps}>
           <div className="stage-pill stage-mono">
             <span className="stage-dot" aria-hidden="true" />
-            Appointment Desk &middot; try it
+            Appointment Desk &middot; one day, replayed
           </div>
-          <h2 className="stage-title" id="ai-desk-title">
-            An AI front desk that actually <span className="stage-serif">does things.</span>
+          <h2 className="stage-title" id="ai-day-title">
+            One front desk. The whole <span className="stage-serif">day.</span>
           </h2>
           <p className="stage-lede">
-            It answers fees and hours, finds a free slot and books it, and passes anything medical to a person. Tap a
-            question to see it work.
+            It answers questions, books and moves appointments, sends reminders and follows up after visits, at eight in
+            the morning or ten at night, with nobody sitting at the desk.
           </p>
-        </div>
+        </m.div>
 
-        <div className="ai-console stage-glass">
-          <div className="ai-console-bar">
-            <span className="ai-console-dots" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-            </span>
-            <span className="ai-console-title stage-mono">Demo Physio Clinic &middot; front desk</span>
-            <span className="ai-console-status stage-mono">
-              <span className={`ai-status-dot${reduce ? ' is-static' : ''}`} aria-hidden="true" />
-              replaying recorded runs
-            </span>
-          </div>
+        <m.div className="ai-day-stage" ref={stageRef} variants={reveal} {...motionProps}>
+          <div className="ai-day-bar">
+            <div className="ai-clock" aria-hidden="true">
+              <span className="ai-clock-time">{hhmm(clock)}</span>
+              <span className="stage-mono ai-clock-day">{DAY_LABEL}</span>
+            </div>
 
-          <div className="ai-console-grid">
-            <div className="ai-chat-col">
-              <div className="ai-chat" ref={chatRef} role="log" aria-live="polite">
-                {messages.map((msg) => {
-                  if (msg.role === 'tag') {
-                    return (
-                      <div className="ai-safety-tag stage-mono" key={msg.id}>
-                        {msg.text}
-                      </div>
-                    )
-                  }
-                  const isClinic = msg.role === 'clinic'
-                  const isStreaming = msg.id === streamId
-                  return (
-                    <div className={`ai-bubble ${isClinic ? 'is-clinic' : 'is-visitor'}`} key={msg.id}>
-                      {isStreaming ? (
-                        <span aria-hidden="true">
-                          <StreamedReply text={msg.text} wordCount={streamWords} />
-                        </span>
-                      ) : isClinic ? (
-                        <FullReply text={msg.text} />
-                      ) : (
-                        <p>{msg.text}</p>
-                      )}
-                    </div>
-                  )
-                })}
-                {typing && (
-                  <div className="ai-bubble is-clinic ai-typing" aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                  </div>
-                )}
-                {/* Streaming text above is aria-hidden; this is what the live
-                    region actually announces, once a reply finishes. */}
-                <div className="sr-only" ref={liveRegionRef}>
-                  {announce}
-                </div>
-              </div>
-
-              <div className="ai-chips">
-                {visibleExchanges.map((exchange) => (
+            <div className="ai-tl-scroll" ref={tlRef}>
+              <div className="ai-tl" role="group" aria-label="Moments in the day">
+                <span className="ai-tl-track" aria-hidden="true" />
+                <span className="ai-tl-fill" style={{ width: along(clock) }} aria-hidden="true" />
+                {HOUR_TICKS.map((h) => (
+                  <span key={h} className="ai-tl-tick stage-mono" style={{ left: along(h * 60) }} aria-hidden="true">
+                    {hhmm(h * 60)}
+                  </span>
+                ))}
+                {MOMENTS.map((mo, i) => (
                   <button
-                    key={exchange.id}
+                    key={mo.id}
                     type="button"
-                    className={`ai-chip${played[exchange.id] ? ' is-played' : ''}`}
-                    onClick={() => playExchange(exchange)}
-                    disabled={streaming}
+                    className={`ai-tl-dot${i === idx ? ' is-current' : ''}${i <= through ? ' is-done' : ''}`}
+                    style={{ left: along(minutesOf(mo.time)) }}
+                    onClick={() => jump(i)}
+                    aria-label={`${mo.time}, ${mo.label}`}
+                    aria-current={i === idx ? 'step' : undefined}
                   >
-                    {played[exchange.id] && (
-                      <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" className="ai-chip-check">
-                        <path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    )}
-                    {exchange.chip}
+                    <span className="ai-tl-time stage-mono" aria-hidden="true">
+                      {mo.time}
+                    </span>
+                    <span className="ai-tl-pip" aria-hidden="true" />
                   </button>
                 ))}
-                <button type="button" className="ai-start-over" onClick={startOver} disabled={streaming}>
-                  Start over
-                </button>
+                <span className="ai-tl-head" style={{ left: along(clock) }} aria-hidden="true" />
               </div>
             </div>
 
-            <div className="ai-rail-col">
-              {!reduce && (
-                <svg className="ai-wire" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                  <AnimatePresence>
-                    {wire && (
-                      <m.path
-                        key={wire.token}
-                        d={`M 0 46 Q 46 ${wireY} 100 ${wireY}`}
-                        pathLength="1"
-                        initial={{ strokeDashoffset: 1, opacity: 0.9 }}
-                        animate={{ strokeDashoffset: 0, opacity: [0.9, 0.9, 0] }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.6, ease: EASE }}
-                      />
-                    )}
-                  </AnimatePresence>
-                </svg>
-              )}
-              <div className="ai-rail" aria-label="What it did">
-                {TOOL_CARDS.map((card) => {
-                  const state = toolState[card.key]
-                  return (
-                    <div className={`ai-tool ai-tool-${state.status}`} key={card.key}>
-                      <div className="ai-tool-head">
-                        <ToolIcon name={card.key} className="ai-tool-icon" />
-                        <span className="ai-tool-name">{card.name}</span>
-                        {state.status === 'done' && (
-                          <svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true" className="ai-tool-tick">
-                            <path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        )}
-                      </div>
-                      <div className="ai-tool-log stage-mono">
-                        {state.logs.length === 0 ? (
-                          <span className="ai-tool-waiting">waiting</span>
-                        ) : (
-                          state.logs.map((log, i) => (
-                            <div className="ai-tool-line" key={i}>
-                              <span className="ai-tool-ts">{log.ts}</span> {log.line}
-                            </div>
-                          ))
-                        )}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
+            {!reduce && (
+              <button
+                type="button"
+                className="ai-play"
+                onClick={() => setUserPlaying((p) => !p)}
+                aria-label={userPlaying ? 'Pause the replay' : 'Play the replay'}
+              >
+                {userPlaying ? (
+                  <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                    <path d="M8 5v14M16 5v14" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                    <path d="M8 5.5v13l10.5-6.5Z" fill="currentColor" />
+                  </svg>
+                )}
+              </button>
+            )}
           </div>
-        </div>
 
-        <div className="stage-note stage-mono ai-note">
-          <span className="stage-dot" aria-hidden="true" />A replay of real recorded test runs on dummy data for a
-          made-up clinic. The replies are the AI's own words from those runs. Not live, not real patients.
-        </div>
-        <p className="ai-cta-line">
-          Want this answering your customers, on your calendar and sheets?{' '}
-          <Link to="/contact?service=ai#write">Let&apos;s talk</Link>
+          <div className="ai-day-now">
+            <AnimatePresence mode="wait" initial={false}>
+              <m.span
+                key={moment.id}
+                className="ai-day-label"
+                initial={reduce ? false : { opacity: 0, filter: 'blur(6px)' }}
+                animate={{ opacity: 1, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, filter: 'blur(6px)' }}
+                transition={{ duration: reduce ? 0 : 0.35, ease: EASE }}
+              >
+                <span className="stage-mono ai-day-when">{moment.time}</span> {moment.label}
+              </m.span>
+            </AnimatePresence>
+            <span className="stage-mono ai-honest">Recorded test runs · made-up physio clinic · dummy data</span>
+          </div>
+
+          <div className="ai-day-grid">
+            <Chat moment={moment} sched={sched} t={t} onHover={setHover} />
+
+            {wide ? (
+              <div className="ai-flow-persp" aria-hidden="true">
+                <m.div className="ai-flow-win stage-glass" style={reduce ? undefined : { rotateX, rotateY, transformPerspective: 1600 }}>
+                  <div className="ai-flow-head">
+                    <span className="ai-flow-title">Front desk</span>
+                    <span className="stage-mono">2 channels / 5 tools</span>
+                    <span className="stage-mono ai-flow-status">
+                      <span className={`ai-live${running ? ' is-on' : ''}`} />
+                      {status}
+                    </span>
+                  </div>
+                  <FlowCanvas state={flow} />
+                  <div className="ai-flow-foot">
+                    <span className="stage-mono ai-flow-foot-label">done today</span>
+                    <ul className="ai-runs">
+                      {recent.map((mo) => (
+                        <li key={mo.id} className="stage-mono">
+                          <span className="ai-runs-dot" />
+                          <span className="ai-runs-time">{mo.time}</span>
+                          {mo.log}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </m.div>
+              </div>
+            ) : (
+              <ul className="ai-used stage-glass" aria-label="Used in this moment">
+                {used.map((key) => (
+                  <li key={key} className={`ai-used-row${flow.lit.has(key) ? ' is-lit' : ''}`}>
+                    <Glyph name={key} className="ai-used-icon" />
+                    <span className="ai-used-name">{NODES[key].label}</span>
+                    <span className="stage-mono ai-used-res">{flow.results[key] || (key === moment.channel && flow.lit.has(key) ? (moment.turns[0].user ? 'message received' : 'message sent') : '')}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="ai-tally">
+            <span className="stage-mono ai-tally-label">In this replay</span>
+            {TALLY.map(({ key, label }) => (
+              <div className="ai-tally-item" key={key}>
+                <span className="ai-tally-num" aria-hidden="true">
+                  <AnimatePresence mode="popLayout" initial={false}>
+                    <m.span
+                      key={tally[key]}
+                      initial={reduce ? false : { opacity: 0, y: 10, filter: 'blur(6px)' }}
+                      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                      exit={{ opacity: 0, y: -10, filter: 'blur(6px)' }}
+                      transition={{ duration: reduce ? 0 : 0.5, ease: EASE }}
+                    >
+                      {tally[key]}
+                    </m.span>
+                  </AnimatePresence>
+                </span>
+                <span className="ai-tally-name">{label}</span>
+                <span className="sr-only">
+                  {tally[key]} {label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* The visible chat and flow are drawn from a moving clock and
+              hidden from screen readers; this is the same moment, whole. */}
+          <div className="sr-only">
+            <p>
+              {moment.time}, {moment.header}. {moment.label}.
+            </p>
+            {moment.turns.map((tn, i) => (
+              <div key={i}>
+                {tn.user && (
+                  <p>
+                    {moment.channel === 'inbox' ? 'Staff' : 'Patient'}: {tn.user}
+                  </p>
+                )}
+                <p>Front desk: {tn.reply.replace('REPLACE_WITH_REVIEW_LINK', 'review link')}</p>
+                <p>Used: {tn.tools.map((x) => `${NODES[x.node].label}, ${x.result}`).join('; ')}.</p>
+              </div>
+            ))}
+          </div>
+        </m.div>
+
+        <p className="stage-note ai-rehook">
+          <span className="stage-dot" aria-hidden="true" />
+          <Link to="/projects/appointment-desk">See how the front desk was built</Link>
         </p>
       </div>
     </section>

@@ -56,8 +56,8 @@ misspelled `Refrence files/` (now `docs/reference/folioblox.html`).
 |------|------|--------|-------|
 | `/` | `src/pages/HomePage.jsx` + `src/pages/home/` | Done | `HomePage.jsx` is composition only; one file per band — see *Home page composition* below |
 | `/websites`, `/software`, `/ai` | `src/pages/ServicePage.jsx` + `src/pages/service/` | Done (2026-09-30) | One page per service area (`services` in `data.js`), the pages outreach links point at. Bands: dusk hero with three "what you get" cards, proof (night, project cards plus this site's own screens), the area's price cards (paper), the area's FAQ (the home `Faq` band with `items`), the other two areas as doors (night), the home closing `Cta` with `service` so its links preselect the area in the contact form |
-| `/projects` | `src/pages/ProjectsPage.jsx` | Done | Reads `src/data.js` |
-| `/projects/:slug` | `src/pages/ProjectDetailPage.jsx` | Done | Renders `problem`, `system`, `outcome` and `outcomeNote` |
+| `/projects` | `src/pages/ProjectsPage.jsx` | Done | Reads `src/data.js`. Eight projects since 2026-09-30: the three n8n assistants (06 to 08) show a cropped still until they have films |
+| `/projects/:slug` | `src/pages/ProjectDetailPage.jsx` | Done | Renders `problem`, `system`, `outcome` and `outcomeNote`. A project with a `stills` entry and no film gets the step-through gallery (`components/Walkthrough.jsx`) in the film's place, and its `credit` as a "Built on" row |
 | `/about` | `src/pages/AboutPage.jsx` | Done | The identity layer that puts a real person behind the work (see `docs/research/06`; the solo framing there was superseded 2026-09-27). Composition only, bands in `src/pages/about/`: portrait hero (dusk monogram card until `founder.photo` is set), a five-step stepper (`founder.steps`), the toolbox grouped by outcome (`toolbox`), the five project films in the site's dialog player, then the home closing CTA. Story renders only once `founder.story` is written |
 | `/contact` | `src/pages/ContactPage.jsx` | Done | Three bands (`src/pages/contact/`): dusk header with the ways to reach me, the `ContactForm.jsx` card on paper, a "what happens next" stepper on night. `?service=websites|software|ai` preselects the form's "What do you need?" option; `#write` lands on the form (`ScrollToTop` honours the hash on forward navigation) |
 | `*` | `src/pages/NotFoundPage.jsx` | Done | Real 404 with a CTA, wired to `path="*"` in `App.jsx` |
@@ -87,7 +87,7 @@ configured, not the mechanism.
 
 ## Data source
 
-`src/data.js` — 4 projects. Email is a **placeholder** (`hello@aniketbuilds.com`,
+`src/data.js` — 8 projects. Email is a **placeholder** (`hello@aniketbuilds.com`,
 carries a TODO to confirm the domain). Never hardcode an email in a component —
 always import `site.email`.
 
@@ -113,7 +113,8 @@ always import `site.email`.
 | `summary` | string | One-line outcome, ICP language |
 | `description` | string | Optional. Narrative paragraph, used only as the fallback when `problem` is unset. Project 01 no longer carries one |
 | `flow` | string[] | Step labels. Renders as the one-line `Flow` row in the case-study spec block |
-| `diagram` | string | Key into `components/SystemDiagram.jsx` — `booking`, `approval`, `operations`, `assistant` |
+| `diagram` | string | Optional. Key into `components/SystemDiagram.jsx`. Unset (the three n8n demos): no drawing and no drawing caption |
+| `credit` | `{ label, href?, to?, licence? }[]` | Optional. What the project is built on, with its licence; renders as the "Built on" row. Required wherever the work starts from someone else's template or package |
 | `private` | boolean | Optional. Renders "Private Client System", suppresses client identity |
 | `role` | string | What Aniket personally did |
 | `timeline` | string | Optional. e.g. `'4 weeks'`. Project 01 has none — both consumers guard it |
@@ -154,6 +155,22 @@ with itself.
 - `stackMarquee` — the moving "Built with" strip under the hero.
 - Source for all of it: `remotion/` + `public/walkthroughs/`, rendered by
   `scripts/render-videos.sh`.
+
+### `stills`, `stillLabel`, `mediaKind` (2026-09-30)
+
+- `stills[slug]`: `{ kind, cover: { file, focus } }` for a demo with real
+  screens but no film yet: Appointment Desk, Practice Knowledge Assistant,
+  Website Answer Widget (captured by `scripts/capture-demos.mjs`: n8n's real
+  chat UI, replies recorded from real test executions and replayed). The
+  `/projects` showcase and the service-page proof cards show `cover`,
+  cropped to `focus` by `components/ScreenStill.jsx`; the case page steps
+  through every shot in `public/walkthroughs/<slug>/steps.json` (read by
+  `src/walkthroughs.js`). A film in `films` always wins.
+- `stillLabel`: the one badge and caption every still surface uses.
+- `mediaKind(slug)`: `'real'` or `'schematic'`, from the film or the still.
+- Placement: all three on `/ai`, the widget also on `/websites`, all on
+  `/projects`. Not on home: the Work band is "three working tools" with
+  films, and a still-only row there would be a second idea in the band.
 
 ### Images — all empty, and that is deliberate
 
@@ -288,6 +305,14 @@ real figures.
 | 7 | Proof strip on home | **Done** — `proofTools` renders as band 1b. Testimonial band (3b) now exists too, as an **empty slot**: it renders an honest "references on request" state until Aniket supplies a real attributed quote. None invented |
 | 8 | Pricing anchor | **Done** — `site.pricingAnchor` in the CTA band, and `packages` renders the full grid |
 | 9 | `/about` page + CV download | **Page done (2026-09-11)** — `/about` renders the identity layer from `founder`. CV PDF and a real headshot still blocked on Aniket, but the page renders labelled slots for both rather than waiting on them |
+
+### Demo projects (2026-09-30)
+
+| # | Item | Status |
+|---|---|---|
+| D1 | Appointment Desk, Practice Knowledge Assistant, Website Answer Widget as projects | **Done**: real stills, step-through on the case page, credits with licences |
+| D2 | Films for the three | **Open**: render into `films`; the stills then retire on their own |
+| D3 | Appointment Desk booking write | **Open**: the screens stop at the offered slots; the calendar write and sheet rows were tested with simulated responses (demo account read-only). Capture the write once the calendar credential can write |
 
 ### P2 — polish
 

@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
-import { films, projects, site, images, proofTools, whatsappPrefill } from '../data.js'
+import { films, projects, site, images, proofTools, whatsappPrefill, mediaKind } from '../data.js'
+import { walkthroughs } from '../walkthroughs.js'
 import BookingCta from '../components/BookingCta.jsx'
 import WhatsAppCta from '../components/WhatsAppCta.jsx'
 import { hasBooking } from '../booking.js'
@@ -7,6 +8,7 @@ import { hasWhatsApp } from '../whatsapp.js'
 import SystemDiagram from '../components/SystemDiagram.jsx'
 import AnimatedFlow from '../components/AnimatedFlow.jsx'
 import Media from '../components/Media.jsx'
+import Walkthrough from '../components/Walkthrough.jsx'
 import Counter from '../motion/Counter.jsx'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 
@@ -64,6 +66,12 @@ export default function ProjectDetailPage() {
   const stack = toList(project.stack)
   const flow = toList(project.flow)
   const film = films[project.slug]
+  /* A demo with real screens and no film yet steps through its captures
+     instead (data.js `stills`). A film, once rendered, takes precedence. */
+  const steps = film ? [] : walkthroughs[project.slug] || []
+  /* Who a project is built on, with the licence. Each entry is a link out
+     (`href`), a link to another case study (`to`), or plain text. */
+  const credit = Array.isArray(project.credit) ? project.credit.filter((c) => c && c.label) : []
   // Silent, so autoplay is allowed — but not for anyone who asked for less motion.
   const autoPlay = !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
   const build = toList(project.system)
@@ -90,11 +98,11 @@ export default function ProjectDetailPage() {
     : []
   const availability = toText(site && site.availability)
 
-  const eyebrow = [toText(project.subtitle), films[project.slug]?.kind === 'real' ? 'Working demo' : 'Client project']
+  const eyebrow = [toText(project.subtitle), mediaKind(project.slug) === 'real' ? 'Working demo' : 'Client project']
     .filter(Boolean)
     .join(' · ')
 
-  const hasMeta = Boolean(role || timeline || flow.length)
+  const hasMeta = Boolean(role || timeline || flow.length || credit.length)
   const banner = images.projects[project.slug]
   const prev = position > 0 ? projects[position - 1] : null
   const next = position < projects.length - 1 ? projects[position + 1] : null
@@ -148,6 +156,8 @@ export default function ProjectDetailPage() {
               : 'A drawing of the real flow. The real screens hold private client records, so they are drawn rather than shown.'}
           </figcaption>
         </figure>
+      ) : steps.length > 0 ? (
+        <Walkthrough steps={steps} title={title} />
       ) : (
         flow.length >= 2 && (
           <figure className="case-flow-figure">
@@ -163,21 +173,26 @@ export default function ProjectDetailPage() {
       {/* The system, drawn. Captioned as a schematic on purpose: it is a
           diagram of the architecture, not a picture of the running
           software, and the caption is what keeps that distinction
-          honest to a reader who only skims the visuals. */}
-      <figure className="case-banner-figure">
-        <SystemDiagram className="case-banner" variant={project.diagram} />
-        <figcaption className="case-caption">
-          A drawing of how the system fits together. Not a screenshot.
-          {/* Below 810px the diagram stops shrinking (its labels would hit
-              ~4px) and scrolls sideways at a legible size instead. Without
-              this line the cut-off right edge reads as a broken image rather
-              than "there is more this way". Hidden on wide screens where the
-              whole diagram is already visible. */}
-          <span className="case-scroll-hint" aria-hidden="true">
-            Scroll sideways to see the whole drawing &rarr;
-          </span>
-        </figcaption>
-      </figure>
+          honest to a reader who only skims the visuals. Only when the
+          project names a diagram: SystemDiagram renders nothing for an
+          unknown key, and the caption alone would describe a picture that
+          is not there. */}
+      {project.diagram && (
+        <figure className="case-banner-figure">
+          <SystemDiagram className="case-banner" variant={project.diagram} />
+          <figcaption className="case-caption">
+            A drawing of how the system fits together. Not a screenshot.
+            {/* Below 810px the diagram stops shrinking (its labels would hit
+                ~4px) and scrolls sideways at a legible size instead. Without
+                this line the cut-off right edge reads as a broken image rather
+                than "there is more this way". Hidden on wide screens where the
+                whole diagram is already visible. */}
+            <span className="case-scroll-hint" aria-hidden="true">
+              Scroll sideways to see the whole drawing &rarr;
+            </span>
+          </figcaption>
+        </figure>
+      )}
 
       {hasMeta && (
         <dl className="case-meta">
@@ -191,6 +206,28 @@ export default function ProjectDetailPage() {
             <div className="case-meta-item">
               <dt className="case-meta-label">Timeline</dt>
               <dd className="case-meta-value">{timeline}</dd>
+            </div>
+          )}
+          {credit.length > 0 && (
+            <div className="case-meta-item">
+              <dt className="case-meta-label">Built on</dt>
+              <dd className="case-meta-value case-credit">
+                {credit.map((c, i) => (
+                  <span key={c.label}>
+                    {i > 0 && ', plus '}
+                    {c.href ? (
+                      <a href={c.href} target="_blank" rel="noopener noreferrer">
+                        {c.label}
+                      </a>
+                    ) : c.to ? (
+                      <Link to={c.to}>{c.label}</Link>
+                    ) : (
+                      c.label
+                    )}
+                    {c.licence && ` (${c.licence})`}
+                  </span>
+                ))}
+              </dd>
             </div>
           )}
           {flow.length > 0 && (

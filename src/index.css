@@ -2309,6 +2309,224 @@ a:hover {
   box-shadow: 0 50px 100px -40px rgba(0, 0, 0, 0.85), 0 0 80px -30px rgba(245, 135, 30, 0.25);
 }
 
+/* ============================================================
+   Stills: a demo with real screens and no film yet (data.js `stills`).
+   ScreenStill crops one capture to its focus rect; the inline style sizes
+   and offsets the image, this only makes the frame clip it. The ground is
+   the captures' own pale grey, so a loading image never shows a black box.
+   ============================================================ */
+
+.screen-still {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #eef1f0;
+}
+
+.screen-still img {
+  position: absolute;
+  max-width: none;
+  height: auto;
+}
+
+/* Case study: the step-through. Breaks out of the reading column like the
+   film it stands in for. */
+.walk {
+  margin-top: var(--space-7);
+}
+
+.page:not(.page-wide) > .walk {
+  max-width: none;
+}
+
+.walk-grid {
+  display: grid;
+  grid-template-columns: minmax(15rem, 20rem) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: start;
+}
+
+/* The step list: numbered, the active step filled saffron, a hairline
+   running down the side behind the numbers. */
+.walk-steps {
+  position: relative;
+  list-style: none;
+  display: grid;
+  gap: var(--space-2);
+  padding: 0;
+  margin: 0;
+}
+
+.walk-steps::before {
+  content: '';
+  position: absolute;
+  top: 1.25rem;
+  bottom: 1.25rem;
+  left: calc(0.75rem + 15px);
+  width: 1px;
+  background: var(--line-strong);
+}
+
+.walk-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--dur-mid) ease, background-color var(--dur-mid) ease, border-color var(--dur-mid) ease;
+}
+
+.walk-step:hover {
+  color: var(--ink);
+}
+
+.walk-step:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.walk-step[aria-current='step'] {
+  color: var(--ink);
+  background: rgba(245, 135, 30, 0.06);
+  border-color: rgba(245, 135, 30, 0.22);
+}
+
+.walk-step-n {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  transition: background-color var(--dur-mid) ease, color var(--dur-mid) ease, border-color var(--dur-mid) ease;
+}
+
+.walk-step[aria-current='step'] .walk-step-n {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #1a0900;
+}
+
+.walk-step-text {
+  padding-top: 0.3rem;
+}
+
+.walk-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line-strong);
+  background: #eef1f0;
+  box-shadow: 0 50px 100px -40px rgba(0, 0, 0, 0.85), 0 0 80px -30px rgba(245, 135, 30, 0.25);
+}
+
+.walk-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(12, 12, 12, 0.78);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.walk-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.walk-count {
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.walk-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color var(--dur-mid) ease, color var(--dur-mid) ease;
+}
+
+.walk-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.walk-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.walk-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* The active caption under the screen: only where the list is hidden. */
+.walk-caption {
+  display: none;
+}
+
+.walk > .case-caption {
+  max-width: 62rem;
+}
+
+.walk .case-caption a,
+.case-credit a {
+  border-bottom: 1px solid var(--line-strong);
+}
+
+@media (max-width: 900px) {
+  .walk-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .walk-steps {
+    display: none;
+  }
+
+  .walk-caption {
+    display: block;
+    margin-top: var(--space-3);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+}
+
 /* Saffron gradient for a single accented word (SplitText `accent`). */
 .text-accent {
   background: linear-gradient(100deg, #ffc27a 0%, var(--accent) 45%, #ff5f2e 100%);

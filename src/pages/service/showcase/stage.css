@@ -1,0 +1,114 @@
+/* ---------------------------------------------------------------
+   The stage: the shared ground for the three service-page showpieces
+   (Websites orbit, Software take-apart, AI front desk). Taken from the
+   Relay reference Aniket saved (docs/ideas/relay-story-loop), in his
+   saffron: near-black, a faint dot grid, one soft saffron glow, glass
+   windows, mono labels, one italic serif word per heading.
+   Each showpiece imports this and adds its own sheet beside it.
+   --------------------------------------------------------------- */
+
+.stage {
+  position: relative;
+  background-color: var(--night);
+  color: var(--ink);
+  isolation: isolate;
+}
+
+/* Dot grid: 1px dots every 24px, faded out towards the edges so it
+   never reads as a pattern fill. */
+.stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1.2px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 45%, #000 40%, transparent 100%);
+  pointer-events: none;
+}
+
+/* The one glow. Position it per showpiece with --glow-x / --glow-y. */
+.stage-glow {
+  position: absolute;
+  z-index: -1;
+  left: var(--glow-x, 50%);
+  top: var(--glow-y, 50%);
+  width: min(900px, 90vw);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(245, 135, 30, 0.16) 0%, rgba(245, 135, 30, 0.05) 35%, transparent 65%);
+  pointer-events: none;
+}
+
+/* Glass window: the frame every showpiece puts its proof in. */
+.stage-glass {
+  background: linear-gradient(180deg, rgba(28, 26, 24, 0.78), rgba(16, 15, 14, 0.82));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    0 30px 80px -20px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* Small mono label: status pills, step counters, tool names. */
+.stage-mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.stage-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.stage-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(245, 135, 30, 0.8);
+}
+
+/* Heading: Inter 500 like the rest of the site, closing on one italic
+   serif word in saffron-peach. */
+.stage-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--display-2);
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+  color: var(--ink);
+}
+
+.stage-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--peach);
+}
+
+.stage-lede {
+  color: var(--muted);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 52ch;
+}
+
+/* Honesty line under every showpiece: what the visitor is looking at. */
+.stage-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}

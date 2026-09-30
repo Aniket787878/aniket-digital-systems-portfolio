@@ -5,6 +5,9 @@ import '@fontsource/inter/latin-400.css'
 import '@fontsource/inter/latin-500.css'
 import '@fontsource/inter/latin-600.css'
 import '@fontsource/inter/latin-700.css'
+/* One italic serif word per showpiece heading (the Relay-style accent on
+   the service pages). Italic 400 only, latin subset. */
+import '@fontsource/instrument-serif/latin-400-italic.css'
 /* Base sheet first, page sheets after.
 
    Order matters and it is not obvious: importing App before index.css

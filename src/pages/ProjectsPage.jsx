@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { fx } from '../interactions/attrs.js'
 import { projects, films } from '../data.js'
 import LoopVideo from '../components/LoopVideo.jsx'
 import { useDocumentTitle } from '../useDocumentTitle.js'
@@ -36,7 +37,7 @@ export default function ProjectsPage() {
 
           return (
             <li key={project.slug} className={`showcase-item${i % 2 ? ' showcase-item-alt' : ''}`}>
-              <Link to={`/projects/${project.slug}`} className="showcase-card loop-video-host">
+              <Link to={`/projects/${project.slug}`} className="showcase-card loop-video-host" {...fx('lerp', 'view')}>
                 <div className={`showcase-media${real ? '' : ' is-schematic'}`}>
                   {film && (
                     <LoopVideo

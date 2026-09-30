@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { fx } from '../../interactions/attrs.js'
 import { m } from 'motion/react'
 import { founder, packages, whatsappPrefill } from '../../data.js'
 import { reveal } from '../../motion/variants.js'
@@ -31,9 +32,8 @@ export default function Steps() {
       <div className="container">
         <m.header className="about-band-head" {...reveal}>
           <PillLabel icon="flow">How I work</PillLabel>
-          <h2 className="h2" id="about-steps-title">
+          <h2 className="h2" {...fx('split')} id="about-steps-title">
             From first message to handover.
-            <br />
             <span className="soft">Five steps. Pick one.</span>
           </h2>
         </m.header>

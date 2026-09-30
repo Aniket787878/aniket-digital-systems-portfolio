@@ -56,6 +56,14 @@
   letter-spacing: -0.04em;
 }
 
+/* The grey second half of a heading sits on its own line. It used to be a
+   <br /> before the span; StringSplit (the word-by-word reveal, see
+   src/interactions) drops <br> when it rewrites a heading, so the break
+   lives here as a block span, which it keeps. */
+.h2 .soft {
+  display: block;
+}
+
 .paper .soft {
   color: #a59d94;
 }

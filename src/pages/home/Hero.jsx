@@ -1,4 +1,5 @@
 import { Fragment, useRef } from 'react'
+import { fx } from '../../interactions/attrs.js'
 import { Link } from 'react-router-dom'
 import { m, useScroll, useTransform, useReducedMotion } from 'motion/react'
 import { site, whatsappPrefill, explainers } from '../../data.js'
@@ -125,7 +126,7 @@ export default function Hero() {
               Not set: the free call on WhatsApp. */}
           {hasBooking ? (
             <>
-              <BookingCta className="btn-saffron" />
+              <BookingCta className="btn-saffron" magnet />
               <WhatsAppCta message={whatsappPrefill.hero} label="WhatsApp me" className="btn-light" />
             </>
           ) : (
@@ -135,9 +136,10 @@ export default function Hero() {
                   message={whatsappPrefill.audit}
                   label="Book a free call"
                   className="btn-saffron"
+                  magnet
                 />
               ) : (
-                <Link to="/contact" className="btn-saffron">
+                <Link to="/contact" className="btn-saffron" {...fx('magnet')}>
                   Book a free call
                 </Link>
               )}
@@ -160,6 +162,7 @@ export default function Hero() {
 
       <m.figure
         className="dusk-card"
+        {...fx('media')}
         style={{ y: cardY, scale: cardScale }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

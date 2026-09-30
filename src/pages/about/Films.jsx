@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { fx } from '../../interactions/attrs.js'
 import { Link } from 'react-router-dom'
 import { m } from 'motion/react'
 import { projects, films } from '../../data.js'
@@ -26,9 +27,8 @@ export default function Films() {
       <div className="container">
         <m.header className="about-band-head" {...reveal}>
           <PillLabel icon="play">The work</PillLabel>
-          <h2 className="h2" id="about-films-title">
+          <h2 className="h2" {...fx('split')} id="about-films-title">
             Five builds, on film.
-            <br />
             <span className="soft">Real screens, or drawings where client records are private.</span>
           </h2>
         </m.header>

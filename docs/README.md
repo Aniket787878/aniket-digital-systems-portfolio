@@ -28,5 +28,6 @@ before.
 | `src/pages/HomePage.jsx` | Composition only — the nine bands, in render order |
 | `src/pages/home/` | One file per band, matching the bands in `HomePage.css` |
 | `src/pages/HomePage.css` | All nine bands' styles, deliberately one file — see the note in `HomePage.jsx` |
+| `src/interactions/` | The StringTune layer: `attrs.js` (the `fx()` hooks components spread), `controller.js` (when to load), `stringtune.js` (the lazy chunk), `interactions.css`. Rules in `CLAUDE.md`. |
 | `src/index.css` | Tokens, reset, nav, footer, buttons, page shells. Loads first, on purpose. |
 | `src/data.js` | Every string and number the site renders |

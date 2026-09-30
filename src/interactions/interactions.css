@@ -1,0 +1,202 @@
+/* ============================================================
+   Interaction layer (StringTune). See CLAUDE.md, "Interaction layer".
+
+   Everything below is gated on html.st-on, a class the lazy chunk adds when
+   it starts and removes when it stops. Without it (reduced motion, no JS, a
+   failed download) none of these rules match and the page is exactly the
+   page it was: nothing is hidden or moved until the library is running.
+
+   Ownership, so nothing fights Motion (Framer): Motion writes `transform`
+   and `opacity` on the reveal wrappers. This layer never writes those on the
+   same element. It uses the individual `translate` and `scale` properties
+   (which compose with `transform` instead of replacing it) on inner
+   elements, or `transform` only on elements Motion does not touch (the
+   split words, the cursor ring, the magnetic buttons).
+   ============================================================ */
+
+/* ---------- 1. Headlines arrive word by word ----------
+   data-string-split headings. StringSplit wraps each word in .-s-word (with
+   --word-index) and adds .-splitted; the library adds .-inview when the
+   heading reaches the screen. Words are only hidden once the heading has
+   actually been split, so an unsplit heading is never invisible. */
+html.st-on [data-string-split].-splitted .-s-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(0, 0.6em, 0);
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.9s var(--ease-out);
+  transition-delay: calc(var(--word-index, 0) * 55ms);
+}
+
+html.st-on [data-string-split].-splitted.-inview .-s-word {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- 2. Scroll-driven depth (StringProgress) ----------
+   --st-progress runs 0 to 1 while the element crosses the viewport (0.5 =
+   centred). Each rule's var() fallback is the element's resting pose, so an
+   element the library has not measured yet simply sits still. */
+
+/* The showreel rises into place: it starts a little smaller and settles at
+   full size once it is most of the way up the screen. The frame is scaled,
+   not the video, so nothing inside is cropped. */
+html.st-on .explainer[data-string] .explainer-frame {
+  scale: calc(0.9 + 0.1 * min(1, var(--st-progress, 1) * 2.6));
+  transition: scale 0.25s var(--ease-out);
+}
+
+/* The two platform films: the panel settles as the row arrives, and the film
+   drifts against it (the panel's padding is what it moves inside, so the
+   drift is capped by that). Individual `translate`/`scale`: .row-frame already
+   has a hover `transform`. */
+html.st-on .row[data-string] .row-panel {
+  scale: calc(0.95 + 0.05 * min(1, var(--st-progress, 1) * 2.4));
+  transition: scale 0.25s var(--ease-out);
+}
+
+html.st-on .row[data-string] .row-frame {
+  translate: 0 calc((var(--st-progress, 0.5) - 0.5) * -32px);
+}
+
+/* ---------- 3. Scroll speed (StringLerp) ----------
+   --lerp is the page's scroll velocity in px per frame. Card media trails the
+   scroll a little and eases back when it stops: fast flick, more lag. */
+html.st-on .card[data-string] .card-media,
+html.st-on .showcase-card[data-string] .showcase-media {
+  translate: 0 clamp(-9px, calc(var(--lerp, 0) * -0.7px), 9px);
+  transition: translate 0.22s ease-out;
+}
+
+/* ---------- 4. Cursor (StringCursor) and magnetic buttons ---------- */
+.st-cursor {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 1024px) {
+  html.st-fine .st-cursor {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    opacity: 0;
+    /* Blend on this element (the one that also carries the transform): a
+       transformed parent would isolate a blending child. `difference` keeps a
+       white ring legible on both the paper and the night grounds. */
+    mix-blend-mode: difference;
+    transform: translate3d(calc(var(--x, 0) * 1px), calc(var(--y, 0) * 1px), 0);
+    transition: opacity 0.3s ease;
+  }
+
+  html.st-fine.st-live .st-cursor {
+    opacity: 1;
+  }
+
+  .st-cursor-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    border: 1.5px solid #fff;
+    border-radius: 50%;
+    color: #1a0900;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    transition:
+      width 0.35s var(--ease-out),
+      height 0.35s var(--ease-out),
+      margin 0.35s var(--ease-out),
+      background-color 0.25s ease,
+      border-color 0.25s ease,
+      opacity 0.2s ease;
+  }
+
+  /* Over anything the ring knows about. */
+  .st-cursor.-show .st-cursor-ring {
+    width: 46px;
+    height: 46px;
+    margin: -23px 0 0 -23px;
+  }
+
+  /* A link into a case study or service page: a saffron disc that says so.
+     Normal blending here, so the fill stays the brand colour. */
+  html.st-fine .st-cursor.is-view {
+    mix-blend-mode: normal;
+  }
+  .st-cursor.is-view .st-cursor-ring {
+    width: 84px;
+    height: 84px;
+    margin: -42px 0 0 -42px;
+    border-color: transparent;
+    background: var(--accent);
+  }
+  .st-cursor.is-view .st-cursor-ring::after {
+    content: 'View';
+  }
+
+  /* The primary buttons: the ring swells around the button as it leans in. */
+  html.st-fine .st-cursor.is-cta {
+    mix-blend-mode: normal;
+  }
+  .st-cursor.is-cta .st-cursor-ring {
+    width: 64px;
+    height: 64px;
+    margin: -32px 0 0 -32px;
+    border-color: rgba(245, 135, 30, 0.9);
+    background: rgba(245, 135, 30, 0.16);
+  }
+
+  /* Films that are not links: the ring grows and says nothing. */
+  .st-cursor.is-media .st-cursor-ring {
+    width: 64px;
+    height: 64px;
+    margin: -32px 0 0 -32px;
+  }
+
+  /* Over form fields the native I-beam is the right cursor: the ring steps
+     aside instead of covering the text. */
+  .st-cursor.is-text .st-cursor-ring {
+    opacity: 0;
+  }
+
+  /* StringMagnetic writes --magnetic-x / --magnetic-y (px). The saffron
+     buttons' own hover `transform: translateY(-1px)` is folded in so the
+     two do not replace each other. */
+  html.st-fine [data-string*='magnetic'] {
+    transform: translate3d(calc(var(--magnetic-x, 0) * 1px), calc(var(--magnetic-y, 0) * 1px), 0);
+    /* The library already lerps the offset every frame; a CSS transition on
+       top of it would add a second, laggier smoothing. */
+    transition-property: background-color, box-shadow, border-color;
+  }
+  html.st-fine [data-string*='magnetic']:hover {
+    transform: translate3d(
+      calc(var(--magnetic-x, 0) * 1px),
+      calc(var(--magnetic-y, 0) * 1px - 1px),
+      0
+    );
+  }
+}
+
+/* Belt and braces: if the preference flips to reduce mid-session the
+   controller stops the library and removes html.st-on, but should a frame
+   linger, nothing here may move. */
+@media (prefers-reduced-motion: reduce) {
+  html.st-on [data-string-split].-splitted .-s-word {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .st-cursor {
+    display: none !important;
+  }
+}

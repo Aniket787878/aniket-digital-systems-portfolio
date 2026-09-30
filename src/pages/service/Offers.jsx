@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { fx } from '../../interactions/attrs.js'
 import { m } from 'motion/react'
 import { site, packages } from '../../data.js'
 import { useCurrency } from '../../currency.js'
@@ -24,9 +25,8 @@ export default function Offers({ area }) {
       <div className="container">
         <m.header className="center-head" {...reveal}>
           <PillLabel icon="rupee">Prices</PillLabel>
-          <h2 className="h2" id="svc-prices-title">
+          <h2 className="h2" {...fx('split')} id="svc-prices-title">
             Fixed scope. Fixed price.
-            <br />
             <span className="soft">A date it goes live.</span>
           </h2>
           <p className="center-lede">

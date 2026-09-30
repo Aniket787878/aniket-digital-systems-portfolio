@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { fx } from '../../interactions/attrs.js'
 import { m } from 'motion/react'
 import { projects, films } from '../../data.js'
 import { reveal, revealStagger, fadeUp } from '../../motion/variants.js'
@@ -23,9 +24,8 @@ export default function Work() {
       <div className="container">
         <m.header className="center-head" {...reveal}>
           <PillLabel icon="layers">Work</PillLabel>
-          <h2 className="h2">
+          <h2 className="h2" {...fx('split')}>
             One platform in daily use, one in pre-launch.
-            <br />
             <span className="soft">Three working tools, running now.</span>
           </h2>
         </m.header>
@@ -35,9 +35,10 @@ export default function Work() {
             <m.article
               key={project.slug}
               className={`row${i % 2 ? ' row-flip' : ''}`}
+              {...fx('progress')}
               {...reveal}
             >
-              <Link to={`/projects/${project.slug}`} className="row-panel" aria-label={`${project.title} case study`}>
+              <Link to={`/projects/${project.slug}`} className="row-panel" {...fx('view')} aria-label={`${project.title} case study`}>
                 <div className="row-frame">
                   <LoopVideo
                     src={films[project.slug].src}
@@ -74,7 +75,7 @@ export default function Work() {
         <m.ul className="cards" {...revealStagger}>
           {tools.map((project) => (
             <m.li key={project.slug} variants={fadeUp}>
-              <Link to={`/projects/${project.slug}`} className="card loop-video-host">
+              <Link to={`/projects/${project.slug}`} className="card loop-video-host" {...fx('lerp', 'view')}>
                 <div className="card-media">
                   <LoopVideo
                     mode="hover"

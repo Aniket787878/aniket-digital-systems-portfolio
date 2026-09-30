@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { fx } from '../../interactions/attrs.js'
 import { Link } from 'react-router-dom'
 import {
   m,
@@ -123,9 +124,8 @@ export default function Tour() {
         <div className="container tour-grid">
           <div className="tour-copy">
             <PillLabel icon="play" className="on-night">Working demos</PillLabel>
-            <h2 className="h2">
+            <h2 className="h2" {...fx('split')}>
               Watch them work.
-              <br />
               <span className="soft">Real screens, real clicks.</span>
             </h2>
 

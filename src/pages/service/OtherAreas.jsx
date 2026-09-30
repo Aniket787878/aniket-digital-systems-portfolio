@@ -1,4 +1,5 @@
 import { m } from 'motion/react'
+import { fx } from '../../interactions/attrs.js'
 import { services } from '../../data.js'
 import { useCurrency } from '../../currency.js'
 import { reveal, revealStagger, fadeUp } from '../../motion/variants.js'
@@ -21,9 +22,8 @@ export default function OtherAreas({ area }) {
           <PillLabel icon="flow" className="on-night">
             One system
           </PillLabel>
-          <h2 className="h2" id="svc-others-title">
+          <h2 className="h2" {...fx('split')} id="svc-others-title">
             Most projects grow into the rest.
-            <br />
             <span className="soft">Built to work together.</span>
           </h2>
         </m.header>

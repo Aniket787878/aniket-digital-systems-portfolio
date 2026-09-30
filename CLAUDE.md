@@ -37,6 +37,38 @@ never in the first-load bundle. A `SafeMount` boundary drops it silently if
 WebGL is unavailable, leaving the photograph. Keep it lazy: the three.js
 chunk is ~220KB gzip and must never re-enter the main bundle.
 
+**Interaction layer.** `@fiddle-digital/string-tune` (a runtime dependency
+because it is the one library that gives cursor portals, magnetic pull and
+word splitting from plain attributes) drives the custom cursor, magnetic
+primary buttons, word-by-word headings and scroll-linked depth. It lives in
+`src/interactions/` and follows these rules:
+
+- **Lazy.** `controller.js` (main bundle, tiny) imports `stringtune.js` (the
+  ~62KB gzip chunk) after `load` plus an idle slot. Never import the library
+  statically. It never starts under `prefers-reduced-motion` (and stops if
+  that flips); cursor and magnetic only for `(hover: hover) and (pointer: fine)`
+  at 1024px+.
+- **Scroll stays native.** StringTune's desktop default mode is `smooth`, which
+  `preventDefault()`s wheel and arrow/space/page/home/end keys. `stringtune.js`
+  switches both modes to `default` synchronously after `getInstance()`. Never
+  enable smooth, never `preventDefault` a scroll input.
+- **Nothing hidden until it runs.** Effects are `data-string*` attributes from
+  `fx()` (`attrs.js`), styled by `interactions.css` only under `html.st-on`;
+  var() fallbacks are the resting pose.
+- **No fight with Motion.** This layer never writes `transform` or `opacity` on
+  an element Motion animates: it uses the individual `translate`/`scale`
+  properties on inner elements, or elements Motion never touches. Progress goes
+  to `--st-progress` because the page has its own `--progress`.
+- **SPA-safe.** One instance, idempotent start/stop (StrictMode, reduced-motion
+  toggle). The library watches the DOM itself for route changes; the controller
+  only re-measures. `StringSplit` rewrites a heading's innerHTML and drops
+  `<br>`: split only static headings, break lines with a block span
+  (`.h2 .soft`), and `key` any route that reuses one component for different
+  text (the three service routes). The ring `<div>` stays mounted, since the
+  library keeps a reference to that exact node.
+- **Library gaps** (stuck hover after scrolling away, magnet never returning) are
+  fixed by the two subclasses in `stringtune.js`; re-check them on upgrade.
+
 **Product films.** Every video on the site is rendered from `remotion/` by
 `bash scripts/render-videos.sh [slug|hero]` into `public/videos/` (films,
 `clips/` loops, `posters/`). The three working demos are **real captures**:

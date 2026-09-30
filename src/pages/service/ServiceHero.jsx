@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { fx } from '../../interactions/attrs.js'
 import { Link } from 'react-router-dom'
 import { m, useScroll, useTransform, useReducedMotion } from 'motion/react'
 import Icon from '../../components/icons.jsx'
@@ -85,15 +86,15 @@ export default function ServiceHero({ area }) {
         <m.div className="dusk-actions" variants={heroItem}>
           {hasBooking ? (
             <>
-              <BookingCta className="btn-saffron" />
+              <BookingCta className="btn-saffron" magnet />
               <WhatsAppCta message={prefill} label="WhatsApp me" className="btn-light" />
             </>
           ) : (
             <>
               {hasWhatsApp ? (
-                <WhatsAppCta message={prefill} label="Book a free call" className="btn-saffron" />
+                <WhatsAppCta message={prefill} label="Book a free call" className="btn-saffron" magnet />
               ) : (
-                <Link to={`/contact?service=${area.slug}#write`} className="btn-saffron">
+                <Link to={`/contact?service=${area.slug}#write`} className="btn-saffron" {...fx('magnet')}>
                   Book a free call
                 </Link>
               )}

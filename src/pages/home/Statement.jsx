@@ -1,4 +1,5 @@
 import { m } from 'motion/react'
+import { fx } from '../../interactions/attrs.js'
 import { heroReel } from '../../data.js'
 import ScrollWords from '../../motion/ScrollWords.jsx'
 import LoopVideo from '../../components/LoopVideo.jsx'
@@ -37,8 +38,8 @@ export default function Statement() {
           ]}
         />
 
-        <m.figure className="explainer" {...reveal}>
-          <div className="explainer-frame explainer-frame--reel">
+        <m.figure className="explainer" {...fx('progress')} {...reveal}>
+          <div className="explainer-frame explainer-frame--reel" {...fx('media')}>
             {still ? (
               <img
                 src={heroReel.poster}

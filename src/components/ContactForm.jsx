@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { fx } from '../interactions/attrs.js'
 import { Link, useSearchParams } from 'react-router-dom'
 import { site, budgetBands, whatsappPrefill, services } from '../data.js'
 import { useCurrency } from '../currency.js'
@@ -239,7 +240,7 @@ function LeadForm() {
     )
   } else {
     body = (
-      <form className="contact-form" onSubmit={handleSubmit}>
+      <form className="contact-form" onSubmit={handleSubmit} {...fx('text')}>
         <div className="contact-field">
           <label className="contact-label" htmlFor="contact-name">
             Your name

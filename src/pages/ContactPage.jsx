@@ -1,4 +1,5 @@
 import { m } from 'motion/react'
+import { fx } from '../interactions/attrs.js'
 import ContactForm from '../components/ContactForm.jsx'
 import { PillLabel, TickList } from '../components/ui.jsx'
 import { reveal } from '../motion/variants.js'
@@ -38,9 +39,8 @@ export default function ContactPage() {
         <div className="container contact-write-grid">
           <m.header className="contact-write-copy" {...reveal}>
             <PillLabel icon="pen">Write it out</PillLabel>
-            <h2 className="h2" id="contact-write-title">
+            <h2 className="h2" {...fx('split')} id="contact-write-title">
               Prefer to type it?
-              <br />
               <span className="soft">Six short questions.</span>
             </h2>
             <p className="contact-write-lede">

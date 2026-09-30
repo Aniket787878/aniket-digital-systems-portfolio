@@ -49,6 +49,22 @@
   },
   {
     "file": "04.png",
+    "caption": "Picks a time and gives a name: the slot is checked, booked into Google Calendar and logged",
+    "target": {
+      "x": 307,
+      "y": 660,
+      "w": 826,
+      "h": 120
+    },
+    "focus": {
+      "x": 217,
+      "y": 570,
+      "w": 1006,
+      "h": 300
+    }
+  },
+  {
+    "file": "05.png",
     "caption": "A clinical question is refused politely and handed to a human",
     "target": {
       "x": 307,
@@ -64,7 +80,7 @@
     }
   },
   {
-    "file": "05.png",
+    "file": "06.png",
     "caption": "An emergency message gets the fixed safety reply, no model involved",
     "target": {
       "x": 307,

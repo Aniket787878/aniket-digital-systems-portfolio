@@ -312,7 +312,7 @@ real figures.
 |---|---|---|
 | D1 | Appointment Desk, Practice Knowledge Assistant, Website Answer Widget as projects | **Done**: real stills, step-through on the case page, credits with licences |
 | D2 | Films for the three | **Open**: render into `films`; the stills then retire on their own |
-| D3 | Appointment Desk booking write | **Open**: the screens stop at the offered slots; the calendar write and sheet rows were tested with simulated responses (demo account read-only). Capture the write once the calendar credential can write |
+| D3 | Appointment Desk booking write | **Done 2026-09-30**: one real booking (execution 23954) wrote the calendar event and the log row, captured as screen 04. It ran on a stand-in calendar with only free/busy visible to the AI; the n8n calendar credential still cannot see the demo calendar. Reschedule, cancel and confirm remain tested with simulated responses |
 
 ### P2 — polish
 

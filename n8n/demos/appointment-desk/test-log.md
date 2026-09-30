@@ -6,7 +6,7 @@ Workflow `OaopI9RUsFqHZ35F` ("Portfolio demo · Appointment Desk"), run through 
 
 - The Chat Trigger message was pinned. The three Google Sheets nodes were pinned to `{ok: true}` because no demo sheet exists yet.
 - **Real, not pinned:** the Gemini model (`gemini-3.1-flash-lite`), Simple Memory, and the calendar read tools (List_busy_times, Check_slot_is_free) against the demo calendar. The demo calendar is empty, so every slot came back free.
-- **Pinned:** the calendar write tools (Create, Reschedule) in tests 1b and 2. The credential "Google Calendar account" has read access to the demo calendar but returns `403 Forbidden` on writes (execution 23802, below), so writes could not run for real. No calendar event was created, so nothing needed deleting.
+- **Pinned:** the calendar write tools (Create, Reschedule) in tests 1b and 2. The credential "Google Calendar account" has read access to the demo calendar but returns `403 Forbidden` on writes (execution 23802, below), so writes could not run for real in those tests. Test 1d, added later, is the one real calendar write; its event was deleted afterwards.
 - Earlier runs failed for reasons outside the workflow logic (Gemini 503 "high demand", 429 free-tier quota, and two bugs fixed along the way: memory key empty after the tool loop, and the chat/WhatsApp router after tool calls). Only the final passing run of each test is listed.
 
 ## Required tests
@@ -43,6 +43,18 @@ The calendar returned `Forbidden - perhaps check your credentials?` (403: the cr
 > Would you like me to hand this over to a member of our team to assist you further, or would you prefer to try another time?
 
 Result: pass for safety (it did not claim a booking that failed). Check_slot_is_free ran for real and returned `available: true`. This run used an earlier event-description template that left "Booked via" blank; that was fixed before 1b.
+
+### 1d. Real booking, written to Google Calendar (execution 23954, nothing pinned)
+Added later the same day, once a calendar with write access was available. The n8n calendar credential still could not see the dedicated demo calendar, so for this one run Check_slot_is_free and Create_appointment pointed at a stand-in calendar on the owner's own Google account. List_busy_times and Find_patient_appointment were switched off for the run, so the model only ever got a free/busy answer from that calendar, never another event's details. The workflow was reverted to the demo calendar straight after.
+
+Input: `Please book an initial assessment on Monday 5 October at 11:00. My name is Demo Patient Alpha and my mobile is 0000000001.`
+Reply:
+> I have booked your initial assessment for Monday, 5 October at 11:00.
+>
+> Please arrive 10 minutes early and bring any reports you have. You can cancel or reschedule for free up to 12 hours before your appointment. If you need to change anything after that, please call the clinic.
+
+Tool calls, all real: Check_slot_is_free (11:00 to 11:45, `available: true`), Create_appointment (event created, title "Physio: Demo Patient Alpha (Initial assessment)", description "Phone: 0000000001 / Type: Initial assessment / Booked via: chat"), then Log_booking_action (action `booked`, a real row in the demo sheet's "Bookings log" tab).
+Result: pass. The test event was deleted a minute later by a one-off cleanup run (execution 23956, `success: true`), not through the agent's Cancel tool.
 
 ### 2. Reschedule (execution 23817, Find and Reschedule pinned)
 Input: `Hello, I need to move my appointment on Monday 5 October at 10:00 to Tuesday 6 October at 15:00 if possible. I am Demo Patient Alpha, mobile 0000000001.`
@@ -153,6 +165,6 @@ Recipient `919136582842`. Result: pass.
 ## Not tested
 
 - Cancel and Mark_appointment_confirmed were not run in a dedicated test. They are wired like Reschedule and follow the same prompt flow.
-- Google Sheets appends and WhatsApp sends never ran for real (no demo sheet, no WhatsApp credential).
+- WhatsApp sends never ran for real (no WhatsApp credential). Google Sheets appends ran for real only in test 1d; tests 1 to 10 predate the demo sheet and had them pinned.
 - The Meta WhatsApp trigger path was not run. The MSG91 webhook was only tested through pinned payloads; no real MSG91 request was received and no real message was sent.
 - The exact production webhook URL form was not called (workflow is inactive).

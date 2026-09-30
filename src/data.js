@@ -955,7 +955,7 @@ export const projects = [
     ],
     title: 'Appointment Desk',
     subtitle: 'An AI front desk for a clinic',
-    tagline: 'Answers fees and hours, offers free slots from the calendar, and hands anything clinical to a person.',
+    tagline: 'Answers fees and hours, books free slots into the calendar, and hands anything clinical to a person.',
     year: '2026',
     summary:
       'A front-desk assistant for a fictional physiotherapy clinic, built in n8n. Patients message it; it answers fees, hours and policies from the clinic’s FAQ, checks the calendar and offers free slots, and books, moves or cancels appointments. Clinical questions go to a person, and emergency wording gets a fixed safety reply before any AI runs.',
@@ -969,7 +969,7 @@ export const projects = [
     metrics: [
       { n: '0', label: 'AI calls when emergency wording is caught: a fixed safety reply goes out instead' },
       { n: '2', label: 'scheduled jobs: 08:00 confirmations on weekdays, 18:30 follow-ups Monday to Saturday' },
-      { n: '15', label: 'tests written up in the test log, all passing' }
+      { n: '16', label: 'tests written up in the test log, all passing' }
     ],
     role:
       'A project of my own, started from a published n8n template: the prompts, the safety screen, the booking and handoff logs, the follow-up jobs and the tests.',
@@ -991,8 +991,8 @@ export const projects = [
         text: 'Fees, hours, address, payment and cancellation, in the clinic’s own words. In the test log the fees answer matched the FAQ exactly.'
       },
       {
-        title: 'Offers free slots',
-        text: 'Asked for next Monday morning, it read the calendar and offered 09:00, 09:30 and 10:00.'
+        title: 'Offers slots and books them',
+        text: 'Asked for next Monday morning, it read the calendar and offered 09:00, 09:30 and 10:00. Given a time, a name and a number, it checked the slot, saved the booking to Google Calendar and logged it.'
       },
       {
         title: 'Clinical questions go to a person',
@@ -1023,7 +1023,7 @@ export const projects = [
     ],
     outcome: [
       'The fees answer, the slot offer, the clinical refusal and the emergency reply all ran for real: the AI model wrote the answers, the slots came from a real read of the demo calendar, and the emergency reply came from the screen before the AI. The screens show those replies',
-      'The screens stop at the offered slots. Saving the booking to the calendar and writing the log rows were tested with simulated responses, because the demo accounts could not write yet, so those steps are not shown',
+      'A booking also went all the way through for real: the slot was checked, the appointment saved to Google Calendar and the log row written. That run used a stand-in calendar where the AI could only see free or busy, and the test booking was deleted afterwards. Moving, cancelling and confirming were tested with simulated calendar responses',
       'The confirmation and follow-up jobs produced the right message for each test appointment. WhatsApp sending is built but switched off for the demo'
     ],
     outcomeNote:
@@ -1597,7 +1597,7 @@ export const services = [
       },
       {
         slug: 'appointment-desk',
-        note: 'Answers fees and hours, offers free slots from the calendar, and hands clinical questions to a person. Emergency wording gets a fixed safety reply before any AI runs.'
+        note: 'Answers fees and hours, books free slots into the calendar, and hands clinical questions to a person. Emergency wording gets a fixed safety reply before any AI runs.'
       },
       {
         slug: 'knowledge-assistant',

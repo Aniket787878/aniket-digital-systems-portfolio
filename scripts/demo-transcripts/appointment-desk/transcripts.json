@@ -20,6 +20,13 @@
     "reply": "I can certainly help you with that. An initial assessment is 45 minutes and costs Rs 1,200.\n\nFor next Monday, 5 October, I have the following morning slots available:\n- 09:00\n- 09:30\n- 10:00\n\nDo any of these work for you?"
   },
   {
+    "id": "booked",
+    "source": "n8n/demos/appointment-desk/test-log.md test 1d",
+    "execution": "23954",
+    "input": "Please book an initial assessment on Monday 5 October at 11:00. My name is Demo Patient Alpha and my mobile is 0000000001.",
+    "reply": "I have booked your initial assessment for Monday, 5 October at 11:00.\n\nPlease arrive 10 minutes early and bring any reports you have. You can cancel or reschedule for free up to 12 hours before your appointment. If you need to change anything after that, please call the clinic."
+  },
+  {
     "id": "clinical",
     "source": "n8n/demos/appointment-desk/test-log.md test 4",
     "execution": "23826",

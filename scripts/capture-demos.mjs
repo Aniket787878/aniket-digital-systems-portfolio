@@ -213,6 +213,7 @@ async function appointmentDesk(browser) {
   const scenes = [
     { id: 'fees', caption: 'Asks for fees and timings, gets the real answer from the clinic’s own FAQ' },
     { id: 'slots', caption: 'Asks to book: the assistant checks the calendar and offers real free slots' },
+    { id: 'booked', caption: 'Picks a time and gives a name: the slot is checked, booked into Google Calendar and logged' },
     { id: 'clinical', caption: 'A clinical question is refused politely and handed to a human' },
     { id: 'emergency', caption: 'An emergency message gets the fixed safety reply, no model involved' },
   ];

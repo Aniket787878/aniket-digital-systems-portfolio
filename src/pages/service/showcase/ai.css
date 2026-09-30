@@ -236,7 +236,7 @@
 .ai-phone {
   display: flex;
   flex-direction: column;
-  height: 560px;
+  height: min(530px, 58vh);
   border-radius: 30px;
   overflow: hidden;
   position: relative;
@@ -307,6 +307,25 @@
   gap: 0.6rem;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+
+/* Previous moments' bubbles, faded above the current thread so the window
+   never opens onto an empty screen. */
+.ai-history {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  opacity: 0.45;
+}
+
+.ai-history-moment {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.ai-history-moment + .ai-history-moment {
+  margin-top: 0.4rem;
 }
 
 .ai-auto,
@@ -468,6 +487,9 @@
 }
 
 .ai-flow-win {
+  display: flex;
+  flex-direction: column;
+  height: min(530px, 58vh);
   border-radius: 18px;
   overflow: hidden;
   transform-origin: 40% 50%;
@@ -480,6 +502,7 @@
 
 .ai-flow-head {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   gap: 0.9rem;
   padding: 0.85rem 1.1rem;
@@ -514,7 +537,8 @@
 
 .ai-flow-board {
   position: relative;
-  aspect-ratio: 760 / 440;
+  flex: 1 1 auto;
+  min-height: 0;
   margin: 0.9rem 1rem 0.4rem;
 }
 
@@ -661,6 +685,7 @@
 
 .ai-flow-foot {
   display: grid;
+  flex: 0 0 auto;
   grid-template-columns: auto 1fr;
   gap: 1rem;
   padding: 0.8rem 1.1rem 1rem;
@@ -824,6 +849,10 @@
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scrollbar-width: none;
+    /* The first tick's "08:00" label is centred on the track's left edge
+       (translateX(-50%)) and would otherwise clip against the scroller's
+       own edge before its own margin can help. */
+    padding-inline: 24px;
   }
 
   .ai-tl-scroll::-webkit-scrollbar {

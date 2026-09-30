@@ -80,6 +80,7 @@ export default function AiShowcase() {
   const { idx } = play
   const moment = MOMENTS[idx]
   const sched = SCHEDULES[idx]
+  const prevMoments = MOMENTS.slice(Math.max(0, idx - 2), idx)
 
   useEffect(() => {
     if (!running) return undefined
@@ -240,7 +241,7 @@ export default function AiShowcase() {
           </div>
 
           <div className="ai-day-grid">
-            <Chat moment={moment} sched={sched} t={t} onHover={setHover} />
+            <Chat moment={moment} sched={sched} t={t} onHover={setHover} prevMoments={prevMoments} />
 
             {wide ? (
               <div className="ai-flow-persp" aria-hidden="true">
@@ -274,7 +275,7 @@ export default function AiShowcase() {
                   <li key={key} className={`ai-used-row${flow.lit.has(key) ? ' is-lit' : ''}`}>
                     <Glyph name={key} className="ai-used-icon" />
                     <span className="ai-used-name">{NODES[key].label}</span>
-                    <span className="stage-mono ai-used-res">{flow.results[key] || (key === moment.channel && flow.lit.has(key) ? (moment.turns[0].user ? 'message received' : 'message sent') : '')}</span>
+                    <span className="stage-mono ai-used-res">{flow.results[key] || (key === moment.channel && flow.lit.has(key) ? (moment.turns[0].user ? 'message received' : 'message prepared') : '')}</span>
                   </li>
                 ))}
               </ul>

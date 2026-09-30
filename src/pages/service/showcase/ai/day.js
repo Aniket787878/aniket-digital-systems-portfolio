@@ -28,8 +28,8 @@ export const MOMENTS = [
     time: '08:00',
     channel: 'wa',
     header: 'WhatsApp · automatic',
-    label: 'Appointment reminder sent',
-    log: 'reminder sent for Thu 1 Oct',
+    label: 'Appointment reminder prepared',
+    log: 'reminder prepared for Thu 1 Oct',
     tally: { r: 1 },
     turns: [
       {
@@ -113,8 +113,8 @@ export const MOMENTS = [
     time: '18:30',
     channel: 'wa',
     header: 'WhatsApp · automatic',
-    label: 'Thank-you follow-up after a visit',
-    log: 'follow-up sent after a visit',
+    label: 'Follow-up message prepared',
+    log: 'follow-up prepared after a visit',
     tally: { f: 1 },
     turns: [
       {
@@ -189,8 +189,8 @@ export const MOMENTS = [
 export const TALLY = [
   { key: 'q', label: 'Questions answered' },
   { key: 'b', label: 'Appointments booked or moved' },
-  { key: 'r', label: 'Reminders sent' },
-  { key: 'f', label: 'Follow-ups sent' },
+  { key: 'r', label: 'Reminders prepared' },
+  { key: 'f', label: 'Follow-ups prepared' },
 ]
 
 /* ---------- timing: everything is a pure function of (moment, t) ---------- */

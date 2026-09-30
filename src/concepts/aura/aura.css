@@ -109,6 +109,14 @@
   text-wrap: balance;
 }
 
+/* The "first visit" heading is never faded by an ancestor's reveal/scroll
+   opacity: always plum at full strength once rendered. (The studio section's
+   .aura-h2 keeps inheriting blush from its dark ground, below.) */
+.c-aura .aura-visit .aura-h2 {
+  color: var(--plum);
+  opacity: 1;
+}
+
 .c-aura .aura-fine {
   margin-top: 26px;
   font-size: 13.5px;
@@ -778,11 +786,25 @@
   gap: 18px;
   padding: 22px 0;
   border-top: 1px solid var(--plum-line);
-  opacity: 0.32;
   transition: opacity 0.6s var(--ease);
 }
 
-.c-aura .aura-step.is-on {
+/* Headings are never allowed to inherit a faded ancestor opacity: they are
+   always plum at full strength. Only the step's number ring and body copy
+   dim when inactive, and never below 55% opacity plum (readability floor). */
+.c-aura .aura-step h3 {
+  color: var(--plum);
+  opacity: 1;
+}
+
+.c-aura .aura-step-no,
+.c-aura .aura-step p {
+  opacity: 0.55;
+  transition: opacity 0.6s var(--ease);
+}
+
+.c-aura .aura-step.is-on .aura-step-no,
+.c-aura .aura-step.is-on p {
   opacity: 1;
 }
 
@@ -1212,7 +1234,21 @@
     bottom: auto;
     width: 100%;
   }
+}
 
+/* The fixed portfolio badge (bottom-left, up to ~340px wide, ~60px tall)
+   sits over the hero on narrow phones. The hero copy sits in normal flow
+   below a large top offset reserved for the bottle canvas; shrink that
+   offset (instead of padding the bottom, which only pushes later sections
+   down) so "See the treatments" clears the badge. */
+@media (max-width: 430px) {
+  .c-aura .aura-hero {
+    padding-top: 58svh;
+    padding-bottom: 96px;
+  }
+}
+
+@media (max-width: 767px) {
   .c-aura .aura-treat {
     padding: 14vh 20px 10vh;
   }

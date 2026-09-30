@@ -1288,6 +1288,8 @@
     font-size: 24px;
   }
   .c-ekam .ek-hero {
+    display: flex;
+    flex-direction: column;
     padding: 104px 20px 96px;
   }
   .c-ekam .ek-eyebrow {
@@ -1298,14 +1300,21 @@
     font-size: 19vw;
     line-height: 0.95;
   }
+  /* Rebalance: "Breathe in." sits around 38% of the viewport height, the
+     lede and buttons follow directly under it, and the breathing ring
+     moves out of its absolute top-right perch to sit below them in normal
+     flow, so the hero never leaves a big empty void above the title. */
   .c-ekam .ek-hero-title {
-    align-self: end;
-    margin-bottom: 32px;
+    align-self: auto;
+    margin: 20vh 0 0;
+  }
+  .c-ekam .ek-hero-foot {
+    margin-top: 28px;
   }
   .c-ekam .ek-ring {
-    top: 150px;
-    bottom: auto;
-    right: 20px;
+    position: static;
+    justify-self: center;
+    margin: 40px auto 0;
     gap: 8px;
   }
   .c-ekam .ek-ring-box {

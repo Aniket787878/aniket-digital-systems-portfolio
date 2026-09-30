@@ -571,6 +571,13 @@
   background: linear-gradient(90deg, rgba(18, 16, 14, 0.72) 0%, rgba(18, 16, 14, 0.42) 42%, transparent 64%);
 }
 
+/* Under reduced motion the camera never walks to the services keyframe, so
+   the sculpture stays parked at the hero position and its stone can sit
+   right behind the "+" icons. Dim the canvas there to ~25% instead. */
+.c-noor.is-still .noor-services::before {
+  background: rgba(18, 16, 14, 0.75);
+}
+
 /* ---------- practice ---------- */
 .c-noor .noor-practice {
   min-height: 115vh;
@@ -1214,6 +1221,14 @@
   .c-noor .noor-process::before,
   .c-noor .noor-contact::before {
     background: linear-gradient(180deg, transparent 0, rgba(18, 16, 14, 0.78) 34vh, rgba(18, 16, 14, 0.86) 100%);
+  }
+
+  /* Process runs longer on mobile (several stacked steps) and the full-bleed
+     wash above hid the sculpture almost completely behind it. Keep the wash
+     close behind the text block only, lighter, so the stone stays visible;
+     --ink (#efe7da) still holds >= 4.5:1 against this depth of black. */
+  .c-noor .noor-process::before {
+    background: linear-gradient(180deg, transparent 0, rgba(18, 16, 14, 0.45) 40vh, rgba(18, 16, 14, 0.62) 100%);
   }
   .c-noor .noor-practice,
   .c-noor .noor-services,

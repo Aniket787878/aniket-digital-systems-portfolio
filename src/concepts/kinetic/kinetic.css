@@ -304,7 +304,11 @@
   gap: 24px;
   padding: 22px var(--pad);
   color: #fff;
-  mix-blend-mode: difference;
+  /* A solid-ish backdrop, not mix-blend-mode: difference, so the hero spine
+     canvas can never wash out "APPROACH SERVICES" underneath it. */
+  background: rgba(12, 13, 13, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.08em;

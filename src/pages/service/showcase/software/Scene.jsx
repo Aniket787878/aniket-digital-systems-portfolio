@@ -148,18 +148,12 @@ function ScreenSlab({ glow, bodyRef, faceRef, edgeRef, haloRef }) {
 
   return (
     <group>
+      {/* The overhead Lightformer used to catch this body's clearcoat and
+          transmission full-on, drawing a hard bright band across the top
+          slab right where the screen reads. Glass stays on the edge line
+          only now; the bezel itself is a flat, matte-ish housing. */}
       <RoundedBox args={[W, T, D]} radius={0.055} smoothness={4} ref={bodyRef}>
-        <meshPhysicalMaterial
-          color="#1b1a1c"
-          roughness={0.12}
-          metalness={0.15}
-          transmission={0.2}
-          thickness={0.6}
-          ior={1.45}
-          clearcoat={1}
-          clearcoatRoughness={0.06}
-          envMapIntensity={1.4}
-        />
+        <meshPhysicalMaterial color="#1b1a1c" roughness={0.32} metalness={0.15} clearcoat={0} envMapIntensity={0.8} />
       </RoundedBox>
       {/* Unlit on purpose: the capture must read as a real screen, not a
           print on a surface, and tone mapping would wash it out. */}
@@ -440,8 +434,9 @@ function placeLabel(el, y, lead, opacity) {
 }
 const CORNERS = [[W / 2, D / 2], [W / 2, -D / 2], [-W / 2, D / 2], [-W / 2, -D / 2]]
 
-function Rig({ progress, labels, metrics, glow }) {
+function Rig({ progress, labels, metrics, glow, onReady }) {
   const group = useRef()
+  const ready = useRef(false)
   const s0 = useRef()
   const s1 = useRef()
   const s2 = useRef()
@@ -456,6 +451,10 @@ function Rig({ progress, labels, metrics, glow }) {
   const rings = useRef([])
 
   useFrame((state, dt) => {
+    if (!ready.current) {
+      ready.current = true
+      onReady?.()
+    }
     const { camera, size } = state
     const slabs = [s0, s1, s2, s3]
     const p = progress.get()
@@ -487,8 +486,10 @@ function Rig({ progress, labels, metrics, glow }) {
     const screenFocus = smooth(1, 1.1, levels.current[0])
     const glowUp = Math.max(lit, screenFocus)
     if (screenFace.current) {
+      // Unlit and mostly full-bright even out of focus: this is meant to
+      // read as a real screen, not a print that dims like the other slabs.
       const base = 0.86 + 0.14 * glowUp
-      screenFace.current.color.setScalar(base * (0.35 + 0.65 * Math.min(1, levels.current[0])))
+      screenFace.current.color.setScalar(base * (0.72 + 0.28 * Math.min(1, levels.current[0])))
     }
     if (screenEdge.current) {
       screenEdge.current.color.lerpColors(new THREE.Color('#ffffff'), SAFFRON, lit)
@@ -565,7 +566,7 @@ function Rig({ progress, labels, metrics, glow }) {
       }
       let y = sumY / 4 - 14
       // Keep labels from stacking on top of each other.
-      y = Math.max(y, prevBottom + 14)
+      y = Math.max(y, prevBottom + 24)
       // Use the label's opened height while it has focus, so the one
       // below makes room before the lines finish unfolding.
       const h = focus === i ? m.full?.[i] : m.short?.[i]
@@ -620,7 +621,7 @@ function Studio() {
   )
 }
 
-export default function Scene({ progress, labels, metrics, active }) {
+export default function Scene({ progress, labels, metrics, active, onReady }) {
   const glow = useMemo(() => makeGlowTexture(), [])
   return (
     <Canvas
@@ -633,7 +634,7 @@ export default function Scene({ progress, labels, metrics, active }) {
     >
       <Studio />
       <Suspense fallback={null}>
-        <Rig progress={progress} labels={labels} metrics={metrics} glow={glow} />
+        <Rig progress={progress} labels={labels} metrics={metrics} glow={glow} onReady={onReady} />
       </Suspense>
     </Canvas>
   )

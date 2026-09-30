@@ -326,7 +326,6 @@ function Fees() {
           <article key={t.name} className={`mr-tier${t.featured ? ' is-featured' : ''}`} data-reveal>
             <div className="mr-tier-head">
               <h3>{t.name}</h3>
-              {t.featured && <span className="mr-tag mr-mono">Most asked for</span>}
             </div>
             <p className="mr-tier-for">{t.for}</p>
             <p className="mr-price">
@@ -341,7 +340,7 @@ function Fees() {
               ))}
             </ul>
             <a href="#m-contact" className={`mr-btn ${t.featured ? 'mr-btn-brass' : 'mr-btn-ghost'} mr-btn-full`}>
-              <span>Talk about {t.name.toLowerCase()}</span>
+              <span>Ask about this plan</span>
               <Arrow />
             </a>
           </article>

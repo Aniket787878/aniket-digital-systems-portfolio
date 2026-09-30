@@ -112,6 +112,7 @@ function Pinned({ onFail }) {
   const metrics = useRef({ fx: 0, fw: 0, lx: 0, short: [], full: [] })
   const [focus, setFocus] = useState(-1)
   const [end, setEnd] = useState(false)
+  const [sceneReady, setSceneReady] = useState(false)
   const inView = useInView(track, { margin: '200px 0px' })
 
   const { scrollYProgress } = useScroll({ target: track, offset: ['start start', 'end end'] })
@@ -153,9 +154,23 @@ function Pinned({ onFail }) {
       <div className="sw3-pin" ref={pin}>
         <div className="stage-glow" aria-hidden="true" />
         <div className="sw3-scene" aria-hidden="true">
+          {/* The real screen capture, centred, while the three.js chunk
+              downloads and the scene renders its first frame; the pinned
+              layout otherwise opens onto a blank canvas for a beat. */}
+          <div className={`sw3-preload${sceneReady ? ' is-done' : ''}`}>
+            <div className="sw3-preload-plate">
+              <PlateArt kind="screen" />
+            </div>
+          </div>
           <SceneBoundary onFail={onFail}>
             <Suspense fallback={null}>
-              <Scene progress={scrollYProgress} labels={labels} metrics={metrics} active={inView} />
+              <Scene
+                progress={scrollYProgress}
+                labels={labels}
+                metrics={metrics}
+                active={inView}
+                onReady={() => setSceneReady(true)}
+              />
             </Suspense>
           </SceneBoundary>
         </div>

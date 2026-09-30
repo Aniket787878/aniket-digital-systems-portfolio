@@ -1,7 +1,10 @@
 # CLAUDE.md
 
-Portfolio site for Aniket — sells AI and operations automation to service
-businesses (clinics, studios, agencies, consultancies).
+Portfolio site for Aniket — sells websites, custom software and AI/automation
+to service businesses (clinics, studios, agencies, consultancies). One site,
+three service areas, each with its own page (`/websites`, `/software`, `/ai`,
+driven by `services` in `src/data.js`); see `docs/system/05-icp-positioning.md`
+(2026-09-30) for why it is not three sites.
 
 **Goal: win client work *and* land jobs.** Audience is "both, client-leaning" —
 when a change serves only one, serve the buyer.
@@ -60,8 +63,12 @@ every deep link 404s on refresh. Runbook: `docs/deploy.md`.
     src/      code        public/   static assets
     docs/     all prose   n8n/      importable workflow
 
-`src/pages/HomePage.jsx` is composition only — nine bands, one file each in
-`src/pages/home/`, named to match the bands in `HomePage.css`.
+`src/pages/HomePage.jsx` is composition only — ten bands, one file each in
+`src/pages/home/`, named to match the bands in `HomePage.css`. The three service
+pages are one component, `src/pages/ServicePage.jsx`, composed from
+`src/pages/service/` plus the home `Faq` and `Cta` bands; its styles are
+`ServicePage.css` (prefix `svc-`) on top of HomePage.css, which App loads on
+every route.
 
 ## Rules that fail silently
 
@@ -147,8 +154,11 @@ measure both at matching viewports before changing anything.
 Branded domain (set `site.origin` in `data.js`; canonical, OG, JSON-LD,
 robots.txt and sitemap.xml are generated from it by the `siteMeta` plugin in
 `vite.config.js`) · `site.bookingUrl` (Cal.com; setting it makes "Book a
-15-min call" the primary button everywhere) · Quick-Win INR price (placeholder
-₹25,000) · case-study numbers · testimonial · CV PDF
+15-min call" the primary button everywhere) · placeholder prices, marked `TODO`
+in `packages` (Quick-Win ₹25,000; Business Website from ₹25,000 / $690; Website
++ AI Assistant from ₹60,000 / $1,500; AI Roadmap Session ₹15,000 / $290) ·
+a `Service` column in the "Portfolio leads" sheet (the form now sends `service`;
+the live n8n workflow needs the column before it can file it) · case-study numbers · testimonial · CV PDF
 and a real headshot (the `/about` page now exists and renders labelled slots for
 both) · real screenshots.
 

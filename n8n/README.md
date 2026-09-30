@@ -23,7 +23,11 @@ Everything runs on the aniket.html@gmail.com Google account.
    create a sheet named `Portfolio leads` and rename its first tab to `Leads`.
    Paste this into row 1 (or import `leads-sheet-header.csv`):
 
-   `Submitted At | Name | Email | Company | Workflow | Budget | Source | Stage`
+   `Submitted At | Name | Email | Company | Workflow | Budget | Source | Stage | Service`
+
+   `Service` (added 2026-09-30) is which area the enquiry is for: `websites`,
+   `software`, `ai` or `not_sure`, from the form's "What do you need?". On a
+   sheet made before then, add the header in the next empty column.
 
    The workflow maps fields to these headers **by name**, so the spelling has
    to match exactly.

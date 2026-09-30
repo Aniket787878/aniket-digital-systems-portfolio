@@ -71,6 +71,12 @@
               "name": "Stage",
               "value": "New",
               "type": "string"
+            },
+            {
+              "id": "7c1f3a52-9d4e-4b8a-a1f6-2e5d8c9b0f13",
+              "name": "Service",
+              "value": "={{ $json.body.service || 'not_sure' }}",
+              "type": "string"
             }
           ]
         },
@@ -195,9 +201,9 @@
     {
       "parameters": {
         "sendTo": "aniket.html@gmail.com",
-        "subject": "=New lead: {{ $('Clean fields').item.json.Name }} ({{ $('Clean fields').item.json.Budget }})",
+        "subject": "=New lead: {{ $('Clean fields').item.json.Name }} ({{ $('Clean fields').item.json.Service }}, {{ $('Clean fields').item.json.Budget }})",
         "emailType": "text",
-        "message": "={{ $('Clean fields').item.json.Name }} <{{ $('Clean fields').item.json.Email }}>\nCompany: {{ $('Clean fields').item.json.Company || 'not given' }}\nBudget: {{ $('Clean fields').item.json.Budget }}\nSource: {{ $('Clean fields').item.json.Source }}\n\nWhat they want fixed:\n{{ $('Clean fields').item.json.Workflow }}\n\nSaved to the Portfolio leads sheet. Reply within 24 hours.",
+        "message": "={{ $('Clean fields').item.json.Name }} <{{ $('Clean fields').item.json.Email }}>\nCompany: {{ $('Clean fields').item.json.Company || 'not given' }}\nLooking for: {{ $('Clean fields').item.json.Service }}\nBudget: {{ $('Clean fields').item.json.Budget }}\nSource: {{ $('Clean fields').item.json.Source }}\n\nWhat they want fixed:\n{{ $('Clean fields').item.json.Workflow }}\n\nSaved to the Portfolio leads sheet. Reply within 24 hours.",
         "options": {
           "appendAttribution": false,
           "replyTo": "={{ $('Clean fields').item.json.Email }}"

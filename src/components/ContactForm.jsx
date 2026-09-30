@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { site, budgetBands, whatsappPrefill } from '../data.js'
+import { Link, useSearchParams } from 'react-router-dom'
+import { site, budgetBands, whatsappPrefill, services } from '../data.js'
 import { useCurrency } from '../currency.js'
 import { hasBooking } from '../booking.js'
 import BookingCta from './BookingCta.jsx'
@@ -22,6 +22,21 @@ const ALL_BANDS = [...budgetBands.usd, ...budgetBands.inr]
 function budgetLabel(value) {
   const match = ALL_BANDS.find((option) => option.value === value)
   return match ? match.label : value
+}
+
+/* "What do you need?": one option per service area, plus not sure. The
+   value is the area's slug, sent as `service`, so the lead sheet says
+   which area every enquiry is for. A service page's "send a message"
+   link preselects its own area with ?service=<slug>. */
+const SERVICE_OPTIONS = [
+  ...services.map((area) => ({ value: area.slug, label: area.formLabel, example: area.example })),
+  { value: 'not_sure', label: 'Not sure yet' }
+]
+const DEFAULT_EXAMPLE =
+  'For example: we answer the same booking questions on WhatsApp all day, then copy every booking into a spreadsheet by hand.'
+
+function serviceOption(value) {
+  return SERVICE_OPTIONS.find((option) => option.value === value)
 }
 
 /* site.whatsapp may be empty, a phone number, or a full link. */
@@ -79,6 +94,10 @@ function DirectContact() {
 function LeadForm() {
   const currency = useCurrency()
   const bands = budgetBands[currency]
+  const [params] = useSearchParams()
+  const [service, setService] = useState(() =>
+    serviceOption(params.get('service')) ? params.get('service') : ''
+  )
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [company, setCompany] = useState('')
@@ -112,9 +131,10 @@ function LeadForm() {
     `Name: ${name}`,
     `Email: ${email}`,
     company ? `Business: ${company}` : null,
+    service ? `Looking for: ${serviceOption(service).label}` : null,
     budgetBand ? `Rough budget: ${budgetLabel(budgetBand)}` : null,
     '',
-    'What takes up too much of our week:',
+    'What we need:',
     workflowBroken
   ]
     .filter((line) => line !== null)
@@ -170,6 +190,7 @@ function LeadForm() {
 
     const payload = {
       ...trimmed,
+      service: service || 'not_sure',
       budget_band: budgetBand,
       source: document.referrer || 'direct',
       submitted_at: new Date().toISOString()
@@ -284,12 +305,32 @@ function LeadForm() {
           />
         </div>
 
+        <fieldset className="contact-fieldset">
+          <legend className="contact-legend">What do you need?</legend>
+          <div className="contact-radios">
+            {SERVICE_OPTIONS.map((option) => (
+              <label className="contact-radio" key={option.value}>
+                <input
+                  type="radio"
+                  name="service"
+                  value={option.value}
+                  required
+                  checked={service === option.value}
+                  onChange={(event) => setService(event.target.value)}
+                />
+                <span>{option.label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
         <div className="contact-field">
           <label className="contact-label" htmlFor="contact-workflow">
-            What takes up too much of your week?
+            Tell me a little about it
           </label>
           <p className="contact-hint" id="contact-workflow-hint">
-            A couple of sentences is plenty. No need to know what the fix is.
+            What you need, or what takes up too much of your week. A couple
+            of sentences is plenty. No need to know what the fix is.
           </p>
           <textarea
             className="contact-textarea"
@@ -297,7 +338,7 @@ function LeadForm() {
             name="workflow_broken"
             rows={5}
             aria-describedby="contact-workflow-hint"
-            placeholder="For example: we answer the same booking questions on WhatsApp all day, then copy every booking into a spreadsheet by hand."
+            placeholder={serviceOption(service)?.example || DEFAULT_EXAMPLE}
             required
             minLength={20}
             maxLength={1000}
@@ -342,7 +383,7 @@ function LeadForm() {
         {status === 'invalid' && (
           <p className="contact-error" role="alert">
             Add your name, your email and a couple of sentences about what
-            takes up your week, then send.
+            you need, then send.
           </p>
         )}
 

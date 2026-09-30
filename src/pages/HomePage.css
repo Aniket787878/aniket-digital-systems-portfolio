@@ -604,6 +604,51 @@
   padding-top: 0.4rem;
 }
 
+/* --- Service doors: the project card, opening a service page ---
+   (components/ServiceDoor.jsx; three on the Services band here, two at
+   the foot of each service page.) */
+.doors {
+  margin-top: 0;
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+}
+
+.door-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--accent-deep);
+}
+
+.door-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--accent-tint);
+}
+
+.door-title {
+  font-size: 1.375rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.card-body .door-from {
+  margin-top: 0.2rem;
+  font-size: 0.9375rem;
+  color: var(--muted-dark);
+}
+
+.door-from strong {
+  font-weight: 500;
+  color: var(--ink-dark);
+}
+
 /* ============================================================
    2b — Product tour (night), pinned: a scroll-driven camera over the
    real screens. Desktop with motion only; the Work cards stand in
@@ -1812,6 +1857,13 @@
   .cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  /* Three doors in a two-column grid leave one hanging; stack them. */
+  .doors {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 560px;
+    margin-inline: auto;
+  }
 }
 
 /* Phones, and anyone who asked for less motion: the process stacks
@@ -1888,13 +1940,17 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  /* On a phone the headline is four short sentences, one per line. The
-     longest ("Without anyone typing.") is ~9.8em wide; 7vw keeps each on
-     one row down to 320px and leaves the primary button on the first
-     screen at 390x844. */
+  /* On a phone each headline sentence ("Websites that bring the work
+     in.") is wider than the screen, so it wraps inside itself; balancing
+     splits it into two even rows instead of a full row and an orphaned
+     "in.". 7vw leaves the primary button on the first screen at 390x844. */
   .dusk-hero .dusk-title {
     margin-top: 1.25rem;
     font-size: 7vw;
+  }
+
+  .dusk-hero .dusk-phrase {
+    text-wrap: balance;
   }
 
   .dusk-hero .dusk-sub {

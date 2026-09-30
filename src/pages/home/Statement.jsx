@@ -31,9 +31,9 @@ export default function Statement() {
         <ScrollWords
           className="statement-text"
           parts={[
-            'I replace that with one system',
+            'I build the website that brings the work in,',
             { icon: 'flow' },
-            'that runs by itself. Built end to end, and yours to keep.'
+            'and the system that runs it by itself. End to end, and yours to keep.'
           ]}
         />
 

@@ -42,20 +42,30 @@ const positions = new Map()
   - it keys on location.key, not pathname, so tapping the nav link for the
     page you are already on also returns you to the top. That is a real
     click path — it is what the mobile menu offers.
+
+  A forward navigation to a URL with a hash (a service page's "send a
+  message" goes to /contact?service=ai#write) lands on that element
+  instead of the top. The new page is already in the DOM here, in a
+  layout effect, so the target can be found before paint.
 */
 export default function ScrollToTop() {
-  const { key } = useLocation()
+  const { key, hash } = useLocation()
   const navigationType = useNavigationType()
 
   useLayoutEffect(() => {
     const saved = positions.get(key)
-    const top = navigationType === 'POP' && typeof saved === 'number' ? saved : 0
-    window.scrollTo({ top, left: 0, behavior: 'instant' })
+    const pop = navigationType === 'POP' && typeof saved === 'number'
+    const target = !pop && hash ? document.getElementById(decodeURIComponent(hash.slice(1))) : null
+    if (target) {
+      target.scrollIntoView({ block: 'start', behavior: 'instant' })
+    } else {
+      window.scrollTo({ top: pop ? saved : 0, left: 0, behavior: 'instant' })
+    }
 
     return () => {
       positions.set(key, Math.round(window.scrollY))
     }
-  }, [key, navigationType])
+  }, [key, hash, navigationType])
 
   return null
 }

@@ -75,6 +75,9 @@ export default function Nav() {
           <NavLink to="/" end>
             Home
           </NavLink>
+          <NavLink to="/websites">Websites</NavLink>
+          <NavLink to="/software">Software</NavLink>
+          <NavLink to="/ai">AI</NavLink>
           <NavLink to="/projects">Projects</NavLink>
           <NavLink to="/about">About</NavLink>
           <NavLink to="/contact">Contact</NavLink>
@@ -139,6 +142,9 @@ export default function Nav() {
           <NavLink to="/" end>
             Home
           </NavLink>
+          <NavLink to="/websites">Websites</NavLink>
+          <NavLink to="/software">Software</NavLink>
+          <NavLink to="/ai">AI</NavLink>
           <NavLink to="/projects">Projects</NavLink>
           <NavLink to="/about">About</NavLink>
           <NavLink to="/contact">Contact</NavLink>

@@ -55,10 +55,11 @@ misspelled `Refrence files/` (now `docs/reference/folioblox.html`).
 | Path | File | Status | Notes |
 |------|------|--------|-------|
 | `/` | `src/pages/HomePage.jsx` + `src/pages/home/` | Done | `HomePage.jsx` is composition only; one file per band — see *Home page composition* below |
+| `/websites`, `/software`, `/ai` | `src/pages/ServicePage.jsx` + `src/pages/service/` | Done (2026-09-30) | One page per service area (`services` in `data.js`), the pages outreach links point at. Bands: dusk hero with three "what you get" cards, proof (night, project cards plus this site's own screens), the area's price cards (paper), the area's FAQ (the home `Faq` band with `items`), the other two areas as doors (night), the home closing `Cta` with `service` so its links preselect the area in the contact form |
 | `/projects` | `src/pages/ProjectsPage.jsx` | Done | Reads `src/data.js` |
 | `/projects/:slug` | `src/pages/ProjectDetailPage.jsx` | Done | Renders `problem`, `system`, `outcome` and `outcomeNote` |
 | `/about` | `src/pages/AboutPage.jsx` | Done | The identity layer that puts a real person behind the work (see `docs/research/06`; the solo framing there was superseded 2026-09-27). Composition only, bands in `src/pages/about/`: portrait hero (dusk monogram card until `founder.photo` is set), a five-step stepper (`founder.steps`), the toolbox grouped by outcome (`toolbox`), the five project films in the site's dialog player, then the home closing CTA. Story renders only once `founder.story` is written |
-| `/contact` | `src/pages/ContactPage.jsx` | Done | Three bands (`src/pages/contact/`): dusk header with the ways to reach me, the `ContactForm.jsx` card on paper, a "what happens next" stepper on night |
+| `/contact` | `src/pages/ContactPage.jsx` | Done | Three bands (`src/pages/contact/`): dusk header with the ways to reach me, the `ContactForm.jsx` card on paper, a "what happens next" stepper on night. `?service=websites|software|ai` preselects the form's "What do you need?" option; `#write` lands on the form (`ScrollToTop` honours the hash on forward navigation) |
 | `*` | `src/pages/NotFoundPage.jsx` | Done | Real 404 with a CTA, wired to `path="*"` in `App.jsx` |
 
 **Every route resets the scroll offset — `src/components/ScrollToTop.jsx`.**
@@ -128,7 +129,8 @@ always import `site.email`.
 |---|---|---|
 | `proofTools` | `{ name, note }[]` | Home proof strip — 6 tools + why each is used |
 | `capabilities` | `{ index, title, blurb, items[] }[]` | One consumer now: the Capabilities band (2b), which renders all four fields. The hero used to repeat `index` + `title` as a numbered range; that duplicated 2b word for word and cost the hero 179px it did not have, so it is gone |
-| `packages` | `{ name, price, timeline, featured, forWho, deliverable, includes[] }[]` | The three offers from `02-service-catalog.md`, in selling order. Sprint is `featured` |
+| `services` | `{ slug, path, name, formLabel, example, icon, docTitle, title[2], sub, promise, points[3], from, media, proofHead[2], proof[], faq[] }[]` | The three service areas (2026-09-30). Drives the three service pages, the home Services band's doors, the closing band's price anchor and the contact form's "What do you need?" options. `proof` entries are project slugs or `{ key, title, subtitle, note, image, badge, to, cta }` for proof that is not a project (this site, its form) |
+| `packages` | `{ lane, name, price, timeline, timelineChart, featured, explainer, forWho, deliverable, includes[] }[]` | The offers from `02-service-catalog.md`, grouped by `lane` (a `services` slug), in selling order within each. `featured` marks each area's "Start here". `timelineChart` picks the bars on the About page's timeline |
 | `carePlan` | `{ name, price, blurb }` | Retainer line under the pricing grid |
 | `founder` | `{ name, role, intro, story, photo, basedIn, steps[], principles[], quickFacts[] }` | The `/about` identity layer. `photo` is empty until a real file lands in `public/` (set `photo: '/aniket.jpg'`; the page shows a drawn dusk monogram card meanwhile). `story` renders only when written. `steps` restate promises made elsewhere on the site. `principles` is currently unused by the page. Nothing invented |
 | `toolbox` | `[{ key, outcome, tools[{ name, note }] }]` | The `/about` toolbox, sorted by what each tool does for the client. Notes reuse `proofTools` where one exists |
@@ -229,19 +231,19 @@ that order fixed. The reasoning is repeated in a comment in `HomePage.jsx`.
 
 | # | Band | File in `src/pages/home/` | Reads from |
 |---|---|---|---|
-| 1 | Hero (dusk scene with the brand explainer; poster on phones) | `Hero.jsx` | `site.headline`, `explainers.brand`, `whatsappPrefill.hero` |
-| 1b | Proof strip — who it is for, then the stack | `ProofStrip.jsx` | `proofTools`. The `.proof-lede` ICP line is hardcoded here; it was the hero lede until the hero was cut to four elements |
-| 2 | Selected work | `Work.jsx` | `projects` (incl. `diagram`) |
-| 3b | Testimonials | `Testimonials.jsx` | `testimonials` (empty → honest slot), `social` (GitHub) |
-| 2b | Capabilities | `Capabilities.jsx` | `capabilities[].blurb/items` |
-| 3 | Process | `Process.jsx` | `process`, `images.process` (usually empty) |
-| 4b | Pricing | `Pricing.jsx` | `packages`, `carePlan` |
-| 5b | CTA band | `CtaBand.jsx` | `site.pricingAnchor`, `site.availability` |
-| 4 | FAQ | `Faq.jsx` | `faq` |
-| 5 | Closing gallery | `Gallery.jsx` | `projects` — the arc fans the four case studies |
+| 1 | Hero (dusk scene with the brand explainer; poster on phones) | `Hero.jsx` | `site.headline`, `site.subtitle`, `explainers.brand`, `whatsappPrefill.audit` |
+| 1b | Statement + showreel | `Statement.jsx` | `heroReel` |
+| 2 | Work | `Work.jsx` | `projects`, `films` |
+| 4 | Services: three doors, one per area, each opening its service page | `Services.jsx` | `services`, `site.guarantee`, `carePlan` (via `components/Pricing.jsx`, `components/ServiceDoor.jsx`) |
+| 2b | Product tour | `Tour.jsx` | `screenTour` |
+| 2c | Connect | `Connect.jsx` | nothing (its copy lives in the file) |
+| 3b | Testimonials | `Testimonials.jsx` | `testimonials` (empty → honest slot) |
+| 3 | Process | `Process.jsx` | `process` |
+| 5 | FAQ | `Faq.jsx` | `faq` (the service pages pass their own `items`) |
+| 6 | Closing CTA | `Cta.jsx` | `site.pricingAnchor` filled from each area's `services[].from` |
 
-`site.availability` renders **once**, in the CTA band. It used to also close the
-gallery; two copies on one page reads as a templating mistake.
+The full price cards moved to the service pages on 2026-09-30; the home page
+only says what the three areas are and where each starts.
 
 ## Layout contract
 

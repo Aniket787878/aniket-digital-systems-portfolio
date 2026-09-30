@@ -33,6 +33,7 @@ Read the webhook URL from `import.meta.env.VITE_LEAD_WEBHOOK_URL`. If it's missi
 | `email` | email | yes | HTML5 validation |
 | `company` | text | no | max 100 |
 | `workflow_broken` | textarea | yes | placeholder: "What's the manual/repetitive workflow you'd want automated?" — max 1000, min 20 |
+| `service` | radio | yes | "What do you need?" (added 2026-09-30): `websites`, `software`, `ai` (the `services` slugs in `src/data.js`) or `not_sure`. Preselected from `?service=` in the URL. The message box's example text follows the choice |
 | `budget_band` | radio | yes | follows the site's USD/INR toggle (`budgetBands` in `src/data.js`). INR: `<50k`, `50k-2L`, `2L+`, `not_sure`. USD: `usd:<1.5k`, `usd:1.5k-5k`, `usd:5k+`, `not_sure`. A hidden honeypot `company_website` is never sent; if it is filled the form shows success and sends nothing. |
 | `source` | hidden | auto | value: `document.referrer || 'direct'` |
 | `submitted_at` | hidden | auto | ISO timestamp |

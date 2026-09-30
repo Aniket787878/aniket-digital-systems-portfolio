@@ -4,6 +4,7 @@ import ScrollToTop from './components/ScrollToTop.jsx'
 import Nav from './components/Nav.jsx'
 import Footer from './components/Footer.jsx'
 import HomePage from './pages/HomePage.jsx'
+import ServicePage from './pages/ServicePage.jsx'
 import ProjectsPage from './pages/ProjectsPage.jsx'
 import ProjectDetailPage from './pages/ProjectDetailPage.jsx'
 import AboutPage from './pages/AboutPage.jsx'
@@ -39,6 +40,9 @@ export default function App() {
       <main className="main" id="main" tabIndex={-1}>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/websites" element={<ServicePage slug="websites" />} />
+          <Route path="/software" element={<ServicePage slug="software" />} />
+          <Route path="/ai" element={<ServicePage slug="ai" />} />
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/projects/:slug" element={<ProjectDetailPage />} />
           <Route path="/about" element={<AboutPage />} />

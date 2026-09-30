@@ -214,15 +214,17 @@ export const site = {
      the second button. See components/BookingCta.jsx. */
   bookingUrl: '',
 
-  /* Positioning, in one place: service businesses broadly (clinics,
-     studios, agencies, growing teams). The clinic system is the proof,
-     not the market. The hero, the meta description, the JSON-LD and the
-     OG card (scripts/render-og.mjs) all read from here. */
-  headline: ['Enquiries answered. Bookings confirmed.', 'Follow-ups sent. Without anyone typing.'],
+  /* Positioning, in one place (docs/system/05-icp-positioning.md,
+     2026-09-30): three service areas, one system underneath. The website
+     brings the work in; the software and the AI run the rest. Buyers are
+     still service businesses broadly (clinics, studios, agencies, growing
+     teams). The hero, the meta description, the JSON-LD and the OG card
+     (scripts/render-og.mjs) all read from here. */
+  headline: ['Websites that bring the work in.', 'Software and AI that run the rest.'],
   subtitle:
-    'Custom systems and automations for clinics, studios, agencies and growing teams, live in weeks.',
+    'Websites, custom software and AI workflows for clinics, studios, agencies and growing teams. Built as one system, live in weeks.',
   tagline:
-    'Enquiries answered, bookings confirmed and follow-ups sent without anyone typing. Custom systems and automations for clinics, studios, agencies and growing teams, live in weeks.',
+    'Websites that bring the work in, and software and AI that run the rest. Built as one system for clinics, studios, agencies and growing teams, live in weeks.',
 
   /* Shown beside the prices. A promise, so it lives with the data it
      qualifies rather than in a component. */
@@ -234,21 +236,21 @@ export const site = {
   location: 'Based in India · working remotely worldwide',
   availability:
     'Taking on new projects. Next start slot is usually one to two weeks out.',
-  /* A template, filled from the first entry in `packages` (the entry
-     offer) in the visitor's currency, so the price is stated once. */
-  pricingAnchor: 'The usual starting point is an {offer}: one task, fully automated, {price}, {timeline}.',
+  /* A template, filled from each area's `from` price in `services`, in
+     the visitor's currency, so every starting price is stated once. */
+  pricingAnchor: 'Websites from {websites}. AI and automation from {ai}. Custom software from {software}.'
 }
 
 /* Title, description and share card for index.html. vite.config.js writes
    these into the <head> at build time, together with site.origin. */
 export const seo = {
-  title: 'Enquiries answered. Bookings confirmed. · Aniket',
+  title: 'Websites, software and AI for service businesses · Aniket',
   description:
-    'Enquiries answered, bookings confirmed and follow-ups sent without anyone typing. Custom systems and automations for clinics, studios, agencies and growing teams, live in weeks.',
-  ogTitle: 'Enquiries answered. Bookings confirmed. Follow-ups sent.',
+    'Websites that bring the work in, and software and AI that run the rest. Built as one system for clinics, studios, agencies and growing teams, live in weeks.',
+  ogTitle: 'Websites that bring the work in. Software and AI that run the rest.',
   ogImage: '/og.png',
   ogImageAlt:
-    'Enquiries answered. Bookings confirmed. Follow-ups sent. Without anyone typing. Custom systems and automations by Aniket.'
+    'Websites that bring the work in. Software and AI that run the rest. Built as one system by Aniket.'
 }
 
 /*
@@ -263,12 +265,12 @@ export const seo = {
 */
 export const founder = {
   name: 'Aniket',
-  role: 'Automation & systems builder',
+  role: 'Websites, software and AI',
 
   /* One honest paragraph. Asserts only what the case studies, pricing and
      process on the rest of the site already stand behind. */
   intro:
-    'Booking, intake, follow-ups, payments and AI, built as one system, so the work stops living in WhatsApp threads and spreadsheets. Clinics, studios, agencies, consultancies and growing teams all hit the same shape of problem. You own what ships.',
+    'The website that brings the enquiry in, the software that holds it and the AI that does the repeat work, built as one system, so the work stops living in WhatsApp threads and spreadsheets. Clinics, studios, agencies, consultancies and growing teams all hit the same shape of problem. You own what ships.',
 
   /* Aniket's own story — how he got here, what he did before — is his to
      write. Left empty on purpose rather than invented; the About page
@@ -356,7 +358,7 @@ export const founder = {
      stays out. (The stack now lives in `toolbox`, below `proofTools`.) */
   quickFacts: [
     { label: 'Based', value: 'India · remote worldwide' },
-    { label: 'Focus', value: 'Booking, intake, follow-ups, payments, AI' },
+    { label: 'Focus', value: 'Websites, software, AI and automation' },
     { label: 'Availability', value: 'Taking new projects' }
   ]
 }
@@ -383,17 +385,23 @@ export const testimonials = []
   Unused while `site.whatsapp` is empty — see components/WhatsAppCta.jsx.
 */
 export const whatsappPrefill = {
-  hero: 'Hi Aniket, I saw your site. Can we talk about a system for my business?',
-  /* The free-audit entry point (docs/research/06, gap G5) — highest-intent
-     top-of-funnel opener, in the buyer's voice. */
+  hero: 'Hi Aniket, I saw your site. Can we talk about what my business needs?',
+  /* The free-call entry point (docs/research/06, gap G5), highest-intent
+     top-of-funnel opener, in the buyer's voice. Was "automation audit";
+     widened 2026-09-30 when websites and software joined the offer. */
   audit:
-    'Hi Aniket, I’d like to book the free 15-minute automation audit. The part of our week that eats the most time is:',
+    'Hi Aniket, I’d like to book the free 15-minute call. What I need help with is:',
   /* `{offer}` is replaced with the package name by home/Services.jsx. */
   pricing: 'Hi Aniket, I’d like to know more about the {offer} for my business.',
-  cta: 'Hi Aniket, there’s a part of our week I’d like to stop doing by hand. Can we talk?',
-  contact: 'Hi Aniket, I have a process I’d like to automate. Do you have 20 minutes?',
+  cta: 'Hi Aniket, I have something I’d like built. Can we talk?',
+  contact: 'Hi Aniket, I’d like to talk about a project. Do you have 20 minutes?',
+  /* One per service page (`services[].slug`), so the chat says which
+     page did the convincing. */
+  websites: 'Hi Aniket, I saw your websites page. I’d like a website for my business.',
+  software: 'Hi Aniket, I saw your software page. I’d like to talk about a tool for my business.',
+  ai: 'Hi Aniket, I saw your AI page. I’d like to talk about using AI in my business.',
   footer: 'Hi Aniket, quick question about the systems you build.',
-  nav: 'Hi Aniket, I’m on your site and would like to talk about a system for my business.'
+  nav: 'Hi Aniket, I’m on your site and would like to talk about a project for my business.'
 }
 
 export const projects = [
@@ -975,18 +983,116 @@ export const toolbox = [
 ]
 
 /*
-  The productized offers, in the order they are meant to be sold: the
-  Quick-Win is the entry offer (one workflow, low risk, a fast first yes),
-  the Sprint is what a Quick-Win client buys next, and the other two are
-  the larger builds. The first entry is the one `site.pricingAnchor` names.
+  The productized offers, grouped by service area (`lane` matches a
+  `services[].slug`). Within an area they are in the order they are meant
+  to be sold: the cheapest first yes leads, the larger builds follow.
+  Each service page shows its own area; the About page's timeline chart
+  shows the ones marked `timeline: true`.
 
   Prices are per currency. USD is the default for visitors outside India;
   INR is shown to visitors whose browser language or timezone says India,
-  or who flip the toggle (src/currency.js). The existing INR bands are
-  unchanged from docs/system/02-service-catalog.md.
+  or who flip the toggle (src/currency.js). The automation, assistant and
+  internal-tool INR bands are unchanged from
+  docs/system/02-service-catalog.md. The website, website + AI and roadmap
+  prices were added 2026-09-30 as placeholders Aniket agreed to start from;
+  they are marked TODO until he confirms them.
 */
 export const packages = [
   {
+    lane: 'websites',
+    name: 'Business Website',
+    explainer: null,
+    price: {
+      usd: 'From $690', // TODO: placeholder, Aniket to confirm
+      inr: 'From ₹25,000' // TODO: placeholder, Aniket to confirm
+    },
+    timeline: 'Live in 2 weeks',
+    timelineChart: true,
+    featured: true,
+    forWho: 'No website yet, or one that looks dated and never brings in an enquiry.',
+    deliverable:
+      'A fast, clear website on your own domain, with every enquiry landing straight in your inbox and on WhatsApp.',
+    includes: [
+      'Up to 5 pages, planned with you on a short call',
+      'Built for phones first, and set up for Google search',
+      'Enquiry form and WhatsApp button wired to your team'
+    ]
+  },
+  {
+    lane: 'websites',
+    name: 'Website + AI Assistant',
+    explainer: 'ai-assistant',
+    price: {
+      usd: 'From $1,500', // TODO: placeholder, Aniket to confirm
+      inr: 'From ₹60,000' // TODO: placeholder, Aniket to confirm
+    },
+    timeline: 'Live in 3 weeks',
+    featured: false,
+    forWho: 'Visitors asking the same questions at all hours, and enquiries going cold before anyone replies.',
+    deliverable:
+      'Everything in the Business Website, plus an assistant on the site that answers from your own information and hands ready buyers to you.',
+    includes: [
+      'Answers from your own services, prices and policies',
+      'Hands over on WhatsApp or email, with a short summary',
+      'Every conversation saved, so you can read what it said'
+    ]
+  },
+  {
+    lane: 'software',
+    name: 'Internal Tool / Dashboard',
+    explainer: 'internal-tool',
+    price: { usd: '$4,000 – $8,000', inr: '₹1.5L – ₹3L' },
+    timeline: 'Live in 3–4 weeks',
+    timelineChart: true,
+    featured: true,
+    forWho: 'Running the business from a spreadsheet nobody fully trusts.',
+    deliverable:
+      'A simple web app that replaces the spreadsheet, easy enough that nobody needs training.',
+    includes: [
+      'A dashboard of what your team is working on',
+      'A portal for tasks and who can see what',
+      'A booking system for rooms, staff or equipment'
+    ]
+  },
+  {
+    lane: 'software',
+    name: 'Custom Platform',
+    explainer: null,
+    /* Not a range: the FAQ already says anything this size is quoted
+       once the process is mapped, and this card says the same. */
+    price: 'Quoted after a call',
+    timeline: 'Live in 3–5 weeks',
+    featured: false,
+    forWho: 'A whole operation to run in one place: clients, bookings, payments, records and the team.',
+    deliverable:
+      'A complete system with separate views for your team, your clients and you, the kind the clinic on this site runs its day on.',
+    includes: [
+      'Client and staff apps that install like normal apps',
+      'Bookings, payments and signed forms in one flow',
+      'Each person sees only what they are allowed to'
+    ]
+  },
+  {
+    lane: 'ai',
+    name: 'AI Roadmap Session',
+    explainer: null,
+    price: {
+      usd: '$290', // TODO: placeholder, Aniket to confirm
+      inr: '₹15,000' // TODO: placeholder, Aniket to confirm
+    },
+    timeline: 'Ready in 1 week',
+    featured: false,
+    forWho: 'You know AI could save your team time, but not where to start or what is worth paying for.',
+    deliverable:
+      'A working session on how your week really runs, then a short written plan of where AI and automation would pay off first.',
+    includes: [
+      'A 60-minute session with you and your team',
+      'Every idea ranked by time saved against cost',
+      'A fixed quote for the first build, if you want one'
+    ]
+  },
+  {
+    lane: 'ai',
     name: 'Automation Quick-Win',
     explainer: null,
     price: {
@@ -994,7 +1100,7 @@ export const packages = [
       inr: '₹25,000' // TODO: placeholder, Aniket to confirm
     },
     timeline: 'Live in 5 days',
-    entry: true,
+    timelineChart: true,
     featured: true,
     forWho: 'One job that eats an hour a day and should just happen on its own.',
     deliverable:
@@ -1006,6 +1112,7 @@ export const packages = [
     ]
   },
   {
+    lane: 'ai',
     name: 'Ops Automation Sprint',
     explainer: 'ops-sprint',
     price: { usd: '$1,500 – $2,500', inr: '₹40k – ₹80k' },
@@ -1021,10 +1128,12 @@ export const packages = [
     ]
   },
   {
+    lane: 'ai',
     name: 'AI Assistant Build',
     explainer: 'ai-assistant',
     price: { usd: '$2,500 – $4,500', inr: '₹80k – ₹1.5L' },
     timeline: 'Live in 3 weeks',
+    timelineChart: true,
     featured: false,
     forWho: 'A team answering the same questions and lookups over and over.',
     deliverable:
@@ -1033,21 +1142,6 @@ export const packages = [
       'An assistant for new client questions',
       'An assistant that answers staff from your own rules',
       'An assistant that drafts quotes'
-    ]
-  },
-  {
-    name: 'Internal Tool / Dashboard',
-    explainer: 'internal-tool',
-    price: { usd: '$4,000 – $8,000', inr: '₹1.5L – ₹3L' },
-    timeline: 'Live in 3–4 weeks',
-    featured: false,
-    forWho: 'Running the business from a spreadsheet nobody fully trusts.',
-    deliverable:
-      'A simple web app that replaces the spreadsheet, easy enough that nobody needs training.',
-    includes: [
-      'A dashboard of what your team is working on',
-      'A portal for tasks and who can see what',
-      'A booking system for rooms, staff or equipment'
     ]
   }
 ]
@@ -1059,6 +1153,176 @@ export const carePlan = {
   blurb:
     'Once a system is live: I keep an eye on it, fix anything that breaks within 24 hours, spend a few hours a month improving it, and you get first call on new builds.'
 }
+
+/*
+  The three service areas, each with its own page (/websites, /software,
+  /ai, rendered by pages/ServicePage.jsx) and a door on the home page's
+  Services band. Positioning: docs/system/05-icp-positioning.md
+  (2026-09-30). One site, three doors: outreach links point straight at
+  an area's page, so a buyer for one never has to wade through the others,
+  while the proof that crosses all three stays in one place.
+
+  `proof` lists what backs each area, most convincing first. A string is a
+  project slug (its card links to the case study); an object is proof that
+  is not a project (`this-site`, `intake`), rendered by the service page.
+  `note` replaces the project tagline with the part that matters here.
+  Never list a demo as client work: the badge on every card says which.
+*/
+export const services = [
+  {
+    slug: 'websites',
+    path: '/websites',
+    name: 'Websites',
+    /* The contact form's "What do you need?" option, and the example
+       in its message box when this option is picked. */
+    formLabel: 'A website',
+    example: 'For example: we have no proper website, and people ask for our prices and timings on WhatsApp all day.',
+    icon: 'globe',
+    docTitle: 'Websites · Aniket',
+    title: ['Websites that bring the work in.', 'And answer it the moment it lands.'],
+    sub: 'A fast, clear site for your business, with the enquiry form, booking and WhatsApp wired straight into how you already work. Add an AI assistant and it answers questions at midnight too.',
+    promise: 'A fast site that turns visitors into enquiries, wired into your inbox, calendar and WhatsApp.',
+    points: [
+      { icon: 'globe', title: 'Built for phones first', text: 'Most of your visitors arrive on a phone. The site is designed there first, and loads fast on a weak connection.' },
+      { icon: 'inbox', title: 'Every enquiry lands', text: 'The form and the WhatsApp button reach your team straight away, and the visitor gets a reply at once.' },
+      { icon: 'spark', title: 'An assistant, if you want one', text: 'Answers the common questions from your own information, then hands ready buyers to you.' }
+    ],
+    from: { usd: '$690', inr: '₹25,000' },
+    media: { kind: 'image', src: '/this-site.jpg', badge: 'This site · real screens', alt: 'The home page of this website: a dusk sky over mountain ridges, with the headline and the call buttons' },
+    proofHead: ['The proof is the page you are on.', 'Built, hosted and wired up by me.'],
+    proof: [
+      {
+        key: 'this-site',
+        title: 'This website',
+        subtitle: 'Designed and built end to end',
+        note: 'The pages, the films and the form. Every enquiry is saved to a sheet, I get an alert, you get a reply straight away, and anything unanswered after a day comes back to me the next morning.',
+        image: '/this-site.jpg',
+        badge: 'Real screens',
+        to: '/contact',
+        cta: 'Try the form'
+      },
+      {
+        slug: 'care-journey',
+        note: 'A public site that takes a visitor from first enquiry through screening and payment to a private portal, in one flow.'
+      }
+    ],
+    faq: [
+      {
+        q: 'Who owns the website and the domain?',
+        a: 'You do. The domain, the hosting and the enquiry inbox are set up in your name, on your own accounts, and handover includes a walkthrough so you are never locked in.'
+      },
+      {
+        q: 'Can it take bookings and payments?',
+        a: 'Yes. Bookings can land on the calendar your team already checks, and payment can be taken in the same flow, the way the Care Journey Platform on this site takes it.'
+      },
+      {
+        q: 'What does the AI assistant actually do?',
+        a: 'It answers from the information you give it: your services, prices, hours and policies. When a question needs a person, or someone is ready to book, it hands over to you on WhatsApp or email with a short summary. You can read every conversation it has.'
+      },
+      {
+        q: 'I already have a website. Can you fix it instead?',
+        a: 'Often, yes. If the site itself is fine and the problem is that enquiries go nowhere, wiring the form into your inbox and WhatsApp may be all it needs, and that is an Automation Quick-Win, not a new website.'
+      }
+    ]
+  },
+  {
+    slug: 'software',
+    path: '/software',
+    name: 'Software',
+    formLabel: 'Software or an app',
+    example: 'For example: we keep clients and bookings in three spreadsheets, and nobody trusts any of them.',
+    icon: 'code',
+    docTitle: 'Custom software · Aniket',
+    title: ['Software built around how you work.', 'Not the other way round.'],
+    sub: 'Internal tools, client portals and complete platforms that replace the spreadsheet and the WhatsApp threads. One system your team actually opens every morning.',
+    promise: 'Dashboards, portals and platforms that replace the spreadsheet nobody trusts.',
+    points: [
+      { icon: 'layers', title: 'Screens that fit the work', text: 'Built around how your team already works, so nobody needs training to use it.' },
+      { icon: 'lock', title: 'Each person sees their part', text: 'Clients, staff and managers each get their own view, and the lock is real, not a hidden button.' },
+      { icon: 'database', title: 'One record you own', text: 'Every client, booking and payment in one place, on your own accounts.' }
+    ],
+    from: { usd: '$4,000', inr: '₹1.5L' },
+    media: { kind: 'clip', slug: 'shared-inbox', badge: 'Real screens' },
+    proofHead: ['Two platforms in real use.', 'Three working tools, running now.'],
+    proof: ['therapist-pwa', 'care-journey', 'consent-signer', 'shared-inbox', 'lead-research'],
+    faq: [
+      {
+        q: 'Why not just buy an off-the-shelf tool?',
+        a: 'Often you should, and I will say so on the call. Custom makes sense when the tool you would buy makes your team work around it, charges per person for features you never use, or cannot keep private records private.'
+      },
+      {
+        q: 'Who owns the code and the data?',
+        a: 'You do. Everything runs on your own accounts and is set up in your name, and handover includes a walkthrough so your team can change the obvious things without calling me.'
+      },
+      {
+        q: 'Does it work on phones?',
+        a: 'Yes. The clinic system on this site installs on a phone or a computer like a normal app, with notifications, and no app store.'
+      },
+      {
+        q: 'Can it connect to the tools we already use?',
+        a: 'Yes. Calendars, WhatsApp, payments, email and spreadsheets are the usual ones, and where your team already uses something that works, I build on it instead of charging you to move.'
+      }
+    ]
+  },
+  {
+    slug: 'ai',
+    path: '/ai',
+    name: 'AI',
+    formLabel: 'AI or automation',
+    example: 'For example: we answer the same booking questions on WhatsApp all day, then copy every booking into a spreadsheet by hand.',
+    icon: 'spark',
+    docTitle: 'AI and automation · Aniket',
+    title: ['AI that does the repeat work.', 'With a person checking what matters.'],
+    sub: 'Enquiries answered, notes drafted, follow-ups sent and leads sorted, on the tools you already use. Start with a plan of where AI pays off, or with one task fully automated in five days.',
+    promise: 'Assistants and automations that answer, draft and follow up, on the tools you already pay for.',
+    points: [
+      { icon: 'chart', title: 'Start with a plan', text: 'Where AI would save your team the most time, ranked, before you spend on a build.' },
+      { icon: 'flow', title: 'The repeat work runs itself', text: 'Enquiries saved and answered, reminders sent, forms filed, on your own accounts.' },
+      { icon: 'check', title: 'A person checks what matters', text: 'The AI drafts, a person approves wherever a wrong answer would cost you.' }
+    ],
+    from: { usd: '$290', inr: '₹15,000' },
+    media: { kind: 'explainer', key: 'ai-assistant', badge: 'Illustrated' },
+    proofHead: ['AI already at work.', 'In a clinic, and on this site.'],
+    proof: [
+      {
+        slug: 'therapist-pwa',
+        note: 'A recorded session becomes a draft clinical note shortly after it ends. The therapist reads and approves it before anything is saved.'
+      },
+      {
+        key: 'intake',
+        title: 'The form on this site',
+        subtitle: 'An automation running right now',
+        note: 'Send a message and watch it work: it is saved to a sheet, I get an alert, you get a reply straight away, and if I have not answered within a day it comes back to me the next morning.',
+        image: '/this-site-form.jpg',
+        badge: 'Real screens',
+        to: '/contact',
+        cta: 'Try it'
+      },
+      {
+        slug: 'care-journey',
+        note: 'Booking, payment, email and video connected into one ten-step journey, and fourteen documents built for each client from their own answers, with no AI wherever a template does the job better.'
+      }
+    ],
+    faq: [
+      {
+        q: 'Will the AI make things up?',
+        a: 'It answers from the information you give it, and wherever a wrong answer would cost you, a person checks it first. In the clinic system the AI drafts the session note, and the therapist approves it before it is saved.'
+      },
+      {
+        q: 'Which AI do you use?',
+        a: 'Whichever fits the job: Claude for reading messy messages and drafting replies, Gemini for turning a recorded session into a draft note. Where a simple template does the job, there is no AI at all.'
+      },
+      {
+        q: 'What happens in the AI Roadmap Session?',
+        a: 'We walk through how your week really runs, then you get a short written plan: where AI and automation would save the most time, ranked by payoff against cost, and a fixed quote for the first build if you want one.'
+      },
+      {
+        q: 'Do we need to change the tools we use?',
+        a: 'No. The automations run on the tools you already pay for, on your own accounts, so you own them.'
+      }
+    ]
+  }
+]
 
 /* Budget bands on the contact form, per currency, lined up with the
    offers above. The INR values are the ones the n8n workflow and
@@ -1143,14 +1407,18 @@ export const process = [
 export const faq = [
   {
     q: 'How long does a build take?',
-    a: 'An Automation Quick-Win is live in 5 days. An Ops Automation Sprint is live in two weeks. Larger systems (a booking platform, a full operations layer for a clinic, studio or agency) run three to five weeks depending on how many people and tools they touch.'
+    a: 'A website is live in about two weeks, or three with an AI assistant built in. One task fully automated is live in 5 days, and a set of automations in two weeks. An internal tool takes three to four weeks, and larger systems (a booking platform, a full operations layer for a clinic, studio or agency) run three to five weeks depending on how many people and tools they touch.'
   },
   {
     q: 'What does it cost?',
     a: {
-      usd: 'The Quick-Win is a fixed $490 for one task, fully automated. A Sprint runs $1,500 to $2,500. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me.',
-      inr: 'The Quick-Win is a fixed ₹25,000 for one task, fully automated. A Sprint runs ₹40,000 to ₹80,000. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me.'
+      usd: 'Websites start at $690, or $1,500 with an AI assistant built in. One task fully automated is a fixed $490, and an AI Roadmap Session is $290. An internal tool runs $4,000 to $8,000. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me.',
+      inr: 'Websites start at ₹25,000, or ₹60,000 with an AI assistant built in. One task fully automated is a fixed ₹25,000, and an AI Roadmap Session is ₹15,000. An internal tool runs ₹1.5L to ₹3L. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me.'
     }
+  },
+  {
+    q: 'Do I have to pick one of the three?',
+    a: 'No. Most projects start in one and grow into the others: the website brings the enquiry in, the software keeps track of it, and the automations do the repeat work around it. Tell me what is going wrong and I will say which part to start with.'
   },
   {
     q: 'Do I need to already use a particular tool?',
@@ -1176,6 +1444,9 @@ export const faq = [
 
 export const footerMenu = [
   { label: 'Home', to: '/' },
+  { label: 'Websites', to: '/websites' },
+  { label: 'Software', to: '/software' },
+  { label: 'AI', to: '/ai' },
   { label: 'Projects', to: '/projects' },
   { label: 'About', to: '/about' },
   { label: 'Get in touch', to: '/contact' },

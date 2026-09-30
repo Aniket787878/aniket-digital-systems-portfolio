@@ -46,7 +46,7 @@ function routes() {
     key: 'form',
     icon: 'pen',
     title: 'Fill in a short form',
-    text: 'Five short questions, if you would rather write it out.',
+    text: 'Six short questions, if you would rather write it out.',
     cue: 'Go to the form',
     href: '#write'
   })
@@ -118,13 +118,12 @@ export default function ContactHero() {
           </m.p>
         )}
         <m.h1 className="dusk-title contact-title" id="contact-title" variants={heroItem}>
-          Tell me what takes up your week.
+          Tell me what you need.
           <span className="dusk-title-warm"> I&rsquo;ll tell you straight if I can help.</span>
         </m.h1>
         <m.p className="dusk-sub contact-sub" variants={heroItem}>
-          Maybe it is answering the same messages, chasing bookings or
-          copying details from one place to another. Pick whichever way to
-          reach me is easiest for you.
+          A new website, a tool for your team, or the messages you answer
+          over and over. Pick whichever way to reach me is easiest for you.
         </m.p>
 
         <m.ul

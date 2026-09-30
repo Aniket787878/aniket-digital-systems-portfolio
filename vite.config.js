@@ -76,7 +76,7 @@ function jsonLd() {
   return JSON.stringify(graph).replace(/</g, '\\u003c')
 }
 
-const routes = ['/', '/projects', '/about', '/contact', '/privacy', ...projects.map((p) => `/projects/${p.slug}`)]
+const routes = ['/', '/websites', '/software', '/ai', '/projects', '/about', '/contact', '/privacy', ...projects.map((p) => `/projects/${p.slug}`)]
 
 function sitemap() {
   const today = new Date().toISOString().slice(0, 10)

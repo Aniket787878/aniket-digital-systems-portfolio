@@ -1,0 +1,114 @@
+[
+  {
+    "file": "01.png",
+    "caption": "Ask the practice anything: answers come only from its own documents",
+    "target": {
+      "x": 291,
+      "y": 805,
+      "w": 858,
+      "h": 66
+    },
+    "focus": {
+      "x": 201,
+      "y": 715,
+      "w": 1038,
+      "h": 185
+    }
+  },
+  {
+    "file": "02.png",
+    "caption": "A policy question is answered from the clinic’s own document, with its source named",
+    "target": {
+      "x": 307,
+      "y": 620,
+      "w": 826,
+      "h": 168
+    },
+    "focus": {
+      "x": 217,
+      "y": 530,
+      "w": 1006,
+      "h": 348
+    }
+  },
+  {
+    "file": "03.png",
+    "caption": "Prices come straight from the services table, not from memory",
+    "target": {
+      "x": 307,
+      "y": 588,
+      "w": 354,
+      "h": 200
+    },
+    "focus": {
+      "x": 217,
+      "y": 498,
+      "w": 534,
+      "h": 380
+    }
+  },
+  {
+    "file": "04.png",
+    "caption": "A pack-of-5 total is worked out from the table and the fee list",
+    "target": {
+      "x": 307,
+      "y": 668,
+      "w": 826,
+      "h": 120
+    },
+    "focus": {
+      "x": 217,
+      "y": 578,
+      "w": 1006,
+      "h": 300
+    }
+  },
+  {
+    "file": "05.png",
+    "caption": "If the documents do not say, it says so and points to the front desk",
+    "target": {
+      "x": 307,
+      "y": 732,
+      "w": 328,
+      "h": 56
+    },
+    "focus": {
+      "x": 217,
+      "y": 642,
+      "w": 508,
+      "h": 236
+    }
+  },
+  {
+    "file": "06.png",
+    "caption": "It will not give clinical advice, and points the patient to a physiotherapist",
+    "target": {
+      "x": 307,
+      "y": 708,
+      "w": 826,
+      "h": 80
+    },
+    "focus": {
+      "x": 217,
+      "y": 618,
+      "w": 1006,
+      "h": 260
+    }
+  },
+  {
+    "file": "07.png",
+    "caption": "An attempt to make it run a database command is refused",
+    "target": {
+      "x": 307,
+      "y": 700,
+      "w": 826,
+      "h": 80
+    },
+    "focus": {
+      "x": 217,
+      "y": 610,
+      "w": 1006,
+      "h": 260
+    }
+  }
+]

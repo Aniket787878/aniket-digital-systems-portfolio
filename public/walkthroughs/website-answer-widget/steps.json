@@ -1,0 +1,98 @@
+[
+  {
+    "file": "01.png",
+    "caption": "A visitor lands on the clinic’s page. The answer bubble waits in the corner",
+    "target": {
+      "x": 1360,
+      "y": 820,
+      "w": 64,
+      "h": 64
+    },
+    "focus": {
+      "x": 1040,
+      "y": 640,
+      "w": 400,
+      "h": 260
+    }
+  },
+  {
+    "file": "02.png",
+    "caption": "They ask about Saturday hours and get the clinic’s real answer, with its source",
+    "target": {
+      "x": 1061,
+      "y": 600,
+      "w": 346,
+      "h": 120
+    },
+    "focus": {
+      "x": 980,
+      "y": 100,
+      "w": 460,
+      "h": 800
+    }
+  },
+  {
+    "file": "03.png",
+    "caption": "Prices come from the clinic’s services table",
+    "target": {
+      "x": 1061,
+      "y": 496,
+      "w": 346,
+      "h": 224
+    },
+    "focus": {
+      "x": 980,
+      "y": 100,
+      "w": 460,
+      "h": 800
+    }
+  },
+  {
+    "file": "04.png",
+    "caption": "Not in the documents? It does not guess. It offers a callback from the front desk",
+    "target": {
+      "x": 1045,
+      "y": 578,
+      "w": 378,
+      "h": 225
+    },
+    "focus": {
+      "x": 980,
+      "y": 100,
+      "w": 460,
+      "h": 800
+    }
+  },
+  {
+    "file": "05.png",
+    "caption": "The visitor leaves a name and number (dummy data here)",
+    "target": {
+      "x": 1045,
+      "y": 578,
+      "w": 378,
+      "h": 225
+    },
+    "focus": {
+      "x": 980,
+      "y": 100,
+      "w": 460,
+      "h": 800
+    }
+  },
+  {
+    "file": "06.png",
+    "caption": "Done: the front desk gets the question and number, the visitor gets a clear thank-you",
+    "target": {
+      "x": 1045,
+      "y": 750,
+      "w": 378,
+      "h": 53
+    },
+    "focus": {
+      "x": 980,
+      "y": 100,
+      "w": 460,
+      "h": 800
+    }
+  }
+]

@@ -1,0 +1,98 @@
+[
+  {
+    "file": "01.png",
+    "caption": "The front desk assistant is ready at any hour",
+    "target": {
+      "x": 291,
+      "y": 805,
+      "w": 858,
+      "h": 66
+    },
+    "focus": {
+      "x": 201,
+      "y": 715,
+      "w": 1038,
+      "h": 185
+    }
+  },
+  {
+    "file": "02.png",
+    "caption": "Asks for fees and timings, gets the real answer from the clinic’s own FAQ",
+    "target": {
+      "x": 307,
+      "y": 516,
+      "w": 826,
+      "h": 272
+    },
+    "focus": {
+      "x": 217,
+      "y": 426,
+      "w": 1006,
+      "h": 452
+    }
+  },
+  {
+    "file": "03.png",
+    "caption": "Asks to book: the assistant checks the calendar and offers real free slots",
+    "target": {
+      "x": 307,
+      "y": 548,
+      "w": 701,
+      "h": 240
+    },
+    "focus": {
+      "x": 217,
+      "y": 458,
+      "w": 881,
+      "h": 420
+    }
+  },
+  {
+    "file": "04.png",
+    "caption": "Picks a time and gives a name: the slot is checked, booked into Google Calendar and logged",
+    "target": {
+      "x": 307,
+      "y": 660,
+      "w": 826,
+      "h": 120
+    },
+    "focus": {
+      "x": 217,
+      "y": 570,
+      "w": 1006,
+      "h": 300
+    }
+  },
+  {
+    "file": "05.png",
+    "caption": "A clinical question is refused politely and handed to a human",
+    "target": {
+      "x": 307,
+      "y": 668,
+      "w": 826,
+      "h": 120
+    },
+    "focus": {
+      "x": 217,
+      "y": 578,
+      "w": 1006,
+      "h": 300
+    }
+  },
+  {
+    "file": "06.png",
+    "caption": "An emergency message gets the fixed safety reply, no model involved",
+    "target": {
+      "x": 307,
+      "y": 660,
+      "w": 826,
+      "h": 128
+    },
+    "focus": {
+      "x": 217,
+      "y": 570,
+      "w": 1006,
+      "h": 308
+    }
+  }
+]

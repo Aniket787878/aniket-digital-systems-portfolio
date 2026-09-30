@@ -105,6 +105,55 @@ export const films = {
   }
 }
 
+/* ------------------------------------------------------------------
+   STILLS: projects that have real screens but no film yet.
+
+   The three n8n assistants were captured as stills (public/walkthroughs/
+   <slug>/, with steps.json) before any film was rendered. Until a film
+   exists in `films` above, every place that would play one shows the
+   `cover` screen instead, cropped to `focus` (a rect in the 1440x900
+   capture space; for the chat demos, the whole chat column, so the
+   patient's message is not cut off), with a badge that says what it is; the case study steps
+   through every captured screen (src/walkthroughs.js). Never an empty
+   player. Once a film is rendered and added to `films`, the film wins
+   everywhere and this entry can go.
+
+   What the screens are, stated wherever they appear: n8n's real chat
+   screens, with each reply recorded from a real test execution on dummy
+   data and replayed for the capture (scripts/capture-demos.mjs checks
+   every reply word for word against the test log). Not live traffic, not
+   real patients.
+   ------------------------------------------------------------------ */
+export const stills = {
+  'appointment-desk': {
+    kind: 'real',
+    cover: { file: '/walkthroughs/appointment-desk/03.png', focus: { x: 280, y: 458, w: 880, h: 420 } }
+  },
+  'knowledge-assistant': {
+    kind: 'real',
+    cover: { file: '/walkthroughs/knowledge-assistant/02.png', focus: { x: 280, y: 530, w: 880, h: 348 } }
+  },
+  'website-answer-widget': {
+    kind: 'real',
+    /* Wider than the step's own focus, so the card shows the clinic's
+       headline beside the chat panel: the point is that it sits on a
+       website. */
+    cover: { file: '/walkthroughs/website-answer-widget/04.png', focus: { x: 260, y: 150, w: 1180, h: 664 } }
+  }
+}
+
+/* The badge and caption for a still, in one place so every surface says
+   the same thing about what the picture is. */
+export const stillLabel = {
+  badge: 'Real screens · recorded test run',
+  caption:
+    'Real n8n chat screens from a recorded test run on dummy data: each reply was recorded from a real execution and replayed for the capture. Not live traffic, not real patients.'
+}
+
+/* 'real' (a working demo) or 'schematic' (a client platform), from the
+   film if there is one, else from the still. */
+export const mediaKind = (slug) => films[slug]?.kind || stills[slug]?.kind || ''
+
 /* Explainer films (remotion/explainers, rendered by
    scripts/render-videos.sh explainers). Illustrative motion design, not
    screen recordings, apart from the real captures they quote. */
@@ -890,6 +939,260 @@ export const projects = [
     ],
     outcomeNote:
       'This research tool is a working demo I built myself, not a client project. It reads only public pages and works best on sites that publish their details for search engines; the counts describe what was built. The screens are from the running app.'
+  },
+  /* The three n8n assistants (2026-09-30). Every sentence below comes from
+     n8n/demos/<slug>/README.md and test-log.md; nothing is added. They have
+     real screens but no film yet, so `stills` above stands in for `films`.
+     `credit` names what each one is built on, with its licence: it renders
+     on the case study, and it must stay there. */
+  {
+    index: '06',
+    slug: 'appointment-desk',
+    highlights: [
+      'Answers fees, hours and policies from the clinic’s own FAQ',
+      'Checks the calendar and offers free slots',
+      'Clinical questions go to a person; emergencies get a fixed safety reply'
+    ],
+    title: 'Appointment Desk',
+    subtitle: 'An AI front desk for a clinic',
+    tagline: 'Answers fees and hours, books free slots into the calendar, and hands anything clinical to a person.',
+    year: '2026',
+    summary:
+      'A front-desk assistant for a fictional physiotherapy clinic, built in n8n. Patients message it; it answers fees, hours and policies from the clinic’s FAQ, checks the calendar and offers free slots, and books, moves or cancels appointments. Clinical questions go to a person, and emergency wording gets a fixed safety reply before any AI runs.',
+    credit: [
+      {
+        label: 'n8n template 3694 by Luciano Gutierrez',
+        href: 'https://n8n.io/workflows/3694',
+        licence: 'MIT licence'
+      }
+    ],
+    metrics: [
+      { n: '0', label: 'AI calls when emergency wording is caught: a fixed safety reply goes out instead' },
+      { n: '2', label: 'scheduled jobs: 08:00 confirmations on weekdays, 18:30 follow-ups Monday to Saturday' },
+      { n: '16', label: 'tests written up in the test log, all passing' }
+    ],
+    role:
+      'A project of my own, started from a published n8n template: the prompts, the safety screen, the booking and handoff logs, the follow-up jobs and the tests.',
+    flow: ['Ask', 'Screen', 'Answer', 'Book', 'Follow up'],
+    stack: ['n8n', 'n8n Chat', 'Google Gemini', 'Google Calendar', 'Google Sheets'],
+    problem:
+      'A clinic front desk answers the same few messages again and again: what does it cost, when are you open, is there a slot on Monday. Those are easy to automate. The hard part is everything around them: a patient describing symptoms, someone typing that they have chest pain, a request to move a booking that is not theirs. The job was a front desk assistant that handles the easy messages on its own and is strict about the rest.',
+    system: [
+      'A safety screen that runs first: if a message contains emergency wording, such as chest pain or trouble breathing, the patient is told to call 112 or go to the nearest emergency department, the team is flagged, and the AI is never called',
+      'An AI assistant that answers fees, hours, address, payment and cancellation questions from a short clinic FAQ',
+      'Calendar tools to check free slots, book, move and cancel, with a check that the mobile number matches the booking before anything is moved or cancelled',
+      'A sheet that logs every booking action for the owner, and a second sheet for every conversation handed to a person',
+      'A weekday 08:00 job that asks tomorrow’s patients to reply CONFIRM, RESCHEDULE or CANCEL',
+      'A Monday to Saturday 18:30 job that sends a review request after a visit marked as attended, or a friendly invitation to rebook after a missed one'
+    ],
+    features: [
+      {
+        title: 'Answers from the clinic’s FAQ',
+        text: 'Fees, hours, address, payment and cancellation, in the clinic’s own words. In the test log the fees answer matched the FAQ exactly.'
+      },
+      {
+        title: 'Offers slots and books them',
+        text: 'Asked for next Monday morning, it read the calendar and offered 09:00, 09:30 and 10:00. Given a time, a name and a number, it checked the slot, saved the booking to Google Calendar and logged it.'
+      },
+      {
+        title: 'Clinical questions go to a person',
+        text: 'Asked what to take for a swollen knee, it declined, logged the question for the team and offered an assessment. Told to ignore its rules, it gave the same answer.'
+      },
+      {
+        title: 'Emergencies get a fixed reply',
+        text: 'Emergency wording skips the AI entirely. The reply is written in advance, so it cannot be improvised.'
+      }
+    ],
+    decisions: [
+      {
+        title: 'Safety before AI',
+        text: 'The emergency check is a plain keyword screen that runs before the AI. It is a safety net, not a diagnosis, and the assistant’s own instructions are a second layer behind it.'
+      },
+      {
+        title: 'Keep as little as possible',
+        text: 'The template this started from also collected date of birth and health conditions. That was dropped on purpose: only the name, mobile number and appointment are kept.'
+      },
+      {
+        title: 'Say so when it fails',
+        text: 'When the calendar refused a booking in testing, the assistant said it could not finish and offered to hand over to the team, instead of claiming the booking was made.'
+      },
+      {
+        title: 'Built on a template, credited',
+        text: 'The starting point is n8n template 3694 by Luciano Gutierrez, shared under the MIT licence. The prompts were rewritten for this clinic, and the safety screen, the follow-up job and the logs were added.'
+      }
+    ],
+    outcome: [
+      'The fees answer, the slot offer, the clinical refusal and the emergency reply all ran for real: the AI model wrote the answers, the slots came from a real read of the demo calendar, and the emergency reply came from the screen before the AI. The screens show those replies',
+      'A booking also went all the way through for real: the slot was checked, the appointment saved to Google Calendar and the log row written. That run used a stand-in calendar where the AI could only see free or busy, and the test booking was deleted afterwards. Moving, cancelling and confirming were tested with simulated calendar responses',
+      'The confirmation and follow-up jobs produced the right message for each test appointment. WhatsApp sending is built but switched off for the demo'
+    ],
+    outcomeNote:
+      'This is a working demo on dummy data for a fictional clinic, not a client project, and none of this is client results. The counts describe what was built and tested. It is not a medical device and makes no HIPAA or GDPR claim. The screens are real n8n chat screens from a recorded test run: each reply was recorded from a real execution and replayed for the capture.'
+  },
+  {
+    index: '07',
+    slug: 'knowledge-assistant',
+    highlights: [
+      'Answers from the clinic’s own documents, with the source named',
+      'Reads prices from the services table instead of guessing',
+      'Says “I don’t know, please ask the front desk.” when the documents do not say'
+    ],
+    title: 'Practice Knowledge Assistant',
+    subtitle: 'Answers from the clinic’s own documents',
+    tagline: 'Staff and patients ask in plain English and get an answer from the clinic’s own documents, with the source named.',
+    year: '2026',
+    summary:
+      'An assistant for a fictional physiotherapy clinic, built in n8n, that answers staff and patient questions from the clinic’s own documents and names the source under every answer. Prices come from the services table, not from memory. If the documents do not say, it replies “I don’t know, please ask the front desk.” instead of guessing.',
+    credit: [
+      {
+        label: 'coleam00/ottomator-agents by Cole Medin',
+        href: 'https://github.com/coleam00/ottomator-agents',
+        licence: 'MIT licence'
+      }
+    ],
+    metrics: [
+      { n: '5', label: 'clinic documents: fees, hours, cancellation, consent and privacy, FAQ' },
+      { n: '8', label: 'services in the price table it reads prices from' },
+      { n: '26', label: 'sections searched, each tagged with the document it came from' }
+    ],
+    role:
+      'A project of my own, started from an open-source template: the clinic documents, the rules it answers by, the price lookup, the read-only database set-up and the tests.',
+    flow: ['Ask', 'Search', 'Read prices', 'Answer', 'Name the source'],
+    stack: ['n8n', 'n8n Chat', 'Google Gemini', 'Postgres', 'pgvector', 'Supabase'],
+    problem:
+      'Every clinic has the answers written down somewhere: the fee list, the cancellation policy, the consent form, the FAQ. Staff still get asked the same questions, and a new receptionist has to hunt for the right document. An assistant could answer, but one that guesses is worse than none: a wrong price or a made-up policy costs trust. The job was an assistant that answers only from the clinic’s own documents, says where each answer came from, and admits when it does not know.',
+    system: [
+      'The clinic’s documents (fee list, opening hours and contact, cancellation policy, consent and privacy policy, FAQ) split into short sections, each tagged with the document it came from, so every answer can name its source',
+      'A services table for anything with a price or a length, looked up instead of remembered, and a calculator for totals and discounts',
+      'Rules it answers by: name the source under every answer; if the documents do not say, reply exactly “I don’t know, please ask the front desk.”; never read missing information as a no',
+      'No clinical advice: questions about symptoms, exercises, medication or diagnosis are pointed to the physiotherapist or the front desk, with the emergency number, and it holds that line when told to ignore its instructions',
+      'Two versions in one workflow: a quick in-memory one for demos, and one on a Postgres database where the assistant can only read'
+    ],
+    features: [
+      {
+        title: 'Every answer names its source',
+        text: 'Asked about cancelling with 12 hours’ notice, it gave the charge and the one-time courtesy waiver, then “Sources: Cancellation Policy”.'
+      },
+      {
+        title: 'Prices from the table, sums done properly',
+        text: 'Asked for a pack of five 45-minute sessions, it took ₹900 from the table and the 10% pack discount from the fee list, and answered ₹4,050.'
+      },
+      {
+        title: '“I don’t know” instead of a guess',
+        text: 'Asked about acupuncture or the Wi-Fi password, neither in the documents, it said “I don’t know, please ask the front desk.” An early version answered “We do not offer acupuncture”, so a rule was added: missing information is never proof of a no.'
+      },
+      {
+        title: 'Holds the line',
+        text: 'Clinical questions are pointed to a physiotherapist. Told to ignore its instructions and delete the price table, it refused.'
+      }
+    ],
+    decisions: [
+      {
+        title: 'Label every section with its source',
+        text: 'Each section starts with its document’s name before it is stored. It is a cheap version of a known retrieval technique, and it is what makes the source line under each answer dependable.'
+      },
+      {
+        title: 'Numbers from a table, not from memory',
+        text: 'Prices and session lengths live in a table the assistant looks up, so a price is read, never recalled.'
+      },
+      {
+        title: 'Read-only, and honest about it',
+        text: 'On the database version the assistant’s queries run under a role that can only read, and a test write was refused by the database. It is a strong safeguard, not a guarantee, and the notes say what a real deployment adds: a separate read-only login.'
+      },
+      {
+        title: 'Built on open source, credited',
+        text: 'The starting point is Cole Medin’s ottomator-agents templates, shared under the MIT licence. The clinic, the rules, the source labels and the calculator were added for this build.'
+      }
+    ],
+    outcome: [
+      'Cancellation, opening hours and consent questions were answered from the right document, with the source named',
+      'Price questions were read from the table, and the pack total came out right: five sessions at ₹900, less 10%, is ₹4,050',
+      'Questions outside the documents, clinical questions and an attempt to make it change the database were all turned away in the recorded tests'
+    ],
+    outcomeNote:
+      'This is a working demo on dummy data for a fictional clinic, not a client project, and none of this is client results. Every document, price and phone number is invented; the counts describe what was built. The rules are instructions to the AI: they held in every recorded test, but instructions are not a guarantee, so a real clinic would add human review. The screens are real n8n chat screens from a recorded test run: each reply was recorded from a real execution and replayed for the capture.'
+  },
+  {
+    index: '08',
+    slug: 'website-answer-widget',
+    highlights: [
+      'A chat bubble on the clinic’s website',
+      'Answers from the clinic’s own documents, with the source named',
+      'Can’t answer? It takes a name and number for a callback'
+    ],
+    title: 'Website Answer Widget',
+    subtitle: 'Answers on the page, or takes a callback',
+    tagline: 'The Knowledge Assistant as a chat bubble on a clinic website. When it cannot answer, it takes a name and number for the front desk.',
+    year: '2026',
+    summary:
+      'The Practice Knowledge Assistant, placed as a small chat bubble on a clinic’s website. A visitor asks about prices, hours or policies and gets the answer from the clinic’s own documents, with the source named. If the documents do not say, it does not guess: it offers a callback card, and the name, number and question land in a sheet for the front desk.',
+    credit: [
+      {
+        label: '@n8n/chat, n8n’s own chat widget',
+        href: 'https://www.npmjs.com/package/@n8n/chat',
+        licence: 'n8n Sustainable Use License, not MIT'
+      },
+      {
+        label: 'the Practice Knowledge Assistant',
+        to: '/projects/knowledge-assistant'
+      }
+    ],
+    metrics: [
+      { n: '3', label: 'things the front desk gets from a callback: name, number and the question asked' },
+      { n: '1', label: 'sheet where every callback lands, and nowhere else' }
+    ],
+    role:
+      'A project of my own: the demo clinic page, the chat bubble set-up, the callback card and the workflow that files each callback in a sheet.',
+    flow: ['Visit', 'Ask', 'Answer', 'Callback', 'Sheet'],
+    stack: ['n8n', '@n8n/chat', 'Google Gemini', 'Google Sheets', 'HTML and CSS'],
+    problem:
+      'A clinic website gets its questions at all hours: how much is a session, are you open on Saturday, do you do home visits. A contact form makes the visitor wait, and an assistant that guesses can give a wrong price. The job was to put the Knowledge Assistant where the questions arrive, and to turn every question it cannot answer into a callback instead of a dead end.',
+    system: [
+      'A small chat bubble in the corner of the clinic’s page, using n8n’s own chat widget',
+      'Behind it, the Practice Knowledge Assistant: answers from the clinic’s documents, prices from its services table, the source named under each answer',
+      'A few lines of script that watch for the fixed reply “I don’t know, please ask the front desk.” and show a callback card under it',
+      'A workflow that checks each callback (a name, and a phone number long enough to call), removes angle brackets from what was typed, and adds a row to the front desk’s sheet',
+      'A demo clinic page to show it in place: plain HTML with one stylesheet and no build step'
+    ],
+    features: [
+      {
+        title: 'Answers on the page',
+        text: 'Saturday hours and prices come back from the clinic’s documents while the visitor is still on the site, with the source named.'
+      },
+      {
+        title: 'A callback instead of a dead end',
+        text: 'When the documents do not say, the visitor is offered a card to leave a name and number, so the question reaches a person.'
+      },
+      {
+        title: 'Lands where the desk can see it',
+        text: 'Each callback is a new row in a sheet: the name, the number and the question they asked.'
+      },
+      {
+        title: 'Checks before it saves',
+        text: 'A name and a usable phone number are required. A test with code in the name box and a two-digit number was turned away, and nothing reached the sheet.'
+      }
+    ],
+    decisions: [
+      {
+        title: 'One assistant, two places',
+        text: 'The widget has no knowledge of its own. It asks the Practice Knowledge Assistant, so an answer on the website comes from the same documents as the one staff get.'
+      },
+      {
+        title: 'The “I don’t know” reply does a job',
+        text: 'Because the assistant’s refusal is one fixed sentence, the page can recognise it reliably and offer the callback card at exactly that moment.'
+      },
+      {
+        title: 'The licence, stated up front',
+        text: 'n8n’s chat widget is not MIT. It uses the n8n Sustainable Use License, which limits commercial use, so its terms are checked against your use before it goes on a client’s public site.'
+      }
+    ],
+    outcome: [
+      'A callback was saved end to end in a real test: the row reached the demo sheet and the workflow confirmed it',
+      'The screens show a whole visit: an answer with its source, a price from the table, a question it could not answer, and the callback card filled in with dummy details',
+      'Nothing is public yet: the chat and the callback workflow stay switched off until a clinic’s site is ready for them'
+    ],
+    outcomeNote:
+      'This is a working demo on dummy data for a fictional clinic, not a client project, and none of this is client results. The screens are the real chat widget from a recorded test run: each reply was recorded from a real execution and replayed for the capture, and the callback in the screens was answered locally. A separate real test saved a callback to the sheet.'
   }
 ]
 
@@ -1204,6 +1507,10 @@ export const services = [
       {
         slug: 'care-journey',
         note: 'A public site that takes a visitor from first enquiry through screening and payment to a private portal, in one flow.'
+      },
+      {
+        slug: 'website-answer-widget',
+        note: 'A chat bubble for a clinic site: it answers from the clinic’s own documents, and when it cannot, it takes a name and number for a callback.'
       }
     ],
     faq: [
@@ -1282,12 +1589,21 @@ export const services = [
     ],
     from: { usd: '$290', inr: '₹15,000' },
     media: { kind: 'explainer', key: 'ai-assistant', badge: 'Illustrated' },
-    proofHead: ['AI already at work.', 'In a clinic, and on this site.'],
+    proofHead: ['AI already at work.', 'In a clinic, on this site, and in three demos.'],
     proof: [
       {
         slug: 'therapist-pwa',
         note: 'A recorded session becomes a draft clinical note shortly after it ends. The therapist reads and approves it before anything is saved.'
       },
+      {
+        slug: 'appointment-desk',
+        note: 'Answers fees and hours, books free slots into the calendar, and hands clinical questions to a person. Emergency wording gets a fixed safety reply before any AI runs.'
+      },
+      {
+        slug: 'knowledge-assistant',
+        note: 'Answers staff and patients from the clinic’s own documents with the source named, and says “I don’t know, please ask the front desk.” rather than guess.'
+      },
+      'website-answer-widget',
       {
         key: 'intake',
         title: 'The form on this site',

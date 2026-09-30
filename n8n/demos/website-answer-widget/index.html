@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo Physio Clinic</title>
+<meta name="description" content="A fictional clinic website used to demo an answer widget. Portfolio demo by Aniket.">
+<!-- Pinned so the demo does not change under you. The capture script serves this same file from node_modules. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@n8n/chat@1.40.2/dist/style.css">
+<link rel="stylesheet" href="./widget.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap bar">
+    <a class="brand" href="#">Demo Physio Clinic</a>
+    <nav><a href="#services">Services</a><a href="#hours">Hours</a><a href="#visit">Visit</a></nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <p class="eyebrow">Physiotherapy, Demoville</p>
+    <h1>Movement, without the guesswork.</h1>
+    <p class="lead">One-to-one assessments, follow-ups and sports rehab, with a written exercise plan you can keep. Ask the assistant in the corner about prices, hours or how a visit works.</p>
+    <a class="btn" href="#services">See services and prices</a>
+  </section>
+
+  <section id="services" class="wrap block">
+    <h2>Services and prices</h2>
+    <table>
+      <thead><tr><th>Service</th><th>Length</th><th class="num">Price (INR)</th></tr></thead>
+      <tbody>
+        <tr><td>Initial assessment<small>Required for new patients</small></td><td>60 min</td><td class="num">1,200</td></tr>
+        <tr><td>Follow-up session</td><td>30 min</td><td class="num">700</td></tr>
+        <tr><td>Follow-up session</td><td>45 min</td><td class="num">900</td></tr>
+        <tr><td>Follow-up session</td><td>60 min</td><td class="num">1,100</td></tr>
+        <tr><td>Sports injury rehab session<small>Includes a written exercise plan</small></td><td>45 min</td><td class="num">1,300</td></tr>
+        <tr><td>Small-group rehab class<small>Maximum 6 people per class</small></td><td>50 min</td><td class="num">400</td></tr>
+        <tr><td>Video follow-up<small>Existing patients only</small></td><td>30 min</td><td class="num">600</td></tr>
+        <tr><td>Workstation ergonomic review<small>Bring a photo of your desk setup</small></td><td>45 min</td><td class="num">1,000</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="hours" class="wrap block two">
+    <div>
+      <h2>Opening hours</h2>
+      <ul class="plain">
+        <li><span>Monday to Friday</span><span>8:00 am to 7:00 pm</span></li>
+        <li><span>Saturday</span><span>9:00 am to 1:00 pm</span></li>
+        <li><span>Sunday</span><span>Closed</span></li>
+        <li><span>Public holidays</span><span>Closed</span></li>
+      </ul>
+      <p class="note">The last appointment of the day starts 60 minutes before closing.</p>
+    </div>
+    <div id="visit">
+      <h2>Visit</h2>
+      <p>1 Example Street, Demoville.<br>Step-free entrance at the side of the building. Two-hour free parking behind the clinic.</p>
+      <p class="note">Address and contact details are invented.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Fictional clinic. Portfolio demo by Aniket.</div>
+</footer>
+
+<div id="n8n-chat"></div>
+
+<script type="module">
+import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat@1.40.2/dist/chat.bundle.es.js';
+
+// PLACEHOLDERS: replace both before switching this on (see README.md).
+const CHAT_WEBHOOK = 'https://<your-n8n-host>/webhook/<knowledge-assistant-chat-webhook-id>/chat';
+const LEAD_WEBHOOK = 'https://<your-n8n-host>/webhook/website-answer-widget-lead-REPLACE_WITH_RANDOM_SUFFIX';
+
+// Must match the fixed reply in the Knowledge Assistant prompt, word for word.
+const UNKNOWN_REPLY = "I don't know, please ask the front desk.";
+
+createChat({
+  webhookUrl: CHAT_WEBHOOK,
+  mode: 'window',
+  target: '#n8n-chat',
+  showWelcomeScreen: false,
+  loadPreviousSession: false,
+  initialMessages: ['Hi, I answer questions about Demo Physio Clinic: prices, hours and policies.'],
+  i18n: { en: {
+    title: 'Ask Demo Physio Clinic',
+    subtitle: 'Answers come from the clinic’s own documents.',
+    footer: 'Fictional clinic. Portfolio demo.',
+    getStarted: 'New conversation',
+    inputPlaceholder: 'Type your question...'
+  } }
+});
+
+let lastQuestion = '';
+let cardShown = false;
+
+function chatRoot() { return document.querySelector('.chat-window'); }
+
+function buildCard() {
+  const card = document.createElement('form');
+  card.className = 'lead-card';
+  card.innerHTML =
+    '<p class="lead-title">Leave your name and number and the front desk will call you back</p>' +
+    '<label>Name<input name="name" autocomplete="name" required maxlength="80"></label>' +
+    '<label>Phone<input name="phone" type="tel" autocomplete="tel" required maxlength="20"></label>' +
+    '<button type="submit">Ask the front desk to call</button>' +
+    '<p class="lead-status" role="status" aria-live="polite"></p>';
+  card.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const status = card.querySelector('.lead-status');
+    const btn = card.querySelector('button');
+    btn.disabled = true;
+    status.textContent = '';
+    try {
+      const res = await fetch(LEAD_WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: card.elements.name.value.trim(),
+          phone: card.elements.phone.value.trim(),
+          question: lastQuestion,
+          page: location.href
+        })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok === true) {
+        card.classList.add('done');
+        status.textContent = 'Thanks, the front desk will call you.';
+      } else {
+        status.textContent = data.error || data.message || 'Something went wrong. Please call the front desk.';
+        btn.disabled = false;
+      }
+    } catch (err) {
+      status.textContent = 'Could not reach the server. Please call the front desk.';
+      btn.disabled = false;
+    }
+  });
+  return card;
+}
+
+function showCard() {
+  if (cardShown) return;
+  const root = chatRoot();
+  if (!root) return;
+  cardShown = true;
+  root.appendChild(buildCard());
+}
+
+new MutationObserver(() => {
+  const root = chatRoot();
+  if (!root) return;
+  const users = root.querySelectorAll('.chat-message-from-user');
+  if (users.length) lastQuestion = users[users.length - 1].textContent.trim();
+  const bots = root.querySelectorAll('.chat-message-from-bot');
+  const last = bots[bots.length - 1];
+  if (last && last.textContent.trim() === UNKNOWN_REPLY) showCard();
+}).observe(document.body, { childList: true, subtree: true, characterData: true });
+</script>
+</body>
+</html>

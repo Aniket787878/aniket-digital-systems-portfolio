@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import { fx } from '../../interactions/attrs.js'
 import { m } from 'motion/react'
-import { projects, films } from '../../data.js'
+import { projects, films, stills } from '../../data.js'
 import { reveal, revealStagger, fadeUp } from '../../motion/variants.js'
 import LoopVideo from '../../components/LoopVideo.jsx'
+import ScreenStill from '../../components/ScreenStill.jsx'
 import Icon from '../../components/icons.jsx'
 import { PillLabel } from '../../components/ui.jsx'
 
@@ -19,6 +20,20 @@ function toCard(entry) {
   }
   const project = projects.find((p) => p.slug === item.slug)
   const film = films[item.slug]
+  /* A demo with real screens and no film yet: its cover still, never an
+     empty player. The badge says the replies were a recorded test run. */
+  if (!film && stills[item.slug]) {
+    return {
+      id: item.slug,
+      title: project.title,
+      subtitle: project.subtitle,
+      note: item.note || project.tagline,
+      to: `/projects/${item.slug}`,
+      cta: 'Read the case study',
+      badge: 'Working demo · recorded test run',
+      still: stills[item.slug].cover
+    }
+  }
   const real = film?.kind === 'real'
   return {
     id: item.slug,
@@ -60,7 +75,13 @@ export default function Proof({ area }) {
             <m.li key={card.id} variants={fadeUp}>
               <Link to={card.to} className="card loop-video-host" {...fx('lerp', 'view')}>
                 <div className="card-media">
-                  {card.film ? (
+                  {card.still ? (
+                    <ScreenStill
+                      src={card.still.file}
+                      focus={card.still.focus}
+                      className="card-video"
+                    />
+                  ) : card.film ? (
                     <LoopVideo
                       mode="hover"
                       src={card.film.src}

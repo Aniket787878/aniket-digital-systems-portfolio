@@ -133,6 +133,13 @@ measure both at matching viewports before changing anything.
   block a normal headless browser). It runs inside the sandbox, so it only
   reaches hosts the environment's network policy allows; for a host that
   policy blocks, fall back to the Firecrawl connector and say so.
+- **Subagents: pick the cheapest model that can do the job** (Aniket's
+  choice, 2026-09-30). Pass `model` on every launch: `haiku` for read-only
+  reviews of prepared material, `sonnet` for code, audits and creative
+  direction, Opus only for the lead session. Capture shared inputs (the
+  site, docs) once with a script and hand agents the path, so no two agents
+  crawl the same thing; code-writing agents work in a worktree and never
+  push.
 - Verify before claiming. Screenshots may be unavailable — use geometry probes
   (`getBoundingClientRect`), `gl.readPixels`, computed-style diffs.
 - **Two traps in that probe environment.** Both have produced false bug reports:

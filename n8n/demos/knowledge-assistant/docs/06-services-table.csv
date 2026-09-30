@@ -1,0 +1,9 @@
+service_id,service,duration_minutes,price_inr,format,notes
+S01,Initial assessment,60,1200,in clinic,Required for new patients
+S02,Follow-up session,30,700,in clinic,
+S03,Follow-up session,45,900,in clinic,
+S04,Follow-up session,60,1100,in clinic,
+S05,Sports injury rehab session,45,1300,in clinic,Includes a written exercise plan
+S06,Small-group rehab class,50,400,in clinic,Maximum 6 people per class
+S07,Video follow-up,30,600,video,Existing patients only
+S08,Workstation ergonomic review,45,1000,in clinic,Bring a photo of your desk setup

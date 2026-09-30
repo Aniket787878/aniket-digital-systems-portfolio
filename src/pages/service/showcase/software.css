@@ -1,420 +1,446 @@
 /* ---------------------------------------------------------------
-   Software showpiece: "Take it apart". A real screen (the Shared
-   Inbox demo) lifts into three glass plates — the screen, the rules,
-   the memory — then snaps back together. Built on stage.css.
+   "Inside the software": the /software showpiece. Prefix sw3-.
+   Two builds: .is-3d (pinned WebGL scene, desktop + motion) and
+   .is-static (a CSS exploded stack for phones, reduced motion and
+   no WebGL). Shared primitives come from stage.css.
    --------------------------------------------------------------- */
 
-.sw-apart {
-  /* stage-glow (stage.css) is centred off-axis (--glow-x: 62%) and wider
-     than a narrow viewport, so without a clip it pushes the page wider
-     than the screen on mobile. `clip`, not `hidden`: an ancestor with
-     `overflow: hidden/auto/scroll` turns into a scroll container and
-     breaks .sw-pin's `position: sticky` below; `clip` clips without
-     that side effect. */
+/* `clip`, not `hidden`: hidden would make the section a scroll
+   container and break the sticky pin inside it. */
+.sw3 {
   overflow: clip;
-  padding-block: clamp(3rem, 7vw, 5rem) 0;
+  --glow-x: 55%;
+  --glow-y: 52%;
 }
 
-/* ---------- Desktop pinned scene ---------- */
+/* ---------- 3D build ---------- */
 
-.sw-wrap {
+.sw3-track {
   position: relative;
-  height: 380vh;
+  height: 300vh;
 }
 
-.sw-pin {
+.sw3-pin {
   position: sticky;
   top: 0;
-  display: flex;
-  align-items: center;
   height: 100vh;
-  min-height: 680px;
-  overflow: hidden;
+  min-height: 640px;
+  overflow: clip;
 }
 
-.sw-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 0.62fr) minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(2rem, 5vw, 5rem);
-  width: 100%;
-}
-
-.sw-copy {
-  max-width: 38ch;
-}
-
-.sw-title {
-  margin-top: 1.25rem;
-}
-
-.sw-steps {
-  list-style: none;
-  display: grid;
-  gap: 1.5rem;
-  margin-top: 2.25rem;
-}
-
-.sw-steps li {
-  display: flex;
-  gap: 0.9rem;
-  padding-left: 1rem;
-  border-left: 2px solid transparent;
-  opacity: 0.45;
-  transition: opacity 0.4s ease, border-color 0.4s ease;
-}
-
-.sw-steps li.is-active {
-  opacity: 1;
-  border-left-color: var(--accent);
-}
-
-.sw-step-count {
-  flex-shrink: 0;
-  padding-top: 0.15rem;
-}
-
-.sw-step-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.sw-step-copy strong {
-  font-size: 1.0625rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-}
-
-.sw-step-copy span {
-  font-size: 0.9375rem;
-  line-height: 1.55;
-  color: var(--muted);
-}
-
-.sw-close {
-  margin-top: 2.25rem;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  color: var(--muted);
-  border-top: 1px solid var(--line);
-  padding-top: 1.25rem;
-}
-
-/* The object: three plates in a 3D scene. */
-.sw-object {
-  position: relative;
-  perspective: 2000px;
-}
-
-.sw-stack {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  transform-style: preserve-3d;
-}
-
-.sw-plate {
+.sw3-scene {
   position: absolute;
   inset: 0;
-  overflow: hidden;
-  padding: 0;
-  /* stage-glass's backdrop-filter mis-composites once a plate carries its
-     own translateZ inside the stack's preserve-3d: content silently stops
-     painting on the far plate. The plates never overlap live page content
-     worth blurring through, so drop it here and keep the gradient. */
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
 }
 
-.sw-plate-chrome {
-  position: relative;
-  display: flex;
-  align-items: center;
-  height: 34px;
-  padding-inline: 12px;
-  background: rgba(10, 9, 8, 0.6);
-  border-bottom: 1px solid var(--line);
-}
-
-.sw-plate-dots {
-  display: flex;
-  gap: 6px;
-}
-
-.sw-plate-dots i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.16);
-}
-
-.sw-plate-url {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 2px 12px;
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.3);
-}
-
-.sw-plate-shot {
+.sw3-scene canvas {
   display: block;
-  width: 100%;
-  height: calc(100% - 34px);
-  object-fit: cover;
-  object-position: top;
 }
 
-.sw-plate-tag {
-  position: absolute;
-  right: 0.85rem;
-  bottom: 0.7rem;
-  padding: 0.2rem 0.55rem;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--line);
-}
-
-/* Plate 2: the rules diagram. */
-.sw-rules {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
+/* Three columns over the full-bleed canvas: copy, the free space the
+   scene centres the product in, and the labels. The canvas reads the
+   middle column's box, so nothing is cropped from 1280 to 1920. */
+.sw3-layout {
+  position: relative;
+  z-index: 1;
   height: 100%;
-  padding: 1.5rem clamp(1rem, 4vw, 2.5rem);
-}
-
-.sw-node-wrap {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  min-width: 0;
-}
-
-.sw-node {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  padding: 0.7rem 0.75rem;
-  border-radius: 12px;
-  text-align: center;
-  min-width: 0;
-}
-
-.sw-node-label {
-  font-size: 0.8125rem;
-  font-weight: 500;
-  line-height: 1.3;
-  color: var(--ink);
-}
-
-.sw-node-sub {
-  font-size: 0.6875rem;
-  color: var(--muted);
-}
-
-.sw-wire {
-  position: relative;
-  flex: 0 0 clamp(1.25rem, 3vw, 2.5rem);
-  height: 2px;
-  background: var(--line-strong);
-  margin-inline: 2px;
-}
-
-.sw-wire.is-active {
-  background: rgba(245, 135, 30, 0.35);
-}
-
-.sw-pulse {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 6px;
-  height: 6px;
-  margin-top: -3px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 8px rgba(245, 135, 30, 0.9);
-  opacity: 0;
-}
-
-.sw-wire.is-active .sw-pulse {
-  animation: sw-travel 2.1s ease-in-out infinite;
-}
-
-.sw-pulse.is-static {
-  left: 50%;
-  margin-left: -3px;
-  opacity: 0.7;
-}
-
-@keyframes sw-travel {
-  0% { left: 0; opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { left: calc(100% - 6px); opacity: 0; }
-}
-
-/* Plate 3: the memory / pipeline board. */
-.sw-board {
-  position: relative;
+  max-width: calc(1440px + var(--container-pad) * 2);
+  margin: 0 auto;
+  padding-inline: var(--container-pad);
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0.6rem;
-  height: 100%;
-  padding: 1.25rem 1rem;
-}
-
-.sw-col {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.5rem;
-  min-width: 0;
-}
-
-.sw-col-label {
-  font-size: 0.6875rem;
-  color: var(--muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.sw-col-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.sw-card {
-  padding: 0.35rem 0.55rem;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--line);
-  font-size: 0.75rem;
-  color: var(--ink-soft);
-  white-space: nowrap;
-}
-
-.sw-card-moving {
-  position: absolute;
-  top: 2.4rem;
-  transform: translateX(-50%);
-  background: rgba(245, 135, 30, 0.14);
-  border-color: rgba(245, 135, 30, 0.4);
-  color: var(--ink);
-}
-
-/* The light stream threading the right edge of the exploded plates. */
-.sw-stream {
-  position: absolute;
-  top: -8%;
-  bottom: -8%;
-  right: 9%;
-  width: 1px;
-  background: linear-gradient(
-    180deg,
-    transparent,
-    rgba(245, 135, 30, 0.7) 20%,
-    rgba(245, 135, 30, 0.7) 80%,
-    transparent
-  );
-  box-shadow: 0 0 12px rgba(245, 135, 30, 0.6);
+  grid-template-columns: clamp(300px, 26vw, 390px) minmax(0, 1fr) clamp(250px, 20vw, 300px);
+  column-gap: clamp(1rem, 2vw, 2.5rem);
   pointer-events: none;
 }
 
-/* ---------- Fallback: mobile + reduced motion ---------- */
-
-.sw-fallback {
-  display: none;
+.sw3-copy {
+  align-self: center;
+  padding-top: calc(var(--nav-h) * 0.5);
+  pointer-events: auto;
 }
 
-.sw-flat {
-  display: grid;
-  gap: 1.25rem;
-  margin-top: 2.25rem;
+.sw3-eyebrow {
+  margin-bottom: 1.5rem;
 }
 
-.sw-flat .sw-plate {
-  position: relative;
-  aspect-ratio: 16 / 10;
+.sw3-title {
+  margin: 0;
+  max-width: 13ch;
 }
 
-/* The two diagram plates are shorter than the screenshot plate: their
-   content is a single row, not a whole app window, so a 16:10 frame
-   leaves too much air above and below it. */
-.sw-flat .sw-plate-2,
-.sw-flat .sw-plate-3 {
-  aspect-ratio: 16 / 7;
-}
-
-.sw-flat .sw-rules {
-  flex-wrap: wrap;
-}
-
-.sw-flat-step {
-  font-size: 0.95rem;
-  line-height: 1.55;
-  color: var(--muted);
-}
-
-.sw-flat-step strong {
-  display: block;
-  margin-bottom: 0.25rem;
+.sw3-lede {
+  margin: 1.25rem 0 0;
   font-size: 1rem;
+}
+
+.sw3-rehook-wrap {
+  margin: 1.25rem 0 0;
+}
+
+.sw3-rehook {
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  padding-bottom: 2px;
+  transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+}
+
+.sw3-rehook:hover,
+.sw3-rehook-wrap.is-on .sw3-rehook {
+  color: var(--peach);
+  border-color: rgba(245, 135, 30, 0.6);
+}
+
+.sw3-rehook:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.sw3-frame {
+  height: 100%;
+}
+
+/* Labels: the scene writes each one's translateY (to sit level with its
+   slab), its opacity and --lead (the leader line's length back to the
+   slab). They start invisible so nothing shows before the scene runs. */
+.sw3-labels {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sw3-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: opacity 0.2s linear;
+}
+
+.sw3-label::before {
+  content: '';
+  position: absolute;
+  top: 0.72em;
+  right: calc(100% + 0.5rem);
+  width: var(--lead, 0px);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.12));
+}
+
+.sw3-label::after {
+  content: '';
+  position: absolute;
+  top: calc(0.72em - 2px);
+  right: calc(100% + 0.5rem + var(--lead, 0px) - 2px);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ink-soft);
+}
+
+.sw3-label.is-active::before {
+  background: linear-gradient(90deg, rgba(245, 135, 30, 0.95), rgba(245, 135, 30, 0.3));
+}
+
+.sw3-label.is-active::after {
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(245, 135, 30, 0.9);
+}
+
+.sw3-idx {
+  padding-top: 0.2em;
+}
+
+.sw3-label.is-active .sw3-idx {
+  color: var(--peach);
+}
+
+.sw3-label-title {
+  display: block;
+  font-size: 1.0625rem;
   font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.4;
   color: var(--ink);
 }
 
-.sw-fallback .sw-close {
-  margin-top: 0.5rem;
+.sw3-label-more {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s var(--ease-out);
 }
 
-/* Scoped to this section: .stage-note is shared with the other two
-   showpieces via stage.css, so an unscoped rule here would leak site-wide. */
-.sw-apart .stage-note {
-  padding-block: 2rem 0;
+.sw3-label.is-active .sw3-label-more {
+  grid-template-rows: 1fr;
 }
 
-@media (max-width: 767px), (prefers-reduced-motion: reduce) {
-  .sw-wrap {
+.sw3-label-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sw3-line {
+  position: relative;
+  display: block;
+  padding: 0.5rem 0 0 0.9rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.sw3-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(0.5rem + 0.6em);
+  width: 5px;
+  height: 1px;
+  background: var(--accent);
+}
+
+/* ---------- Static build ---------- */
+
+.sw3-static {
+  position: relative;
+  padding-block: var(--section-pad);
+}
+
+.sw3-static-head {
+  max-width: 640px;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.sw3-static-head .sw3-title {
+  max-width: 16ch;
+}
+
+.sw3-stack {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sw3-layer {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(2rem, 5vw, 4.5rem);
+}
+
+/* Each plate sits in a flat box; the stream line runs through the box
+   centre behind the plate, so the four boxes join into one line. */
+.sw3-plate-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 2.25;
+  perspective: 1800px;
+}
+
+.sw3-plate-wrap::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(245, 135, 30, 0.15), rgba(245, 135, 30, 0.75), rgba(245, 135, 30, 0.15));
+  box-shadow: 0 0 12px rgba(245, 135, 30, 0.6);
+}
+
+.sw3-layer:first-child .sw3-plate-wrap::before {
+  top: 50%;
+}
+
+.sw3-layer:last-child .sw3-plate-wrap::before {
+  bottom: 50%;
+}
+
+.sw3-plate {
+  position: relative;
+  width: 74%;
+  aspect-ratio: 1.6;
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(155deg, #1f1e21 0%, #121214 60%, #0d0d0e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transform: rotateX(56deg) rotateZ(-34deg);
+  /* The slab's thickness and its saffron rim, drawn as stacked shadows
+     under the rotated face, then a soft floor shadow. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 5px 0 -1px #0a0a0b,
+    0 6px 0 -1px rgba(245, 135, 30, 0.45),
+    0 40px 50px -24px rgba(0, 0, 0, 0.85);
+}
+
+.sw3-plate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(125deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 38%);
+  pointer-events: none;
+}
+
+.sw3-plate-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sw3-plate-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.sw3-cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 9%;
+  padding: 14% 10%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.sw3-card {
+  border-radius: 4px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.sw3-card.is-new {
+  border-color: rgba(245, 135, 30, 0.8);
+  box-shadow: 0 0 12px rgba(245, 135, 30, 0.45);
+}
+
+.sw3-ports {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6%;
+  align-items: center;
+  height: 100%;
+  padding: 0 8%;
+  box-sizing: border-box;
+}
+
+.sw3-port {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+}
+
+.sw3-socket {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #0b0b0c;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 12px rgba(245, 135, 30, 0.55), inset 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.sw3-cable {
+  width: 2px;
+  height: 18px;
+  background: linear-gradient(180deg, rgba(245, 135, 30, 0.8), rgba(255, 255, 255, 0.25));
+}
+
+.sw3-tile {
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(245, 135, 30, 0.55);
+  background: rgba(245, 135, 30, 0.08);
+  font-size: 0.6875rem;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.sw3-layer-title {
+  margin: 0.4rem 0 0;
+  font-size: var(--display-3);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.sw3-layer-lines {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+}
+
+.sw3-layer-lines li {
+  position: relative;
+  padding: 0.3rem 0 0 1rem;
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  max-width: 44ch;
+}
+
+.sw3-layer-lines li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(0.3rem + 0.72em);
+  width: 6px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.sw3-layer--screen .sw3-layer-title {
+  color: var(--peach);
+}
+
+.sw3-static-foot {
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+@media (max-width: 767px) {
+  .sw3-layer {
+    grid-template-columns: 1fr;
+  }
+
+  .sw3-layer + .sw3-layer {
+    margin-top: 1.5rem;
+  }
+
+  .sw3-plate-wrap {
+    aspect-ratio: 1.9;
+  }
+
+  .sw3-plate-wrap::before {
     display: none;
   }
 
-  .sw-fallback {
-    display: block;
-  }
-}
-
-@media (max-width: 480px) {
-  .sw-rules {
-    flex-direction: column;
-    gap: 0.75rem;
+  .sw3-plate {
+    width: 82%;
+    transform: rotateX(48deg) rotateZ(-24deg);
   }
 
-  .sw-wire {
-    width: 2px;
-    height: clamp(1.25rem, 6vw, 2rem);
-    flex: 0 0 auto;
+  .sw3-layer-text {
+    margin-top: 0.25rem;
   }
 
-  .sw-pulse {
-    animation-name: sw-travel-vertical;
+  .sw3-tile {
+    font-size: 0.5625rem;
+    padding: 0.2rem 0.3rem;
   }
 
-  .sw-board {
-    grid-template-columns: repeat(5, minmax(56px, 1fr));
-    overflow-x: auto;
+  .sw3-socket {
+    width: 18px;
+    height: 18px;
   }
-}
-
-@keyframes sw-travel-vertical {
-  0% { top: 0; left: 50%; margin-top: -3px; margin-left: -3px; opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { top: calc(100% - 6px); left: 50%; margin-top: -3px; margin-left: -3px; opacity: 0; }
 }

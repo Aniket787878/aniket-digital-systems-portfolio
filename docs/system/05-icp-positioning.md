@@ -1,10 +1,59 @@
 # 05 — ICP & Positioning
 
-**Status: REPOSITIONED (2026-09-27).** Supersedes the 2026-09-13 decision below
-("complete production systems, built solo") and the short-lived clinic-first line
-used for the outreach pass earlier the same day. Both are kept for history.
+**Status: REPOSITIONED (2026-09-30).** Supersedes the 2026-09-27 decision below
+(result-led, automation only), which itself superseded 2026-09-13 ("complete
+production systems, built solo"). All are kept for history.
 
-## Decision (current — 2026-09-27)
+## Decision (current — 2026-09-30)
+
+**One site, three service areas: websites, software, AI.**
+
+Aniket's point: the site only showed software and automation, which undersold
+what he does. He builds websites, and wants AI work (including consultancy) to
+stand as its own offer. Options weighed: two sites (websites + software, and an
+AI consultancy), three sites, or one portfolio naming three areas.
+
+**Chosen: one site, one brand, three doors.** Each area gets its own page
+(`/websites`, `/software`, `/ai`) with its own offers, prices, proof and FAQ, so
+outreach links go straight to the page for that buyer. The home page names all
+three and opens each.
+
+Why not separate sites (yet):
+
+- **The proof crosses the areas.** The clinic platform is software with AI in it;
+  the care platform is a public site, software and automations. Split across
+  sites, each would look thinner. "The AI built into working software" is the
+  difference from a prompt-only AI consultant.
+- **Proof is scarce.** No testimonials, no case-study numbers, no branded domain
+  yet. Three sites would mean three empty testimonial slots.
+- **Jobs need one link.** A hiring manager wants a single URL with the full range.
+- **Upkeep.** Each site carries a design system, rendered films and a lead
+  pipeline; the time is better spent on outreach.
+- **The price-tier risk is handled on one site.** A ₹25k website beside a ₹3L
+  build can cheapen the build; each area's prices live only on its own page.
+
+**Revisit a separate AI site** once there are 2-3 AI engagements with real
+numbers, or if the AI buyer turns out to be a different company size. Lifting
+`/ai` out to its own domain is then a small job.
+
+**Proof rule, unchanged and restated:** no invented case studies. New proof for
+the websites and AI areas comes from real demo builds, labelled as demos on
+every card, the way the three working tools already are (next PR: a sample
+business website with an AI assistant, and an n8n AI enquiry workflow).
+
+- **Headline (hero, title, OG):** "Websites that bring the work in." /
+  "Software and AI that run the rest."
+- **Support line:** "Websites, custom software and AI workflows for clinics,
+  studios, agencies and growing teams. Built as one system, live in weeks."
+- **Buyers:** still service businesses broadly. The clinic system is the proof,
+  not the market. The no-solo-framing rule below still holds.
+- Copy lives in `site.headline`, `site.subtitle`, `site.tagline`, `seo` and
+  `services` in `src/data.js`; `public/og.png` is re-rendered from
+  `site.headline` by `scripts/render-og.mjs`.
+
+---
+
+## Superseded (2026-09-27)
 
 **Service businesses broadly, a result-led headline, no solo framing.**
 

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { m } from 'motion/react'
-import { site, whatsappPrefill, packages } from '../../data.js'
+import { site, whatsappPrefill, services } from '../../data.js'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
 import BookingCta from '../../components/BookingCta.jsx'
 import { hasBooking } from '../../booking.js'
@@ -16,15 +16,17 @@ const STARS = starField(40, 19)
 
 /* ---------------------------------------------------------------
    6 — Closing call to action, back at dusk: the page ends where it
-   began. The free audit is the ask (docs/research/06, gap G5).
+   began. The free call is the ask (docs/research/06, gap G5). Also the
+   closing band of the three service pages, so the copy stays general;
+   there `service` preselects that area in the contact form.
    --------------------------------------------------------------- */
-export default function Cta() {
+export default function Cta({ service }) {
+  const contact = service ? `/contact?service=${service}#write` : '/contact'
   const currency = useCurrency()
-  const entry = packages[0]
-  const anchor = site.pricingAnchor
-    .replace('{offer}', entry.name)
-    .replace('{price}', inCurrency(entry.price, currency))
-    .replace('{timeline}', entry.timeline.toLowerCase())
+  const anchor = services.reduce(
+    (text, area) => text.replace(`{${area.slug}}`, inCurrency(area.from, currency)),
+    site.pricingAnchor
+  )
 
   return (
     <section className="dusk-cta">
@@ -49,16 +51,17 @@ export default function Cta() {
       <m.div className="container dusk-cta-inner" {...reveal}>
         <p className="glass-pill">
           <span className="status-dot" aria-hidden="true" />
-          {hasBooking ? 'Free 15-minute call' : 'Free 15-minute audit'}
+          Free 15-minute call
         </p>
         <h2 className="dusk-title dusk-cta-title">
-          Have a process
+          Something to build,
           <br />
-          <span className="dusk-title-warm">that eats your week?</span>
+          <span className="dusk-title-warm">or a week to win back?</span>
         </h2>
         <p className="dusk-sub">
-          We map the one process costing you the most time, and I tell you
-          straight what automating it would take and whether it is worth doing.
+          Tell me what your business needs or what is eating your week, and
+          I will tell you straight what it would take and whether it is
+          worth doing.
         </p>
         <div className="dusk-actions">
           {hasBooking ? (
@@ -69,13 +72,13 @@ export default function Cta() {
           ) : (
             <>
               {hasWhatsApp ? (
-                <WhatsAppCta message={whatsappPrefill.audit} label="Book the free audit" className="btn-saffron" />
+                <WhatsAppCta message={whatsappPrefill.audit} label="Book the free call" className="btn-saffron" />
               ) : (
-                <Link to="/contact" className="btn-saffron">
-                  Book the free audit
+                <Link to={contact} className="btn-saffron">
+                  Book the free call
                 </Link>
               )}
-              <Link to="/contact" className="btn-light">
+              <Link to={contact} className="btn-light">
                 Send a message
               </Link>
             </>

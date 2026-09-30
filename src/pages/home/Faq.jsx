@@ -7,9 +7,10 @@ import { PillLabel } from '../../components/ui.jsx'
 
 /* ---------------------------------------------------------------
    5 — FAQ, on the light ground. Real disclosure buttons, one open at
-   a time; the answer eases open rather than snapping.
+   a time; the answer eases open rather than snapping. The service
+   pages pass their own questions and heading.
    --------------------------------------------------------------- */
-export default function Faq() {
+export default function Faq({ items = faq, heading = ['Before you ask.', 'Scope, cost and who owns what.'] }) {
   const [openIndex, setOpenIndex] = useState(0)
   const currency = useCurrency()
 
@@ -19,14 +20,14 @@ export default function Faq() {
         <m.header className="center-head" {...reveal}>
           <PillLabel icon="search">FAQ</PillLabel>
           <h2 className="h2">
-            Before you ask.
+            {heading[0]}
             <br />
-            <span className="soft">Scope, cost and who owns what.</span>
+            <span className="soft">{heading[1]}</span>
           </h2>
         </m.header>
 
         <m.ul className="faq-list" {...revealStagger}>
-          {faq.map((item, i) => {
+          {items.map((item, i) => {
             const isOpen = openIndex === i
             return (
               <m.li key={item.q} className={`faq-item${isOpen ? ' is-open' : ''}`} variants={fadeUp}>

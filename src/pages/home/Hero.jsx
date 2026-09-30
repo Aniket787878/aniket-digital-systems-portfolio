@@ -122,7 +122,7 @@ export default function Hero() {
         >
           {/* Booking link set: the call is primary, WhatsApp second, and
               "See the work" gives way (three buttons read as a menu).
-              Not set: the WhatsApp audit, exactly as before. */}
+              Not set: the free call on WhatsApp. */}
           {hasBooking ? (
             <>
               <BookingCta className="btn-saffron" />
@@ -133,12 +133,12 @@ export default function Hero() {
               {hasWhatsApp ? (
                 <WhatsAppCta
                   message={whatsappPrefill.audit}
-                  label="Book a free audit"
+                  label="Book a free call"
                   className="btn-saffron"
                 />
               ) : (
                 <Link to="/contact" className="btn-saffron">
-                  Book a free audit
+                  Book a free call
                 </Link>
               )}
               <a href="#work" className="btn-light">

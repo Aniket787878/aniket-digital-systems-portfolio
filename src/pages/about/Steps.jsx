@@ -230,7 +230,11 @@ function ScopeArt({ on }) {
 }
 
 /* Bar length is the offer's live time in days, parsed from `timeline`
-   ("Live in 5 days", "Live in 3–4 weeks": the upper bound counts). */
+   ("Live in 5 days", "Live in 3–4 weeks": the upper bound counts). Only
+   the offers marked `timelineChart` in data.js, one or two per service
+   area, so the chart stays a glance rather than a list of eight. */
+const CHART = packages.filter((p) => p.timelineChart)
+
 function days(timeline) {
   const nums = timeline.match(/\d+/g) || ['0']
   const n = Number(nums[nums.length - 1])
@@ -238,11 +242,11 @@ function days(timeline) {
 }
 
 function BuildArt({ on }) {
-  const max = Math.max(...packages.map((p) => days(p.timeline)))
+  const max = Math.max(...CHART.map((p) => days(p.timeline)))
   return (
     <Card title="Live in" icon="chart">
       <ul className="about-art-bars">
-        {packages.map((p, i) => (
+        {CHART.map((p, i) => (
           <li key={p.name}>
             <span className="about-art-bar-name">{p.name}</span>
             <span className="about-art-bar-track">

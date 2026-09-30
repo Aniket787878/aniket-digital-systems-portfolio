@@ -24,9 +24,9 @@ export default function Footer() {
             Good systems should feel like less work, not more software.
           </p>
           <p className="footer-desc">
-            I build the systems service businesses run on: booking, intake,
-            follow-ups, payments and AI, in one place instead of across
-            WhatsApp threads and spreadsheets.
+            I build websites, software and AI for service businesses: the
+            site that brings the enquiry in, the system that keeps track of
+            it, and the automations that do the repeat work.
           </p>
           <div className="footer-actions">
             <WhatsAppCta

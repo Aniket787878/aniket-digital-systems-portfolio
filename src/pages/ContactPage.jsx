@@ -41,11 +41,12 @@ export default function ContactPage() {
             <h2 className="h2" id="contact-write-title">
               Prefer to type it?
               <br />
-              <span className="soft">Five short questions.</span>
+              <span className="soft">Six short questions.</span>
             </h2>
             <p className="contact-write-lede">
-              Tell me what keeps you or your team busy with the same task
-              over and over. No need to know what the fix is. That is my job.
+              A website, a tool for your team, or the task that keeps you
+              busy over and over. No need to know what the fix is. That is
+              my job.
             </p>
             <TickList items={FORM_POINTS} className="contact-write-points" />
           </m.header>

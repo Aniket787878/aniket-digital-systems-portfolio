@@ -444,3 +444,13 @@
   align-items: flex-start;
   margin-top: 0.6rem;
 }
+
+.wo-copy-stack {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+}
+
+.wo-copy-stack > .wo-copy {
+  grid-area: 1 / 1;
+}

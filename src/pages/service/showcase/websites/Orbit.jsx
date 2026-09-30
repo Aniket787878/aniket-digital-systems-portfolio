@@ -149,24 +149,28 @@ export default function Orbit() {
             </div>
             <span className="stage-mono">{TAG}</span>
           </div>
-          <AnimatePresence mode="wait" initial={false}>
-            <m.div
-              key={c.slug}
-              className="wo-copy"
-              initial={{ opacity: 0, y: 8, filter: 'blur(6px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, y: -4, filter: 'blur(6px)' }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div className="wo-text">
-                <h3 className="wo-name">
-                  {c.name} <span className="wo-type">{c.type}</span>
-                </h3>
-                <p className="wo-line">{c.line}</p>
-              </div>
-              <OpenLink slug={c.slug} name={c.name} />
-            </m.div>
-          </AnimatePresence>
+          {/* Old and new copy share one grid cell and crossfade, so the
+              caption is never empty while the ring turns. */}
+          <div className="wo-copy-stack">
+            <AnimatePresence initial={false}>
+              <m.div
+                key={c.slug}
+                className="wo-copy"
+                initial={{ opacity: 0, y: 8, filter: 'blur(6px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, y: -4, filter: 'blur(6px)' }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <div className="wo-text">
+                  <h3 className="wo-name">
+                    {c.name} <span className="wo-type">{c.type}</span>
+                  </h3>
+                  <p className="wo-line">{c.line}</p>
+                </div>
+                <OpenLink slug={c.slug} name={c.name} />
+              </m.div>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </div>

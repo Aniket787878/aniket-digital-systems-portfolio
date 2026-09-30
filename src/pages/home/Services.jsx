@@ -1,4 +1,5 @@
 import { m } from 'motion/react'
+import { fx } from '../../interactions/attrs.js'
 import { site, services } from '../../data.js'
 import { useCurrency } from '../../currency.js'
 import { reveal, revealStagger, fadeUp } from '../../motion/variants.js'
@@ -25,9 +26,8 @@ export default function Services() {
       <div className="container">
         <m.header className="center-head" {...reveal}>
           <PillLabel icon="chart">Services</PillLabel>
-          <h2 className="h2">
+          <h2 className="h2" {...fx('split')}>
             Three things I build.
-            <br />
             <span className="soft">One system underneath.</span>
           </h2>
           <p className="center-lede">

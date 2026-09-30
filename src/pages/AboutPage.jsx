@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { fx } from '../interactions/attrs.js'
 import { m } from 'motion/react'
 import WhatsAppCta from '../components/WhatsAppCta.jsx'
 import BookingCta from '../components/BookingCta.jsx'
@@ -57,9 +58,9 @@ export default function AboutPage() {
             )}
             <m.div className="about-hero-actions" variants={heroItem}>
               {hasBooking ? (
-                <BookingCta className="btn-saffron" />
+                <BookingCta className="btn-saffron" magnet />
               ) : (
-                <Link to="/contact" className="btn-saffron">
+                <Link to="/contact" className="btn-saffron" {...fx('magnet')}>
                   Tell me what is breaking
                   <span className="btn-pill-icon" aria-hidden="true">
                     <Icon name="arrow" size={16} />

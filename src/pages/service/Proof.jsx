@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { fx } from '../../interactions/attrs.js'
 import { m } from 'motion/react'
 import { projects, films } from '../../data.js'
 import { reveal, revealStagger, fadeUp } from '../../motion/variants.js'
@@ -48,9 +49,8 @@ export default function Proof({ area }) {
           <PillLabel icon="layers" className="on-night">
             Proof
           </PillLabel>
-          <h2 className="h2" id="svc-proof-title">
+          <h2 className="h2" {...fx('split')} id="svc-proof-title">
             {area.proofHead[0]}
-            <br />
             <span className="soft">{area.proofHead[1]}</span>
           </h2>
         </m.header>
@@ -58,7 +58,7 @@ export default function Proof({ area }) {
         <m.ul className="cards svc-cards" data-count={cards.length} {...revealStagger}>
           {cards.map((card) => (
             <m.li key={card.id} variants={fadeUp}>
-              <Link to={card.to} className="card loop-video-host">
+              <Link to={card.to} className="card loop-video-host" {...fx('lerp', 'view')}>
                 <div className="card-media">
                   {card.film ? (
                     <LoopVideo

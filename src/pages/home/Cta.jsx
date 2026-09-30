@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { fx } from '../../interactions/attrs.js'
 import { m } from 'motion/react'
 import { site, whatsappPrefill, services } from '../../data.js'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
@@ -66,15 +67,15 @@ export default function Cta({ service }) {
         <div className="dusk-actions">
           {hasBooking ? (
             <>
-              <BookingCta className="btn-saffron" />
+              <BookingCta className="btn-saffron" magnet />
               <WhatsAppCta message={whatsappPrefill.cta} label="WhatsApp me" className="btn-light" />
             </>
           ) : (
             <>
               {hasWhatsApp ? (
-                <WhatsAppCta message={whatsappPrefill.audit} label="Book the free call" className="btn-saffron" />
+                <WhatsAppCta message={whatsappPrefill.audit} label="Book the free call" className="btn-saffron" magnet />
               ) : (
-                <Link to={contact} className="btn-saffron">
+                <Link to={contact} className="btn-saffron" {...fx('magnet')}>
                   Book the free call
                 </Link>
               )}

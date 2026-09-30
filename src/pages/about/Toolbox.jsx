@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { fx } from '../../interactions/attrs.js'
 import { m } from 'motion/react'
 import { toolbox } from '../../data.js'
 import { reveal } from '../../motion/variants.js'
@@ -26,9 +27,8 @@ export default function Toolbox() {
       <div className="container">
         <m.header className="about-band-head" {...reveal}>
           <PillLabel icon="layers" className="on-night">Toolbox</PillLabel>
-          <h2 className="h2" id="about-toolbox-title">
+          <h2 className="h2" {...fx('split')} id="about-toolbox-title">
             The tools, sorted by
-            <br />
             <span className="soft">what they do for you.</span>
           </h2>
         </m.header>

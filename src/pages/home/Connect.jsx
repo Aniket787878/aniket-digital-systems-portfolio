@@ -1,4 +1,5 @@
 import { m } from 'motion/react'
+import { fx } from '../../interactions/attrs.js'
 import FlowGraph from '../../components/FlowGraph.jsx'
 import { PillLabel, TickList } from '../../components/ui.jsx'
 import { reveal } from '../../motion/variants.js'
@@ -15,9 +16,8 @@ export default function Connect() {
       <div className="container">
         <m.header className="center-head" {...reveal}>
           <PillLabel icon="flow">How it connects</PillLabel>
-          <h2 className="h2">
+          <h2 className="h2" {...fx('split')}>
             Your tools, wired into
-            <br />
             <span className="soft">one system that runs itself.</span>
           </h2>
           <p className="center-lede">

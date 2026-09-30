@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { fx } from '../../interactions/attrs.js'
 import { m, AnimatePresence } from 'motion/react'
 import { faq } from '../../data.js'
 import { useCurrency, inCurrency } from '../../currency.js'
@@ -19,9 +20,8 @@ export default function Faq({ items = faq, heading = ['Before you ask.', 'Scope,
       <div className="container">
         <m.header className="center-head" {...reveal}>
           <PillLabel icon="search">FAQ</PillLabel>
-          <h2 className="h2">
+          <h2 className="h2" {...fx('split')}>
             {heading[0]}
-            <br />
             <span className="soft">{heading[1]}</span>
           </h2>
         </m.header>

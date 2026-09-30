@@ -1,4 +1,5 @@
 import { hasWhatsApp, whatsappHref } from '../whatsapp.js'
+import { fx } from '../interactions/attrs.js'
 
 /* ---------------------------------------------------------------
    The WhatsApp button: pill body, glyph in the trailing circle.
@@ -7,7 +8,7 @@ import { hasWhatsApp, whatsappHref } from '../whatsapp.js'
    why, and check `hasWhatsApp` from there before laying out a row that
    would otherwise be left with one button in it.
    --------------------------------------------------------------- */
-export default function WhatsAppCta({ message, label, className = '' }) {
+export default function WhatsAppCta({ message, label, className = '', magnet = false }) {
   if (!hasWhatsApp) return null
 
   return (
@@ -16,6 +17,7 @@ export default function WhatsAppCta({ message, label, className = '' }) {
       className={className}
       target="_blank"
       rel="noreferrer noopener"
+      {...(magnet ? fx('magnet') : null)}
     >
       {label}
       <span className="btn-pill-icon" aria-hidden="true">

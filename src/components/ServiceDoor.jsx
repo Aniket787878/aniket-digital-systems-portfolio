@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { fx } from '../interactions/attrs.js'
 import { inCurrency } from '../currency.js'
 import Icon from './icons.jsx'
 import ServiceMedia from './ServiceMedia.jsx'
@@ -12,7 +13,7 @@ import ServiceMedia from './ServiceMedia.jsx'
    --------------------------------------------------------------- */
 export default function ServiceDoor({ area, currency }) {
   return (
-    <Link to={area.path} className="card door loop-video-host">
+    <Link to={area.path} className="card door loop-video-host" {...fx('lerp', 'view')}>
       <div className="card-media">
         <ServiceMedia media={area.media} className="card-video" />
         <span className="card-badge">

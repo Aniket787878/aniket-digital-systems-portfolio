@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { fx } from '../../interactions/attrs.js'
 import { m } from 'motion/react'
 import Icon from '../../components/icons.jsx'
 import { PillLabel } from '../../components/ui.jsx'
@@ -46,9 +47,8 @@ export default function NextSteps() {
       <div className="container">
         <m.header className="contact-next-head" {...reveal}>
           <PillLabel icon="flow" className="on-night">What happens next</PillLabel>
-          <h2 className="h2" id="contact-next-title">
+          <h2 className="h2" {...fx('split')} id="contact-next-title">
             From your message to a price in writing.
-            <br />
             <span className="soft">Three steps, nothing hidden.</span>
           </h2>
         </m.header>

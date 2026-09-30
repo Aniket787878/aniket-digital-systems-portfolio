@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { fx } from '../../interactions/attrs.js'
 import { m, AnimatePresence, useScroll, useMotionValueEvent, useReducedMotion } from 'motion/react'
 import { process } from '../../data.js'
 import Icon from '../../components/icons.jsx'
@@ -39,9 +40,8 @@ export default function Process() {
         <div className="container process-grid">
           <div className="process-copy">
             <PillLabel icon="pulse" className="on-night">Process</PillLabel>
-            <h2 className="h2">
+            <h2 className="h2" {...fx('split')}>
               How a build goes.
-              <br />
               <span className="soft">Work first, tools second.</span>
             </h2>
             <ol className="process-steps" style={{ '--progress': (active + 1) / process.length }}>

@@ -1,4 +1,5 @@
 import Icon from './icons.jsx'
+import { fx } from '../interactions/attrs.js'
 import { bookingUrl, hasBooking, BOOKING_LABEL } from '../booking.js'
 
 /* ---------------------------------------------------------------
@@ -7,11 +8,17 @@ import { bookingUrl, hasBooking, BOOKING_LABEL } from '../booking.js'
    WhatsAppCta, so check `hasBooking` (booking.js) before laying out a
    row that depends on it.
    --------------------------------------------------------------- */
-export default function BookingCta({ className = '', label = BOOKING_LABEL }) {
+export default function BookingCta({ className = '', label = BOOKING_LABEL, magnet = false }) {
   if (!hasBooking) return null
 
   return (
-    <a href={bookingUrl} className={className} target="_blank" rel="noreferrer noopener">
+    <a
+      href={bookingUrl}
+      className={className}
+      target="_blank"
+      rel="noreferrer noopener"
+      {...(magnet ? fx('magnet') : null)}
+    >
       {label}
       <span className="btn-pill-icon" aria-hidden="true">
         <Icon name="calendar" size={16} />

@@ -88,8 +88,39 @@ function Typing() {
   )
 }
 
+/* The last couple of moments' messages, faded, so the window opens onto a
+   running thread instead of an empty screen. Full text, no typing beats:
+   these moments already finished. */
+function History({ moments }) {
+  if (!moments.length) return null
+  return (
+    <div className="ai-history" aria-hidden="true">
+      {moments.map((mo) => (
+        <div className="ai-history-moment" key={mo.id}>
+          <div className="ai-daychip stage-mono">Today {mo.time}</div>
+          {!mo.turns[0].user && (
+            <div className="ai-auto stage-mono">Prepared automatically at {mo.time}</div>
+          )}
+          {mo.turns.map((turn, i) => (
+            <div key={i}>
+              {turn.user && (
+                <div className="ai-bubble is-visitor">
+                  <p>{turn.user}</p>
+                </div>
+              )}
+              <div className="ai-bubble is-desk">
+                <Reply text={turn.reply} limit={Infinity} />
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 /* The phone-style window: one moment's conversation, derived from t. */
-export default function Chat({ moment, sched, t, onHover }) {
+export default function Chat({ moment, sched, t, onHover, prevMoments = [] }) {
   const scroller = useRef(null)
   const items = []
   let composing = ''
@@ -106,7 +137,7 @@ export default function Chat({ moment, sched, t, onHover }) {
     if (!turn.user && i === 0 && t >= CLOCK_MS) {
       items.push(
         <div className="ai-auto stage-mono" key="auto">
-          Sent automatically at {moment.time}
+          Prepared automatically at {moment.time}
         </div>
       )
     }
@@ -151,6 +182,7 @@ export default function Chat({ moment, sched, t, onHover }) {
         </span>
       </div>
       <div className="ai-phone-log" ref={scroller} aria-hidden="true">
+        <History moments={prevMoments} />
         {items}
       </div>
       <div className="ai-composer" aria-hidden="true">

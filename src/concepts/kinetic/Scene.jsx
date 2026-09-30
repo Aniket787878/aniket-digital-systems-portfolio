@@ -8,8 +8,8 @@ import * as THREE from 'three'
    each disc eases toward its pose with its own delay, and a travelling wave
    driven by scroll speed and pointer X keeps the whole thing moving. */
 
-const N = 24
-const SP = 0.3
+const N = 14
+const SP = 0.6
 const L = SP * (N - 1)
 const TEAL = new THREE.Color('#00e0c6')
 const DIM = new THREE.Color('#1b3a36')
@@ -20,9 +20,9 @@ const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v)
 const ease = (v) => v * v * (3 - 2 * v)
 
 function makeDisc() {
-  const R = 0.44
-  const h = 0.085
-  const c = 0.06
+  const R = 0.48
+  const h = 0.06
+  const c = 0.05
   const seg = 8
   const pts = [new THREE.Vector2(0.0001, -h)]
   for (let k = 0; k <= seg; k++) {
@@ -49,7 +49,7 @@ function makeProcess() {
 }
 
 function makeJoint(tube) {
-  const g = new THREE.TorusGeometry(0.34, tube, 10, 64)
+  const g = new THREE.TorusGeometry(0.4, tube, 10, 64)
   g.rotateX(Math.PI / 2)
   return g
 }
@@ -124,7 +124,10 @@ function poseH(i, lay, P, Q) {
 
 function poseX(i, lay, P, Q, sc) {
   const d = sc[i]
-  P.set((d.x * 0.62 - 0.2) * lay.w, d.y * lay.h * 0.92, -3 + d.z * 4)
+  // Keep every exploded disc within the left 55% of the viewport (world
+  // units at this camera), with margin for perspective drift across the
+  // z range, so none of them drift over the right-hand text column.
+  P.set((-0.35 + d.x * 0.34) * lay.w, d.y * lay.h * 0.92, -3 + d.z * 4)
   _q2.setFromAxisAngle(UP, lay.time * 0.4 + i)
   Q.copy(d.q).multiply(_q2)
   return discSize(i) * 0.9
@@ -282,7 +285,7 @@ function Spine({ stRef, reduced, onReady }) {
       const a = buf.cP[i]
       const b = buf.cP[j]
       const d = a.distanceTo(b)
-      const vis = clamp01((0.72 - d) / 0.22)
+      const vis = clamp01((0.95 - d) / 0.3)
       _t.copy(a).add(b).multiplyScalar(0.5)
       _q.copy(buf.cQ[i]).slerp(buf.cQ[j], 0.5)
       const s = Math.min(buf.cS[i], buf.cS[j]) * vis

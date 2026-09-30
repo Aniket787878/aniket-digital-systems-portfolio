@@ -37,6 +37,32 @@
   display: block;
 }
 
+/* Loading plate: the same screenshot the static build uses, centred, so
+   the pin opens onto the real product instead of a blank canvas while the
+   three.js chunk loads. Fades out once the scene reports its first frame. */
+.sw3-preload {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.sw3-preload.is-done {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sw3-preload-plate {
+  width: min(560px, 42vw);
+  aspect-ratio: 1.6;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 40px 50px -24px rgba(0, 0, 0, 0.85);
+}
+
 /* Three columns over the full-bleed canvas: copy, the free space the
    scene centres the product in, and the labels. The canvas reads the
    middle column's box, so nothing is cropped from 1280 to 1920. */

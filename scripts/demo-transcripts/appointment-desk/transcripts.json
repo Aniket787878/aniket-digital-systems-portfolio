@@ -1,0 +1,36 @@
+[
+  {
+    "id": "welcome",
+    "kind": "ui-chrome",
+    "note": "Initial message is widget configuration, not a model reply. It is not in the test log.",
+    "reply": "Hi, I am the Demo Physio Clinic front desk assistant. I can answer questions and help with appointments."
+  },
+  {
+    "id": "fees",
+    "source": "n8n/demos/appointment-desk/test-log.md test 3",
+    "execution": "23825",
+    "input": "What are your fees and timings? Also do you accept insurance?",
+    "reply": "Our opening hours are Monday to Friday 09:00-18:00 and Saturday 09:00-13:00.\n\nOur fees are:\n- Initial assessment (45 min): Rs 1,200\n- Follow-up session (30 min): Rs 800\n\nWe do not bill insurance companies directly. However, we provide an itemised receipt that you can use to make your own insurance claim.\n\nWould you like to book an appointment?"
+  },
+  {
+    "id": "slots",
+    "source": "n8n/demos/appointment-desk/test-log.md test 1a",
+    "execution": "23810",
+    "input": "Hi, I would like to book an initial assessment for next Monday morning please.",
+    "reply": "I can certainly help you with that. An initial assessment is 45 minutes and costs Rs 1,200.\n\nFor next Monday, 5 October, I have the following morning slots available:\n- 09:00\n- 09:30\n- 10:00\n\nDo any of these work for you?"
+  },
+  {
+    "id": "clinical",
+    "source": "n8n/demos/appointment-desk/test-log.md test 4",
+    "execution": "23826",
+    "input": "My knee is swollen since yesterday, what should I take for it?",
+    "reply": "I cannot advise on symptoms or what you should take. A member of the clinic team will follow up with you during opening hours. If it feels severe or is getting worse, please call 112 or your doctor.\n\nWould you like to book an initial assessment with a physiotherapist?"
+  },
+  {
+    "id": "emergency",
+    "source": "n8n/demos/appointment-desk/test-log.md test 5",
+    "execution": "23828",
+    "input": "I have severe chest pain and my left arm feels numb",
+    "reply": "This sounds like it could be an emergency. Please call 112 (emergency services) now, or go to your nearest emergency department. If it is safe to do so, ask someone to stay with you. I am an automated assistant and cannot assess symptoms, so please do not wait for a reply from us. I have flagged your message for the clinic team."
+  }
+]

@@ -1,0 +1,31 @@
+[
+  {
+    "id": "welcome",
+    "kind": "ui-chrome",
+    "note": "Initial message is widget configuration in index.html, not a model reply.",
+    "reply": "Hi, I answer questions about Demo Physio Clinic: prices, hours and policies."
+  },
+  {
+    "id": "saturday",
+    "source": "n8n/demos/knowledge-assistant/test-log.md section 2, row 2",
+    "execution": "23824",
+    "input": "What time do you open on Saturday?",
+    "reply": "We are open from 9:00 am to 1:00 pm on Saturdays.\n\nSources: Opening Hours and Contact"
+  },
+  {
+    "id": "prices-45",
+    "source": "n8n/demos/knowledge-assistant/test-log.md section 2, row 4",
+    "execution": "23819",
+    "input": "How much is a 45-minute session?",
+    "reply": "A 45-minute session costs:\n- Follow-up session: ₹900\n- Sports injury rehab session: ₹1,300\n- Workstation ergonomic review: ₹1,000\n\nSources: Services Table"
+  },
+  {
+    "id": "acupuncture",
+    "source": "n8n/demos/knowledge-assistant/test-log.md section 2, row 6",
+    "execution": "23834",
+    "input": "Do you offer acupuncture?",
+    "reply": "I don't know, please ask the front desk.",
+    "leadExecution": "23881",
+    "leadNote": "Lead card capture: the lead POST is routed to {ok:true} in Playwright. The real workflow run that saved exactly this lead (name \"Demo Visitor\", phone \"0000000002\") is n8n execution 23881."
+  }
+]

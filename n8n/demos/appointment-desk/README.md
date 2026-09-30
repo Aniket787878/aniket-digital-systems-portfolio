@@ -38,7 +38,7 @@ SOFTWARE.
 
 ## What it does, in plain words
 
-1. **Patient chats** (n8n Chat Trigger today, WhatsApp Business Cloud later).
+1. **Patient chats** (n8n Chat Trigger, or WhatsApp through MSG91 for one allowlisted number, or WhatsApp Business Cloud later, disabled).
 2. A **keyword screen** checks for emergency wording (chest pain, can't breathe, self-harm and so on). If it hits, the patient gets a fixed "call 112 / go to the nearest emergency department" reply, the model is never called, and a row goes to the Handoffs sheet.
 3. Otherwise the **AI agent** takes over. It answers fees, hours, address, payment and cancellation questions from a small FAQ inside its system prompt, and uses Google Calendar tools to check free slots, book, reschedule, cancel and mark confirmed. After every booking action it writes a row to the "Bookings log" sheet.
 4. **Clinical questions** ("my knee is swollen, what should I take?") are refused, logged to the Handoffs sheet, and the patient is told a team member will follow up and to call 112 or their doctor if it is severe.
@@ -66,10 +66,22 @@ Added:
 - Google Sheets log of every booking action ("Bookings log") and of every handoff ("Handoffs").
 - Identity check before reschedule or cancel (mobile number must match the calendar event).
 
+## WhatsApp through MSG91 (allowlisted demo path)
+
+A third entry path lets the demo run on WhatsApp through an existing MSG91 account, without exposing it to the public.
+
+- **Inbound:** node "MSG91 inbound webhook" (POST). Point MSG91's inbound-message webhook at `https://<your-n8n-host>/webhook/appointment-desk-msg91-REPLACE_WITH_RANDOM_SUFFIX` once the workflow is active. The path has a random suffix so it cannot be guessed. n8n answers MSG91 with HTTP 200 straight away in every case.
+- **Hard allowlist:** the next node, "Sender allowlist (edit ALLOWED_SENDER here)", strips the sender to digits and compares it with one constant, `ALLOWED_SENDER = "919136582842"`, in the first lines of the code. Any other sender, or any non-text message (image, document, contact, delivery report), stops there: no reply, no model call, and nothing written anywhere, because the node outputs only `{allowed:false}`. To use another number, change that one line.
+- **Allowed sender:** the message goes through the same emergency keyword screen, the same agent and the same guardrails as the chat path. Memory is keyed `wa-<phone digits>`. A repeat delivery of the same MSG91 message id within two minutes is ignored.
+- **Outbound:** "Build MSG91 session message" prepares `integrated_number`, `recipient_number`, `content_type = text` and `text`, and "MSG91 WhatsApp reply (session message, text only)" POSTs them to `https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/` (query parameters `integrated_number`, `recipient_number`, `content_type`, JSON body `{"text": ...}`) with an HTTP Header Auth credential (MSG91 `authkey` header). The recipient is always the allowlisted number, never the raw payload sender. Free-form session messages only reach a user who wrote in the last 24 hours, which fits a reply. No templates, no media.
+- **Formats** were learned read-only from an existing MSG91 inbound bot: inbound `body.incoming_message[0]` with `from`, `from_name`, `message_id`, `message_type` and `text_type.text` (a flat `customerNumber`/`sender` + `text` form is also accepted); outbound as above. The integrated number in the "Build MSG91 session message" node is the WhatsApp number registered in MSG91.
+- **No message storage:** workflow settings save neither successful nor failed production executions (`saveDataSuccessExecution` and `saveDataErrorExecution` are `none`), so real messages that arrive on the webhook are never kept in n8n. Manual test runs are still saved (`saveManualExecutions` stays true) so tests can be inspected. The Sheets logs are separate and only receive rows from allowlisted senders.
+- The Meta WhatsApp Cloud API nodes stay disabled and are untouched.
+
 ## Setup
 
 1. Import `workflow.json` (n8n, Workflows, Import from file). It imports inactive.
-2. Credentials: the export contains no credential fields, so nothing is linked on import. Attach a Google Gemini (PaLM) API credential to the "Gemini chat model" node, a Google Calendar OAuth2 credential to the calendar nodes, and a Google Sheets OAuth2 credential to the Sheets nodes.
+2. Credentials: the export contains no credential fields, so nothing is linked on import. Attach a Google Gemini (PaLM) API credential to the "Gemini chat model" node, a Google Calendar OAuth2 credential to the calendar nodes, a Google Sheets OAuth2 credential to the Sheets nodes, and (only for the MSG91 path) an HTTP Header Auth credential with the MSG91 `authkey` header to "MSG91 WhatsApp reply (session message, text only)".
 3. **Demo calendar ID:** already set. Every Calendar node points at Aniket's dedicated demo calendar (ID ending `...@group.calendar.google.com`, in the `calendar` field). To use another calendar, replace it in all nine Calendar nodes (seven agent tool nodes and two scheduled-job nodes). Never point it at a real patient calendar. The Google account behind the Calendar credential needs **writer** access to that calendar.
 4. **Demo sheet ID:** create a demo Google Sheet with two tabs.
    - `Bookings log`, header row: `timestamp, action, patient_name, patient_phone, appointment_start, calendar_event_id, channel, note`

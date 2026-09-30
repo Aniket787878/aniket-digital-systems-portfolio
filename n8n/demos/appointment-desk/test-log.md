@@ -122,8 +122,37 @@ Pinned today's events. Output:
 
 Result: pass.
 
+## MSG91 path tests (added later; webhook payloads pinned in the MSG91 shape, MSG91 send node pinned so nothing was sent)
+
+The Gemini model ran for real in (a); the three Sheets nodes and the MSG91 send node were pinned. Payload shape: `body.incoming_message[0] = {from, from_name, message_id, message_type: "text", text_type: {text}}`.
+
+### M-a. Allowed sender asks for timings (execution 23861)
+Input: from `919136582842`, text `What are your timings and fees?`
+Allowlist output: `allowed: true`, session `wa-919136582842`, provider `msg91`. Agent reply:
+> Our opening hours are Monday to Friday 09:00-18:00 and Saturday 09:00-13:00. We are closed on Sundays.
+>
+> Our fees are:
+> - Initial assessment (45 minutes): Rs 1,200
+> - Follow-up session (30 minutes): Rs 800
+>
+> Would you like to book an appointment?
+
+"Build MSG91 session message" produced exactly the request the send node uses: `integrated_number REPLACE_WITH_MSG91_INTEGRATED_NUMBER`, `recipient_number 919136582842`, `content_type text`, `text` = the reply above. Result: pass.
+
+### M-b. Sender not on the allowlist (execution 23862)
+Input: from `919999900000`, text `Hi I want to book`
+Allowlist output was only `{allowed: false}`. "Sender allowed?" took its false branch and nothing else ran: no normalise step, no emergency screen, no model call, no Sheets row, no send. Result: pass.
+
+### M-c. Emergency text from the allowed number (execution 23863)
+Input: from `+91 91365 82842` (formatting is stripped to digits, so it matches), text `I have severe chest pain and cannot breathe`
+The keyword screen hit, the model never ran, the handoff log node ran (pinned), and the send request carried the fixed reply:
+> This sounds like it could be an emergency. Please call 112 (emergency services) now, or go to your nearest emergency department. If it is safe to do so, ask someone to stay with you. I am an automated assistant and cannot assess symptoms, so please do not wait for a reply from us. I have flagged your message for the clinic team.
+
+Recipient `919136582842`. Result: pass.
+
 ## Not tested
 
 - Cancel and Mark_appointment_confirmed were not run in a dedicated test. They are wired like Reschedule and follow the same prompt flow.
 - Google Sheets appends and WhatsApp sends never ran for real (no demo sheet, no WhatsApp credential).
-- The WhatsApp trigger path (channel `whatsapp`) was not run.
+- The Meta WhatsApp trigger path was not run. The MSG91 webhook was only tested through pinned payloads; no real MSG91 request was received and no real message was sent.
+- The exact production webhook URL form was not called (workflow is inactive).

@@ -1,0 +1,432 @@
+/* ----------------------------------------------------------------
+   AiShowcase: "Ask the front desk". Its own sheet, stage.css carries
+   the shared stage/glass/mono/heading primitives.
+   ---------------------------------------------------------------- */
+
+.ai-desk {
+  padding-block: clamp(4rem, 9vw, 7rem);
+}
+
+.ai-desk-in {
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-desk-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  max-width: 62ch;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+/* ---------------- console shell ---------------- */
+
+.ai-console {
+  width: 100%;
+  max-width: 1100px;
+  margin-inline: auto;
+  overflow: hidden;
+}
+
+.ai-console-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.ai-console-dots {
+  display: inline-flex;
+  gap: 0.35rem;
+  flex: 0 0 auto;
+}
+
+.ai-console-dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.ai-console-title {
+  flex: 1 1 auto;
+  text-align: center;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ai-console-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.ai-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(245, 135, 30, 0.75);
+  animation: ai-pulse 1.8s ease-in-out infinite;
+}
+
+.ai-status-dot.is-static {
+  animation: none;
+}
+
+@keyframes ai-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.72); }
+}
+
+.ai-console-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+}
+
+.ai-chat-col {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--line);
+  min-width: 0;
+}
+
+/* ---------------- chat ---------------- */
+
+.ai-chat {
+  height: 460px;
+  overflow-y: auto;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  scrollbar-width: thin;
+}
+
+.ai-bubble {
+  max-width: 82%;
+  padding: 0.7rem 0.95rem;
+  border-radius: 14px;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.ai-bubble p {
+  margin: 0 0 0.5em;
+}
+
+.ai-bubble p:last-child {
+  margin-bottom: 0;
+}
+
+.ai-bubble ul {
+  margin: 0.2em 0 0.6em;
+  padding-left: 1.1em;
+}
+
+.ai-bubble ul:last-child {
+  margin-bottom: 0;
+}
+
+.ai-bubble.is-clinic {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  border-bottom-left-radius: 4px;
+}
+
+.ai-bubble.is-visitor {
+  align-self: flex-end;
+  background: rgba(245, 135, 30, 0.14);
+  border: 1px solid rgba(245, 135, 30, 0.35);
+  color: var(--ink);
+  border-bottom-right-radius: 4px;
+}
+
+.ai-safety-tag {
+  align-self: flex-start;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 135, 30, 0.3);
+  background: rgba(245, 135, 30, 0.08);
+  color: var(--peach);
+}
+
+.ai-typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  padding: 0.75rem 0.95rem;
+}
+
+.ai-typing span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--muted);
+  animation: ai-typing-bounce 1.1s ease-in-out infinite;
+}
+
+.ai-typing span:nth-child(2) { animation-delay: 0.15s; }
+.ai-typing span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes ai-typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-3px); opacity: 1; }
+}
+
+/* ---------------- chips ---------------- */
+
+.ai-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+  padding: 0.9rem 1.25rem 1.1rem;
+  border-top: 1px solid var(--line);
+}
+
+.ai-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 0.5rem 0.95rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.ai-chip:hover:not(:disabled) {
+  border-color: rgba(245, 135, 30, 0.45);
+  color: var(--ink);
+}
+
+.ai-chip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.ai-chip:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.ai-chip.is-played {
+  border-color: rgba(245, 135, 30, 0.4);
+  color: var(--ink);
+}
+
+.ai-chip-check {
+  color: var(--accent);
+  flex: 0 0 auto;
+}
+
+.ai-start-over {
+  margin-left: auto;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem 0.3rem;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.ai-start-over:hover:not(:disabled) {
+  color: var(--ink);
+  text-decoration-color: currentColor;
+}
+
+.ai-start-over:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+/* ---------------- rail ---------------- */
+
+.ai-rail-col {
+  position: relative;
+  min-width: 0;
+}
+
+.ai-wire {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.ai-wire path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-dasharray: 1;
+  filter: drop-shadow(0 0 4px rgba(245, 135, 30, 0.6));
+}
+
+.ai-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.1rem;
+  height: 100%;
+}
+
+.ai-tool {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.7rem 0.85rem;
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+}
+
+.ai-tool-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  transition: color 0.35s ease;
+}
+
+.ai-tool-icon {
+  flex: 0 0 auto;
+  color: var(--muted);
+  transition: color 0.35s ease;
+}
+
+.ai-tool-name {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.ai-tool-tick {
+  margin-left: auto;
+  color: var(--accent);
+  flex: 0 0 auto;
+}
+
+.ai-tool-log {
+  margin-top: 0.45rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  min-height: 1.1em;
+}
+
+.ai-tool-waiting {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+.ai-tool-line {
+  color: var(--ink-soft);
+}
+
+.ai-tool-ts {
+  color: var(--muted);
+}
+
+.ai-tool-lit {
+  border-color: rgba(245, 135, 30, 0.55);
+  background: rgba(245, 135, 30, 0.07);
+  box-shadow: 0 0 0 1px rgba(245, 135, 30, 0.35), 0 0 22px -6px rgba(245, 135, 30, 0.55);
+}
+
+.ai-tool-lit .ai-tool-head,
+.ai-tool-lit .ai-tool-icon {
+  color: var(--accent);
+}
+
+.ai-tool-done .ai-tool-head {
+  color: var(--ink-soft);
+}
+
+/* ---------------- note + closing line ---------------- */
+
+.ai-note {
+  max-width: 62ch;
+}
+
+.ai-cta-line {
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.ai-cta-line a {
+  color: var(--peach);
+  text-underline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------------- mobile ---------------- */
+
+@media (max-width: 768px) {
+  .ai-console-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-chat-col {
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .ai-chat {
+    height: 420px;
+  }
+
+  .ai-wire {
+    display: none;
+  }
+
+  .ai-rail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .ai-console-title {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-status-dot {
+    animation: none;
+  }
+
+  .ai-typing span {
+    animation: none;
+  }
+}

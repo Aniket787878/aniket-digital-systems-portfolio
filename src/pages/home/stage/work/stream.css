@@ -1,0 +1,40 @@
+/* The stream segment (Stream.jsx) and the gutter it runs in. Shared by
+   the three home sections built here: StageWork (sw-), Doors (sd-) and
+   Questions (sq-). */
+
+.sw,
+.sd,
+.sq {
+  --stream-x: clamp(24px, 6vw, 96px);
+  /* Content keeps clear of the stream: the gutter plus a margin. */
+  --sw-inset: calc(var(--stream-x) + 40px);
+}
+
+.sw-stream {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .sw-stream {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--stream-x) - 4px);
+    width: 8px;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+.sw-stream path {
+  fill: none;
+  stroke-width: 1px;
+}
+
+.sw-stream-lit {
+  stroke: var(--accent);
+  filter: drop-shadow(0 0 6px rgba(245, 135, 30, 0.6));
+}

@@ -1,0 +1,906 @@
+/* ----------------------------------------------------------------
+   StageHero (prefix sh-). stage.css carries the ground, glass, mono
+   and heading primitives; this sheet adds the hero's layout, the
+   tilted window and the enquiry flow inside it.
+   ---------------------------------------------------------------- */
+
+.sh,
+.sk {
+  --stream-x: clamp(24px, 6vw, 96px);
+}
+
+.sh {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding-block: calc(var(--nav-h, 72px) + 2rem) 3rem;
+  overflow: clip;
+}
+
+/* The dot grid fades in from the very top, so the floating nav sits on
+   clean black. */
+.sh.stage::before {
+  mask-image: linear-gradient(180deg, transparent 0, #000 22%, #000 78%, transparent 100%),
+    radial-gradient(ellipse 80% 75% at 55% 50%, #000 40%, transparent 100%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+}
+
+/* The hero clips its overflow, so the glow would end on a hard line
+   at the bottom edge: fade it into the night instead. */
+.sh::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  z-index: -1;
+  height: 28%;
+  background: linear-gradient(180deg, transparent, var(--night));
+  pointer-events: none;
+}
+
+/* One big glow, behind the window. */
+.sh-glow {
+  width: min(1200px, 95vw);
+  background: radial-gradient(
+    circle,
+    rgba(245, 135, 30, 0.26) 0%,
+    rgba(245, 135, 30, 0.09) 32%,
+    rgba(245, 135, 30, 0.02) 50%,
+    transparent 64%
+  );
+}
+
+.sh-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  /* Wider than the page container: the headline needs ~8.4em for
+     "Websites that bring" to hold four lines, and the window may run
+     off the right edge like a product shot. */
+  max-width: calc(1600px + var(--container-pad) * 2);
+  grid-template-columns: minmax(0, 48fr) minmax(0, 52fr);
+  align-items: center;
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.sh-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.sh-pill {
+  margin: 0 0 1.75rem;
+  color: var(--ink);
+  font-size: 0.75rem;
+}
+
+.sh-title {
+  margin: 0;
+  font-size: clamp(2.8rem, 4.9vw, 5.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+
+.sh-line {
+  display: block;
+}
+
+.sh-line + .sh-line {
+  margin-top: 0.08em;
+}
+
+.sh-title .stage-serif {
+  font-size: 1.08em;
+  line-height: 0.9;
+  padding-right: 0.04em;
+}
+
+.sh-lede {
+  margin: 1.75rem 0 0;
+  max-width: 34rem;
+}
+
+.sh-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2.25rem;
+}
+
+/* Dark outlined secondary, Relay's "Watch a build". */
+.sh-watch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 48px;
+  padding: 0 1.25rem 0 0.9rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color: var(--ink);
+  font: 500 0.9375rem/1 var(--font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.sh-watch:hover {
+  border-color: rgba(245, 135, 30, 0.55);
+  background: rgba(245, 135, 30, 0.06);
+  transform: translateY(-1px);
+}
+
+.sh-watch:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.sh-watch-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(245, 135, 30, 0.14);
+  color: var(--accent);
+}
+
+.sh-foot {
+  margin: 1.1rem 0 0;
+}
+
+/* ---------------- the window ---------------- */
+
+.sh-figure {
+  position: relative;
+  margin: 0;
+  min-width: 0;
+}
+
+.sh-persp {
+  perspective: 1800px;
+  perspective-origin: 30% 50%;
+  width: 100%;
+  max-width: 900px;
+}
+
+.sh-tilt {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.sh-window {
+  container-type: inline-size;
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  color: var(--ink);
+  background: linear-gradient(180deg, rgba(30, 28, 26, 0.82), rgba(15, 14, 13, 0.9));
+  border-color: rgba(255, 255, 255, 0.09);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.45),
+    0 50px 120px -30px rgba(0, 0, 0, 0.85),
+    0 0 80px -20px rgba(245, 135, 30, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 40px rgba(0, 0, 0, 0.35);
+  /* Nothing sits behind the window but the glow, so a backdrop blur
+     would cost a full re-blur every frame of the tilt for no change. */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* The 1px top-edge light, brightest in the middle. */
+.sh-window::before {
+  content: '';
+  position: absolute;
+  inset: 0 8% auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* A soft sheen across the glass, so it reads as a surface. */
+.sh-window::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.045) 0%, transparent 28%, transparent 70%, rgba(255, 255, 255, 0.02) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.sh-bar {
+  display: flex;
+  align-items: center;
+  gap: 1.6cqi;
+  height: 6.2cqi;
+  padding: 0 2.4cqi;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.sh-lights {
+  display: inline-flex;
+  gap: 0.8cqi;
+}
+
+.sh-lights i {
+  width: 1.2cqi;
+  height: 1.2cqi;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.sh-wtitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 1cqi;
+  font-size: 1.75cqi;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+
+.sh-live {
+  animation: sh-blink 2.4s ease-in-out infinite;
+}
+
+.sh-tag {
+  margin-left: auto;
+  padding: 0.5cqi 1.2cqi;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 1.35cqi;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ---------------- the flow ---------------- */
+
+.sh-flow {
+  position: relative;
+  aspect-ratio: 1000 / 600;
+  margin: 1.2cqi 0 0;
+}
+
+.sh-wires {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.sh-wire {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 1.25px;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: stroke 0.5s ease;
+  animation: sh-draw 1.4s 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.sh-wire.is-lit {
+  stroke: rgba(245, 135, 30, 0.6);
+  filter: drop-shadow(0 0 3px rgba(245, 135, 30, 0.55));
+}
+
+.sh-pulses {
+  z-index: 0;
+  will-change: transform;
+}
+
+.sh-pulses g {
+  filter: drop-shadow(0 0 4px rgba(245, 135, 30, 0.9));
+}
+
+.sh-trail,
+.sh-head {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+}
+
+.sh-trail {
+  stroke: rgba(255, 166, 77, 0.7);
+  stroke-width: 2px;
+}
+
+.sh-head {
+  stroke: #fff3e3;
+  stroke-width: 3px;
+}
+
+/* Glass nodes: inner highlight, 1px top light, soft inner shadow. */
+.sh-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 1.5cqi 1.7cqi;
+  border-radius: 1.6cqi;
+  background: linear-gradient(180deg, rgba(40, 37, 34, 0.92), rgba(22, 21, 19, 0.94));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    inset 0 -10px 24px rgba(0, 0, 0, 0.25),
+    0 14px 30px -12px rgba(0, 0, 0, 0.7);
+  transition: border-color 0.45s ease, box-shadow 0.45s ease;
+  overflow: hidden;
+}
+
+.sh-node.is-focus {
+  border-color: rgba(245, 135, 30, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 200, 154, 0.2),
+    inset 0 -10px 24px rgba(0, 0, 0, 0.25),
+    0 0 0 3px rgba(245, 135, 30, 0.08),
+    0 0 34px -6px rgba(245, 135, 30, 0.45),
+    0 14px 30px -12px rgba(0, 0, 0, 0.7);
+}
+
+.sh-node-head {
+  display: flex;
+  align-items: center;
+  gap: 1cqi;
+  font-size: 1.7cqi;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+
+.sh-node-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 2.8cqi;
+  height: 2.8cqi;
+  border-radius: 0.8cqi;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: var(--muted);
+  transition: color 0.4s ease, border-color 0.4s ease;
+}
+
+.sh-node-icon svg {
+  width: 1.7cqi;
+  height: 1.7cqi;
+}
+
+.sh-node.is-focus .sh-node-icon {
+  color: var(--accent);
+  border-color: rgba(245, 135, 30, 0.35);
+}
+
+/* chat */
+.sh-bubble {
+  position: relative;
+  display: block;
+  margin: 1.3cqi 0 0 auto;
+  padding: 1cqi 1.3cqi;
+  border-radius: 1.3cqi 1.3cqi 0.4cqi 1.3cqi;
+  background: rgba(245, 135, 30, 0.1);
+  border: 1px solid rgba(245, 135, 30, 0.22);
+  font-size: 1.55cqi;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.sh-bubble-short {
+  width: max-content;
+  opacity: 0;
+  transform: translateY(0.6cqi);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.sh-bubble-short.is-on {
+  opacity: 1;
+  transform: none;
+}
+
+.sh-ghost {
+  color: transparent;
+}
+
+.sh-caret {
+  display: inline-block;
+  width: 1.5px;
+  height: 1.1em;
+  margin: 0 -1.5px -0.18em 0;
+  background: var(--accent);
+  animation: sh-blink 0.9s steps(2, start) infinite;
+}
+
+.sh-offer {
+  margin: 1cqi 0 0;
+  font-family: var(--font-mono);
+  font-size: 1.3cqi;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.sh-offer.is-on {
+  opacity: 1;
+}
+
+/* desk */
+.sh-status {
+  display: flex;
+  align-items: center;
+  gap: 0.9cqi;
+  margin: 1.4cqi 0 0;
+  font-family: var(--font-mono);
+  font-size: 1.32cqi;
+  line-height: 1.3;
+  color: var(--muted);
+  min-height: 3.4cqi;
+}
+
+.sh-spin {
+  flex: none;
+  width: 1.4cqi;
+  height: 1.4cqi;
+  border-radius: 50%;
+  border: 1.5px solid rgba(245, 135, 30, 0.25);
+  border-top-color: var(--accent);
+  animation: sh-spin 0.8s linear infinite;
+}
+
+.sh-ok {
+  flex: none;
+  width: 1.1cqi;
+  height: 1.1cqi;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(245, 135, 30, 0.8);
+}
+
+/* waiting on a yes */
+.sh-wait {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1cqi;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  filter: blur(4px);
+  transition: opacity 0.45s ease, filter 0.45s ease;
+}
+
+.sh-wait.is-on {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.sh-ring {
+  position: relative;
+  width: 3.2cqi;
+  height: 3.2cqi;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  box-shadow: 0 0 14px rgba(245, 135, 30, 0.55), inset 0 0 8px rgba(245, 135, 30, 0.35);
+}
+
+.sh-ring::after {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  animation: sh-ping 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.sh-wait-label {
+  padding: 0.4cqi 1.1cqi;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 135, 30, 0.3);
+  background: rgba(20, 18, 16, 0.9);
+  font-family: var(--font-mono);
+  font-size: 1.3cqi;
+  color: var(--peach);
+  white-space: nowrap;
+}
+
+/* calendar, sheets, reminder */
+.sh-swap {
+  display: grid;
+  margin-top: 1.3cqi;
+}
+
+.sh-swap > * {
+  grid-area: 1 / 1;
+  margin: 0;
+  opacity: 0;
+  filter: blur(4px);
+  transition: opacity 0.45s ease, filter 0.45s ease;
+}
+
+.sh-swap > .is-on {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.sh-meta {
+  font-family: var(--font-mono);
+  font-size: 1.32cqi;
+  color: var(--muted);
+}
+
+.sh-result {
+  display: flex;
+  align-items: center;
+  gap: 0.9cqi;
+  font-size: 1.42cqi;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+.sh-chips {
+  display: flex;
+  gap: 0.9cqi;
+  margin-top: 1.4cqi;
+}
+
+.sh-chip {
+  padding: 0.7cqi 1.3cqi;
+  border-radius: 0.9cqi;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.035);
+  font-family: var(--font-mono);
+  font-size: 1.4cqi;
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(0.6cqi) scale(0.96);
+  filter: blur(4px);
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), filter 0.4s ease,
+    border-color 0.4s ease, background-color 0.4s ease, color 0.4s ease;
+}
+
+.sh-chip.is-on {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+.sh-chip.is-dim {
+  opacity: 0.35;
+}
+
+.sh-chip.is-picked {
+  border-color: rgba(245, 135, 30, 0.7);
+  background: rgba(245, 135, 30, 0.16);
+  color: var(--peach);
+  box-shadow: 0 0 16px -4px rgba(245, 135, 30, 0.6);
+}
+
+/* ---------------- last runs ---------------- */
+
+.sh-log {
+  margin: 1.2cqi 2.4cqi 0;
+  padding: 1.8cqi 0 2.2cqi;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sh-log-head {
+  font-family: var(--font-mono);
+  font-size: 1.35cqi;
+  color: var(--muted);
+}
+
+.sh-log-rows {
+  margin: 1.1cqi 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sh-log-rows li {
+  display: flex;
+  align-items: center;
+  gap: 1.2cqi;
+  height: 3.2cqi;
+  font-family: var(--font-mono);
+  font-size: 1.35cqi;
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(0.5cqi);
+  filter: blur(4px);
+  transition: opacity 0.45s ease, transform 0.45s ease, filter 0.45s ease;
+}
+
+/* The loop replays one run: rows from the pass before stay, dimmed,
+   until this pass reaches them again. */
+.sh-log-rows li.is-prev {
+  opacity: 0.3;
+  transform: none;
+  filter: none;
+}
+
+.sh-log-rows li.is-prev .sh-log-dot {
+  background: var(--muted);
+  box-shadow: none;
+}
+
+.sh-log-rows li.is-on {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+.sh-log-dot {
+  width: 0.8cqi;
+  height: 0.8cqi;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px rgba(245, 135, 30, 0.8);
+}
+
+.sh-log-tool {
+  margin-left: auto;
+  color: var(--muted);
+}
+
+/* ---------------- stream of light ---------------- */
+
+.sh-stream {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.sh-stream svg {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+
+.sh-stream-probe {
+  position: absolute;
+  left: var(--stream-x);
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+.sh-stream-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1px;
+  filter: drop-shadow(0 0 6px rgba(245, 135, 30, 0.6));
+}
+
+.sh-stream-ring {
+  fill: none;
+  stroke: rgba(245, 135, 30, 0.75);
+  stroke-width: 1.25px;
+  filter: drop-shadow(0 0 6px rgba(245, 135, 30, 0.6));
+}
+
+.sh-stream-node {
+  fill: var(--accent);
+}
+
+/* ---------------- phones and narrow screens ---------------- */
+
+@media (max-width: 1023.98px) {
+  .sh {
+    min-height: 0;
+    padding-block: calc(var(--nav-h, 72px) + 2rem) 3.5rem;
+  }
+
+  .sh-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.75rem;
+  }
+
+  .sh-title {
+    font-size: clamp(2.3rem, 9vw, 3rem);
+  }
+
+  .sh-lede {
+    margin-top: 1.25rem;
+  }
+
+  .sh-actions {
+    margin-top: 1.75rem;
+  }
+
+  .sh-pill {
+    margin-bottom: 1.25rem;
+  }
+}
+
+/* The flat window (phones, and desktop under reduced motion) uses
+   fixed sizes rather than container units. */
+.sh-window-flat {
+  container-type: normal;
+}
+
+.sh-window-flat .sh-bar {
+  height: 44px;
+  gap: 10px;
+  padding: 0 16px;
+}
+
+.sh-window-flat .sh-lights {
+  gap: 6px;
+}
+
+.sh-window-flat .sh-lights i {
+  width: 8px;
+  height: 8px;
+}
+
+.sh-window-flat .sh-wtitle {
+  gap: 8px;
+  font-size: 0.8125rem;
+}
+
+.sh-list {
+  margin: 0;
+  padding: 18px 16px 6px;
+  list-style: none;
+  transition: opacity 0.4s ease;
+}
+
+.sh-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 12px;
+  padding-bottom: 16px;
+  opacity: 0.18;
+  filter: blur(3px);
+  transition: opacity 0.45s ease, filter 0.45s ease;
+}
+
+.sh-step.is-on {
+  opacity: 1;
+  filter: blur(0);
+}
+
+/* The wire between steps. */
+.sh-step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 14.5px;
+  top: 32px;
+  bottom: 2px;
+  width: 1.25px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.sh-step.is-on:not(:last-child)::before {
+  background: rgba(245, 135, 30, 0.55);
+  box-shadow: 0 0 6px rgba(245, 135, 30, 0.5);
+}
+
+.sh-step-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(180deg, rgba(40, 37, 34, 0.92), rgba(22, 21, 19, 0.94));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+}
+
+.sh-step.is-focus .sh-step-icon {
+  color: var(--accent);
+  border-color: rgba(245, 135, 30, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 200, 154, 0.2), 0 0 18px -4px rgba(245, 135, 30, 0.6);
+}
+
+.sh-step-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  padding-top: 5px;
+}
+
+.sh-step-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.sh-step-detail {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.sh-step .sh-bubble {
+  margin: 2px 0 0;
+  padding: 8px 11px;
+  border-radius: 11px 11px 11px 3px;
+  font-size: 0.875rem;
+  max-width: 100%;
+}
+
+.sh-step .sh-bubble-short {
+  opacity: 1;
+  transform: none;
+}
+
+.sh-step .sh-chips {
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.sh-step .sh-chip {
+  padding: 4px 9px;
+  border-radius: 7px;
+  font-size: 0.75rem;
+}
+
+.sh-ring-sm {
+  width: 14px;
+  height: 14px;
+}
+
+.sh-tag-foot {
+  display: inline-block;
+  margin: 0 16px 16px;
+  padding: 4px 10px;
+  font-size: 0.6875rem;
+  white-space: normal;
+}
+
+/* Reduced motion on a wide screen: the full flow, flat and still. */
+.sh-flat .sh-window:not(.sh-window-flat) .sh-wire {
+  animation: none;
+}
+
+@keyframes sh-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+@keyframes sh-blink {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes sh-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes sh-ping {
+  from {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sh-wire,
+  .sh-live,
+  .sh-caret,
+  .sh-spin,
+  .sh-ring::after {
+    animation: none;
+  }
+}

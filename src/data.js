@@ -272,6 +272,10 @@ export const site = {
   headline: ['Websites that bring the work in.', 'Software and AI that run the rest.'],
   subtitle:
     'Websites, custom software and AI workflows for clinics, studios, agencies and growing teams. Built as one system, live in weeks.',
+  /* The home hero's lede: says what the headline doesn't (who it is for,
+     what the system does, how fast), instead of repeating it. */
+  heroLede:
+    'One system for clinics, studios, agencies and growing teams: the site that brings enquiries in, and the software and AI that answer, book and follow up. Live in weeks.',
   tagline:
     'Websites that bring the work in, and software and AI that run the rest. Built as one system for clinics, studios, agencies and growing teams, live in weeks.',
 

@@ -1,0 +1,563 @@
+/* ---------------------------------------------------------------
+   HowLoop (hl-) and Close (cl-): the ∞ "How I work" loop and the
+   closing call. Both sit on the shared stage ground (stage.css) and
+   carry the page's stream of light at --stream-x.
+   --------------------------------------------------------------- */
+
+.hl,
+.cl {
+  --hl-sx: var(--stream-x, clamp(24px, 6vw, 96px));
+}
+
+.hl-probe,
+.cl-probe {
+  position: absolute;
+  top: 0;
+  left: var(--hl-sx);
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* The stream of light: 1px saffron with a soft glow, drawn by dashoffset
+   on a pathLength of 1. */
+.hl-stream-path,
+.cl-stream-path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  filter: drop-shadow(0 0 6px rgba(245, 135, 30, 0.6));
+}
+
+/* ---------- HowLoop, pinned 3D ---------- */
+
+.hl-track {
+  position: relative;
+  height: 320vh;
+}
+
+.hl-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-height: 640px;
+  overflow: clip;
+}
+
+.hl-glow {
+  --glow-x: 36%;
+  --glow-y: 53%;
+  /* Kept inside the pinned frame: a glow cut by its bottom edge reads as
+     a seam when the frame unpins. */
+  width: min(860px, 92vh);
+}
+
+.hl-stream {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.hl-scene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hl-scene.is-ready {
+  opacity: 1;
+}
+
+.hl-canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.hl-labels {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s ease 0.2s;
+}
+
+.hl-labels.is-ready {
+  opacity: 1;
+}
+
+.hl-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+.hl-label-inner {
+  position: absolute;
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  white-space: nowrap;
+  translate: -50% 30px;
+  transition: color 0.5s ease;
+}
+
+.hl-label.is-top .hl-label-inner {
+  translate: -50% calc(-100% - 30px);
+}
+
+.hl-label-idx {
+  color: var(--muted);
+  transition: color 0.5s ease;
+}
+
+.hl-label-name {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.1875rem;
+  letter-spacing: -0.02em;
+  color: var(--muted);
+  transition: color 0.5s ease, text-shadow 0.5s ease;
+}
+
+.hl-label.is-lit .hl-label-idx {
+  color: var(--accent);
+}
+
+.hl-label.is-lit .hl-label-name {
+  color: #d9d4ce;
+}
+
+.hl-label.is-now .hl-label-name {
+  color: var(--ink);
+  text-shadow: 0 0 18px rgba(245, 135, 30, 0.45);
+}
+
+.hl-again {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  translate: -50% 96px;
+  white-space: nowrap;
+  color: var(--peach);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hl-layout {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 5rem clamp(1.5rem, 4vw, 4.5rem) 2rem;
+  pointer-events: none;
+}
+
+.hl-copy {
+  width: min(430px, 31vw);
+  pointer-events: auto;
+}
+
+.hl-eyebrow {
+  margin: 0 0 1.4rem;
+}
+
+.hl-title {
+  margin: 0;
+}
+
+.hl-lede {
+  margin: 1.1rem 0 0;
+  font-size: 1rem;
+}
+
+.hl-card {
+  display: grid;
+  margin-top: 1.75rem;
+  padding: 1.35rem 1.5rem 1.45rem;
+  border-color: rgba(245, 135, 30, 0.18);
+}
+
+.hl-card-face {
+  grid-area: 1 / 1;
+  opacity: 0;
+  translate: 0 8px;
+  filter: blur(6px);
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), translate 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hl-card-face.is-on {
+  opacity: 1;
+  translate: 0 0;
+  filter: none;
+}
+
+.hl-card-face.is-on.is-waiting {
+  opacity: 0.6;
+}
+
+.hl-card-count {
+  margin: 0 0 0.7rem;
+}
+
+.hl-card-now {
+  color: var(--accent);
+}
+
+.hl-card-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.3125rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.hl-card-text {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+  font-size: 0.96875rem;
+  line-height: 1.55;
+}
+
+.hl-rehook {
+  margin: 1.6rem 0 0;
+  opacity: 0.62;
+  transition: opacity 0.6s ease;
+}
+
+.hl-rehook.is-on {
+  opacity: 1;
+}
+
+.hl-rehook-link {
+  color: var(--ink);
+  font-size: 1.0625rem;
+  text-decoration: underline;
+  text-decoration-color: rgba(245, 135, 30, 0.6);
+  text-underline-offset: 0.3em;
+  text-decoration-thickness: 1px;
+}
+
+.hl-rehook-link:hover {
+  color: var(--peach);
+}
+
+.hl-rehook-link:focus-visible,
+.cl-email a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* ---------- HowLoop, SVG build ---------- */
+
+.hl.is-flat {
+  overflow: clip;
+}
+
+.hl-flat {
+  position: relative;
+  padding-block: clamp(5rem, 10vw, 8rem);
+}
+
+.hl-flat-glow {
+  --glow-x: 50%;
+  --glow-y: 46%;
+}
+
+.hl-flat-head {
+  max-width: 640px;
+}
+
+.hl-figure {
+  position: relative;
+  margin: clamp(3.5rem, 8vw, 6rem) 0 clamp(3.5rem, 7vw, 5rem);
+}
+
+.hl-figure-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.hl-figure-glass {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.07);
+  stroke-width: 26;
+  stroke-linejoin: round;
+}
+
+.hl-figure-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.hl-figure-halo {
+  fill: var(--accent);
+  fill-opacity: 0;
+  transition: fill-opacity 0.5s ease;
+}
+
+.hl-figure-dot {
+  fill: #2a2520;
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 1.5;
+  transition: fill 0.5s ease;
+}
+
+.hl-figure-stop.is-lit .hl-figure-halo {
+  fill-opacity: 0.22;
+}
+
+.hl-figure-stop.is-lit .hl-figure-dot {
+  fill: var(--accent);
+  stroke: var(--peach);
+}
+
+.hl-figure-head {
+  fill: #fff3e6;
+}
+
+.hl-figure-head-halo {
+  fill: var(--accent);
+  fill-opacity: 0.35;
+}
+
+.hl-figure-label {
+  position: absolute;
+  translate: -50% 20px;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(0.8125rem, 1.6vw, 1.125rem);
+  letter-spacing: -0.01em;
+  color: var(--muted);
+  transition: color 0.5s ease;
+}
+
+.hl-figure-label.is-top {
+  translate: -50% calc(-100% - 20px);
+}
+
+.hl-figure-label .stage-mono {
+  margin-right: 0.3rem;
+  font-size: 0.75em;
+}
+
+.hl-figure-label.is-lit {
+  color: var(--ink);
+}
+
+.hl-figure-label.is-lit .stage-mono {
+  color: var(--accent);
+}
+
+.hl-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hl-flat-card {
+  padding: 1.35rem 1.4rem 1.45rem;
+  transition: border-color 0.5s ease;
+}
+
+.hl-flat-card.is-lit {
+  border-color: rgba(245, 135, 30, 0.22);
+}
+
+.hl-flat .hl-rehook {
+  margin-top: 2.5rem;
+  opacity: 1;
+}
+
+.hl-stream-static {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .hl-flat {
+    padding-left: max(var(--container-pad), calc(var(--hl-sx) + 40px));
+  }
+
+  .hl-stream-static {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--hl-sx);
+    width: 1.25px;
+    background: var(--accent);
+    box-shadow: 0 0 6px rgba(245, 135, 30, 0.6);
+    pointer-events: none;
+  }
+}
+
+/* ---------- Close ---------- */
+
+.cl {
+  overflow: clip;
+  padding: clamp(7rem, 14vw, 11rem) 0 120px;
+  text-align: center;
+}
+
+.cl-glow {
+  --glow-x: 50%;
+  width: min(1000px, 110vw);
+}
+
+.cl-inf {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  width: min(1500px, 130vw);
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+.cl-stream {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.cl-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cl-pill {
+  margin: 0 0 1.75rem;
+}
+
+.cl-title {
+  margin: 0;
+  max-width: 14ch;
+  font-size: clamp(2.8rem, 6vw, 6rem);
+  line-height: 1;
+}
+
+.cl-lede {
+  margin: 1.5rem auto 0;
+  max-width: 46ch;
+}
+
+.cl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2.75rem;
+}
+
+.cl-primary {
+  display: inline-flex;
+}
+
+.cl .btn-saffron {
+  height: 52px;
+  padding: 0 1.6rem;
+}
+
+/* Relay's secondary: dark, outlined, so the saffron button is the only
+   lit thing in the row. */
+.cl .btn-light {
+  height: 52px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--ink);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.cl .btn-light:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.cl-email {
+  margin: 2rem 0 0;
+}
+
+.cl-email a {
+  color: var(--ink-soft, #c4c4c4);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.2);
+  text-underline-offset: 0.3em;
+}
+
+.cl-email a:hover {
+  color: var(--peach);
+}
+
+@media (max-width: 767px) {
+  .cl-title {
+    max-width: 11ch;
+  }
+
+  .cl-actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .cl-actions > *,
+  .cl-primary > * {
+    width: 100%;
+  }
+}
+
+/* Phones: the figure is drawn at a third of its size, so the line, the
+   glass and the stops are thickened to stay readable. */
+@media (max-width: 767px) {
+  .hl-figure-line {
+    stroke-width: 6;
+  }
+
+  .hl-figure-glass {
+    stroke-width: 44;
+  }
+
+  .hl-figure-dot {
+    r: 15px;
+    stroke-width: 3;
+  }
+
+  .hl-figure-halo {
+    r: 30px;
+  }
+
+  .hl-figure-head {
+    r: 13px;
+  }
+
+  .hl-figure-head-halo {
+    r: 38px;
+  }
+}

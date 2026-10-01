@@ -1,0 +1,294 @@
+/* ----------------------------------------------------------------
+   Stakes (prefix sk-): the first story loop, right after the hero.
+   Desktop pins one 100vh stage inside a 340vh band; phones and
+   reduced motion get the four beats as plain stacked blocks.
+   ---------------------------------------------------------------- */
+
+.sk {
+  --stream-x: clamp(24px, 6vw, 96px);
+  overflow: clip;
+}
+
+.sk-pinned {
+  /* Height is set inline from BAND_VH in Stakes.jsx. */
+  position: relative;
+}
+
+.sk-pinned.stage::before {
+  /* The dot grid would stretch over the whole band and fade at the wrong place;
+     the sticky stage carries its own. */
+  display: none;
+}
+
+.sk-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+
+.sk-sticky::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1.2px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 100%);
+  pointer-events: none;
+}
+
+.sk-glow {
+  --glow-x: 50%;
+  --glow-y: 50%;
+  width: min(820px, 80vw);
+  opacity: 0.85;
+}
+
+.sk-beat {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100% - 2 * (var(--stream-x) + 48px), 68rem);
+  text-align: center;
+}
+
+.sk-line {
+  margin: 0;
+  font-size: clamp(2.6rem, 5vw, 5rem);
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+  max-width: 15em;
+}
+
+.sk-line .stage-serif {
+  font-size: 1.08em;
+  padding-right: 0.04em;
+}
+
+.sk-note {
+  margin: 1.75rem 0 0;
+  font-size: 0.8125rem;
+}
+
+/* ---------------- the headfake: seven steps fold into two ---------------- */
+
+.sk-collapse {
+  --k: 0;
+  --f: 0;
+  --s: 0;
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin-top: 3rem;
+  width: 100%;
+}
+
+.sk-manual,
+.sk-auto {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.sk-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.6rem 0.95rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(180deg, rgba(36, 33, 30, 0.85), rgba(20, 19, 17, 0.9));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 10px 24px -14px rgba(0, 0, 0, 0.8);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.sk-manual .sk-chip {
+  transform: translateX(calc(var(--dx) * var(--k))) scale(calc(1 - 0.45 * var(--k)));
+  opacity: calc(1 - var(--f));
+  filter: blur(calc(var(--k) * 3px + var(--f) * 6px));
+  will-change: transform, opacity, filter;
+}
+
+.sk-collapse .sk-auto {
+  opacity: var(--s);
+  transform: scale(calc(0.86 + 0.14 * var(--s)));
+  filter: blur(calc((1 - var(--s)) * 8px));
+  gap: 0.9rem;
+}
+
+.sk-chip-auto {
+  padding: 0.75rem 1.15rem;
+  border-color: rgba(245, 135, 30, 0.6);
+  color: var(--peach);
+  font-size: 0.9375rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 200, 154, 0.18),
+    0 0 0 3px rgba(245, 135, 30, 0.07),
+    0 0 30px -8px rgba(245, 135, 30, 0.55);
+}
+
+/* ---------------- the rehook ---------------- */
+
+.sk-rehook {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 2.5rem 0 0;
+  color: var(--muted);
+}
+
+.sk-arrow {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(245, 135, 30, 0.45);
+  color: var(--accent);
+  box-shadow: 0 0 24px -6px rgba(245, 135, 30, 0.6);
+  animation: sk-bob 2.2s ease-in-out infinite;
+}
+
+/* ---------------- the stream through the band ---------------- */
+
+.sk-stream {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--stream-x);
+  width: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.sk-stream-line {
+  position: absolute;
+  left: -0.5px;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: var(--accent);
+  box-shadow: 0 0 6px rgba(245, 135, 30, 0.6), 0 0 2px rgba(245, 135, 30, 0.8);
+  transform-origin: 50% 0;
+}
+
+.sk-dot {
+  position: absolute;
+  left: 0;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: var(--night);
+  transform: translate(-50%, -50%);
+}
+
+.sk-dot-on {
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(245, 135, 30, 0.14), 0 0 16px rgba(245, 135, 30, 0.85);
+}
+
+/* ---------------- stacked: phones and reduced motion ---------------- */
+
+.sk-stacked {
+  padding-block: 2rem 4rem;
+}
+
+.sk-stacked .sk-glow {
+  --glow-y: 30%;
+}
+
+.sk-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-block: clamp(3.5rem, 10vw, 6rem);
+}
+
+.sk-block + .sk-block {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sk-stacked .sk-line {
+  font-size: clamp(2rem, 7.5vw, 3.6rem);
+}
+
+.sk-stacked .sk-note {
+  margin-top: 1.25rem;
+  line-height: 1.6;
+}
+
+.sk-fold {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.sk-crossed {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sk-crossed li {
+  padding: 0.4rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.025);
+  font-size: 0.875rem;
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: rgba(245, 135, 30, 0.7);
+}
+
+.sk-fold-arrow {
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+
+.sk-auto-static {
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  justify-content: flex-start;
+}
+
+.sk-stacked .sk-rehook {
+  align-items: flex-start;
+  flex-direction: row;
+  margin-top: 1.75rem;
+}
+
+@keyframes sk-bob {
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-arrow {
+    animation: none;
+  }
+}

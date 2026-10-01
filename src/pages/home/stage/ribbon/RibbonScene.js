@@ -98,7 +98,7 @@ const THREAD_VERT = /* glsl */ `
     float pinch = pinchAt(aT);
     float ends = smoothstep(0.0, 0.07, aT) * smoothstep(1.0, 0.9, aT);
     vColor = aColor;
-    vAlpha = aAlpha * (0.45 + 0.55 * q.z) * (0.4 + 1.6 * pinch * (1.0 - 0.85 * uCalm)) * ends;
+    vAlpha = aAlpha * (0.45 + 0.55 * q.z) * (0.4 + 1.6 * pinch * (1.0 - 0.7 * uCalm)) * ends;
     // A packet: a sharp head with a tail behind it, running from t=0 to
     // t=1. Only some threads carry one at a time, so it reads as current
     // rather than a scrolling pattern.

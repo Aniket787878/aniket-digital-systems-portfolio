@@ -38,8 +38,8 @@ const WIDE = {
 // is no blur, so the ribbon there is wide, loose and very dim.
 const NARROW = {
   hero: { p: [[1.6, -0.15], [1.05, 0.3], [0.7, 0.95], [1.4, 1.15]], w: 0.28, wMin: 6, pinchT: 0.6, pinchW: 0.13, twist: 4.6, gain: 0.75 },
-  a: { p: [[0.7, -0.2], [-0.2, 0.3], [0.9, 0.7], [0.2, 1.2]], w: 0.6, wMin: 150, pinchT: 0.5, pinchW: 0.26, twist: 4, gain: 0.26 },
-  b: { p: [[0.2, -0.2], [1.1, 0.35], [0.0, 0.65], [0.8, 1.2]], w: 0.6, wMin: 150, pinchT: 0.5, pinchW: 0.26, twist: 4.2, gain: 0.26 },
+  a: { p: [[0.7, -0.2], [-0.2, 0.3], [0.9, 0.7], [0.2, 1.2]], w: 0.6, wMin: 150, pinchT: 0.5, pinchW: 0.26, twist: 4, gain: 0.55 },
+  b: { p: [[0.2, -0.2], [1.1, 0.35], [0.0, 0.65], [0.8, 1.2]], w: 0.6, wMin: 150, pinchT: 0.5, pinchW: 0.26, twist: 4.2, gain: 0.55 },
   close: { p: [[1.3, -0.3], [0.9, 0.1], [0.1, 0.6], [0.5, 0.95]], w: 0.5, wMin: 7, pinchT: 0.82, pinchW: 0.13, twist: 4.6, gain: 0.95 }
 }
 

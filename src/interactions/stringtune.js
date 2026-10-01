@@ -19,8 +19,8 @@ import StringTune, {
 const root = document.documentElement
 let running = null
 
-/* Two gaps in the library's own hover bookkeeping, both found by testing in a
-   real browser, both fixed by subclassing rather than patching node_modules. */
+/* Three gaps in the library's own bookkeeping, all found by testing in a
+   real browser, all fixed here rather than by patching node_modules. */
 
 /* StringCursor drops an element's mouseenter/mouseleave listeners when the
    element scrolls out of range. If the pointer was resting on it, the "over"
@@ -52,6 +52,44 @@ class Magnetic extends StringMagnetic {
       }
     }
   }
+}
+
+/* StringSplit ('word' mode) decides where to put the space between two
+   word spans by pre-measuring the heading's own line wrap (character
+   widths summed against the element's content width) and skipping the
+   separator wherever it thinks a word is last on its own line — two
+   adjacent inline-block word spans still get a natural wrap point between
+   them with nothing rendered there, which is correct when the prediction
+   matches reality. Its width maths rounds wrong often enough for narrow,
+   one-letter words (seen on /contact: "a" before "price") that the
+   predicted line-end and the browser's actual wrap point disagree; when
+   that happens the two spans end up on the same visual line with no
+   separator between them at all, so they render glued together ("aprice").
+   It re-splits on every resize, so this cannot be a one-time pass at
+   boot — watch the DOM instead and patch the exact shape the bug leaves:
+   a `.-s-word` whose immediately preceding sibling is another `.-s-word`
+   with no text node of any kind between them. Where the library did
+   insert its own separator (the normal case), the previous sibling is a
+   text node, not an element, so this never double-spaces a heading that
+   was already correct. */
+function watchSplitWordSpacing() {
+  const fixWord = (word) => {
+    const prev = word.previousSibling
+    if (prev && prev.nodeType === Node.ELEMENT_NODE && prev.classList.contains('-s-word')) {
+      word.before(document.createTextNode(' '))
+    }
+  }
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (node.nodeType !== Node.ELEMENT_NODE) continue
+        if (node.classList.contains('-s-word')) fixWord(node)
+        node.querySelectorAll?.('.-s-word').forEach(fixWord)
+      }
+    }
+  })
+  observer.observe(document.body, { childList: true, subtree: true })
+  return observer
 }
 
 export function start({ fine }) {
@@ -87,6 +125,7 @@ export function start({ fine }) {
     st.use(Magnetic)
   }
   st.start(60)
+  const splitWordSpacingObserver = watchSplitWordSpacing()
 
   root.classList.add('st-on')
   if (fine) root.classList.add('st-fine')
@@ -110,6 +149,7 @@ export function start({ fine }) {
     stop: () => {
       window.removeEventListener('pointermove', onMove)
       document.removeEventListener('mouseout', onLeave)
+      splitWordSpacingObserver.disconnect()
       st.destroy()
       root.classList.remove('st-on', 'st-fine', 'st-live', '-string')
       running = null

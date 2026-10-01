@@ -1555,7 +1555,16 @@ export const services = [
     from: { usd: '$4,000', inr: '₹1.5L' },
     media: { kind: 'clip', slug: 'shared-inbox', badge: 'Real screens' },
     proofHead: ['Two platforms in real use.', 'Three working tools, running now.'],
-    proof: ['therapist-pwa', 'care-journey', 'consent-signer', 'shared-inbox', 'lead-research'],
+    proof: [
+      {
+        slug: 'therapist-pwa',
+        note: 'Three apps working as one for an eleven-therapist clinic: the staff app the team runs its day on (tasks, client records, bookings, consent forms), the online forms clients fill in, and a companion app for clients.'
+      },
+      'care-journey',
+      'consent-signer',
+      'shared-inbox',
+      'lead-research'
+    ],
     faq: [
       {
         q: 'Why not just buy an off-the-shelf tool?',
@@ -1593,7 +1602,7 @@ export const services = [
     ],
     from: { usd: '$490', inr: '₹20,000' },
     media: { kind: 'explainer', key: 'ai-assistant', badge: 'Illustrated' },
-    proofHead: ['AI already at work.', 'In a clinic, on this site, and in three demos.'],
+    proofHead: ['AI already at work.', 'In a clinic, and in three working demos.'],
     proof: [
       {
         slug: 'therapist-pwa',
@@ -1607,21 +1616,7 @@ export const services = [
         slug: 'knowledge-assistant',
         note: 'Answers staff and patients from the clinic’s own documents with the source named, and says “I don’t know, please ask the front desk.” rather than guess.'
       },
-      'website-answer-widget',
-      {
-        key: 'intake',
-        title: 'The form on this site',
-        subtitle: 'An automation running right now',
-        note: 'Send a message and watch it work: it is saved to a sheet, I get an alert, you get a reply straight away, and if I have not answered within a day it comes back to me the next morning.',
-        image: '/this-site-form.jpg',
-        badge: 'Real screens',
-        to: '/contact',
-        cta: 'Try it'
-      },
-      {
-        slug: 'care-journey',
-        note: 'Booking, payment, email and video connected into one ten-step journey, and fourteen documents built for each client from their own answers, with no AI wherever a template does the job better.'
-      }
+      'website-answer-widget'
     ],
     faq: [
       {

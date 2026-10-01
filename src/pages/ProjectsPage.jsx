@@ -5,9 +5,6 @@ import LoopVideo from '../components/LoopVideo.jsx'
 import ScreenStill from '../components/ScreenStill.jsx'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 
-const toList = (value) =>
-  Array.isArray(value) ? value.filter((item) => typeof item === 'string' && item.trim()) : []
-
 const toText = (value) => (typeof value === 'string' && value.trim() ? value.trim() : '')
 
 export default function ProjectsPage() {
@@ -31,14 +28,12 @@ export default function ProjectsPage() {
           reply that matters, with its own badge. */}
       <ul className="showcase">
         {projects.map((project, i) => {
-          const stack = toList(project.stack)
           const summary = toText(project.summary)
           const index = toText(project.index)
           const film = films[project.slug]
           const still = !film && stills[project.slug]
           const real = mediaKind(project.slug) === 'real'
           const metrics = (project.metrics || []).slice(0, 2)
-          const shown = stack.slice(0, 5)
 
           return (
             <li key={project.slug} className={`showcase-item${i % 2 ? ' showcase-item-alt' : ''}`}>
@@ -80,16 +75,6 @@ export default function ProjectsPage() {
                           <span className="showcase-metric-label">{metric.label}</span>
                         </div>
                       ))}
-                    </div>
-                  )}
-                  {shown.length > 0 && (
-                    <div className="showcase-stack">
-                      {shown.map((tool) => (
-                        <span className="chip" key={tool}>{tool}</span>
-                      ))}
-                      {stack.length > shown.length && (
-                        <span className="chip chip-more">+{stack.length - shown.length}</span>
-                      )}
                     </div>
                   )}
                   <span className="arrow-link showcase-link">

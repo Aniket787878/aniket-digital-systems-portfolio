@@ -447,7 +447,7 @@ export const whatsappPrefill = {
   /* `{offer}` is replaced with the package name by home/Services.jsx. */
   pricing: 'Hi Aniket, I’d like to know more about the {offer} for my business.',
   cta: 'Hi Aniket, I have something I’d like built. Can we talk?',
-  contact: 'Hi Aniket, I’d like to talk about a project. Do you have 20 minutes?',
+  contact: 'Hi Aniket, I’d like to talk about a project. Do you have 15 minutes?',
   /* One per service page (`services[].slug`), so the chat says which
      page did the convincing. */
   websites: 'Hi Aniket, I saw your websites page. I’d like a website for my business.',

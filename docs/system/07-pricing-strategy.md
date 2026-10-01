@@ -3,8 +3,9 @@
 Method: the `pricing-strategy` skill from emotixco/claude-skills-founder
 (`skills/pricing-strategy/SKILL.md`), adapted from SaaS subscriptions to a
 project studio. Competitor prices were checked on 2026-10-01 and are listed
-at the end with links. **Proposed, not confirmed:** the new USD prices and the
-Roadmap credit are live only on the preview branch until Aniket says yes.
+at the end with links. **Confirmed:** the USD prices and the Roadmap credit went live
+in PR #46. On 2026-10-01 Aniket also chose to raise INR to a premium level
+rather than keep it or lower the entry prices.
 
 ## 1. Pricing model
 
@@ -33,18 +34,19 @@ one is the one to sell.
 
 ## 3. The prices
 
-INR stays where it is: against India's published prices it already sits
-just above budget shops, which fits the wiring and AI it adds. USD was
+INR first stayed where it was (just above budget shops). Aniket chose to
+raise it instead, so the rupee prices say premium like the dollar ones do:
+the site is sold on wiring and AI, not on being the cheapest. USD was
 priced like an Indian shop converted to dollars, and against international
 studios that reads as cheap rather than competitive. It moves up, and still
 lands well under them.
 
-| Offer | INR | USD before | USD now | Why |
+| Offer | INR (was → now) | USD before | USD now | Why |
 |---|---|---|---|---|
-| Business Website | from ₹25,000 | from $690 | **from $1,200** | Studio Utexo £999, F5 Studio $2,500. $690 signals low quality abroad |
-| Website + AI Assistant | from ₹60,000 | from $1,500 | **from $2,400** | Keeps the same 2x step over the plain site as in INR |
-| AI Roadmap Session | ₹15,000 | $290 | **$490, taken off the first build** | Value Consulting $599, Prime AI £999. The credit makes it a free door into a build |
-| Automation Quick-Win | ₹25,000 | $490 | **$690** | One automation sells for $400-$1,200; Value Consulting $899 |
+| Business Website | from ₹25,000 → **₹35,000** | from $690 | **from $1,200** | Studio Utexo £999, F5 Studio $2,500. $690 signals low quality abroad |
+| Website + AI Assistant | from ₹60,000 → **₹75,000** | from $1,500 | **from $2,400** | Keeps the same 2x step over the plain site as in INR |
+| AI Roadmap Session | ₹15,000 → **₹20,000** | $290 | **$490, taken off the first build** | Value Consulting $599, Prime AI £999. The credit makes it a free door into a build |
+| Automation Quick-Win | ₹25,000 → **₹30,000** | $490 | **$690** | One automation sells for $400-$1,200; Value Consulting $899 |
 | Ops Automation Sprint | ₹40k-₹80k | $1,500-$2,500 | **$1,900-$3,200** | Goodspeed $5,000 for up to 4 workflows; Bluelinks from $497 per package |
 | AI Assistant Build | ₹80k-₹1.5L | $2,500-$4,500 | **$2,900-$4,900** | No like-for-like price published; moved in step with the sprint |
 | Internal Tool | ₹1.5L-₹3L | $4,000-$8,000 | unchanged | AIPixel's ₹2,50,000 SaaS package sits inside the range |
@@ -63,14 +65,14 @@ lands well under them.
   build price, or one busy client erases the margin. *Amount unconfirmed:
   measure it on the first live client.*
 - **Break-even:** depends on Aniket's monthly target, which isn't written
-  down. Fill it in: target ÷ ₹25,000 = Quick-Wins a month to cover it.
+  down. Fill it in: target ÷ ₹30,000 = Quick-Wins a month to cover it.
 
 ## 5. Price psychology (three tactics)
 
 1. **Anchor:** each service page lists its larger offers beside the entry
-   one, so ₹25,000 reads as the easy start, not the whole bill.
-2. **Decoy:** Website + AI Assistant (₹60,000) costs less than the website
-   plus the standalone AI Assistant Build (₹25,000 + ₹80,000), which makes
+   one, so ₹35,000 reads as the easy start, not the whole bill.
+2. **Decoy:** Website + AI Assistant (₹75,000) costs less than the website
+   plus the standalone AI Assistant Build (₹35,000 + ₹80,000), which makes
    the bundle the obvious pick.
 3. **Risk reversal, not discounts:** "fixed before work starts, half to
    begin, half when it goes live" (now in the FAQ), and the Roadmap fee
@@ -80,8 +82,8 @@ lands well under them.
 
 - **Now (first 3 paying clients per area):** these prices. Ask each
   client for a short testimonial and permission to show the real numbers.
-- **Raise INR by about 20%** once an area has 3 shipped clients with
-  numbers you can show. The proof replaces the discount.
+- **INR is already at the premium level** (2026-10-01). The next rise
+  waits for 3 shipped clients per area with numbers you can show.
 - **Grandfathering:** Care Plan clients keep their monthly rate for 12
   months after any rise.
 - **Raise sooner if** more than 2 in 3 proposals are accepted without
@@ -89,9 +91,8 @@ lands well under them.
 
 ## Open for Aniket
 
-1. Confirm the new USD prices (or pick different ones).
-2. Confirm the Roadmap credit: the fee comes off the first build if the
-   client goes ahead. It is a promise on the live site once merged.
+1. Done: USD prices and the Roadmap credit are live (PR #46).
+2. Done: INR raised to premium (2026-10-01).
 3. Optional new offer, not built: a **Site Care** plan around ₹4,999/month
    for website-only clients (India market: Aarav ₹3,999-₹29,999/mo). The
    current Care Plan (₹15k+) is sized for systems, not a 5-page site.

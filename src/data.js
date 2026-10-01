@@ -1300,9 +1300,9 @@ export const toolbox = [
   INR is shown to visitors whose browser language or timezone says India,
   or who flip the toggle (src/currency.js). The automation, assistant and
   internal-tool INR bands are unchanged from
-  docs/system/02-service-catalog.md. The website, website + AI and roadmap
-  prices were added 2026-09-30 as placeholders Aniket agreed to start from;
-  they are marked TODO until he confirms them.
+  docs/system/02-service-catalog.md. The website, website + AI, roadmap and
+  quick-win prices (both currencies) were confirmed by Aniket on
+  2026-10-01; reasoning in docs/system/07-pricing-strategy.md.
 */
 export const packages = [
   {
@@ -1310,8 +1310,8 @@ export const packages = [
     name: 'Business Website',
     explainer: null,
     price: {
-      usd: 'From $1,200', // proposed 2026-10-01, Aniket to confirm
-      inr: 'From ₹25,000' // TODO: placeholder, Aniket to confirm
+      usd: 'From $1,200',
+      inr: 'From ₹35,000'
     },
     timeline: 'Live in 2 weeks',
     timelineChart: true,
@@ -1330,8 +1330,8 @@ export const packages = [
     name: 'Website + AI Assistant',
     explainer: 'ai-assistant',
     price: {
-      usd: 'From $2,400', // proposed 2026-10-01, Aniket to confirm
-      inr: 'From ₹60,000' // TODO: placeholder, Aniket to confirm
+      usd: 'From $2,400',
+      inr: 'From ₹75,000'
     },
     timeline: 'Live in 3 weeks',
     featured: false,
@@ -1384,8 +1384,8 @@ export const packages = [
     name: 'AI Roadmap Session',
     explainer: null,
     price: {
-      usd: '$490', // proposed 2026-10-01, Aniket to confirm
-      inr: '₹15,000' // TODO: placeholder, Aniket to confirm
+      usd: '$490',
+      inr: '₹20,000'
     },
     timeline: 'Ready in 1 week',
     featured: false,
@@ -1403,8 +1403,8 @@ export const packages = [
     name: 'Automation Quick-Win',
     explainer: null,
     price: {
-      usd: '$690', // proposed 2026-10-01, Aniket to confirm
-      inr: '₹25,000' // TODO: placeholder, Aniket to confirm
+      usd: '$690',
+      inr: '₹30,000'
     },
     timeline: 'Live in 5 days',
     timelineChart: true,
@@ -1494,7 +1494,7 @@ export const services = [
       { icon: 'inbox', title: 'Every enquiry lands', text: 'The form and the WhatsApp button reach your team straight away, and the visitor gets a reply at once.' },
       { icon: 'spark', title: 'An assistant, if you want one', text: 'Answers the common questions from your own information, then hands ready buyers to you.' }
     ],
-    from: { usd: '$1,200', inr: '₹25,000' },
+    from: { usd: '$1,200', inr: '₹35,000' },
     media: { kind: 'image', src: '/this-site.jpg', badge: 'This site · real screens', alt: 'The home page of this website: a dusk sky over mountain ridges, with the headline and the call buttons' },
     proofHead: ['The proof is the page you are on.', 'Built, hosted and wired up by me.'],
     proof: [
@@ -1591,7 +1591,7 @@ export const services = [
       { icon: 'flow', title: 'The repeat work runs itself', text: 'Enquiries saved and answered, reminders sent, forms filed, on your own accounts.' },
       { icon: 'check', title: 'A person checks what matters', text: 'The AI drafts, a person approves wherever a wrong answer would cost you.' }
     ],
-    from: { usd: '$490', inr: '₹15,000' },
+    from: { usd: '$490', inr: '₹20,000' },
     media: { kind: 'explainer', key: 'ai-assistant', badge: 'Illustrated' },
     proofHead: ['AI already at work.', 'In a clinic, on this site, and in three demos.'],
     proof: [
@@ -1733,7 +1733,7 @@ export const faq = [
     q: 'What does it cost?',
     a: {
       usd: 'Websites start at $1,200, or $2,400 with an AI assistant built in. One task fully automated is a fixed $690, and an AI Roadmap Session is $490, taken off your first build if you go ahead. An internal tool runs $4,000 to $8,000. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me. Every price is fixed before work starts: half to begin, half when it goes live.',
-      inr: 'Websites start at ₹25,000, or ₹60,000 with an AI assistant built in. One task fully automated is a fixed ₹25,000, and an AI Roadmap Session is ₹15,000, taken off your first build if you go ahead. An internal tool runs ₹1.5L to ₹3L. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me. Every price is fixed before work starts: half to begin, half when it goes live.'
+      inr: 'Websites start at ₹35,000, or ₹75,000 with an AI assistant built in. One task fully automated is a fixed ₹30,000, and an AI Roadmap Session is ₹20,000, taken off your first build if you go ahead. An internal tool runs ₹1.5L to ₹3L. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me. Every price is fixed before work starts: half to begin, half when it goes live.'
     }
   },
   {

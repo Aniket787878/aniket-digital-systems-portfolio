@@ -201,9 +201,7 @@ measure both at matching viewports before changing anything.
 Branded domain (set `site.origin` in `data.js`; canonical, OG, JSON-LD,
 robots.txt and sitemap.xml are generated from it by the `siteMeta` plugin in
 `vite.config.js`) · `site.bookingUrl` (Cal.com; setting it makes "Book a
-15-min call" the primary button everywhere) · placeholder prices, marked `TODO`
-in `packages` (Quick-Win ₹25,000; Business Website from ₹25,000 / $690; Website
-+ AI Assistant from ₹60,000 / $1,500; AI Roadmap Session ₹15,000 / $290) ·
+15-min call" the primary button everywhere) ·
 a `Service` column in the "Portfolio leads" sheet (the form now sends `service`;
 the live n8n workflow needs the column before it can file it) · case-study numbers · testimonial · CV PDF
 and a real headshot (the `/about` page now exists and renders labelled slots for

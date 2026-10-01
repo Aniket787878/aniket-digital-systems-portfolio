@@ -200,8 +200,11 @@ export default function Ribbon() {
             threads: wide ? 420 : 130,
             steps: wide ? 140 : 64,
             sparks: wide ? 240 : 40,
-            dpr: Math.min(window.devicePixelRatio || 1, wide ? 1.5 : 1),
-            antialias: wide
+            // Full sharpness up to 2x: at 1x the hairline threads stair-step
+            // on a phone's dense screen. Phones save their time on the thread
+            // count instead.
+            dpr: Math.min(window.devicePixelRatio || 1, 2),
+            antialias: true
           })
         } catch {
           return

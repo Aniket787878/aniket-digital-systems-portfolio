@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import {
   m,
   useInView,
+  useMotionValueEvent,
   useMotionValue,
   useReducedMotion,
   useScroll,
@@ -54,9 +55,14 @@ export default function StageHero() {
   const inView = useInView(ref, { amount: 0.15 })
   const [film, setFilm] = useState(null)
 
-  const running = !reduce && inView && visible
+  // Wide screens: the window plays on its own clock beside the claim.
+  // Phones: the list sits below the fold, so the scroll plays it instead,
+  // one step per stretch of scrolling, and scrolling back rewinds it.
+  const running = !reduce && wide && inView && visible
   const clock = useLoopClock(running, T.total)
-  const t = reduce ? FINAL : clock
+  const listRef = useRef(null)
+  const scrolled = useScrollClock(listRef, !reduce && !wide)
+  const t = reduce ? FINAL : wide ? clock : scrolled
 
   return (
     <section
@@ -122,7 +128,7 @@ export default function StageHero() {
             10:00 to 10:45, logs the booking and prepares a reminder for 08:00.
           </figcaption>
           {wide && !reduce ? <TiltedWindow t={t} sectionRef={ref} /> : (
-            <div aria-hidden="true" className="sh-flat">
+            <div aria-hidden="true" className="sh-flat" ref={listRef}>
               {wide ? <FlowWindow t={t} /> : <FlowList t={t} />}
             </div>
           )}
@@ -134,6 +140,17 @@ export default function StageHero() {
       <VideoDialog film={film} onClose={() => setFilm(null)} />
     </section>
   )
+}
+
+/* The flow's time from the scroll: the list starts playing as its top
+   comes up from the bottom of the screen and finishes, every step shown,
+   once its bottom passes three-quarters of the way up. Rounded to 40ms so
+   the list only re-renders when something in it can change. */
+function useScrollClock(target, on) {
+  const [t, setT] = useState(450)
+  const { scrollYProgress } = useScroll({ target, offset: ['start 0.9', 'end 0.75'] })
+  useMotionValueEvent(scrollYProgress, 'change', (p) => on && setT(Math.round((450 + p * (FINAL - 450)) / 40) * 40))
+  return t
 }
 
 /* The window at rest: rotateX 10, rotateY -14, rotateZ 2. It follows

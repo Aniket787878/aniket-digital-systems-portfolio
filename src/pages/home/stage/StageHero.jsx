@@ -12,12 +12,13 @@ import {
 } from 'motion/react'
 import '../../service/showcase/stage.css'
 import './hero/hero.css'
-import { site, whatsappPrefill, explainers, explainersReady } from '../../../data.js'
+import { site, services, whatsappPrefill, explainers, explainersReady } from '../../../data.js'
 import WhatsAppCta from '../../../components/WhatsAppCta.jsx'
 import BookingCta from '../../../components/BookingCta.jsx'
 import VideoDialog from '../../../components/VideoDialog.jsx'
 import { hasWhatsApp } from '../../../whatsapp.js'
 import { hasBooking } from '../../../booking.js'
+import { useCurrency, inCurrency } from '../../../currency.js'
 import { fx } from '../../../interactions/attrs.js'
 import FlowWindow from './hero/FlowWindow.jsx'
 import FlowList from './hero/FlowList.jsx'
@@ -33,6 +34,32 @@ const LINE_2_HEAD = LINE_2.slice(0, LAST)
 const LINE_2_TAIL = LINE_2.slice(LAST + 1)
 
 const FILM = explainers.brand
+
+/* Parses a Doors-style price string ("$490", "₹20,000", "₹1.5L") into a
+   plain number, so the price anchor below can find the cheapest service
+   instead of a hardcoded figure. Lakh ("L") suffix only appears on INR. */
+function parseAmount(formatted) {
+  if (!formatted) return Infinity
+  const cleaned = formatted.replace(/[₹$,\s]/g, '')
+  const n = parseFloat(cleaned)
+  if (Number.isNaN(n)) return Infinity
+  return /l$/i.test(cleaned) ? n * 100000 : n
+}
+
+/* The cheapest of the three service areas' "from" prices, in the
+   visitor's currency, formatted exactly as the Doors band formats it
+   (same inCurrency hook) so the hero anchor and the Doors cards always
+   agree and the toggle updates both. */
+function lowestFrom(currency) {
+  return services.reduce(
+    (min, area) => {
+      const formatted = inCurrency(area.from, currency)
+      const amount = parseAmount(formatted)
+      return amount < min.amount ? { amount, formatted } : min
+    },
+    { amount: Infinity, formatted: null }
+  ).formatted
+}
 
 const settle = (delay) => ({
   initial: { opacity: 0, y: 12, filter: 'blur(10px)' },
@@ -54,6 +81,8 @@ export default function StageHero() {
   const visible = usePageVisible()
   const inView = useInView(ref, { amount: 0.15 })
   const [film, setFilm] = useState(null)
+  const currency = useCurrency()
+  const anchor = lowestFrom(currency)
 
   // Wide screens: the window plays on its own clock beside the claim.
   // Phones: the list sits below the fold, so the scroll plays it instead,
@@ -116,7 +145,7 @@ export default function StageHero() {
             )}
           </m.div>
           <m.p className="stage-mono sh-foot" {...(reduce ? {} : settle(0.6))}>
-            free 15-minute call &middot; no obligation
+            {anchor && <>from {anchor} &middot; </>}free 15-minute call &middot; no obligation
           </m.p>
         </div>
 

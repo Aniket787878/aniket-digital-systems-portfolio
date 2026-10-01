@@ -45,7 +45,11 @@ export default function FlowList({ t }) {
                     <span className="sh-ghost">{REPLY.slice(s.replyTyped)}</span>
                   </span>
                 )}
-                {step.detail && <span className="sh-step-detail">{step.detail}</span>}
+                {step.detail && (
+                  <span className={`sh-step-detail${step.id === 'booked' ? ' sh-step-detail-peak' : ''}`}>
+                    {step.detail}
+                  </span>
+                )}
                 {step.id === 'cal' && (
                   <span className="sh-chips">
                     {SLOTS.map((slot, i) => (

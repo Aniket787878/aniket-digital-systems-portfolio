@@ -861,6 +861,29 @@
   white-space: normal;
 }
 
+/* Phones only (<768px): the live flow's meaningful text (times, dates,
+   the "Booked" result) was running at 10-12px, too small to read
+   comfortably. Step labels and the chat bubbles are already >=13px, so
+   only the mono detail line and the slot chips need bumping; the footer
+   tag stays small, since it is a decorative credit line, not part of
+   the story. The final "Booked" line is the peak of the loop: largest,
+   heaviest and brightest of the three. */
+@media (max-width: 767.98px) {
+  .sh-step-detail {
+    font-size: 0.8125rem;
+  }
+
+  .sh-step .sh-chip {
+    font-size: 0.8125rem;
+  }
+
+  .sh-step-detail-peak {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+}
+
 /* Reduced motion on a wide screen: the full flow, flat and still. */
 .sh-flat .sh-window:not(.sh-window-flat) .sh-wire {
   animation: none;

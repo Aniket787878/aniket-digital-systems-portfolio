@@ -30,6 +30,17 @@ const STEP = 14
 
 const DECK = '(min-width: 1024px) and (min-height: 680px)'
 
+/* Phones (<768px) show only the first N outcome bullets per card (CSS
+   hides the rest with display:none, so the DOM and the reading order
+   match). Default is 2; a card goes to 3 when its outcomeNote refers to
+   something only the third bullet says ("the screens are from the
+   running app" names the real-screens bullet on these two cards), so the
+   note still makes sense with only the shown bullets. */
+const PHONE_BULLETS = {
+  'consent-signer': 3,
+  'shared-inbox': 3
+}
+
 /* What the media is, in the words the films themselves use on screen. */
 const KIND_TAG = {
   schematic: 'Schematic film · client data never shown',
@@ -270,7 +281,7 @@ function ProjectCard({ project, index, total }) {
         <p className="sw-tagline">{project.tagline}</p>
         {project.outcome?.length > 0 && (
           <>
-            <ul className="sw-outcome">
+            <ul className="sw-outcome" data-phone-bullets={PHONE_BULLETS[project.slug] ?? 2}>
               {project.outcome.map((line) => (
                 <li key={line}>{line}</li>
               ))}

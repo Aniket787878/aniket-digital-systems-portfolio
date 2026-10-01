@@ -1164,7 +1164,38 @@
 }
 
 .sv-desk.is-live .sv-bubble {
-  animation: sv-fly 5.6s var(--ease) both;
+  animation: sv-ask 5.6s var(--ease) both;
+}
+
+.sv-desk.is-live .sv-bubble-ghost {
+  animation-name: sv-fly;
+}
+
+.sv-reply {
+  border-color: rgba(245, 135, 30, 0.38);
+  border-radius: 1.4cqw 1.4cqw 0.4cqw 1.4cqw;
+  background: linear-gradient(180deg, rgba(58, 38, 20, 0.95), rgba(30, 22, 15, 0.95));
+}
+
+.sv-reply .sv-bubble-head {
+  color: var(--accent);
+}
+
+.sv-desk.is-live .sv-reply {
+  animation-name: sv-answer;
+}
+
+@keyframes sv-ask {
+  0% { opacity: 0; translate: 0 1.2cqw; filter: blur(6px); }
+  8%, 90% { opacity: 1; translate: 0 0; filter: blur(0); }
+  100% { opacity: 0; translate: 0 0; filter: blur(4px); }
+}
+
+/* Lands after the beam reaches the tool (about 0.5 of the step). */
+@keyframes sv-answer {
+  0%, 46% { opacity: 0; translate: 0 1.2cqw; filter: blur(6px); }
+  56%, 90% { opacity: 1; translate: 0 0; filter: blur(0); }
+  100% { opacity: 0; translate: 0 0; filter: blur(4px); }
 }
 
 @keyframes sv-fly {

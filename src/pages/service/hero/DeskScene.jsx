@@ -29,12 +29,28 @@ const NODES = [
   { key: 'docs', name: 'Clinic documents' }
 ]
 
-const pick = (id, turn = 0) => {
+// The reply shown under the question: the opening sentence(s) of the
+// recorded reply, word for word, with an ellipsis when more follows.
+function lead(reply, sentences) {
+  const parts = reply.split('\n\n')[0].match(/[^.!?]+[.!?]+/g) || [reply]
+  const text = parts.slice(0, sentences).join('').trim()
+  return text.length < reply.trim().length ? `${text} …` : text
+}
+
+const pick = (id, turn = 0, sentences = 1) => {
   const mo = MOMENTS.find((x) => x.id === id)
   const t = mo.turns[turn]
-  return { id: `${id}${turn}`, time: mo.time, header: mo.header, label: mo.label, user: t.user, tools: t.tools }
+  return {
+    id: `${id}${turn}`,
+    time: mo.time,
+    header: mo.header,
+    label: mo.label,
+    user: t.user,
+    tools: t.tools,
+    reply: lead(t.reply, sentences)
+  }
 }
-const STEPS = [pick('saturday'), pick('fees'), pick('pack'), pick('booking', 1)]
+const STEPS = [pick('saturday'), pick('fees'), pick('pack', 0, 2), pick('booking', 1)]
 const STILL = STEPS.length - 1
 
 // Points on an ellipse round the core: [angle in degrees, label anchor].
@@ -55,7 +71,8 @@ const WIDE = layout({
   rx: 26,
   ry: 19.5,
   angles: { cal: [-90, 'r'], sheet: [-25, 'c'], gmail: [30, 'c'], wa: [90, 'c'], docs: [140, 'c'] },
-  bubble: { x: 4, y: 15, w: 29 }
+  bubble: { x: 4, y: 9, w: 29 },
+  reply: { x: 4, y: 27, w: 29 }
 })
 
 const NARROW = layout({
@@ -144,12 +161,39 @@ export default function DeskScene({ live, wide }) {
           <div
             key={`m${step}`}
             className="sv-bubble"
+            style={{ left: `${b.x}%`, top: `${(b.y / L.h) * 100}%`, width: `${b.w}%` }}
+          >
+            <span className="sv-bubble-head stage-mono">
+              {mo.header} · {mo.time}
+            </span>
+            <span className="sv-bubble-text">{mo.user}</span>
+          </div>
+        )}
+
+        {/* A copy of the question flies into the core while the original
+            stays put, so the left of the window never goes empty. */}
+        {live && mo.user && (
+          <div
+            key={`f${step}`}
+            className="sv-bubble sv-bubble-ghost"
             style={{ left: `${b.x}%`, top: `${(b.y / L.h) * 100}%`, width: `${b.w}%`, ...fly }}
           >
             <span className="sv-bubble-head stage-mono">
               {mo.header} · {mo.time}
             </span>
             <span className="sv-bubble-text">{mo.user}</span>
+          </div>
+        )}
+
+        {/* Phones have no room under the question; the tool result says it. */}
+        {L.reply && (
+          <div
+            key={`r${step}`}
+            className="sv-bubble sv-reply"
+            style={{ left: `${L.reply.x}%`, top: `${(L.reply.y / L.h) * 100}%`, width: `${L.reply.w}%` }}
+          >
+            <span className="sv-bubble-head stage-mono">AI front desk · reply</span>
+            <span className="sv-bubble-text">{mo.reply}</span>
           </div>
         )}
       </div>

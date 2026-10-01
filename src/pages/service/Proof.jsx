@@ -91,7 +91,7 @@ export default function Proof({ area }) {
                   ) : (
                     <img
                       src={card.image}
-                      alt=""
+                      alt={card.imageAlt || ''}
                       className="card-video"
                       width="1600"
                       height="900"

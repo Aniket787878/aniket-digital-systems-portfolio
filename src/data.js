@@ -1495,8 +1495,8 @@ export const services = [
       { icon: 'spark', title: 'An assistant, if you want one', text: 'Answers the common questions from your own information, then hands ready buyers to you.' }
     ],
     from: { usd: '$1,200', inr: '₹35,000' },
-    media: { kind: 'image', src: '/this-site.jpg', badge: 'This site · real screens', alt: 'The home page of this website: a dusk sky over mountain ridges, with the headline and the call buttons' },
-    proofHead: ['The proof is the page you are on.', 'Built, hosted and wired up by me.'],
+    media: { kind: 'image', src: '/this-site.jpg', badge: 'This site · real screens', alt: 'The home page of this website: a dark page with the headline Websites that bring the work in, software and AI that run the rest, and a saffron Book a free call button' },
+    proofHead: ['The proof is the page you are on.', 'And five more, built for made-up businesses.'],
     proof: [
       {
         key: 'this-site',
@@ -1509,12 +1509,59 @@ export const services = [
         cta: 'Try the form'
       },
       {
-        slug: 'care-journey',
-        note: 'A public site that takes a visitor from first enquiry through screening and payment to a private portal, in one flow.'
+        key: 'concept-aura',
+        title: 'Aura Skin Studio',
+        subtitle: 'Skin and aesthetics clinic',
+        note: 'A glass serum bottle turns in the light, so the product sells the clinic before a word is read.',
+        image: '/showcase/websites/aura-hero.webp',
+        imageAlt: 'The home screen of the Aura Skin Studio concept site: a glass serum bottle turning in the light',
+        badge: 'Concept site · made-up business',
+        to: '/concepts/aura',
+        cta: 'Open the site'
       },
       {
-        slug: 'website-answer-widget',
-        note: 'A chat bubble for a clinic site: it answers from the clinic’s own documents, and when it cannot, it takes a name and number for a callback.'
+        key: 'concept-kinetic',
+        title: 'Kinetic Physio',
+        subtitle: 'Sports and physio clinic',
+        note: 'A chrome spine that flexes as you scroll: movement is the whole promise, so the page moves.',
+        image: '/showcase/websites/kinetic-hero.webp',
+        imageAlt: 'The home screen of the Kinetic Physio concept site: a chrome spine model',
+        badge: 'Concept site · made-up business',
+        to: '/concepts/kinetic',
+        cta: 'Open the site'
+      },
+      {
+        key: 'concept-ekam',
+        title: 'Studio Ekam',
+        subtitle: 'Yoga and breathwork studio',
+        note: 'A living ink that breathes in and out with the words. Calm, shown rather than claimed.',
+        image: '/showcase/websites/ekam-hero.webp',
+        imageAlt: 'The home screen of the Studio Ekam concept site: ink breathing in and out with the words',
+        badge: 'Concept site · made-up business',
+        to: '/concepts/ekam',
+        cta: 'Open the site'
+      },
+      {
+        key: 'concept-noor',
+        title: 'Atelier Noor',
+        subtitle: 'Interior and architecture studio',
+        note: 'A marble and bronze sculpture in low gallery light, so the studio reads as craft from the first second.',
+        image: '/showcase/websites/noor-hero.webp',
+        imageAlt: 'The home screen of the Atelier Noor concept site: a marble and bronze sculpture in low gallery light',
+        badge: 'Concept site · made-up business',
+        to: '/concepts/noor',
+        cta: 'Open the site'
+      },
+      {
+        key: 'concept-meridian',
+        title: 'Meridian Advisory',
+        subtitle: 'Accounting and wealth advisory',
+        note: 'A field of points gathers from a scattered cloud into a clear chart: the job, in one move.',
+        image: '/showcase/websites/meridian-hero.webp',
+        imageAlt: 'The home screen of the Meridian Advisory concept site: scattered points gathering into a chart',
+        badge: 'Concept site · made-up business',
+        to: '/concepts/meridian',
+        cta: 'Open the site'
       }
     ],
     faq: [

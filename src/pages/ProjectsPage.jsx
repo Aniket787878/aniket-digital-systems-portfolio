@@ -19,7 +19,7 @@ export default function ProjectsPage() {
         day; the care journey platform, for online recovery care, is in
         pre-launch. The consent signer, the shared inbox and the lead
         research tool are tools I built to work the same ideas, and the last
-        three are AI assistants for a fictional physio clinic, built in n8n.
+        three are AI assistants for a fictional physio clinic.
       </p>
       {/* A showcase, not a list: every project leads with its film. The
           working demos play real captures on hover; the client platforms

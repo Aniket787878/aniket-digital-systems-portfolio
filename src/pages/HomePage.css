@@ -2043,3 +2043,79 @@
   background-color: transparent;
   background-image: linear-gradient(180deg, transparent, var(--night) 25vh);
 }
+
+/* ============ the current in the stream (stage/Current.jsx) ============
+   Every piece of the stream strokes with the one moving gradient, so
+   packets of light run down the whole page through every section, and a
+   second, wider glow flickers behind the line like a live wire. The
+   flicker is steps(): it changes only at its keyframes, so the costly
+   filter repaints a few times a cycle, not every frame. */
+.stage-current-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.home-stage :is(.sh-stream-line, .sw-stream-lit, .hl-stream-path, .cl-stream-path) {
+  stroke: url(#stage-current);
+  stroke-width: 2px;
+  animation: stage-flicker 3.4s steps(1, end) infinite;
+}
+
+/* The two pieces drawn as plain boxes (the pinned Stakes run and the
+   loop's flat fallback) carry the same packets as a moving background.
+   Same period and speed as the gradient, so the pieces read as one wire. */
+.home-stage :is(.sk-stream-line, .hl-stream-static) {
+  width: 2px;
+  margin-left: -0.5px;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(245, 135, 30, 0.34) 0,
+    rgba(245, 135, 30, 0.34) 62px,
+    rgba(245, 135, 30, 0.7) 156px,
+    #ff9d3c 192px,
+    #fff4e4 203px,
+    rgba(245, 135, 30, 0.34) 208px,
+    rgba(245, 135, 30, 0.34) 364px,
+    #ff9d3c 411px,
+    #fff4e4 422px,
+    rgba(245, 135, 30, 0.34) 427px,
+    rgba(245, 135, 30, 0.34) 520px
+  );
+  background-size: 100% 520px;
+  animation:
+    stage-current-run 1.5s linear infinite,
+    stage-flicker-box 3.4s steps(1, end) infinite;
+}
+
+@keyframes stage-current-run {
+  from { background-position: 0 0; }
+  to { background-position: 0 520px; }
+}
+
+@keyframes stage-flicker {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(245, 135, 30, 0.75)) drop-shadow(0 0 18px rgba(245, 135, 30, 0.38)); }
+  23% { filter: drop-shadow(0 0 5px rgba(255, 170, 90, 0.95)) drop-shadow(0 0 22px rgba(245, 135, 30, 0.45)); }
+  25% { filter: drop-shadow(0 0 3px rgba(245, 135, 30, 0.55)) drop-shadow(0 0 10px rgba(245, 135, 30, 0.2)); }
+  27% { filter: drop-shadow(0 0 4px rgba(245, 135, 30, 0.75)) drop-shadow(0 0 18px rgba(245, 135, 30, 0.38)); }
+  61% { filter: drop-shadow(0 0 6px rgba(255, 170, 90, 1)) drop-shadow(0 0 26px rgba(245, 135, 30, 0.5)); }
+  63% { filter: drop-shadow(0 0 4px rgba(245, 135, 30, 0.75)) drop-shadow(0 0 18px rgba(245, 135, 30, 0.38)); }
+  84% { filter: drop-shadow(0 0 3px rgba(245, 135, 30, 0.6)) drop-shadow(0 0 10px rgba(245, 135, 30, 0.22)); }
+}
+
+@keyframes stage-flicker-box {
+  0%, 100% { box-shadow: 0 0 4px rgba(245, 135, 30, 0.75), 0 0 18px rgba(245, 135, 30, 0.38); }
+  23% { box-shadow: 0 0 5px rgba(255, 170, 90, 0.95), 0 0 22px rgba(245, 135, 30, 0.45); }
+  25% { box-shadow: 0 0 3px rgba(245, 135, 30, 0.55), 0 0 10px rgba(245, 135, 30, 0.2); }
+  27% { box-shadow: 0 0 4px rgba(245, 135, 30, 0.75), 0 0 18px rgba(245, 135, 30, 0.38); }
+  61% { box-shadow: 0 0 6px rgba(255, 170, 90, 1), 0 0 26px rgba(245, 135, 30, 0.5); }
+  63% { box-shadow: 0 0 4px rgba(245, 135, 30, 0.75), 0 0 18px rgba(245, 135, 30, 0.38); }
+  84% { box-shadow: 0 0 3px rgba(245, 135, 30, 0.6), 0 0 10px rgba(245, 135, 30, 0.22); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-stage :is(.sh-stream-line, .sw-stream-lit, .hl-stream-path, .cl-stream-path, .sk-stream-line, .hl-stream-static) {
+    animation: none;
+  }
+}

@@ -54,13 +54,13 @@ const STEPS = [pick('saturday'), pick('fees'), pick('pack', 0, 2), pick('booking
 const STILL = STEPS.length - 1
 
 // Points on an ellipse round the core: [angle in degrees, label anchor].
-function layout({ w, h, core, r, rx, ry, angles, bubble }) {
+function layout({ w, h, core, r, rx, ry, angles, bubble, reply }) {
   const nodes = {}
   for (const [key, [deg, anchor]] of Object.entries(angles)) {
     const a = (deg * Math.PI) / 180
     nodes[key] = { x: core[0] + rx * Math.cos(a), y: core[1] + ry * Math.sin(a), anchor }
   }
-  return { w, h, core, r, rx, ry, nodes, bubble }
+  return { w, h, core, r, rx, ry, nodes, bubble, reply }
 }
 
 const WIDE = layout({

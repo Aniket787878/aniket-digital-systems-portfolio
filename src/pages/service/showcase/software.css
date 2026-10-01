@@ -1,0 +1,472 @@
+/* ---------------------------------------------------------------
+   "Inside the software": the /software showpiece. Prefix sw3-.
+   Two builds: .is-3d (pinned WebGL scene, desktop + motion) and
+   .is-static (a CSS exploded stack for phones, reduced motion and
+   no WebGL). Shared primitives come from stage.css.
+   --------------------------------------------------------------- */
+
+/* `clip`, not `hidden`: hidden would make the section a scroll
+   container and break the sticky pin inside it. */
+.sw3 {
+  overflow: clip;
+  --glow-x: 55%;
+  --glow-y: 52%;
+}
+
+/* ---------- 3D build ---------- */
+
+.sw3-track {
+  position: relative;
+  height: 300vh;
+}
+
+.sw3-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-height: 640px;
+  overflow: clip;
+}
+
+.sw3-scene {
+  position: absolute;
+  inset: 0;
+}
+
+.sw3-scene canvas {
+  display: block;
+}
+
+/* Loading plate: the same screenshot the static build uses, centred, so
+   the pin opens onto the real product instead of a blank canvas while the
+   three.js chunk loads. Fades out once the scene reports its first frame. */
+.sw3-preload {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.sw3-preload.is-done {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sw3-preload-plate {
+  width: min(560px, 42vw);
+  aspect-ratio: 1.6;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 40px 50px -24px rgba(0, 0, 0, 0.85);
+}
+
+/* Three columns over the full-bleed canvas: copy, the free space the
+   scene centres the product in, and the labels. The canvas reads the
+   middle column's box, so nothing is cropped from 1280 to 1920. */
+.sw3-layout {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  max-width: calc(1440px + var(--container-pad) * 2);
+  margin: 0 auto;
+  padding-inline: var(--container-pad);
+  display: grid;
+  grid-template-columns: clamp(300px, 26vw, 390px) minmax(0, 1fr) clamp(250px, 20vw, 300px);
+  column-gap: clamp(1rem, 2vw, 2.5rem);
+  pointer-events: none;
+}
+
+.sw3-copy {
+  align-self: center;
+  padding-top: calc(var(--nav-h) * 0.5);
+  pointer-events: auto;
+}
+
+.sw3-eyebrow {
+  margin-bottom: 1.5rem;
+}
+
+.sw3-title {
+  margin: 0;
+  max-width: 13ch;
+}
+
+.sw3-lede {
+  margin: 1.25rem 0 0;
+  font-size: 1rem;
+}
+
+.sw3-rehook-wrap {
+  margin: 1.25rem 0 0;
+}
+
+.sw3-rehook {
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  padding-bottom: 2px;
+  transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+}
+
+.sw3-rehook:hover,
+.sw3-rehook-wrap.is-on .sw3-rehook {
+  color: var(--peach);
+  border-color: rgba(245, 135, 30, 0.6);
+}
+
+.sw3-rehook:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.sw3-frame {
+  height: 100%;
+}
+
+/* Labels: the scene writes each one's translateY (to sit level with its
+   slab), its opacity and --lead (the leader line's length back to the
+   slab). They start invisible so nothing shows before the scene runs. */
+.sw3-labels {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sw3-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: opacity 0.2s linear;
+}
+
+.sw3-label::before {
+  content: '';
+  position: absolute;
+  top: 0.72em;
+  right: calc(100% + 0.5rem);
+  width: var(--lead, 0px);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.12));
+}
+
+.sw3-label::after {
+  content: '';
+  position: absolute;
+  top: calc(0.72em - 2px);
+  right: calc(100% + 0.5rem + var(--lead, 0px) - 2px);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ink-soft);
+}
+
+.sw3-label.is-active::before {
+  background: linear-gradient(90deg, rgba(245, 135, 30, 0.95), rgba(245, 135, 30, 0.3));
+}
+
+.sw3-label.is-active::after {
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(245, 135, 30, 0.9);
+}
+
+.sw3-idx {
+  padding-top: 0.2em;
+}
+
+.sw3-label.is-active .sw3-idx {
+  color: var(--peach);
+}
+
+.sw3-label-title {
+  display: block;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.sw3-label-more {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s var(--ease-out);
+}
+
+.sw3-label.is-active .sw3-label-more {
+  grid-template-rows: 1fr;
+}
+
+.sw3-label-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sw3-line {
+  position: relative;
+  display: block;
+  padding: 0.5rem 0 0 0.9rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.sw3-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(0.5rem + 0.6em);
+  width: 5px;
+  height: 1px;
+  background: var(--accent);
+}
+
+/* ---------- Static build ---------- */
+
+.sw3-static {
+  position: relative;
+  padding-block: var(--section-pad);
+}
+
+.sw3-static-head {
+  max-width: 640px;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.sw3-static-head .sw3-title {
+  max-width: 16ch;
+}
+
+.sw3-stack {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sw3-layer {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(2rem, 5vw, 4.5rem);
+}
+
+/* Each plate sits in a flat box; the stream line runs through the box
+   centre behind the plate, so the four boxes join into one line. */
+.sw3-plate-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 2.25;
+  perspective: 1800px;
+}
+
+.sw3-plate-wrap::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(245, 135, 30, 0.15), rgba(245, 135, 30, 0.75), rgba(245, 135, 30, 0.15));
+  box-shadow: 0 0 12px rgba(245, 135, 30, 0.6);
+}
+
+.sw3-layer:first-child .sw3-plate-wrap::before {
+  top: 50%;
+}
+
+.sw3-layer:last-child .sw3-plate-wrap::before {
+  bottom: 50%;
+}
+
+.sw3-plate {
+  position: relative;
+  width: 74%;
+  aspect-ratio: 1.6;
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(155deg, #1f1e21 0%, #121214 60%, #0d0d0e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transform: rotateX(56deg) rotateZ(-34deg);
+  /* The slab's thickness and its saffron rim, drawn as stacked shadows
+     under the rotated face, then a soft floor shadow. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 5px 0 -1px #0a0a0b,
+    0 6px 0 -1px rgba(245, 135, 30, 0.45),
+    0 40px 50px -24px rgba(0, 0, 0, 0.85);
+}
+
+.sw3-plate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(125deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 38%);
+  pointer-events: none;
+}
+
+.sw3-plate-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sw3-plate-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.sw3-cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 9%;
+  padding: 14% 10%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.sw3-card {
+  border-radius: 4px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.sw3-card.is-new {
+  border-color: rgba(245, 135, 30, 0.8);
+  box-shadow: 0 0 12px rgba(245, 135, 30, 0.45);
+}
+
+.sw3-ports {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6%;
+  align-items: center;
+  height: 100%;
+  padding: 0 8%;
+  box-sizing: border-box;
+}
+
+.sw3-port {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+}
+
+.sw3-socket {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #0b0b0c;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 12px rgba(245, 135, 30, 0.55), inset 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.sw3-cable {
+  width: 2px;
+  height: 18px;
+  background: linear-gradient(180deg, rgba(245, 135, 30, 0.8), rgba(255, 255, 255, 0.25));
+}
+
+.sw3-tile {
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(245, 135, 30, 0.55);
+  background: rgba(245, 135, 30, 0.08);
+  font-size: 0.6875rem;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.sw3-layer-title {
+  margin: 0.4rem 0 0;
+  font-size: var(--display-3);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.sw3-layer-lines {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+}
+
+.sw3-layer-lines li {
+  position: relative;
+  padding: 0.3rem 0 0 1rem;
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  max-width: 44ch;
+}
+
+.sw3-layer-lines li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(0.3rem + 0.72em);
+  width: 6px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.sw3-layer--screen .sw3-layer-title {
+  color: var(--peach);
+}
+
+.sw3-static-foot {
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+@media (max-width: 767px) {
+  .sw3-layer {
+    grid-template-columns: 1fr;
+  }
+
+  .sw3-layer + .sw3-layer {
+    margin-top: 1.5rem;
+  }
+
+  .sw3-plate-wrap {
+    aspect-ratio: 1.9;
+  }
+
+  .sw3-plate-wrap::before {
+    display: none;
+  }
+
+  .sw3-plate {
+    width: 82%;
+    transform: rotateX(48deg) rotateZ(-24deg);
+  }
+
+  .sw3-layer-text {
+    margin-top: 0.25rem;
+  }
+
+  .sw3-tile {
+    font-size: 0.5625rem;
+    padding: 0.2rem 0.3rem;
+  }
+
+  .sw3-socket {
+    width: 18px;
+    height: 18px;
+  }
+}

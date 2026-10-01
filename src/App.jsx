@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { MotionConfig, LazyMotion, domAnimation } from 'motion/react'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import Interactions from './interactions/Interactions.jsx'
@@ -12,8 +12,12 @@ import AboutPage from './pages/AboutPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
 import PrivacyPage from './pages/PrivacyPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
+import ConceptPage from './concepts/ConceptPage.jsx'
 
 export default function App() {
+  /* The concept sites (/concepts/*) are other businesses' websites: they
+     render full-bleed, without this site's nav, footer and cursor layer. */
+  const concept = useLocation().pathname.startsWith('/concepts/')
   return (
     /* LazyMotion + the lightweight `m` component load only the `domAnimation`
        feature set (animations, variants, gestures, whileInView), which is
@@ -33,14 +37,14 @@ export default function App() {
       <ScrollToTop />
       {/* The StringTune layer (src/interactions). Renders only the cursor ring;
           the library itself is a lazy chunk fetched after first paint. */}
-      <Interactions />
+      {!concept && <Interactions />}
       {/* First focusable element on the page: lets keyboard and screen-reader
           users jump the fixed header straight to the content. Hidden until
           focused (see .skip-link). */}
       <a href="#main" className="skip-link">
         Skip to content
       </a>
-      <Nav />
+      {!concept && <Nav />}
       <main className="main" id="main" tabIndex={-1}>
         {/* The three service routes are keyed so moving between them remounts
             the page. StringSplit rewrites a heading's innerHTML into word
@@ -55,11 +59,12 @@ export default function App() {
           <Route path="/projects/:slug" element={<ProjectDetailPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/concepts/:slug" element={<ConceptPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
-      <Footer />
+      {!concept && <Footer />}
     </div>
     </MotionConfig>
     </LazyMotion>

@@ -1,0 +1,456 @@
+/* ---------------------------------------------------------------
+   "Five businesses. Five worlds.": the /websites showpiece.
+   Prefixes: ws- (shared), wo- (the desktop ring), wr- (the row for
+   tablets, phones and reduced motion). Shared primitives: stage.css.
+   --------------------------------------------------------------- */
+
+/* `clip`, not `hidden`: hidden would make the section a scroll
+   container and break the sticky pin inside it. */
+.ws {
+  overflow: clip;
+  padding-block: var(--section-pad);
+  --glow-x: 50%;
+  --glow-y: 40%;
+}
+
+.ws-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.ws-lede {
+  margin: 0 auto;
+}
+
+.ws-note {
+  justify-content: center;
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.ws-rehook {
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: rgba(245, 135, 30, 0.5);
+  text-underline-offset: 0.3em;
+  transition: text-decoration-color var(--dur-fast) ease;
+}
+
+.ws-rehook:hover {
+  text-decoration-color: var(--accent);
+}
+
+/* ---------- Browser frame (both builds) ---------- */
+
+.ws-bar {
+  position: relative;
+  flex: none;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  background: #101011;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ws-lights {
+  display: flex;
+  gap: 6px;
+}
+
+.ws-lights i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.ws-url {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 3px 14px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ---------- Caption pieces (both builds) ---------- */
+
+.wo-name {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.wo-type {
+  margin-left: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+.wo-line {
+  margin: 0.35rem 0 0;
+  max-width: 62ch;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.wo-act {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.ws-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid rgba(245, 135, 30, 0.55);
+  border-radius: 999px;
+  background: rgba(245, 135, 30, 0.06);
+  box-shadow: 0 0 18px -6px rgba(245, 135, 30, 0.45);
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: border-color var(--dur-fast) ease, background-color var(--dur-fast) ease;
+}
+
+.ws-open:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.ws-open:focus-visible,
+.wo-dot:focus-visible,
+.ws-rehook:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ---------- The ring (desktop, motion allowed) ---------- */
+
+/* Card size: 56vw, or less when the viewport is short, so the front card,
+   its browser bar and the caption always fit one screen (21rem is the nav,
+   the caption and the gaps). The ring's front card sits at z = 0, so it
+   projects at exactly this size: no perspective blow-up to budget for.
+   Radius: half a card over tan(36deg) (five cards meet edge to edge),
+   plus a small gap. */
+/* Pulled up by the nav's height: the pinned stage reserves that space at
+   its top, which before the pin would read as a gap under the lede. */
+.wo-track {
+  position: relative;
+  height: 400vh;
+  margin-top: calc(var(--nav-h) * -1 + 1rem);
+}
+
+.wo-stage {
+  --w: min(56vw, calc((100vh - 21rem) * 1.6));
+  --h: calc(var(--w) * 0.625 + 32px);
+  --r: calc(var(--w) * 0.6882 + var(--w) * 0.045);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  box-sizing: border-box;
+  padding: var(--nav-h) 0 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* Mid-turn, the near edges of the two turning cards swing slightly
+     toward the viewer and project ~3% of a card width past the ring's
+     box; the gap keeps them off the caption. */
+  gap: calc(var(--w) * 0.035 + 1rem);
+}
+
+.wo-view {
+  position: relative;
+  flex: none;
+  width: 100%;
+  height: var(--h);
+  perspective: 2200px;
+}
+
+/* Rotated only. The static lift cancels the drop the -6deg tilt gives the
+   front card (r * sin 6deg), so the front card sits dead centre; the
+   push back by r puts it at z = 0. Neither ever changes with scroll. */
+.wo-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  transform:
+    translateY(calc(var(--r) * -0.1045))
+    translateZ(calc(var(--r) * -1))
+    rotateX(-6deg)
+    rotateY(calc(var(--turn, 0) * -1 * var(--step)));
+}
+
+.wo-card {
+  position: absolute;
+  left: calc(var(--w) / -2);
+  top: calc(var(--h) / -2);
+  width: var(--w);
+  height: var(--h);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #141416;
+  box-shadow: 0 40px 100px -30px rgba(0, 0, 0, 0.85);
+  transform: rotateY(calc(var(--i) * var(--step))) translateZ(var(--r));
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: box-shadow 0.5s var(--ease-out), border-color 0.5s var(--ease-out);
+}
+
+.wo-card.is-front {
+  border-color: rgba(245, 135, 30, 0.3);
+  box-shadow:
+    0 40px 100px -30px rgba(0, 0, 0, 0.85),
+    0 0 60px -20px rgba(245, 135, 30, 0.35);
+}
+
+.wo-screen {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  container-type: size;
+  background: var(--night);
+}
+
+.wo-screen img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The front card plays its site: the whole page, top to bottom and back,
+   after a beat on the first screen. */
+.wo-strip {
+  animation:
+    wo-in 0.6s ease both,
+    wo-pan 14s ease-in-out 1.4s infinite alternate;
+}
+
+@keyframes wo-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes wo-pan {
+  from { transform: translateY(0); }
+  to { transform: translateY(calc(-100% + 100cqh)); }
+}
+
+.wo-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+/* Fixed height, so a longer name or line never nudges the ring. */
+.wo-caption {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: var(--w);
+  height: 9rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.wo-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.wo-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.wo-count {
+  color: var(--ink-soft);
+}
+
+.wo-dots {
+  display: flex;
+}
+
+.wo-dot {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+}
+
+.wo-dot::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.25);
+  transform: translate(-50%, -50%);
+  transition: width 0.4s var(--ease-out), background-color 0.4s var(--ease-out);
+}
+
+.wo-dot:hover::before {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.wo-dot[aria-current]::before {
+  width: 14px;
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(245, 135, 30, 0.7);
+}
+
+.wo-copy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.wo-copy .wo-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wo-copy .wo-line {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* ---------- The row (tablets, phones, reduced motion) ---------- */
+
+.wr-row {
+  list-style: none;
+  margin: clamp(2rem, 5vw, 3.5rem) 0 0;
+  padding: 0 var(--container-pad) 1.25rem;
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--container-pad);
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.wr-item {
+  flex: 0 0 84vw;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 640px) {
+  .wr-item {
+    flex-basis: 58vw;
+  }
+}
+
+/* Reduced motion on a desktop: the same row at desktop size, two and a
+   half cards in view so it reads as a row that continues. */
+@media (min-width: 1024px) {
+  .wr-item {
+    flex-basis: calc((100vw - var(--container-pad) - 2rem) / 2.5);
+  }
+}
+
+.wr-card {
+  display: block;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #141416;
+  box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.85);
+}
+
+.wr-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.wr-cap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.wr-cap .wo-type {
+  display: block;
+  margin: 0.2rem 0 0;
+}
+
+.wr-cap .wo-line {
+  margin: 0;
+}
+
+.wr-cap .wo-act {
+  align-items: flex-start;
+  margin-top: 0.6rem;
+}
+
+.wo-copy-stack {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+}
+
+.wo-copy-stack > .wo-copy {
+  grid-area: 1 / 1;
+}

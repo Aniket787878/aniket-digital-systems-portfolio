@@ -1,13 +1,11 @@
-import Hero from './home/Hero.jsx'
-import Statement from './home/Statement.jsx'
-import Work from './home/Work.jsx'
-import Tour from './home/Tour.jsx'
-import Connect from './home/Connect.jsx'
+import StageHero from './home/stage/StageHero.jsx'
+import Stakes from './home/stage/Stakes.jsx'
+import StageWork from './home/stage/StageWork.jsx'
 import Testimonials from './home/Testimonials.jsx'
-import Process from './home/Process.jsx'
-import Services from './home/Services.jsx'
-import Faq from './home/Faq.jsx'
-import Cta from './home/Cta.jsx'
+import Doors from './home/stage/Doors.jsx'
+import HowLoop from './home/stage/HowLoop.jsx'
+import Questions from './home/stage/Questions.jsx'
+import Close from './home/stage/Close.jsx'
 
 /* The page's stylesheet stays a single file, imported once, here.
 
@@ -20,25 +18,30 @@ import './HomePage.css'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 import { seo } from '../data.js'
 
-/* Bands in render order, on the dark and light grounds of the Dusk system
-   (docs/design-system.md). Services (the prices) sits straight after the
-   work, so a buyer who has seen the proof reads the price next instead of
-   after two long scroll-driven bands. Testimonials renders only once a
-   real quote exists. Each is one file in ./home. */
+/* The home page on the Stage ground (docs/ideas/relay-direction.md): one
+   near-black ground, a saffron stream of light, and the story loop (stakes,
+   big question, headfake, rehook) cascading down the page:
+     1. StageHero + Stakes: the problem, the question, "fewer steps, not
+        more software", rehooking into the work.
+     2. StageWork: the real projects, each one rehooking into the next.
+     3. Doors: the three service areas and their prices.
+     4. HowLoop: the glowing infinity loop of how the work runs, rehooking
+        into the call.
+   Testimonials renders only once a real quote exists. The old Dusk bands
+   (Hero, Statement, Work, Services, Tour, Connect, Process) are unused here;
+   Faq and Cta are still used by the service pages. */
 export default function HomePage() {
   useDocumentTitle(seo.title)
   return (
-    <div className="home">
-      <Hero />
-      <Statement />
-      <Work />
-      <Services />
-      <Tour />
-      <Connect />
+    <div className="home home-stage">
+      <StageHero />
+      <Stakes />
+      <StageWork />
       <Testimonials />
-      <Process />
-      <Faq />
-      <Cta />
+      <Doors />
+      <HowLoop />
+      <Questions />
+      <Close />
     </div>
   )
 }

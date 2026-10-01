@@ -145,7 +145,7 @@ export default function StageHero() {
             )}
           </m.div>
           <m.p className="stage-mono sh-foot" {...(reduce ? {} : settle(0.6))}>
-            {anchor && <>from {anchor} &middot; </>}free 15-minute call &middot; no obligation
+            {anchor && <><span className="sh-foot-part">from {anchor}</span> &middot; </>}<span className="sh-foot-part">free 15-minute call</span> &middot; <span className="sh-foot-part">no obligation</span>
           </m.p>
         </div>
 

@@ -3100,6 +3100,11 @@ a:hover .text-link svg {
     gap: var(--space-3);
   }
 
+  /* Sit the CTA beside the menu button, as on desktop, not adrift mid-bar. */
+  .nav-actions {
+    margin-left: auto;
+  }
+
   .nav-actions .btn-saffron {
     height: 36px;
     padding: 0 0.75rem;
@@ -3334,4 +3339,21 @@ a:hover .text-link svg {
 .loop-video-note {
   color: #f2f0ed;
   background: rgba(11, 11, 12, 0.7);
+}
+
+/* Currency pill buttons (home Doors, service-page offers): ~33px tall on a
+   phone. An invisible ::after grows the hit box to 44px without making the
+   pill itself any taller. */
+.currency-toggle button {
+  position: relative;
+}
+
+.currency-toggle button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100%, 44px);
+  height: 44px;
 }

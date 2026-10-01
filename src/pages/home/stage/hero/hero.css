@@ -927,3 +927,8 @@
     animation: none;
   }
 }
+
+/* Keep each part of the reassurance line whole so it wraps at a dot, never mid-phrase. */
+.sh-foot-part {
+  white-space: nowrap;
+}

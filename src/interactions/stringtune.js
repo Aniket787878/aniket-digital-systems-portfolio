@@ -19,8 +19,8 @@ import StringTune, {
 const root = document.documentElement
 let running = null
 
-/* Two gaps in the library's own hover bookkeeping, both found by testing in a
-   real browser, both fixed by subclassing rather than patching node_modules. */
+/* Three gaps in the library's own bookkeeping, all found by testing in a
+   real browser, all fixed here rather than by patching node_modules. */
 
 /* StringCursor drops an element's mouseenter/mouseleave listeners when the
    element scrolls out of range. If the pointer was resting on it, the "over"
@@ -52,6 +52,45 @@ class Magnetic extends StringMagnetic {
       }
     }
   }
+}
+
+/* StringSplit ('word' mode) puts the space between words inside each word
+   span ("price&nbsp;") and leaves it off wherever it predicts the word ends
+   a line. Its width maths rounds wrong often enough around one-letter words
+   (seen on /contact at 390px: "a" before "price") that the prediction and the
+   browser's real wrap disagree, and the two words render glued ("aprice").
+   Patch exactly that shape: a word span with no trailing space whose next
+   sibling is another word span. Correct words already end in a space, so
+   nothing is ever doubled. It re-splits on resize, so watch the DOM as well
+   as sweeping once after the first split. */
+const SPACE_END = /[\s\u00a0]$/
+function fixSplitWordSpacing(scope) {
+  scope.querySelectorAll('.-s-word').forEach((word) => {
+    const next = word.nextSibling
+    if (
+      next &&
+      next.nodeType === Node.ELEMENT_NODE &&
+      next.classList.contains('-s-word') &&
+      !SPACE_END.test(word.textContent)
+    ) {
+      word.after(document.createTextNode(' '))
+    }
+  })
+}
+
+function watchSplitWordSpacing() {
+  const observer = new MutationObserver((mutations) => {
+    const parents = new Set()
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (node.nodeType === Node.ELEMENT_NODE && node.parentElement) parents.add(node.parentElement)
+      }
+    }
+    parents.forEach(fixSplitWordSpacing)
+  })
+  observer.observe(document.body, { childList: true, subtree: true })
+  fixSplitWordSpacing(document.body)
+  return observer
 }
 
 export function start({ fine }) {
@@ -87,6 +126,7 @@ export function start({ fine }) {
     st.use(Magnetic)
   }
   st.start(60)
+  const splitWordSpacingObserver = watchSplitWordSpacing()
 
   root.classList.add('st-on')
   if (fine) root.classList.add('st-fine')
@@ -110,6 +150,7 @@ export function start({ fine }) {
     stop: () => {
       window.removeEventListener('pointermove', onMove)
       document.removeEventListener('mouseout', onLeave)
+      splitWordSpacingObserver.disconnect()
       st.destroy()
       root.classList.remove('st-on', 'st-fine', 'st-live', '-string')
       running = null

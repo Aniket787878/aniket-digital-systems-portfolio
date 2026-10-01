@@ -447,7 +447,7 @@ export const whatsappPrefill = {
   /* `{offer}` is replaced with the package name by home/Services.jsx. */
   pricing: 'Hi Aniket, I’d like to know more about the {offer} for my business.',
   cta: 'Hi Aniket, I have something I’d like built. Can we talk?',
-  contact: 'Hi Aniket, I’d like to talk about a project. Do you have 20 minutes?',
+  contact: 'Hi Aniket, I’d like to talk about a project. Do you have 15 minutes?',
   /* One per service page (`services[].slug`), so the chat says which
      page did the convincing. */
   websites: 'Hi Aniket, I saw your websites page. I’d like a website for my business.',
@@ -467,7 +467,7 @@ export const projects = [
       'Consent forms signed online, saved as a PDF and signed by the clinic'
     ],
     diagram: 'platform',
-    title: 'Therapist PWA',
+    title: 'Clinic Staff App',
     subtitle: 'Clinic operations platform',
     tagline: 'The system an eleven-therapist clinic runs its whole day on: client records, bookings and an AI that writes up session notes.',
     year: '2025–26',
@@ -962,7 +962,7 @@ export const projects = [
     tagline: 'Answers fees and hours, books free slots into the calendar, and hands anything clinical to a person.',
     year: '2026',
     summary:
-      'A front-desk assistant for a fictional physiotherapy clinic, built in n8n. Patients message it; it answers fees, hours and policies from the clinic’s FAQ, checks the calendar and offers free slots, and books, moves or cancels appointments. Clinical questions go to a person, and emergency wording gets a fixed safety reply before any AI runs.',
+      'A front-desk assistant for a fictional physiotherapy clinic. Patients message it; it answers fees, hours and policies from the clinic’s FAQ, checks the calendar and offers free slots, and books, moves or cancels appointments. Clinical questions go to a person, and emergency wording gets a fixed safety reply before any AI runs.',
     credit: [
       {
         label: 'n8n template 3694 by Luciano Gutierrez',
@@ -1046,7 +1046,7 @@ export const projects = [
     tagline: 'Staff and patients ask in plain English and get an answer from the clinic’s own documents, with the source named.',
     year: '2026',
     summary:
-      'An assistant for a fictional physiotherapy clinic, built in n8n, that answers staff and patient questions from the clinic’s own documents and names the source under every answer. Prices come from the services table, not from memory. If the documents do not say, it replies “I don’t know, please ask the front desk.” instead of guessing.',
+      'An assistant for a fictional physiotherapy clinic that answers staff and patient questions from the clinic’s own documents and names the source under every answer. Prices come from the services table, not from memory. If the documents do not say, it replies “I don’t know, please ask the front desk.” instead of guessing.',
     credit: [
       {
         label: 'coleam00/ottomator-agents by Cole Medin',

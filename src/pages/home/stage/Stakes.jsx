@@ -25,8 +25,11 @@ const BEATS = [
 
 /* The pinned band is BAND_VH tall, so the pin lasts BAND_VH - 100 of
    scroll. Each beat gets a share of it by weight: the headfake gets the
-   most, because its seven steps need room to fold. */
-const BAND_VH = 340
+   most, because its seven steps need room to fold. 340vh was too long a
+   hold per beat (a normal scroll could leave the middle line still
+   blurred); cut by ~40% (2026-10 UX pass), scaling every beat's hold by
+   the same amount so the weights still read the same. */
+const BAND_VH = 204
 const WEIGHTS = [1, 0.85, 1.55, 0.9]
 const TOTAL = WEIGHTS.reduce((a, b) => a + b, 0)
 const SPANS = WEIGHTS.map((w, i) => {
@@ -79,8 +82,12 @@ function Beat({ beat, i, q }) {
   /* Offsets stay inside 0..1 (motion hands these to a scroll timeline):
      the first beat is already in focus when the pin starts, the last one
      stays in focus as the pin lets go. One beat leaves before the next
-     arrives, so two lines of big type never sit on top of each other. */
-  const range = [first ? 0 : a, first ? 0.001 : a + 0.045, last ? 0.999 : b - 0.045, last ? 1 : b]
+     arrives, so two lines of big type never sit on top of each other.
+     The fade-in/out edge is 30% of THIS beat's own span, not a fixed
+     slice of the whole band, so every beat (long or short) reaches full
+     sharpness by the same point in its own scroll progress. */
+  const edge = (b - a) * 0.3
+  const range = [first ? 0 : a, first ? 0.001 : a + edge, last ? 0.999 : b - edge, last ? 1 : b]
   const opacity = useTransform(q, range, [first ? 1 : 0, 1, 1, last ? 1 : 0])
   const blur = useTransform(q, range, [first ? 0 : 10, 0, 0, last ? 0 : 10])
   const filter = useTransform(blur, (v) => (v < 0.05 ? 'none' : `blur(${v}px)`))

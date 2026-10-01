@@ -1310,7 +1310,7 @@ export const packages = [
     name: 'Business Website',
     explainer: null,
     price: {
-      usd: 'From $690', // TODO: placeholder, Aniket to confirm
+      usd: 'From $1,200', // proposed 2026-10-01, Aniket to confirm
       inr: 'From ₹25,000' // TODO: placeholder, Aniket to confirm
     },
     timeline: 'Live in 2 weeks',
@@ -1330,7 +1330,7 @@ export const packages = [
     name: 'Website + AI Assistant',
     explainer: 'ai-assistant',
     price: {
-      usd: 'From $1,500', // TODO: placeholder, Aniket to confirm
+      usd: 'From $2,400', // proposed 2026-10-01, Aniket to confirm
       inr: 'From ₹60,000' // TODO: placeholder, Aniket to confirm
     },
     timeline: 'Live in 3 weeks',
@@ -1384,7 +1384,7 @@ export const packages = [
     name: 'AI Roadmap Session',
     explainer: null,
     price: {
-      usd: '$290', // TODO: placeholder, Aniket to confirm
+      usd: '$490', // proposed 2026-10-01, Aniket to confirm
       inr: '₹15,000' // TODO: placeholder, Aniket to confirm
     },
     timeline: 'Ready in 1 week',
@@ -1395,7 +1395,7 @@ export const packages = [
     includes: [
       'A 60-minute session with you and your team',
       'Every idea ranked by time saved against cost',
-      'A fixed quote for the first build, if you want one'
+      'A fixed quote for the first build, with this fee taken off it'
     ]
   },
   {
@@ -1403,7 +1403,7 @@ export const packages = [
     name: 'Automation Quick-Win',
     explainer: null,
     price: {
-      usd: '$490',
+      usd: '$690', // proposed 2026-10-01, Aniket to confirm
       inr: '₹25,000' // TODO: placeholder, Aniket to confirm
     },
     timeline: 'Live in 5 days',
@@ -1422,7 +1422,7 @@ export const packages = [
     lane: 'ai',
     name: 'Ops Automation Sprint',
     explainer: 'ops-sprint',
-    price: { usd: '$1,500 – $2,500', inr: '₹40k – ₹80k' },
+    price: { usd: '$1,900 – $3,200', inr: '₹40k – ₹80k' },
     timeline: 'Live in 2 weeks',
     featured: false,
     forWho: 'Too much time spent copying details, chasing forms and following up.',
@@ -1438,7 +1438,7 @@ export const packages = [
     lane: 'ai',
     name: 'AI Assistant Build',
     explainer: 'ai-assistant',
-    price: { usd: '$2,500 – $4,500', inr: '₹80k – ₹1.5L' },
+    price: { usd: '$2,900 – $4,900', inr: '₹80k – ₹1.5L' },
     timeline: 'Live in 3 weeks',
     timelineChart: true,
     featured: false,
@@ -1494,7 +1494,7 @@ export const services = [
       { icon: 'inbox', title: 'Every enquiry lands', text: 'The form and the WhatsApp button reach your team straight away, and the visitor gets a reply at once.' },
       { icon: 'spark', title: 'An assistant, if you want one', text: 'Answers the common questions from your own information, then hands ready buyers to you.' }
     ],
-    from: { usd: '$690', inr: '₹25,000' },
+    from: { usd: '$1,200', inr: '₹25,000' },
     media: { kind: 'image', src: '/this-site.jpg', badge: 'This site · real screens', alt: 'The home page of this website: a dusk sky over mountain ridges, with the headline and the call buttons' },
     proofHead: ['The proof is the page you are on.', 'Built, hosted and wired up by me.'],
     proof: [
@@ -1591,7 +1591,7 @@ export const services = [
       { icon: 'flow', title: 'The repeat work runs itself', text: 'Enquiries saved and answered, reminders sent, forms filed, on your own accounts.' },
       { icon: 'check', title: 'A person checks what matters', text: 'The AI drafts, a person approves wherever a wrong answer would cost you.' }
     ],
-    from: { usd: '$290', inr: '₹15,000' },
+    from: { usd: '$490', inr: '₹15,000' },
     media: { kind: 'explainer', key: 'ai-assistant', badge: 'Illustrated' },
     proofHead: ['AI already at work.', 'In a clinic, on this site, and in three demos.'],
     proof: [
@@ -1732,8 +1732,8 @@ export const faq = [
   {
     q: 'What does it cost?',
     a: {
-      usd: 'Websites start at $690, or $1,500 with an AI assistant built in. One task fully automated is a fixed $490, and an AI Roadmap Session is $290. An internal tool runs $4,000 to $8,000. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me.',
-      inr: 'Websites start at ₹25,000, or ₹60,000 with an AI assistant built in. One task fully automated is a fixed ₹25,000, and an AI Roadmap Session is ₹15,000. An internal tool runs ₹1.5L to ₹3L. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me.'
+      usd: 'Websites start at $1,200, or $2,400 with an AI assistant built in. One task fully automated is a fixed $690, and an AI Roadmap Session is $490, taken off your first build if you go ahead. An internal tool runs $4,000 to $8,000. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me. Every price is fixed before work starts: half to begin, half when it goes live.',
+      inr: 'Websites start at ₹25,000, or ₹60,000 with an AI assistant built in. One task fully automated is a fixed ₹25,000, and an AI Roadmap Session is ₹15,000, taken off your first build if you go ahead. An internal tool runs ₹1.5L to ₹3L. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me. Every price is fixed before work starts: half to begin, half when it goes live.'
     }
   },
   {

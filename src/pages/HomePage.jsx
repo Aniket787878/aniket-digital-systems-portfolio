@@ -6,6 +6,7 @@ import Doors from './home/stage/Doors.jsx'
 import HowLoop from './home/stage/HowLoop.jsx'
 import Questions from './home/stage/Questions.jsx'
 import Close from './home/stage/Close.jsx'
+import Ribbon from './home/stage/ribbon/Ribbon.jsx'
 
 /* The page's stylesheet stays a single file, imported once, here.
 
@@ -34,6 +35,7 @@ export default function HomePage() {
   useDocumentTitle(seo.title)
   return (
     <div className="home home-stage">
+      <Ribbon />
       <StageHero />
       <Stakes />
       <StageWork />

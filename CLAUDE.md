@@ -75,7 +75,7 @@ primary buttons, word-by-word headings and scroll-linked depth. It lives in
 PNGs of the running apps plus a `steps.json` (caption, clicked element,
 zoom region) in `public/walkthroughs/<slug>/`; the film only adds camera,
 pointer and captions. The two client platforms are **schematics** —
-wireframes of the real flow in `remotion/platformScenes.jsx`, labelled as
+wireframes of the real flow in `remotion/stage/schematics.jsx`, labelled as
 such on every frame, on the card and in the caption, because their real
 screens hold client records. Never swap one kind for the other without
 changing the label (`films[slug].kind` in `data.js`). The explainer films

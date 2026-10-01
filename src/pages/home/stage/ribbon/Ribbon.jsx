@@ -28,16 +28,18 @@ import { useReducedMotion } from 'motion/react'
 
 const WIDE = {
   hero: { p: [[1.02, -0.16], [0.62, 0.3], [0.28, 0.98], [0.98, 1.2]], w: 0.34, wMin: 9, pinchT: 0.6, pinchW: 0.12, twist: 5.2, gain: 1 },
-  a: { p: [[0.44, -0.25], [-0.12, 0.3], [0.42, 0.72], [0.02, 1.25]], w: 0.62, wMin: 130, pinchT: 0.5, pinchW: 0.26, twist: 4.2, gain: 0.62 },
-  b: { p: [[0.08, -0.25], [0.6, 0.34], [-0.06, 0.66], [0.4, 1.25]], w: 0.62, wMin: 130, pinchT: 0.5, pinchW: 0.26, twist: 4.6, gain: 0.62 },
+  a: { p: [[0.44, -0.25], [-0.12, 0.3], [0.42, 0.72], [0.02, 1.25]], w: 0.62, wMin: 130, pinchT: 0.5, pinchW: 0.26, twist: 4.2, gain: 0.45 },
+  b: { p: [[0.08, -0.25], [0.6, 0.34], [-0.06, 0.66], [0.4, 1.25]], w: 0.62, wMin: 130, pinchT: 0.5, pinchW: 0.26, twist: 4.6, gain: 0.45 },
   close: { p: [[1.0, -0.3], [0.55, 0.1], [0.1, 0.6], [0.45, 0.95]], w: 0.36, wMin: 8, pinchT: 0.82, pinchW: 0.12, twist: 5, gain: 1 }
 }
 
 // Phones: the hero stacks, so the ribbon runs more upright and narrower.
+// Between the hero and the close the text spans the whole screen and there
+// is no blur, so the ribbon there is wide, loose and very dim.
 const NARROW = {
-  hero: { p: [[1.5, -0.15], [0.95, 0.3], [0.6, 0.95], [1.35, 1.15]], w: 0.42, wMin: 7, pinchT: 0.6, pinchW: 0.13, twist: 4.6, gain: 0.85 },
-  a: { p: [[0.7, -0.2], [-0.2, 0.3], [0.9, 0.7], [0.2, 1.2]], w: 0.6, wMin: 70, pinchT: 0.5, pinchW: 0.26, twist: 4, gain: 0.5 },
-  b: { p: [[0.2, -0.2], [1.1, 0.35], [0.0, 0.65], [0.8, 1.2]], w: 0.6, wMin: 70, pinchT: 0.5, pinchW: 0.26, twist: 4.2, gain: 0.5 },
+  hero: { p: [[1.6, -0.15], [1.05, 0.3], [0.7, 0.95], [1.4, 1.15]], w: 0.28, wMin: 6, pinchT: 0.6, pinchW: 0.13, twist: 4.6, gain: 0.75 },
+  a: { p: [[0.7, -0.2], [-0.2, 0.3], [0.9, 0.7], [0.2, 1.2]], w: 0.6, wMin: 150, pinchT: 0.5, pinchW: 0.26, twist: 4, gain: 0.26 },
+  b: { p: [[0.2, -0.2], [1.1, 0.35], [0.0, 0.65], [0.8, 1.2]], w: 0.6, wMin: 150, pinchT: 0.5, pinchW: 0.26, twist: 4.2, gain: 0.26 },
   close: { p: [[1.3, -0.3], [0.9, 0.1], [0.1, 0.6], [0.5, 0.95]], w: 0.5, wMin: 7, pinchT: 0.82, pinchW: 0.13, twist: 4.6, gain: 0.95 }
 }
 
@@ -68,7 +70,7 @@ function place(key, W, H, wide, target) {
     const dy = target[1] - py
     p = p.map(([x, y]) => [x + dx, y + dy])
   }
-  return { ...key, p, wMax: key.w * (wide ? H : W) }
+  return { ...key, p, wMax: key.w * (wide ? H : W), calm: target ? 0 : 1 }
 }
 
 function mix(a, b, k) {
@@ -79,7 +81,8 @@ function mix(a, b, k) {
     pinchT: lerp(a.pinchT, b.pinchT, k),
     pinchW: lerp(a.pinchW, b.pinchW, k),
     twist: lerp(a.twist, b.twist, k),
-    gain: lerp(a.gain, b.gain, k)
+    gain: lerp(a.gain, b.gain, k),
+    calm: lerp(a.calm ?? 1, b.calm ?? 1, k)
   }
 }
 
@@ -114,6 +117,11 @@ export default function Ribbon() {
     let raf = 0
     let alive = true
     let lastBlur = -1
+    let lastDraw = 0
+    let eased = null
+    // The two targets, looked up again only once they leave the page.
+    const els = {}
+    const find = (k, sel) => (els[k]?.isConnected ? els[k] : (els[k] = document.querySelector(sel)))
     const t0 = performance.now()
 
     const draw = (now) => {
@@ -122,19 +130,23 @@ export default function Ribbon() {
       const W = window.innerWidth
       const H = window.innerHeight
       const wide = W >= 1024
+      // Seconds since the last frame, capped so a hidden tab coming back
+      // doesn't make the shape jump.
+      const dt = lastDraw ? Math.min((now - lastDraw) / 1000, 0.1) : 1
+      lastDraw = now
       const K = wide ? WIDE : NARROW
       const y = window.scrollY
 
       // Where the pinches go: just past the last hero button, and on the
       // close button itself.
-      const heroBtn = document.querySelector('.sh-actions > :last-child')
+      const heroBtn = find('hero', '.sh-actions > :last-child')
       const heroAt = heroBtn
         ? (() => {
             const r = heroBtn.getBoundingClientRect()
-            return wide ? [r.right + 150, r.top + r.height / 2 + 12] : [W * 0.9, r.top + r.height / 2]
+            return wide ? [r.right + 150, r.top + r.height / 2 + 12] : [W * 0.93, r.top + r.height / 2]
           })()
         : null
-      const closeBtn = document.querySelector('.cl-primary')
+      const closeBtn = find('close', '.cl-primary')
       const closeAt = centre(closeBtn)
       const closeTop = closeBtn ? closeBtn.closest('section')?.getBoundingClientRect().top ?? H : H
 
@@ -142,11 +154,15 @@ export default function Ribbon() {
       const c = closeBtn ? smooth(0.95 * H, 0.3 * H, closeTop) : 0
       const sway = 0.5 - 0.5 * Math.cos((Math.PI * y) / (2.2 * H))
 
-      let shape = mix(place(K.a, W, H, wide), place(K.b, W, H, wide), sway)
-      if (h > 0) shape = mix(shape, place(K.hero, W, H, wide, heroAt), h)
-      if (c > 0) shape = mix(shape, place(K.close, W, H, wide, closeAt), c)
+      let goal = mix(place(K.a, W, H, wide), place(K.b, W, H, wide), sway)
+      if (h > 0) goal = mix(goal, place(K.hero, W, H, wide, heroAt), h)
+      if (c > 0) goal = mix(goal, place(K.close, W, H, wide, closeAt), c)
+      // The ribbon eases toward where the scroll says it should be instead
+      // of snapping there, so a flick of the page reads as the current
+      // swinging, not jumping. Reduced motion snaps.
+      const shape = (eased = eased && !reduce ? mix(eased, goal, 1 - Math.exp(-dt * 7)) : goal)
 
-      const focus = Math.max(h, c)
+      const focus = 1 - shape.calm
       // Blur in whole pixels, written only when it changes: a filter
       // change re-rasterises the layer, so not every frame.
       const blur = wide ? Math.round((1 - focus) * 9) : 0
@@ -181,10 +197,11 @@ export default function Ribbon() {
         const wide = window.innerWidth >= 1024
         try {
           ribbon = createRibbon(canvasRef.current, {
-            threads: wide ? 420 : 200,
-            steps: wide ? 140 : 90,
-            sparks: wide ? 240 : 90,
-            dpr: Math.min(window.devicePixelRatio || 1, wide ? 1.5 : 1.25)
+            threads: wide ? 420 : 130,
+            steps: wide ? 140 : 64,
+            sparks: wide ? 240 : 40,
+            dpr: Math.min(window.devicePixelRatio || 1, wide ? 1.5 : 1),
+            antialias: wide
           })
         } catch {
           return

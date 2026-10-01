@@ -39,6 +39,9 @@ const PATH = /* glsl */ `
   uniform float uPinchT;
   uniform float uPinchW;
   uniform float uTwist;
+  // 0 where the ribbon is the subject (hero, close), 1 where it sits
+  // behind text: there the pinch, packets and sparks lose their burn.
+  uniform float uCalm;
 
   vec2 bez(float t) {
     float u = 1.0 - t;
@@ -61,14 +64,15 @@ const PATH = /* glsl */ `
     vec2 d = bezD(t);
     vec2 n = normalize(vec2(-d.y, d.x) + 1e-5);
     float pinch = pinchAt(t);
-    float breathe = 0.82 + 0.18 * sin(t * 3.1 + uTime * 0.27);
+    float breathe = 0.86 + 0.14 * sin(t * 3.1 + uTime * 0.2);
     float w = mix(uWMax, uWMin, pinch) * breathe;
     // The twist: a flat band turning about its spine, so its projected
     // width swings, and where it turns edge-on the threads crowd and burn.
-    float phi = t * uTwist + uTime * 0.21 + seed * 0.5;
+    float phi = t * uTwist + uTime * 0.16 + seed * 0.5;
     float off = w * s * cos(phi);
-    off += sin(t * 9.0 + uTime * 0.7 + seed * 40.0) * 7.0 * (1.0 - pinch);
-    off += sin(t * 23.0 - uTime * 1.1 + seed * 90.0) * 2.2 * (1.0 - pinch);
+    // One slow wave, nearly in step across threads, so the band moves
+    // like silk rather than each hair twitching on its own.
+    off += sin(t * 6.0 - uTime * 0.45 + seed * 2.0) * 9.0 * (1.0 - pinch);
     return vec3(bez(t) + n * off, abs(sin(phi)));
   }
 
@@ -94,12 +98,12 @@ const THREAD_VERT = /* glsl */ `
     float pinch = pinchAt(aT);
     float ends = smoothstep(0.0, 0.07, aT) * smoothstep(1.0, 0.9, aT);
     vColor = aColor;
-    vAlpha = aAlpha * (0.45 + 0.55 * q.z) * (0.4 + 1.6 * pinch) * ends;
+    vAlpha = aAlpha * (0.45 + 0.55 * q.z) * (0.4 + 1.6 * pinch * (1.0 - 0.85 * uCalm)) * ends;
     // A packet: a sharp head with a tail behind it, running from t=0 to
     // t=1. Only some threads carry one at a time, so it reads as current
     // rather than a scrolling pattern.
-    float f = fract(aT * 1.3 - uTime * 0.42 + aSeed * 17.0);
-    vPulse = pow(f, 26.0) * step(0.55, fract(aSeed * 7.13)) * ends;
+    float f = fract(aT * 1.1 - uTime * 0.22 + aSeed * 17.0);
+    vPulse = pow(f, 9.0) * 0.6 * step(0.55, fract(aSeed * 7.13)) * ends * (1.0 - 0.8 * uCalm);
   }
 `
 
@@ -128,10 +132,10 @@ const SPARK_VERT = /* glsl */ `
   void main() {
     float t = fract(aT + uTime * aSpeed);
     vec3 q = place(t, aS, aSeed);
-    gl_Position = toClip(q.xy + vec2(sin(uTime + aSeed * 30.0), cos(uTime * 0.8 + aSeed * 20.0)) * 6.0);
+    gl_Position = toClip(q.xy + vec2(sin(uTime * 0.4 + aSeed * 30.0), cos(uTime * 0.3 + aSeed * 20.0)) * 5.0);
     float ends = smoothstep(0.0, 0.1, t) * smoothstep(1.0, 0.85, t);
-    float twinkle = 0.55 + 0.45 * sin(uTime * 3.0 + aSeed * 50.0);
-    vAlpha = ends * twinkle * (0.35 + 0.9 * pinchAt(t));
+    float twinkle = 0.6 + 0.4 * sin(uTime * 1.2 + aSeed * 50.0);
+    vAlpha = ends * twinkle * (0.35 + 0.9 * pinchAt(t)) * (1.0 - 0.7 * uCalm);
     gl_PointSize = aSize * uDpr;
   }
 `
@@ -240,8 +244,8 @@ function buildSparks(count) {
   return g
 }
 
-export function createRibbon(canvas, { threads, steps, sparks, dpr }) {
-  const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' })
+export function createRibbon(canvas, { threads, steps, sparks, dpr, antialias = true }) {
+  const renderer = new WebGLRenderer({ canvas, antialias, alpha: true, powerPreference: 'high-performance' })
   renderer.setPixelRatio(dpr)
   renderer.setClearColor(0x000000, 0)
 
@@ -258,6 +262,7 @@ export function createRibbon(canvas, { threads, steps, sparks, dpr }) {
     uPinchW: { value: 0.16 },
     uTwist: { value: 5 },
     uGain: { value: 1 },
+    uCalm: { value: 0 },
     uDpr: { value: dpr }
   }
 
@@ -283,7 +288,7 @@ export function createRibbon(canvas, { threads, steps, sparks, dpr }) {
       renderer.setSize(w, h, false)
       uniforms.uRes.value.set(w, h)
     },
-    /* shape: { p: [[x,y] x4], wMax, wMin, pinchT, pinchW, twist, gain } */
+    /* shape: { p: [[x,y] x4], wMax, wMin, pinchT, pinchW, twist, gain, calm } */
     frame(time, shape) {
       uniforms.uTime.value = time
       shape.p.forEach(([x, y], i) => uniforms[`uP${i}`].value.set(x, y))
@@ -293,6 +298,7 @@ export function createRibbon(canvas, { threads, steps, sparks, dpr }) {
       uniforms.uPinchW.value = shape.pinchW
       uniforms.uTwist.value = shape.twist
       uniforms.uGain.value = shape.gain
+      uniforms.uCalm.value = shape.calm ?? 0
       renderer.render(scene, camera)
     },
     dispose() {

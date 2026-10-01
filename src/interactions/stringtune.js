@@ -54,41 +54,42 @@ class Magnetic extends StringMagnetic {
   }
 }
 
-/* StringSplit ('word' mode) decides where to put the space between two
-   word spans by pre-measuring the heading's own line wrap (character
-   widths summed against the element's content width) and skipping the
-   separator wherever it thinks a word is last on its own line — two
-   adjacent inline-block word spans still get a natural wrap point between
-   them with nothing rendered there, which is correct when the prediction
-   matches reality. Its width maths rounds wrong often enough for narrow,
-   one-letter words (seen on /contact: "a" before "price") that the
-   predicted line-end and the browser's actual wrap point disagree; when
-   that happens the two spans end up on the same visual line with no
-   separator between them at all, so they render glued together ("aprice").
-   It re-splits on every resize, so this cannot be a one-time pass at
-   boot — watch the DOM instead and patch the exact shape the bug leaves:
-   a `.-s-word` whose immediately preceding sibling is another `.-s-word`
-   with no text node of any kind between them. Where the library did
-   insert its own separator (the normal case), the previous sibling is a
-   text node, not an element, so this never double-spaces a heading that
-   was already correct. */
-function watchSplitWordSpacing() {
-  const fixWord = (word) => {
-    const prev = word.previousSibling
-    if (prev && prev.nodeType === Node.ELEMENT_NODE && prev.classList.contains('-s-word')) {
-      word.before(document.createTextNode(' '))
-    }
-  }
-  const observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      for (const node of mutation.addedNodes) {
-        if (node.nodeType !== Node.ELEMENT_NODE) continue
-        if (node.classList.contains('-s-word')) fixWord(node)
-        node.querySelectorAll?.('.-s-word').forEach(fixWord)
-      }
+/* StringSplit ('word' mode) puts the space between words inside each word
+   span ("price&nbsp;") and leaves it off wherever it predicts the word ends
+   a line. Its width maths rounds wrong often enough around one-letter words
+   (seen on /contact at 390px: "a" before "price") that the prediction and the
+   browser's real wrap disagree, and the two words render glued ("aprice").
+   Patch exactly that shape: a word span with no trailing space whose next
+   sibling is another word span. Correct words already end in a space, so
+   nothing is ever doubled. It re-splits on resize, so watch the DOM as well
+   as sweeping once after the first split. */
+const SPACE_END = /[\s\u00a0]$/
+function fixSplitWordSpacing(scope) {
+  scope.querySelectorAll('.-s-word').forEach((word) => {
+    const next = word.nextSibling
+    if (
+      next &&
+      next.nodeType === Node.ELEMENT_NODE &&
+      next.classList.contains('-s-word') &&
+      !SPACE_END.test(word.textContent)
+    ) {
+      word.after(document.createTextNode(' '))
     }
   })
+}
+
+function watchSplitWordSpacing() {
+  const observer = new MutationObserver((mutations) => {
+    const parents = new Set()
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (node.nodeType === Node.ELEMENT_NODE && node.parentElement) parents.add(node.parentElement)
+      }
+    }
+    parents.forEach(fixSplitWordSpacing)
+  })
   observer.observe(document.body, { childList: true, subtree: true })
+  fixSplitWordSpacing(document.body)
   return observer
 }
 

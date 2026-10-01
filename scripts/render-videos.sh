@@ -44,22 +44,22 @@ explainer() { # composition, output name, poster frame, crf
 for slug in consent-signer shared-inbox lead-research; do
   [ -n "$ONLY" ] && [ "$ONLY" != "$slug" ] && continue
   # the site film: told like the platform films, over the real captures
-  film "Platform-$slug" "$slug" 160
+  film "Platform-$slug" "$slug" 234
   loop "Clip-$slug" "$OUT/clips/$slug.mp4" 0.8
   # frame 0 is the loop's wide frame, so the poster and the first frame match
   npx remotion still "$ENTRY" "Clip-$slug" "$OUT/posters/$slug-clip.jpg" --frame=0 \
     --scale=0.8 --image-format=jpeg --jpeg-quality=80 "${BROWSER[@]}" --log=error  # the /projects card: the same loop framed like the platform films
   loop "Framed-$slug" "$OUT/clips/$slug-framed.mp4" 0.6
-  npx remotion still "$ENTRY" "Framed-$slug" "$OUT/posters/$slug-framed.jpg" --frame=40 \
+  npx remotion still "$ENTRY" "Framed-$slug" "$OUT/posters/$slug-framed.jpg" --frame=60 \
     --scale=0.6 --image-format=jpeg --jpeg-quality=82 "${BROWSER[@]}" --log=error
 done
 for slug in therapist-pwa care-journey; do
   [ -n "$ONLY" ] && [ "$ONLY" != "$slug" ] && continue
-  film "Platform-$slug" "$slug" 160
+  film "Platform-$slug" "$slug" 234
 done
 if [ -z "$ONLY" ] || [ "$ONLY" = hero ]; then
   loop HeroReel "$OUT/hero-reel.mp4" 1
-  npx remotion still "$ENTRY" HeroReel "$OUT/posters/hero-reel.jpg" --frame=0 \
+  npx remotion still "$ENTRY" HeroReel "$OUT/posters/hero-reel.jpg" --frame=300 \
     --image-format=jpeg --jpeg-quality=80 "${BROWSER[@]}" --log=error
 fi
 

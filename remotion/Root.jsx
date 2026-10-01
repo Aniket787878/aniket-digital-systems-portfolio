@@ -1,8 +1,10 @@
 import { Composition } from 'remotion'
 import { Walkthrough, walkthroughLength } from './Walkthrough.jsx'
-import { PlatformFilm, platformLength } from './PlatformFilm.jsx'
-import { Clip, clipLength } from './Clip.jsx'
-import { FramedClip, FRAMED, framedLength } from './FramedClip.jsx'
+import { StageFilm, stageFilmLength } from './stage/StageFilm.jsx'
+import { StageClip, stageClipLength } from './stage/StageClip.jsx'
+import { StageFramed, stageFramedLength } from './stage/StageFramed.jsx'
+import { HeroReel, HERO_LEN } from './stage/HeroReel.jsx'
+import { FRAMED } from './FramedClip.jsx'
 import { WALKTHROUGHS } from './walkthroughs.js'
 import { SCENES } from './platformScenes.jsx'
 import { DEMO_SCENES } from './demoScenes.jsx'
@@ -10,13 +12,6 @@ import { ExplainerBrand, BRAND_LEN } from './explainers/ExplainerBrand.jsx'
 import { ExplainerOpsSprint, OPS_LEN } from './explainers/ExplainerOpsSprint.jsx'
 import { ExplainerAiAssistant, AI_LEN } from './explainers/ExplainerAiAssistant.jsx'
 import { ExplainerInternalTool, TOOL_LEN } from './explainers/ExplainerInternalTool.jsx'
-
-/* The hero reel: the strongest beats of each working demo, back to back. */
-export const HERO_REEL = [
-  { slug: 'shared-inbox', pick: [2, 3, 7] },
-  { slug: 'consent-signer', pick: [2, 5, 7] },
-  { slug: 'lead-research', pick: [3, 5, 6] },
-]
 
 /* Card previews: a short silent loop per tool. */
 export const CARD_PICKS = {
@@ -55,8 +50,8 @@ export const RemotionRoot = () => (
       <Composition
         key={`p-${slug}`}
         id={`Platform-${slug}`}
-        component={PlatformFilm}
-        durationInFrames={platformLength(slug)}
+        component={StageFilm}
+        durationInFrames={stageFilmLength(slug)}
         fps={30}
         width={1920}
         height={1080}
@@ -67,24 +62,24 @@ export const RemotionRoot = () => (
       <Composition
         key={`f-${slug}`}
         id={`Framed-${slug}`}
-        component={FramedClip}
-        durationInFrames={framedLength(slug)}
+        component={StageFramed}
+        durationInFrames={stageFramedLength(slug)}
         fps={30}
         width={1920}
         height={1080}
         defaultProps={{ slug }}
       />
     ))}
-    {Object.entries(CARD_PICKS).map(([slug, pick]) => (
+    {Object.keys(CARD_PICKS).map((slug) => (
       <Composition
         key={`c-${slug}`}
         id={`Clip-${slug}`}
-        component={Clip}
-        durationInFrames={clipLength([{ slug, pick }])}
+        component={StageClip}
+        durationInFrames={stageClipLength(slug)}
         fps={30}
         width={1440}
         height={900}
-        defaultProps={{ items: [{ slug, pick }], captions: true }}
+        defaultProps={{ slug }}
       />
     ))}
     <Composition id="Explainer-brand" component={ExplainerBrand} durationInFrames={BRAND_LEN} fps={30} width={1920} height={1080} />
@@ -92,14 +87,6 @@ export const RemotionRoot = () => (
     <Composition id="Explainer-ops-sprint" component={ExplainerOpsSprint} durationInFrames={OPS_LEN} fps={30} width={1920} height={1080} />
     <Composition id="Explainer-ai-assistant" component={ExplainerAiAssistant} durationInFrames={AI_LEN} fps={30} width={1920} height={1080} />
     <Composition id="Explainer-internal-tool" component={ExplainerInternalTool} durationInFrames={TOOL_LEN} fps={30} width={1920} height={1080} />
-    <Composition
-      id="HeroReel"
-      component={Clip}
-      durationInFrames={clipLength(HERO_REEL)}
-      fps={30}
-      width={1440}
-      height={900}
-      defaultProps={{ items: HERO_REEL, captions: true }}
-    />
+    <Composition id="HeroReel" component={HeroReel} durationInFrames={HERO_LEN} fps={30} width={1440} height={900} />
   </>
 )

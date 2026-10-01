@@ -104,12 +104,26 @@
 }
 
 .sw3-rehook {
+  position: relative;
   color: var(--ink-soft);
   text-decoration: none;
   font-size: 0.9375rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   padding-bottom: 2px;
   transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+}
+
+/* Measured ~22px tall on a phone -- short of the 44px thumb-target floor.
+   Grown with an invisible ::after rather than padding, since padding here
+   would push the border-bottom further from the text, changing the look. */
+.sw3-rehook::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100%, 44px);
+  height: 44px;
 }
 
 .sw3-rehook:hover,

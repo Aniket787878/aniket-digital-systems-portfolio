@@ -187,3 +187,25 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* ---------- Tap targets (44px minimum, no visual change) ----------
+   The currency pill buttons render at ~33-35px tall on a phone -- too
+   short under the 44px thumb-target floor, but growing their own padding
+   would make the pill itself taller on screen. Scoped to the service
+   pages' offers section only (`.currency-toggle` is shared with the home
+   page's Pricing/Doors bands, which this agent does not own); the hit box
+   grows via an invisible ::after instead of touching the pill's padding,
+   so the before/after screenshot is identical. */
+.svc-offers .currency-toggle button {
+  position: relative;
+}
+
+.svc-offers .currency-toggle button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100%, 44px);
+  height: 44px;
+}

@@ -778,12 +778,26 @@
 }
 
 .ai-rehook a {
+  position: relative;
   color: var(--ink);
   font-size: 0.9375rem;
   text-decoration: underline;
   text-decoration-color: rgba(245, 135, 30, 0.6);
   text-underline-offset: 4px;
   transition: text-decoration-color 0.25s ease, color 0.25s ease;
+}
+
+/* Measured ~26px tall on a phone -- short of the 44px thumb-target floor.
+   Invisible ::after rather than padding, so the underline offset and text
+   position do not move. */
+.ai-rehook a::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100%, 44px);
+  height: 44px;
 }
 
 .ai-rehook a:hover {

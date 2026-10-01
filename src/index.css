@@ -3104,6 +3104,15 @@ a:hover .text-link svg {
     height: 36px;
     padding: 0 0.75rem;
   }
+
+  /* Same cascade-tie problem: `.btn-saffron .btn-pill-icon { display:
+     inline-grid; ... }` above (unconditional, floating-pill-nav section)
+     has the same specificity as the earlier 810px block's
+     `.nav-actions .btn-pill-icon { display: none }` and comes later in the
+     file, so it was winning and the icon circle was still showing. */
+  .nav-actions .btn-pill-icon {
+    display: none;
+  }
 }
 
 /* ---------- Footer on the night ground ---------- */

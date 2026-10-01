@@ -514,7 +514,7 @@ export function EndCard({ f, line = END_LINE }) {
               transform: `translateY(${((1 - b) * 24).toFixed(2)}px) scale(${(0.94 + 0.06 * b).toFixed(4)})`,
             }}
           >
-            Contact now
+            Book a free call
             <Icon name="arrow" size={tall ? 38 : 32} stroke={2.4} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: tall ? 'center' : 'flex-start', opacity: cl(c * 1.5), transform: `translateY(${((1 - c) * 16).toFixed(2)}px)` }}>

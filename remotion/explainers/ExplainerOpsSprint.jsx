@@ -1,253 +1,281 @@
-import { AbsoluteFill } from 'remotion'
-import { C, SANS, rise, pop, tween, easeInOut } from '../shared.jsx'
-import { FlowGraph } from '../FlowGraph.jsx'
+import { AbsoluteFill, useCurrentFrame } from 'remotion'
 import { Icon } from '../icons.jsx'
-import { Shell, StepHeadline } from './Shell.jsx'
-import { ChatBubble, Toast, Chip, cardShadow } from './illustrative.jsx'
+import { S, useStageFonts, Ground, Tag, Line, Beat, Captions, World, camAt, Glass, Bar, Chip, Wire, wirePath, Bubble, EndCard, Mono, arrive, move, fadeIn, lerp, cl } from './stageLook.jsx'
 
 /*
-  Ops Automation Sprint, ~30s. One enquiry at 11:04 pm, followed through
-  the automation: instant WhatsApp reply, CRM row, team heads-up, a
-  reminder next morning, then the Day 3 / Day 7 follow-ups. The flow runs
-  along the bottom on a timeline; the card above shows what each step does.
+  Ops Automation Sprint, 30 s, in the Stage look. Same story as before: one
+  enquiry at 11:04 pm, followed through the automation: an instant WhatsApp
+  reply, a row in the client list, a heads-up for the team, a reminder next
+  morning, then the Day 3 and Day 7 follow-ups, which stop the moment they
+  book. The flow runs along the bottom on a saffron wire; the glass panel
+  above shows what each step did. Everything on screen is illustrative.
 */
 
-const PAPER_AT = 104
-const PAPER_END = 612
-export const OPS_LEN = PAPER_AT + PAPER_END + 196
+export const OPS_LEN = 912
 
-const S = [56, 146, 236, 326, 416, 506]
-const X = [206, 508, 809, 1111, 1412, 1714]
+const HOOK_END = 98
+const STEP = [176, 254, 332, 410, 488, 570]
+// the form panel arrives early, so it is typed in while the first caption reads
+const FORM_IN = 116
+const STOP = [696, 746]
+const END = 752
+
+const X = [230, 522, 814, 1106, 1398, 1690]
+const NODE_Y = 838
 const NODES = [
-  { id: 'form', label: 'Web form', icon: 'form', time: '11:04 pm' },
-  { id: 'reply', label: 'Auto-reply', icon: 'chat', time: '11:04 pm' },
-  { id: 'crm', label: 'CRM', icon: 'database', time: '11:04 pm' },
-  { id: 'team', label: 'Team', icon: 'bell', time: '11:05 pm' },
-  { id: 'remind', label: 'Reminder', icon: 'sun', time: '9:00 am' },
-  { id: 'follow', label: 'Follow-up', icon: 'repeat', time: 'Day 3 · Day 7' },
+  { label: 'Web form', icon: 'form', time: '11:04 pm' },
+  { label: 'Auto-reply', icon: 'chat', time: '11:04 pm' },
+  { label: 'Client list', icon: 'database', time: '11:04 pm' },
+  { label: 'Team', icon: 'bell', time: '11:05 pm' },
+  { label: 'Reminder', icon: 'sun', time: '9:00 am' },
+  { label: 'Follow-up', icon: 'repeat', time: 'Day 3 · Day 7' },
 ]
-const LINES = [
-  { at: S[0], text: 'A lead fills in your form at {11:04 pm.}' },
-  { at: S[1], text: 'A WhatsApp reply goes out {instantly.}' },
-  { at: S[2], text: 'The lead is {saved in your CRM.}' },
-  { at: S[3], text: 'Your team {gets a heads-up.}' },
-  { at: S[4], text: 'Next morning, {a gentle reminder.}' },
-  { at: S[5], text: 'Then {Day 3 and Day 7} follow-ups.', exit: PAPER_END - 10 },
+const CAPS = [
+  { at: FORM_IN, text: 'At 11:04 pm, a lead fills in your {form.}' },
+  { at: STEP[1] - 4, text: 'A WhatsApp reply goes out {instantly.}' },
+  { at: STEP[2] - 4, text: 'The lead lands in your client {list.}' },
+  { at: STEP[3] - 4, text: 'Your team gets a {heads-up.}' },
+  { at: STEP[4] - 4, text: 'Next morning, a gentle {reminder.}' },
+  { at: STEP[5] - 4, text: 'Then follow-ups on {Day 3 and Day 7.}', exit: STOP[0] - 10 },
 ]
 
 export function ExplainerOpsSprint() {
+  useStageFonts()
+  const f = useCurrentFrame()
+  const cam = camAt(f, [
+    { x: 960, y: 620, s: 0.88, rx: 18 },
+    { at: HOOK_END + 4, dur: 22, x: 960, y: 560, s: 1, rx: 0 },
+    { at: STEP[5], dur: 90, s: 1.03 },
+  ])
+  const reached = STEP.reduce((acc, s, i) => (f >= s ? i : acc), -1)
+  const glow = f < HOOK_END ? { x: 960, y: 520 } : f < STOP[0] ? { x: lerp(X[Math.max(0, reached)], 960, 0.5), y: 560 } : { x: 960, y: 520 }
+  const fake = cl(fadeIn(f, STOP[0] - 4, 8) - fadeIn(f, STOP[1], 8))
+  const toEnd = fadeIn(f, END, 10)
   return (
-    <Shell hook="11:04 pm." hookSub="A new enquiry. Your team is asleep." hookIcon="moon" paperAt={PAPER_AT} paperEnd={PAPER_END}>
-      {(f) => <Paper f={f} />}
-    </Shell>
+    <Ground f={f} glow={glow}>
+      {f < HOOK_END + 10 && <Hook f={f} />}
+      {f >= HOOK_END && f < END + 10 && (
+        <AbsoluteFill style={{ opacity: 1 - toEnd, filter: fake > 0.01 ? `blur(${(fake * 14).toFixed(2)}px)` : undefined }}>
+          <World cam={cam}>
+            <Timeline f={f} />
+            {STAGES.map((Stage, k) => {
+              const from = k === 0 ? FORM_IN : STEP[k]
+              const inT = arrive(f, from + 2, 130)
+              const outT = k < STAGES.length - 1 ? move(f, STEP[k + 1] - 6, 10) : 0
+              if (f < from || outT >= 1) return null
+              return (
+                <div
+                  key={k}
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: 240,
+                    height: 470,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    opacity: cl(inT * 1.6) * (1 - outT),
+                    transform: `translateY(${((1 - inT) * 50 - outT * 30).toFixed(2)}px) rotateX(${((1 - inT) * 18).toFixed(2)}deg) scale(${(1.2 - outT * 0.04).toFixed(4)})`,
+                    filter: (1 - inT) * 12 + outT * 10 > 0.1 ? `blur(${((1 - inT) * 12 + outT * 10).toFixed(2)}px)` : undefined,
+                  }}
+                >
+                  <Stage f={f - from} />
+                </div>
+              )
+            })}
+          </World>
+          <AbsoluteFill style={{ opacity: 1 - fake }}>
+            <Captions f={f} items={CAPS} top={92} size={66} />
+          </AbsoluteFill>
+        </AbsoluteFill>
+      )}
+      {fake > 0.01 && <AbsoluteFill style={{ background: `rgba(11,11,12,${(0.55 * fake).toFixed(3)})` }} />}
+      <Beat f={f} text={'Stops the moment\nthey {book.}'} start={STOP[0]} end={STOP[1]} size={140} />
+      {f >= END && <EndCard f={f - END} />}
+      <Tag />
+    </Ground>
   )
 }
 
-function Paper({ f }) {
-  const nodes = NODES.map((n, i) => ({
-    ...n,
-    x: X[i],
-    y: 752,
-    w: 236,
-    h: 152,
-    layout: 'stack',
-    labelSize: 30,
-    appear: 16 + i * 5,
-    lit: S[i] + 8,
-  }))
-  const edges = NODES.slice(1).map((n, i) => ({ from: NODES[i].id, to: n.id, fp: 'r', tp: 'l', show: 34 + i * 4, run: S[i + 1] - 14, dur: 22 }))
+/* Stakes: the hour, and nobody there. */
+function Hook({ f }) {
+  const out = move(f, HOOK_END - 6, 10)
+  const c = arrive(f, 4, 120)
   return (
-    <AbsoluteFill>
-      <StepHeadline f={f} items={LINES} size={76} />
-      <FlowGraph nodes={nodes} edges={edges} frame={f} width={1920} height={1080} uid="ops" />
-      <Timeline f={f} />
-      {STAGES.map((Stage, k) => {
-        const inT = rise(f, S[k] + 4, { stiffness: 80 })
-        const outT = k < STAGES.length - 1 ? rise(f, S[k + 1] - 6, { stiffness: 110 }) : 0
-        if (inT < 0.001 || outT > 0.999) return null
-        return (
-          <div
-            key={k}
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              top: 200,
-              height: 474,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              opacity: Math.min(1, inT * 1.5) * (1 - outT),
-              transform: `translateY(${((1 - inT) * 40 - outT * 30).toFixed(2)}px) scale(1.1)`,
-              filter: inT < 0.98 || outT > 0.01 ? `blur(${((1 - inT) * 12 + outT * 10).toFixed(2)}px)` : undefined,
-            }}
-          >
-            <Stage f={f - S[k]} />
-          </div>
-        )
-      })}
+    <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center', opacity: 1 - out, filter: out > 0.01 ? `blur(${(out * 10).toFixed(2)}px)` : undefined }}>
+      <div style={{ width: 84, height: 84, borderRadius: 22, display: 'grid', placeItems: 'center', background: 'rgba(245,135,30,0.12)', border: '1px solid rgba(245,135,30,0.3)', color: S.peach, opacity: cl(c * 1.5), transform: `translateY(${((1 - c) * 20).toFixed(2)}px)`, marginBottom: 34 }}>
+        <Icon name="moon" size={42} stroke={2} />
+      </div>
+      <Line text="11:04 pm." f={f} start={8} size={190} />
+      <div style={{ marginTop: 26 }}>
+        <Line text={'A new enquiry. Your team is {asleep.}'} f={f} start={28} size={64} color={S.inkSoft} weight={500} stagger={2} />
+      </div>
     </AbsoluteFill>
   )
 }
 
 function Timeline({ f }) {
-  const y = 872
-  const a = rise(f, 30)
-  const reached = S.reduce((acc, s, i) => (f >= s + 8 ? i : acc), -1)
-  const next = reached + 1 < S.length ? tween(f, S[reached + 1] - 14, S[reached + 1] + 8, easeInOut) : 0
-  const fillTo = reached < 0 ? X[0] : X[reached] + (reached + 1 < X.length ? (X[reached + 1] - X[reached]) * next : 0)
+  const W = 236
+  const H = 112
+  const reached = STEP.reduce((acc, s, i) => (f >= s + 6 ? i : acc), -1)
   return (
-    <div style={{ position: 'absolute', inset: 0, opacity: a }}>
-      <div style={{ position: 'absolute', left: X[0], width: X[5] - X[0], top: y, height: 3, borderRadius: 3, background: '#e1d9ce' }} />
-      <div style={{ position: 'absolute', left: X[0], width: Math.max(0, fillTo - X[0]), top: y, height: 3, borderRadius: 3, background: C.accent }} />
-      {X.map((x, i) => {
+    <>
+      {X.slice(1).map((x, i) => (
+        <Wire key={i} uid={`ops${i}`} d={wirePath({ x: X[i] + W / 2, y: NODE_Y }, { x: x - W / 2, y: NODE_Y })} draw={move(f, HOOK_END + 20 + i * 4, 14)} pulse={(f - STEP[i + 1] + 14) / 16} />
+      ))}
+      {NODES.map((n, i) => {
+        const a = arrive(f, HOOK_END + 12 + i * 4, 140)
+        const lit = fadeIn(f, STEP[i] + 6, 8)
         const on = i <= reached
         return (
           <div key={i}>
-            <div style={{ position: 'absolute', left: x - 8, top: y - 6.5, width: 16, height: 16, borderRadius: '50%', background: on ? C.accent : C.paper, border: `3px solid ${on ? C.accent : '#cfc5b8'}`, boxSizing: 'border-box' }} />
-            <div style={{ position: 'absolute', left: x - 150, width: 300, top: y + 24, textAlign: 'center', fontFamily: SANS, fontSize: 28, fontWeight: 500, letterSpacing: '-0.02em', color: on ? C.accentDeep : C.mutedDark }}>{NODES[i].time}</div>
+            <Glass
+              rim={null}
+              lit={lit}
+              style={{ left: X[i] - W / 2, top: NODE_Y - H / 2, width: W, height: H, display: 'flex', alignItems: 'center', gap: 14, padding: '0 18px', opacity: cl(a * 1.5), transform: `translateY(${((1 - a) * 30).toFixed(2)}px)` }}
+            >
+              <div style={{ width: 54, height: 54, borderRadius: 14, flex: 'none', display: 'grid', placeItems: 'center', background: on ? S.saffron : 'rgba(245,135,30,0.12)', color: on ? S.onSaffron : S.peach, boxShadow: on ? '0 0 26px rgba(245,135,30,0.45)' : 'none' }}>
+                <Icon name={n.icon} size={28} stroke={2} />
+              </div>
+              <span style={{ fontSize: 26, letterSpacing: '-0.02em', whiteSpace: 'nowrap', color: on ? S.ink : S.inkSoft }}>{n.label}</span>
+            </Glass>
+            <div style={{ position: 'absolute', left: X[i] - 150, width: 300, top: NODE_Y + H / 2 + 22, textAlign: 'center', opacity: cl(a * 1.5) }}>
+              <Mono size={21} color={on ? S.peach : S.muted}>{n.time}</Mono>
+            </div>
           </div>
         )
       })}
-    </div>
+    </>
   )
 }
 
-/* ---------- the six stage cards; f is local to the step ---------- */
+/* ---------- the six panels; f is local to the step ---------- */
 
-const card = { background: C.card, border: `1.5px solid ${C.cardLine}`, borderRadius: 24, boxShadow: cardShadow, fontFamily: SANS, color: C.inkDark, boxSizing: 'border-box' }
-
-function Field({ label, children, h = 60 }) {
+function Field({ label, children }) {
   return (
     <div style={{ marginTop: 18 }}>
-      <div style={{ fontSize: 26, color: C.mutedDark, marginBottom: 8 }}>{label}</div>
-      <div style={{ height: h, borderRadius: 14, border: `1.5px solid ${C.cardLine}`, background: '#fbfaf8', display: 'flex', alignItems: 'center', padding: '0 18px', fontSize: 28, letterSpacing: '-0.015em' }}>{children}</div>
+      <Mono size={19}>{label}</Mono>
+      <div style={{ marginTop: 8, height: 58, borderRadius: 12, border: `1px solid ${S.line}`, background: 'rgba(255,255,255,0.03)', display: 'flex', alignItems: 'center', padding: '0 18px', fontSize: 27, letterSpacing: '-0.015em' }}>{children}</div>
     </div>
   )
 }
 
 function typed(text, f, a, b) {
-  const n = Math.round(tween(f, a, b, (t) => t) * text.length)
-  return text.slice(0, n)
+  return text.slice(0, Math.round(cl((f - a) / (b - a)) * text.length))
 }
 
 function StageForm({ f }) {
-  const pressed = f > 58
-  const p = pop(f, 58)
+  const g = f
+  const sent = g > 62
+  const press = cl(1 - Math.abs(g - 60) / 4)
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 40 }}>
-      <div style={{ ...card, width: 640, padding: '30px 34px' }}>
-        <div style={{ fontSize: 34, letterSpacing: '-0.03em' }}>Book a consultation</div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 44 }}>
+      <Glass rim="left" style={{ position: 'relative', width: 640, padding: '28px 34px 32px' }}>
+        <div style={{ fontSize: 32, fontWeight: 600, letterSpacing: '-0.03em' }}>Book a consultation</div>
         <Field label="Name">
-          <div style={{ width: `${tween(f, 8, 22) * 46}%`, height: 14, borderRadius: 14, background: '#d9d2c8' }} />
+          <div style={{ width: `${cl((g - 6) / 14) * 46}%`, height: 12, borderRadius: 12, background: 'rgba(255,255,255,0.16)' }} />
         </Field>
         <Field label="What do you need?">
-          {typed('An evening slot, first visit', f, 20, 50)}
-          <span style={{ width: 2, height: 30, background: C.accent, marginLeft: 3, opacity: f < 52 && Math.floor(f / 8) % 2 === 0 ? 1 : 0 }} />
+          {typed('An evening slot, first visit', g, 18, 48)}
+          <span style={{ width: 2.5, height: 28, background: S.saffron, marginLeft: 3, opacity: g < 52 && Math.floor(g / 8) % 2 === 0 ? 1 : 0 }} />
         </Field>
-        <div style={{ marginTop: 26, display: 'inline-flex', alignItems: 'center', gap: 10, padding: '16px 30px', borderRadius: 999, background: pressed ? C.tint : C.accent, color: pressed ? C.accentDeep : C.onAccent, fontSize: 28, transform: `scale(${1 - (f > 54 && f < 62 ? 0.05 : 0)})` }}>
-          {pressed ? <Icon name="check" size={26} stroke={2.6} /> : null}
-          {pressed ? 'Sent' : 'Send enquiry'}
+        <div style={{ marginTop: 24, display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 28px', borderRadius: 999, fontSize: 26, fontWeight: 600, background: sent ? 'rgba(245,135,30,0.16)' : S.saffron, color: sent ? S.peach : S.onSaffron, border: `1px solid ${sent ? 'rgba(245,135,30,0.5)' : S.saffron}`, transform: `scale(${(1 - press * 0.05).toFixed(4)})` }}>
+          {sent && <Icon name="check" size={24} stroke={2.6} />}
+          {sent ? 'Sent' : 'Send enquiry'}
         </div>
-      </div>
-      <div style={{ opacity: rise(f, 10), transform: `translateY(${(1 - rise(f, 10)) * 20}px)` }}>
-        <Chip icon="moon" dark size={32}>11:04 pm</Chip>
-        <div style={{ marginTop: 18, fontSize: 28, color: C.mutedDark, maxWidth: 300, lineHeight: 1.3, opacity: p }}>Nobody is at the desk.</div>
+      </Glass>
+      <div style={{ width: 330 }}>
+        <Chip icon="moon" label="11:04 pm" lit={1} size={30} style={{ position: 'relative', opacity: fadeIn(g, 10, 10) }} />
+        <div style={{ marginTop: 20, fontSize: 28, color: S.muted, lineHeight: 1.3, opacity: fadeIn(g, 64, 10) }}>Nobody is at the desk.</div>
       </div>
     </div>
   )
 }
 
 function StageReply({ f }) {
+  const a = arrive(f, 12)
   return (
-    <div style={{ ...card, width: 700, padding: '26px 30px 30px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14, paddingBottom: 18, borderBottom: `1.5px solid ${C.cardLine}` }}>
-        <div style={{ width: 52, height: 52, borderRadius: '50%', background: C.paper2, display: 'grid', placeItems: 'center', color: C.mutedDark }}>
-          <Icon name="user" size={28} />
-        </div>
-        <div style={{ fontSize: 30, letterSpacing: '-0.02em' }}>New enquiry</div>
-        <div style={{ marginLeft: 'auto', fontSize: 26, color: C.mutedDark }}>WhatsApp</div>
+    <Glass rim="right" style={{ position: 'relative', width: 720, overflow: 'hidden' }}>
+      <Bar title="New enquiry" label="WhatsApp" icon="user" />
+      <div style={{ padding: '26px 30px 30px', display: 'flex', justifyContent: 'flex-end', opacity: cl(a * 1.5), transform: `translateY(${((1 - a) * 26).toFixed(2)}px)` }}>
+        <Bubble side="out" width={580} text="Hi! Thanks for getting in touch. Here’s a link to pick a time that suits you." time="11:04 pm" tag="Sent instantly" />
       </div>
-      <div style={{ marginTop: 26, display: 'flex', justifyContent: 'flex-end', opacity: rise(f, 10), transform: `translateY(${(1 - pop(f, 10)) * 24}px)` }}>
-        <ChatBubble side="out" width={560} text="Hi! Thanks for getting in touch. Here’s a link to pick a time that suits you." time="11:04 pm" tag="Sent instantly" />
-      </div>
-    </div>
+    </Glass>
   )
 }
 
-function StageCrm({ f }) {
-  const row = pop(f, 12)
-  const cols = ['Source', 'Received', 'Stage']
-  const bar = (w) => <div style={{ width: w, height: 14, borderRadius: 14, background: '#e4ddd3' }} />
+function StageList({ f }) {
+  const row = arrive(f, 12, 120)
+  const cols = '1.2fr 1fr 1fr'
+  const bar = (w) => <div style={{ width: w, height: 12, borderRadius: 12, background: 'rgba(255,255,255,0.08)' }} />
   return (
-    <div style={{ ...card, width: 980, overflow: 'hidden' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '22px 30px', borderBottom: `1.5px solid ${C.cardLine}` }}>
-        <Icon name="database" size={30} color={C.accentDeep} />
-        <span style={{ fontSize: 32, letterSpacing: '-0.025em' }}>Leads</span>
-        <span style={{ marginLeft: 'auto', fontSize: 26, color: C.mutedDark }}>Every enquiry, one record</span>
+    <Glass rim="top" style={{ position: 'relative', width: 1000, overflow: 'hidden' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '20px 30px', borderBottom: `1px solid ${S.hair}` }}>
+        <Icon name="database" size={28} color={S.peach} />
+        <span style={{ fontSize: 30, letterSpacing: '-0.025em' }}>Leads</span>
+        <span style={{ marginLeft: 'auto' }}>
+          <Mono size={20}>Every enquiry, one record</Mono>
+        </span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr', padding: '14px 30px', fontSize: 26, color: C.mutedDark, borderBottom: `1.5px solid ${C.cardLine}` }}>
-        {cols.map((c) => (
-          <div key={c}>{c}</div>
+      <div style={{ display: 'grid', gridTemplateColumns: cols, padding: '14px 30px', borderBottom: `1px solid ${S.hair}` }}>
+        {['Source', 'Received', 'Stage'].map((c) => (
+          <Mono key={c} size={20}>{c}</Mono>
         ))}
       </div>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1.2fr 1fr 1fr',
-          alignItems: 'center',
-          padding: '0 30px',
-          height: row * 76,
-          overflow: 'hidden',
-          background: C.tint,
-          fontSize: 28,
-          borderBottom: `1.5px solid ${C.cardLine}`,
-          opacity: Math.min(1, row * 1.4),
-        }}
-      >
+      <div style={{ display: 'grid', gridTemplateColumns: cols, alignItems: 'center', padding: '0 30px', height: row * 74, overflow: 'hidden', background: 'rgba(245,135,30,0.1)', borderLeft: `3px solid ${S.saffron}`, fontSize: 27, borderBottom: `1px solid ${S.hair}`, opacity: cl(row * 1.4) }}>
         <div>Web form</div>
         <div>11:04 pm</div>
         <div>
-          <span style={{ padding: '6px 16px', borderRadius: 999, background: C.accent, color: C.onAccent, fontSize: 26 }}>New</span>
+          <span style={{ padding: '6px 16px', borderRadius: 999, background: S.saffron, color: S.onSaffron, fontSize: 23, fontWeight: 600 }}>New</span>
         </div>
       </div>
       {[0, 1].map((r) => (
-        <div key={r} style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr', alignItems: 'center', padding: '0 30px', height: 72, borderBottom: r === 0 ? `1.5px solid ${C.cardLine}` : 'none' }}>
+        <div key={r} style={{ display: 'grid', gridTemplateColumns: cols, alignItems: 'center', padding: '0 30px', height: 70, borderBottom: r === 0 ? `1px solid ${S.hair}` : 'none' }}>
           {bar('60%')}
           {bar('50%')}
           {bar('40%')}
         </div>
       ))}
-    </div>
+    </Glass>
   )
 }
 
 function StageTeam({ f }) {
-  const a = pop(f, 8)
-  const b = rise(f, 26)
+  const a = arrive(f, 6, 140)
+  const b = arrive(f, 24)
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22 }}>
-      <div style={{ opacity: Math.min(1, a * 1.4), transform: `translateY(${(1 - a) * -30}px)` }}>
-        <Toast icon="bell" tone="accent" title="New lead from the web form" sub="Assigned to the front desk" width={640} />
-      </div>
-      <div style={{ ...card, width: 640, padding: '22px 28px', display: 'flex', alignItems: 'center', gap: 18, opacity: b, transform: `translateY(${(1 - b) * 20}px)` }}>
-        <div style={{ width: 30, height: 30, borderRadius: 8, border: `2.5px solid ${C.accent}`, flex: 'none' }} />
-        <div style={{ fontSize: 30, letterSpacing: '-0.02em' }}>Call back before 10 am</div>
-        <div style={{ marginLeft: 'auto', fontSize: 26, color: C.accentDeep }}>Task</div>
-      </div>
+      <Glass rim="left" lit={0.5} style={{ position: 'relative', width: 660, padding: '22px 26px', display: 'flex', alignItems: 'center', gap: 20, opacity: cl(a * 1.5), transform: `translateY(${((1 - a) * -30).toFixed(2)}px)` }}>
+        <div style={{ width: 58, height: 58, borderRadius: 16, display: 'grid', placeItems: 'center', background: S.saffron, color: S.onSaffron, flex: 'none' }}>
+          <Icon name="bell" size={30} stroke={2.1} />
+        </div>
+        <div>
+          <div style={{ fontSize: 30, letterSpacing: '-0.02em' }}>New lead from the web form</div>
+          <div style={{ marginTop: 6, fontSize: 24, color: S.muted }}>Assigned to the front desk</div>
+        </div>
+      </Glass>
+      <Glass rim={null} style={{ position: 'relative', width: 660, padding: '22px 26px', display: 'flex', alignItems: 'center', gap: 18, opacity: cl(b * 1.5), transform: `translateY(${((1 - b) * 20).toFixed(2)}px)` }}>
+        <div style={{ width: 28, height: 28, borderRadius: 8, border: `2px solid ${S.saffron}`, flex: 'none' }} />
+        <div style={{ fontSize: 29, letterSpacing: '-0.02em' }}>Call back before 10 am</div>
+        <span style={{ marginLeft: 'auto' }}>
+          <Mono size={20} color={S.peach}>Task</Mono>
+        </span>
+      </Glass>
     </div>
   )
 }
 
 function StageRemind({ f }) {
+  const a = arrive(f, 14)
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 40 }}>
-      <div style={{ opacity: rise(f, 4), transform: `translateY(${(1 - rise(f, 4)) * 20}px)` }}>
-        <Chip icon="sun" dark size={32}>9:00 am</Chip>
-        <div style={{ marginTop: 18, fontSize: 28, color: C.mutedDark }}>Next morning</div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 44 }}>
+      <div style={{ opacity: fadeIn(f, 4, 10) }}>
+        <Chip icon="sun" label="9:00 am" lit={1} size={30} style={{ position: 'relative' }} />
+        <div style={{ marginTop: 18, fontSize: 28, color: S.muted }}>Next morning</div>
       </div>
-      <div style={{ opacity: rise(f, 14), transform: `translateY(${(1 - pop(f, 14)) * 24}px)` }}>
-        <ChatBubble side="out" width={620} text="Good morning! A quick reminder: your booking link is here whenever you’re ready." time="9:00 am" />
+      <div style={{ opacity: cl(a * 1.5), transform: `translateY(${((1 - a) * 24).toFixed(2)}px)` }}>
+        <Bubble side="out" width={640} text="Good morning! A quick reminder: your booking link is here whenever you’re ready." time="9:00 am" />
       </div>
     </div>
   )
@@ -259,23 +287,25 @@ function StageFollow({ f }) {
     { day: 'Day 7', text: 'Still keen? Here are this week’s open slots.', state: 'Scheduled', at: 22 },
   ]
   return (
-    <div style={{ ...card, width: 1000, padding: '12px 30px 24px' }}>
+    <Glass rim="left" style={{ position: 'relative', width: 1040, padding: '10px 32px 24px' }}>
       {rows.map((r, i) => {
-        const a = rise(f, r.at)
+        const a = arrive(f, r.at)
         return (
-          <div key={r.day} style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '20px 0', borderBottom: i === 0 ? `1.5px solid ${C.cardLine}` : 'none', opacity: a, transform: `translateX(${(1 - a) * 30}px)` }}>
-            <span style={{ flex: 'none', padding: '8px 18px', borderRadius: 999, background: C.tint, color: C.accentDeep, fontSize: 28 }}>{r.day}</span>
-            <span style={{ fontSize: 30, letterSpacing: '-0.02em' }}>{r.text}</span>
-            <span style={{ marginLeft: 'auto', fontSize: 26, color: i === 0 ? C.accentDeep : C.mutedDark, whiteSpace: 'nowrap' }}>{r.state}</span>
+          <div key={r.day} style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '20px 0', borderBottom: i === 0 ? `1px solid ${S.hair}` : 'none', opacity: cl(a * 1.5), transform: `translateX(${((1 - a) * 30).toFixed(2)}px)` }}>
+            <span style={{ flex: 'none', padding: '8px 18px', borderRadius: 999, background: 'rgba(245,135,30,0.14)', border: '1px solid rgba(245,135,30,0.35)', color: S.peach, fontSize: 25 }}>{r.day}</span>
+            <span style={{ fontSize: 29, letterSpacing: '-0.02em' }}>{r.text}</span>
+            <span style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+              <Mono size={20} color={i === 0 ? S.peach : S.muted}>{r.state}</Mono>
+            </span>
           </div>
         )
       })}
-      <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 12, fontSize: 28, color: C.mutedDark, opacity: rise(f, 40) }}>
-        <Icon name="check" size={28} color={C.accent} stroke={2.6} />
+      <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 12, fontSize: 27, color: S.muted, opacity: fadeIn(f, 40, 10) }}>
+        <Icon name="check" size={26} color={S.saffron} stroke={2.6} />
         Stops the moment they book.
       </div>
-    </div>
+    </Glass>
   )
 }
 
-const STAGES = [StageForm, StageReply, StageCrm, StageTeam, StageRemind, StageFollow]
+const STAGES = [StageForm, StageReply, StageList, StageTeam, StageRemind, StageFollow]

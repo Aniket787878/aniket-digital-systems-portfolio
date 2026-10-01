@@ -72,7 +72,7 @@ EXPLAINERS=(
   "Explainer-brand-vertical explainer-brand-vertical 842 27"
   "Explainer-ops-sprint explainer-ops-sprint 664 25"
   "Explainer-ai-assistant explainer-ai-assistant 574 25"
-  "Explainer-internal-tool explainer-internal-tool 584 25"
+  "Explainer-internal-tool explainer-internal-tool 500 25"
 )
 for row in "${EXPLAINERS[@]}"; do
   read -r comp name poster crf <<<"$row"

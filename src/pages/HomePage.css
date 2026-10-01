@@ -2026,3 +2026,9 @@
     animation: none;
   }
 }
+
+/* The saffron stream of light threads every Stage band of the home page
+   down one shared gutter; each band draws its own segment at this x. */
+.home-stage {
+  --stream-x: clamp(24px, 6vw, 96px);
+}

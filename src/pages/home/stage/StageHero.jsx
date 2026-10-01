@@ -84,7 +84,7 @@ export default function StageHero() {
           </h1>
 
           <m.p className="stage-lede sh-lede" {...(reduce ? {} : settle(0.4))}>
-            {site.tagline}
+            {site.heroLede}
           </m.p>
 
           <m.div className="sh-actions" {...(reduce ? {} : settle(0.5))}>

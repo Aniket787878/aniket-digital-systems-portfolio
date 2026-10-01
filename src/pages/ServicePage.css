@@ -135,10 +135,34 @@
   box-shadow: 0 34px 60px -30px rgba(245, 135, 30, 0.3);
 }
 
-.svc-cards[data-count='2'] {
+.svc-cards[data-count='2'],
+.svc-cards[data-count='4'] {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   max-width: 56rem;
   margin-inline: auto;
+}
+
+/* Five cards in three columns: centre the last two instead of leaving a
+   hole at the end of the row (6-track grid, each card spans 2). */
+@media (min-width: 1000.02px) {
+  .svc-cards[data-count='5'] {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .svc-cards[data-count='5'] > li {
+    grid-column: span 2;
+  }
+
+  .svc-cards[data-count='5'] > li:nth-child(4) {
+    grid-column: 2 / span 2;
+  }
+}
+
+/* Subtitle on its own line under the title, so a short title ("Clinic
+   Staff App") doesn't pull its subtitle up beside it while longer ones wrap. */
+.svc-cards .card-title {
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 /* ---------- 3. Offers (paper) ---------- */
@@ -183,8 +207,30 @@
 }
 
 @media (max-width: 640px) {
-  .svc-cards[data-count='2'] {
+  .svc-cards[data-count='2'],
+  .svc-cards[data-count='4'] {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Six proof cards (the websites area: this site plus five concept
+     sites) would stack into a long scroll at one column. "This website"
+     stays full width and first; the five concept cards pair up two per
+     row, so the section still reads in a glance. */
+  .svc-cards[data-count='6'] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .svc-cards[data-count='6'] > li:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .svc-cards[data-count='6'] .card-body {
+    padding: 0.85rem 0.75rem 0.65rem;
+  }
+
+  .svc-cards[data-count='6'] .card-title h3 {
+    font-size: 1.0625rem;
   }
 }
 

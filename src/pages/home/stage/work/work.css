@@ -507,3 +507,15 @@ a.sw-rehook-name:hover {
     width: 52%;
   }
 }
+
+/* Phones: lighter cards. Only the first `data-phone-bullets` outcome
+   lines show; the rest are display:none (not just visually hidden), so
+   a screen reader's reading order matches what's on screen. Desktop
+   (>=768px) is untouched, and the full list stays for every wider
+   layout. */
+@media (max-width: 767.98px) {
+  .sw-outcome[data-phone-bullets='2'] li:nth-child(n + 3),
+  .sw-outcome[data-phone-bullets='3'] li:nth-child(n + 4) {
+    display: none;
+  }
+}

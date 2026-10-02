@@ -62,6 +62,7 @@ export default function LoopVideo({ src, poster, mode = 'inview', className = ''
     const byHover = mode === 'hover' && canHover
     let visible = false
     let wanted = false
+    let rewind = false
     let spinnerTimer = 0
     let stallTimer = 0
 
@@ -104,6 +105,13 @@ export default function LoopVideo({ src, poster, mode = 'inview', className = ''
     }
     const play = () => {
       arm()
+      /* Back on screen after leaving it: start the film from its first
+         frame. The films open on their intro line, and resuming mid-story
+         drops the viewer into a random step. */
+      if (rewind) {
+        rewind = false
+        if (video.currentTime > 0) video.currentTime = 0
+      }
       wanted = true
       if (video.readyState < 3) buffering()
       const p = video.play()
@@ -126,8 +134,11 @@ export default function LoopVideo({ src, poster, mode = 'inview', className = ''
     video.addEventListener('error', fail)
 
     /* Two observers, two jobs. `near` arms the film (starts buffering) a
-       screen and a half before it arrives; `onScreen` plays it once 15% is
-       visible and pauses it when it leaves. */
+       screen and a half before it arrives; `onScreen` plays it once most
+       of it is in view (60%, or 60% of the screen for a film taller than
+       that), so the intro isn't spent while the card is still sliding in,
+       and pauses it once less than 15% is left. A film that left the
+       screen starts again from the top next time. */
     const near = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) arm()
@@ -136,14 +147,18 @@ export default function LoopVideo({ src, poster, mode = 'inview', className = ''
     )
     const onScreen = new IntersectionObserver(
       ([entry]) => {
-        visible = entry.isIntersecting
-        if (visible) {
+        const rootH = entry.rootBounds?.height || window.innerHeight
+        const mostly = entry.intersectionRatio >= 0.6 || entry.intersectionRect.height >= 0.6 * rootH
+        if (mostly && !visible) {
+          visible = true
           if (!byHover) play()
-        } else {
+        } else if (visible && entry.intersectionRatio < 0.15) {
+          visible = false
+          rewind = true
           pause()
         }
       },
-      { threshold: 0.15 }
+      { threshold: [0, 0.15, 0.3, 0.45, 0.6, 0.8, 1] }
     )
     near.observe(video)
     onScreen.observe(video)

@@ -48,6 +48,13 @@ export const images = {
   }
 }
 
+/* Appended to every film and poster URL. The files keep their names when
+   they are re-rendered, and browsers cache /videos/ for a day (then serve
+   the stale copy while revalidating), so a returning visitor would keep
+   seeing the old films. Change this whenever scripts/render-videos.sh
+   output is committed. */
+export const FILM_V = '?v=2026-10-02b'
+
 /* ------------------------------------------------------------------
    PRODUCT FILMS — rendered from remotion/ by scripts/render-videos.sh.
 
@@ -68,40 +75,40 @@ export const images = {
 export const films = {
   'therapist-pwa': {
     kind: 'schematic',
-    src: '/videos/therapist-pwa.mp4',
-    poster: '/videos/posters/therapist-pwa.jpg'
+    src: `/videos/therapist-pwa.mp4${FILM_V}`,
+    poster: `/videos/posters/therapist-pwa.jpg${FILM_V}`
   },
   'care-journey': {
     kind: 'schematic',
-    src: '/videos/care-journey.mp4',
-    poster: '/videos/posters/care-journey.jpg'
+    src: `/videos/care-journey.mp4${FILM_V}`,
+    poster: `/videos/posters/care-journey.jpg${FILM_V}`
   },
   'consent-signer': {
     kind: 'real',
-    src: '/videos/consent-signer.mp4',
-    poster: '/videos/posters/consent-signer.jpg',
-    clip: '/videos/clips/consent-signer.mp4',
-    clipPoster: '/videos/posters/consent-signer-clip.jpg',
-    framed: '/videos/clips/consent-signer-framed.mp4',
-    framedPoster: '/videos/posters/consent-signer-framed.jpg'
+    src: `/videos/consent-signer.mp4${FILM_V}`,
+    poster: `/videos/posters/consent-signer.jpg${FILM_V}`,
+    clip: `/videos/clips/consent-signer.mp4${FILM_V}`,
+    clipPoster: `/videos/posters/consent-signer-clip.jpg${FILM_V}`,
+    framed: `/videos/clips/consent-signer-framed.mp4${FILM_V}`,
+    framedPoster: `/videos/posters/consent-signer-framed.jpg${FILM_V}`
   },
   'shared-inbox': {
     kind: 'real',
-    src: '/videos/shared-inbox.mp4',
-    poster: '/videos/posters/shared-inbox.jpg',
-    clip: '/videos/clips/shared-inbox.mp4',
-    clipPoster: '/videos/posters/shared-inbox-clip.jpg',
-    framed: '/videos/clips/shared-inbox-framed.mp4',
-    framedPoster: '/videos/posters/shared-inbox-framed.jpg'
+    src: `/videos/shared-inbox.mp4${FILM_V}`,
+    poster: `/videos/posters/shared-inbox.jpg${FILM_V}`,
+    clip: `/videos/clips/shared-inbox.mp4${FILM_V}`,
+    clipPoster: `/videos/posters/shared-inbox-clip.jpg${FILM_V}`,
+    framed: `/videos/clips/shared-inbox-framed.mp4${FILM_V}`,
+    framedPoster: `/videos/posters/shared-inbox-framed.jpg${FILM_V}`
   },
   'lead-research': {
     kind: 'real',
-    src: '/videos/lead-research.mp4',
-    poster: '/videos/posters/lead-research.jpg',
-    clip: '/videos/clips/lead-research.mp4',
-    clipPoster: '/videos/posters/lead-research-clip.jpg',
-    framed: '/videos/clips/lead-research-framed.mp4',
-    framedPoster: '/videos/posters/lead-research-framed.jpg'
+    src: `/videos/lead-research.mp4${FILM_V}`,
+    poster: `/videos/posters/lead-research.jpg${FILM_V}`,
+    clip: `/videos/clips/lead-research.mp4${FILM_V}`,
+    clipPoster: `/videos/posters/lead-research-clip.jpg${FILM_V}`,
+    framed: `/videos/clips/lead-research-framed.mp4${FILM_V}`,
+    framedPoster: `/videos/posters/lead-research-framed.jpg${FILM_V}`
   }
 }
 
@@ -165,24 +172,24 @@ export const explainersReady = true
 export const explainers = {
   brand: {
     title: 'What I build, in one minute',
-    src: '/videos/explainers/explainer-brand.mp4',
-    vertical: '/videos/explainers/explainer-brand-vertical.mp4',
-    poster: '/videos/posters/explainer-brand.jpg'
+    src: `/videos/explainers/explainer-brand.mp4${FILM_V}`,
+    vertical: `/videos/explainers/explainer-brand-vertical.mp4${FILM_V}`,
+    poster: `/videos/posters/explainer-brand.jpg${FILM_V}`
   },
   'ops-sprint': {
     title: 'Ops Automation Sprint',
-    src: '/videos/explainers/explainer-ops-sprint.mp4',
-    poster: '/videos/posters/explainer-ops-sprint.jpg'
+    src: `/videos/explainers/explainer-ops-sprint.mp4${FILM_V}`,
+    poster: `/videos/posters/explainer-ops-sprint.jpg${FILM_V}`
   },
   'ai-assistant': {
     title: 'AI Assistant Build',
-    src: '/videos/explainers/explainer-ai-assistant.mp4',
-    poster: '/videos/posters/explainer-ai-assistant.jpg'
+    src: `/videos/explainers/explainer-ai-assistant.mp4${FILM_V}`,
+    poster: `/videos/posters/explainer-ai-assistant.jpg${FILM_V}`
   },
   'internal-tool': {
     title: 'Internal Tool / Dashboard',
-    src: '/videos/explainers/explainer-internal-tool.mp4',
-    poster: '/videos/posters/explainer-internal-tool.jpg'
+    src: `/videos/explainers/explainer-internal-tool.mp4${FILM_V}`,
+    poster: `/videos/posters/explainer-internal-tool.jpg${FILM_V}`
   }
 }
 
@@ -241,8 +248,8 @@ export const screenTour = [
 
 /* The hero showreel: the strongest beats of the three working demos. */
 export const heroReel = {
-  src: '/videos/hero-reel.mp4',
-  poster: '/videos/posters/hero-reel.jpg',
+  src: `/videos/hero-reel.mp4${FILM_V}`,
+  poster: `/videos/posters/hero-reel.jpg${FILM_V}`,
   caption: 'A shared inbox, a consent signer and a lead research tool, real screens from the running apps.'
 }
 
@@ -1496,7 +1503,7 @@ export const services = [
     ],
     from: { usd: '$1,200', inr: '₹35,000' },
     media: { kind: 'image', src: '/this-site.jpg', badge: 'This site · real screens', alt: 'The home page of this website: a dark page with the headline Websites that bring the work in, software and AI that run the rest, and a saffron Book a free call button' },
-    proofHead: ['The proof is the page you are on.', 'And five more, built for made-up businesses.'],
+    proofHead: ['The proof is the page you are on.', 'Built end to end, and live.'],
     proof: [
       {
         key: 'this-site',
@@ -1507,61 +1514,6 @@ export const services = [
         badge: 'Real screens',
         to: '/contact',
         cta: 'Try the form'
-      },
-      {
-        key: 'concept-aura',
-        title: 'Aura Skin Studio',
-        subtitle: 'Skin and aesthetics clinic',
-        note: 'A glass serum bottle turns in the light, so the product sells the clinic before a word is read.',
-        image: '/showcase/websites/aura-hero.webp',
-        imageAlt: 'The home screen of the Aura Skin Studio concept site: a glass serum bottle turning in the light',
-        badge: 'Concept site · made-up business',
-        to: '/concepts/aura',
-        cta: 'Open the site'
-      },
-      {
-        key: 'concept-kinetic',
-        title: 'Kinetic Physio',
-        subtitle: 'Sports and physio clinic',
-        note: 'A chrome spine that flexes as you scroll: movement is the whole promise, so the page moves.',
-        image: '/showcase/websites/kinetic-hero.webp',
-        imageAlt: 'The home screen of the Kinetic Physio concept site: a chrome spine model',
-        badge: 'Concept site · made-up business',
-        to: '/concepts/kinetic',
-        cta: 'Open the site'
-      },
-      {
-        key: 'concept-ekam',
-        title: 'Studio Ekam',
-        subtitle: 'Yoga and breathwork studio',
-        note: 'A living ink that breathes in and out with the words. Calm, shown rather than claimed.',
-        image: '/showcase/websites/ekam-hero.webp',
-        imageAlt: 'The home screen of the Studio Ekam concept site: ink breathing in and out with the words',
-        badge: 'Concept site · made-up business',
-        to: '/concepts/ekam',
-        cta: 'Open the site'
-      },
-      {
-        key: 'concept-noor',
-        title: 'Atelier Noor',
-        subtitle: 'Interior and architecture studio',
-        note: 'A marble and bronze sculpture in low gallery light, so the studio reads as craft from the first second.',
-        image: '/showcase/websites/noor-hero.webp',
-        imageAlt: 'The home screen of the Atelier Noor concept site: a marble and bronze sculpture in low gallery light',
-        badge: 'Concept site · made-up business',
-        to: '/concepts/noor',
-        cta: 'Open the site'
-      },
-      {
-        key: 'concept-meridian',
-        title: 'Meridian Advisory',
-        subtitle: 'Accounting and wealth advisory',
-        note: 'A field of points gathers from a scattered cloud into a clear chart: the job, in one move.',
-        image: '/showcase/websites/meridian-hero.webp',
-        imageAlt: 'The home screen of the Meridian Advisory concept site: scattered points gathering into a chart',
-        badge: 'Concept site · made-up business',
-        to: '/concepts/meridian',
-        cta: 'Open the site'
       }
     ],
     faq: [

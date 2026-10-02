@@ -46,7 +46,15 @@ export default function Portrait({ photo, name, role, basedIn }) {
       onPointerLeave={photo ? undefined : onLeave}
     >
       {photo ? (
-        <img className="about-portrait-img" src={photo} alt={`${name}, ${role.toLowerCase()}`} />
+        <img
+          className="about-portrait-img"
+          src={photo}
+          srcSet={`${photo.replace(/\.jpg$/, '-560.jpg')} 560w, ${photo} 1120w`}
+          sizes="(max-width: 760px) 92vw, 27rem"
+          width="1120"
+          height="1400"
+          alt={`${name}, ${role.toLowerCase()}`}
+        />
       ) : (
         <div className="about-portrait-art" role="img" aria-label={`${name}: monogram over a dusk ridge`}>
           <div className="about-portrait-sky" aria-hidden="true">

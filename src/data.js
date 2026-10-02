@@ -342,10 +342,13 @@ export const founder = {
           orientation, 4:5, at least 960x1200; it is cropped to 4:5 on wide
           screens and to 16:10 from the top on phones, so keep the face in
           the upper third);
-       2. set   photo: '/aniket.jpg',
+       2. set   photo: '/aniket.jpg', with a 560px-wide copy beside it as
+          aniket-560.jpg (Portrait.jsx serves it to phones via srcset).
      While this is '' the page shows a dusk monogram card (pages/about/
      Portrait.jsx) that is plainly not a photograph: never a stock face. */
-  photo: '',
+  /* Supplied 2026-10-02; t-shirt recoloured from periwinkle to charcoal at
+     his request, nothing else changed. */
+  photo: '/aniket.jpg',
 
   basedIn: 'Based in India · working remotely worldwide',
 

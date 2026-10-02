@@ -346,8 +346,9 @@ export const founder = {
           aniket-560.jpg (Portrait.jsx serves it to phones via srcset).
      While this is '' the page shows a dusk monogram card (pages/about/
      Portrait.jsx) that is plainly not a photograph: never a stock face. */
-  /* Supplied 2026-10-02; t-shirt recoloured from periwinkle to charcoal at
-     his request, nothing else changed. */
+  /* Supplied 2026-10-02. At his request the t-shirt is recoloured from
+     periwinkle to charcoal and the purple-and-white backdrop is replaced
+     with the site's night ground and a soft saffron glow; he is unchanged. */
   photo: '/aniket.jpg',
 
   basedIn: 'Based in India · working remotely worldwide',

@@ -86,9 +86,9 @@ an empty player. Remotion is a dev
 dependency only; nothing from it ships in the site bundle. Renders need a
 scale giving even pixel sizes (H.264), hence 0.8 for the card loops.
 
-**Film sound.** The films, the hero reel and the explainers carry sound
-effects (96 kb/s AAC); the card loops (`Clip-*`, `Framed-*`) render
-`--muted`, with no audio track. The effects are synthesised in code by
+**Film sound.** The films and the explainers carry sound effects
+(96 kb/s AAC); the card loops (`Clip-*`, `Framed-*`) and the hero reel
+(only ever a silent home loop) render `--muted`, with no audio track. The effects are synthesised in code by
 `python3 scripts/make-sfx.py` into `remotion/sfx/*.wav`, so there is no
 licence to track; never swap in downloaded audio. Cues are placed by
 `remotion/sound.jsx` (`cue()` and `<Soundtrack>`), driven by the same

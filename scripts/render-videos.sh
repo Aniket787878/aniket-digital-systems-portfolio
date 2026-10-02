@@ -22,9 +22,9 @@ BROWSER=()
 PAR=(--concurrency="${CONCURRENCY:-4}")
 ONLY="${1:-}"
 
-# Sound (remotion/sound.jsx). The films, the hero reel and the explainers
-# carry the synthesised effects as 96 kb/s AAC; the card loops are rendered
-# --muted, so they carry no audio track at all.
+# Sound (remotion/sound.jsx). The films and the explainers carry the
+# synthesised effects as 96 kb/s AAC; the card loops and the hero reel are
+# rendered --muted, so they carry no audio track at all.
 SOUND=(--audio-codec=aac --audio-bitrate=96k)
 
 # The optional music bed. Put the track at remotion/audio/music.mp3 (or .m4a
@@ -83,9 +83,11 @@ for slug in therapist-pwa care-journey; do
   film "Platform-$slug" "$slug" 234
 done
 if [ -z "$ONLY" ] || [ "$ONLY" = hero ]; then
-  # the reel carries sound (the site plays it muted, but the file stands alone)
+  # rendered --muted: the site only plays the reel as a silent home loop, so
+  # an audio track would be bytes nobody hears (its cues stay in HeroReel.jsx
+  # for the day it gets a full player)
   npx remotion render "$ENTRY" HeroReel "$OUT/hero-reel.mp4" --codec=h264 --crf=27 --x264-preset=slow \
-    --pixel-format=yuv420p "${SOUND[@]}" "${PAR[@]}" "${BROWSER[@]}" --log=error
+    --pixel-format=yuv420p --muted "${PAR[@]}" "${BROWSER[@]}" --log=error
   npx remotion still "$ENTRY" HeroReel "$OUT/posters/hero-reel.jpg" --frame=300 \
     --image-format=jpeg --jpeg-quality=80 "${BROWSER[@]}" --log=error
 fi

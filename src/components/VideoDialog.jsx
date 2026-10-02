@@ -74,7 +74,7 @@ export default function VideoDialog({ film, onClose }) {
                 onClick={toggleSound}
               >
                 <SoundIcon on={sound} />
-                {sound ? 'Sound on' : 'Sound off'}
+                {sound ? 'Sound off' : 'Sound on'}
               </button>
               <button type="button" className="video-dialog-close" onClick={close}>
                 Close

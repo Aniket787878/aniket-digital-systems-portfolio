@@ -1,6 +1,7 @@
 import { AbsoluteFill, useCurrentFrame } from 'remotion'
 import { Ground, Glow, Wordmark, MonoTag, KineticLine, CountUp, EndCard, useStageFonts, tween, settle, easeInOut } from './kit.jsx'
 import { Act } from './Act.jsx'
+import { CaptureAct } from './CaptureAct.jsx'
 import { DEMO_STORIES, TAG, demoSteps } from './stories.js'
 import { SCHEMATIC_STORIES } from './schematics.jsx'
 
@@ -24,11 +25,26 @@ export const FILM_LAYOUT = {
   W: 1920,
   H: 1080,
   win: { x: 150, y: 150, w: 1180 },
-  chips: { x: 1410, gap: 82, size: 25 },
+  chips: { top: 120, right: 60, size: 24 },
   caption: { y: 964, size: 34 },
   enterRy: -12,
   ghost: { dx: -96, dy: -64, scale: 0.92, ry: 6, opacity: 0.42, blur: 7 },
   glowSize: 1300,
+}
+
+/* The real-capture demos: the screen is the hero. The window is 88% of
+   the frame width, centred, and never moves once it has arrived; the
+   camera inside it does the work. */
+export const CAPTURE_LAYOUT = {
+  W: 1920,
+  H: 1080,
+  win: { x: 115, y: 112, w: 1690, h: 936 },
+  chrome: 40,
+  radius: 20,
+  caption: { size: 40, bottom: 52, scrim: 300 },
+  chips: { top: 108, right: 60, size: 20, max: 3 },
+  pointer: 36,
+  glowSize: 1700,
 }
 
 export function storyFor(slug) {
@@ -47,7 +63,6 @@ export function StageFilm({ slug }) {
   const k = story.headfakeAt // headfake plays before step index k
   const hfAt = A0 + k * STEP_LEN
   const actEnd = A0 + n * STEP_LEN + HF
-  const total = actEnd + TAIL
 
   /* the act's own clock pauses through the headfake */
   const actF = frame < hfAt ? frame - A0 : frame < hfAt + HF ? k * STEP_LEN - 1 : frame - A0 - HF
@@ -68,7 +83,10 @@ export function StageFilm({ slug }) {
       <Ground drift={frame * 0.15} />
       <Glow x={960 + drift} y={560} size={1300} opacity={Math.max(titleGlow, tween(tailF, 0, 20))} />
 
-      {frame >= A0 - 20 && frame < actEnd + 24 && (
+      {frame >= A0 - 20 && frame < actEnd + 24 && story.kind === 'real' && (
+        <CaptureAct steps={story.steps} f={actF} stepLen={STEP_LEN} L={CAPTURE_LAYOUT} enter={enter} recede={recede} leave={leave} />
+      )}
+      {frame >= A0 - 20 && frame < actEnd + 24 && story.kind !== 'real' && (
         <Act steps={story.steps} f={actF} stepLen={STEP_LEN} L={L} enter={enter} recede={recede} leave={leave} push={push} tilt={{ rx: 2.5 * (1 - push), ry: 5 - 8 * push }} />
       )}
 
@@ -113,7 +131,6 @@ export function StageFilm({ slug }) {
         <Wordmark size={34} />
       </div>
       <MonoTag text={TAG[story.kind]} />
-      <div style={{ position: 'absolute', left: 0, bottom: 0, height: 3, width: `${((frame / (total - 1)) * 100).toFixed(3)}%`, background: 'rgba(245,135,30,0.7)' }} />
     </AbsoluteFill>
   )
 }

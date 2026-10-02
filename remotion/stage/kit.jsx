@@ -509,3 +509,144 @@ export function EndCard({ f, heading = 'Let’s find your first *leak.*', pill =
     </AbsoluteFill>
   )
 }
+
+/*
+  The "what it did" chips as a tidy stack in one fixed spot (top right,
+  under the honesty tag). No wires: each step's chip fades and slides in
+  over 0.4 s under the ones before it. `items` is [{ label, state, t }] in
+  order, t 0..1 being that chip's arrival. Only the newest `max` stay; when
+  one more arrives the oldest fades up and out as the stack shifts.
+*/
+export function ChipStack({ items, top, right, size = 22, gap, max = 6, opacity = 1 }) {
+  const g = gap ?? size * 2.3
+  const on = items.filter((it) => it.t > 0.001)
+  if (!on.length || opacity <= 0.001) return null
+  const newest = on[on.length - 1]
+  const over = on.length > max
+  const shift = over ? newest.t : 0
+  const list = on.slice(-(max + 1))
+  return (
+    <div style={{ position: 'absolute', top, right, opacity, zIndex: 40 }}>
+      {list.map((it, k) => {
+        const leaving = over && k === 0
+        const slot = (over ? k - shift : k) * g
+        const t = leaving ? 1 - shift : it.t
+        return (
+          <div
+            key={it.key}
+            style={{
+              position: 'absolute',
+              right: 0,
+              top: slot.toFixed(2) + 'px',
+              opacity: Math.min(1, t * 1.25),
+              transform: leaving ? `translateY(${(-shift * 10).toFixed(2)}px)` : `translateX(${((1 - it.t) * 26).toFixed(2)}px)`,
+            }}
+          >
+            <Chip label={it.label} state={it.state} t={1} active={it === newest} size={size} />
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+/* Chip arrival: a plain 0.4 s ease, so the stack moves as one calm beat. */
+export const chipIn = (f, at) => tween(f, at, at + 12, easeOut)
+
+/*
+  The pointer for the real captures: a saffron ring (no arrow) that glides
+  to the clicked element and gives one soft pulse. Drawn in frame pixels at
+  a fixed size, so it never balloons with the camera. `click` runs 0..1.
+*/
+export function PointerRing({ x, y, click = -1, opacity = 1, size = 34 }) {
+  if (opacity <= 0.001) return null
+  const r = size / 2
+  const press = click > 0 && click < 0.3 ? Math.sin((click / 0.3) * Math.PI) : 0
+  const ring = click > 0 && click < 1 ? click : -1
+  const rr = r * (1 + 1.7 * Math.max(0, easeOut(Math.max(0, ring))))
+  return (
+    <div style={{ position: 'absolute', left: x, top: y, width: 0, height: 0, opacity, zIndex: 30, pointerEvents: 'none' }}>
+      {ring > 0 && (
+        <div
+          style={{
+            position: 'absolute',
+            left: -rr,
+            top: -rr,
+            width: rr * 2,
+            height: rr * 2,
+            borderRadius: '50%',
+            boxSizing: 'border-box',
+            border: `2px solid rgba(245,135,30,${(0.85 * (1 - ring)).toFixed(3)})`,
+          }}
+        />
+      )}
+      <div
+        style={{
+          position: 'absolute',
+          left: -r,
+          top: -r,
+          width: size,
+          height: size,
+          borderRadius: '50%',
+          boxSizing: 'border-box',
+          border: `${(size * 0.09).toFixed(2)}px solid ${S.accent}`,
+          background: `rgba(245,135,30,${(0.16 + press * 0.22).toFixed(3)})`,
+          boxShadow: '0 0 0 1px rgba(0,0,0,0.35), 0 4px 18px rgba(0,0,0,0.45), 0 0 22px rgba(245,135,30,0.45)',
+          transform: `scale(${(1 - press * 0.16).toFixed(4)})`,
+        }}
+      />
+    </div>
+  )
+}
+
+/*
+  The caption for the real-capture films: one line, bottom centre, with
+  the mono step counter "02 / 06" before it. `t` is the arrival (0..1),
+  `out` the exit.
+*/
+export function BottomCaption({ i, n, text, t = 1, out = 0, size = 40, bottom, opacity = 1 }) {
+  const o = Math.min(1, t * 1.4) * (1 - out) * opacity
+  if (o <= 0.001) return null
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'baseline',
+        gap: size * 0.55,
+        opacity: o,
+        transform: `translateY(${((1 - t) * size * 0.35 - out * size * 0.15).toFixed(2)}px)`,
+        zIndex: 35,
+      }}
+    >
+      <span style={{ fontFamily: MONO, fontSize: size * 0.5, letterSpacing: '0.08em', color: S.muted, whiteSpace: 'nowrap', position: 'relative', top: -size * 0.06 }}>
+        {String(i + 1).padStart(2, '0')} / {String(n).padStart(2, '0')}
+      </span>
+      <span style={{ fontFamily: SANS, fontWeight: 600, fontSize: size, letterSpacing: '-0.025em', color: S.ink, lineHeight: 1.15, whiteSpace: 'nowrap' }}>{text}</span>
+    </div>
+  )
+}
+
+/* The soft dark band the caption sits on, along the bottom of the frame. */
+export function CaptionScrim({ H, height, opacity = 1 }) {
+  if (opacity <= 0.001) return null
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: H - height,
+        height,
+        opacity,
+        zIndex: 34,
+        pointerEvents: 'none',
+        background: 'linear-gradient(180deg, rgba(11,11,12,0) 0%, rgba(11,11,12,0.62) 34%, rgba(11,11,12,0.9) 62%, rgba(11,11,12,0.94) 100%)',
+      }}
+    />
+  )
+}

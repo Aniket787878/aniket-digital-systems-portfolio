@@ -1,6 +1,7 @@
 import { AbsoluteFill, useCurrentFrame } from 'remotion'
 import { S, SANS, Ground, Glow, Wordmark, MonoTag, Mono, KineticLine, CountUp, EndCard, useStageFonts, tween, settle, easeInOut } from './kit.jsx'
 import { Act } from './Act.jsx'
+import { CaptureAct } from './CaptureAct.jsx'
 import { DEMO_STORIES, TAG, captureStep } from './stories.js'
 import { SCHEMATIC_STORIES } from './schematics.jsx'
 
@@ -46,11 +47,25 @@ const LAYOUT = {
   W: 1440,
   H: 900,
   win: { x: 100, y: 128, w: 940 },
-  chips: { x: 1100, gap: 66, size: 21 },
+  chips: { top: 86, right: 44, size: 19 },
   caption: { y: 788, size: 28 },
   enterRy: -14,
   glowSize: 1000,
   ghost: { dx: -70, dy: -50, scale: 0.92, ry: 6, opacity: 0.4, blur: 6 },
+}
+
+/* The three working demos: the same big centred window and camera as the
+   films, scaled to the reel. */
+const CAPTURE = {
+  W: 1440,
+  H: 900,
+  win: { x: 86, y: 92, w: 1268, h: 782 },
+  chrome: 32,
+  radius: 16,
+  caption: { size: 30, bottom: 38, scrim: 210 },
+  chips: { top: 84, right: 44, size: 16, max: 3 },
+  pointer: 30,
+  glowSize: 1300,
 }
 
 export function HeroReel() {
@@ -84,18 +99,28 @@ export function HeroReel() {
         const labelO = Math.min(1, enter * 1.4) * (1 - lv) * (1 - recede)
         return (
           <AbsoluteFill key={s.name}>
-            <Act
-              steps={s.steps}
-              f={Math.min(f, s.steps.length * STEP - 1)}
-              stepLen={STEP}
-              L={LAYOUT}
-              enter={enter}
-              leave={lv}
-              recede={recede}
-              push={push}
-              tilt={{ rx: 2 * (1 - push), ry: 4 - 7 * push }}
-            />
-            <div style={{ position: 'absolute', left: LAYOUT.win.x, top: LAYOUT.win.y - 56, display: 'flex', alignItems: 'baseline', gap: 14, opacity: labelO, transform: `translateY(${((1 - enter) * 20).toFixed(2)}px)` }}>
+            {s.kind === 'real' ? (
+              <CaptureAct steps={s.steps} f={Math.min(f, s.steps.length * STEP - 1)} stepLen={STEP} L={CAPTURE} enter={enter} leave={lv} recede={recede} />
+            ) : (
+              <Act
+                steps={s.steps}
+                f={Math.min(f, s.steps.length * STEP - 1)}
+                stepLen={STEP}
+                L={LAYOUT}
+                enter={enter}
+                leave={lv}
+                recede={recede}
+                push={push}
+                tilt={{ rx: 2 * (1 - push), ry: 4 - 7 * push }}
+              />
+            )}
+            <div
+              style={
+                s.kind === 'real'
+                  ? { position: 'absolute', left: 0, right: 0, top: 40, display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 14, opacity: labelO, transform: `translateY(${((1 - enter) * 12).toFixed(2)}px)` }
+                  : { position: 'absolute', left: LAYOUT.win.x, top: LAYOUT.win.y - 56, display: 'flex', alignItems: 'baseline', gap: 14, opacity: labelO, transform: `translateY(${((1 - enter) * 20).toFixed(2)}px)` }
+              }
+            >
               <Mono size={15} color={S.accent}>{String(si + 1).padStart(2, '0')}</Mono>
               <span style={{ fontFamily: SANS, fontWeight: 600, fontSize: 26, letterSpacing: '-0.03em', color: S.ink }}>{s.name}</span>
             </div>

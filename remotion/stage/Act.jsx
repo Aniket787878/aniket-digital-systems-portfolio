@@ -1,11 +1,12 @@
 import { AbsoluteFill, Img, staticFile } from 'remotion'
-import { S, SANS, GlassWindow, Chip, Pointer, Glow, Mono, tween, settle, lerp, easeInOut, clamp } from './kit.jsx'
+import { S, SANS, GlassWindow, ChipStack, chipIn, Pointer, Glow, Mono, tween, settle, lerp, easeInOut, clamp } from './kit.jsx'
 import { interpolate } from 'remotion'
 
 /*
-  The act: one glass window floating on the stage, the product's steps
-  cutting inside it, the "what it did" chips joined by a saffron wire on
-  the right and a caption with a mono step counter underneath. The film
+  The act for the schematic films: one glass window floating on the
+  stage, the product's steps cutting inside it, the "what it did" chips
+  stacked top right (no wires) and a caption with a mono step counter
+  underneath. The real-capture demos use CaptureAct instead. The film
   around it decides when the window enters (tilted and soft, settling flat)
   and leaves; the act does everything in between.
 
@@ -140,27 +141,14 @@ export function Act({ steps, f, stepLen, L, enter = 1, leave = 0, recede = 0, pu
     gp = { x: lerp(gp.x, home.x, backToStart), y: lerp(gp.y, home.y, backToStart) }
   }
 
-  /* chips */
-  const chipGap = L.chips?.gap ?? 80
-  const chipSize = L.chips?.size ?? 24
-  const colTop = L.win.y + winH / 2 - ((n - 1) * chipGap) / 2
-  const chipT = (i) => {
-    if (!steps[i].chip) return 0
-    if (i < idx) return 1
-    if (i > idx) return 0
-    return settle(sf, CHIP)
-  }
+  /* chips: a tidy stack top right, one per step, no wires */
   const chipsFade = loopOut ? 1 - tween(sf, stepLen - 16, stepLen - 4) : 1
-  const visible = steps.map((_, i) => chipT(i))
-  const lastOn = visible.reduce((a, t, i) => (t > 0.02 ? i : a), -1)
-  const firstOn = visible.findIndex((t) => t > 0.02)
-  const dotX = (L.chips?.x ?? 0) + chipSize * 0.7 + chipSize * 0.21
-
-  /* the wire from the window's edge to the newest chip */
-  const winRight = L.win.x + L.win.w * pose.sc
-  const wireT = step.chip ? tween(sf, CHIP - 4, CHIP + 10) * (1 - (loopOut ? tween(sf, stepLen - 18, stepLen - 8) : 0)) : 0
-  const chipY = colTop + idx * chipGap
-  const fromY = Math.max(L.win.y + 60, Math.min(L.win.y + winH - 60, here.y))
+  const chipItems = steps.map((st, i) => ({
+    key: i,
+    label: st.chip?.[0],
+    state: st.chip?.[1],
+    t: !st.chip ? 0 : i < idx ? 1 : i === idx && f >= 0 ? chipIn(sf, CHIP) : 0,
+  }))
 
   /* caption */
   const capIn = idx === 0 && f < stepLen && !loop ? settle(f, 6) : idx === 0 && loop ? 1 : settle(sf, 4)
@@ -218,38 +206,8 @@ export function Act({ steps, f, stepLen, L, enter = 1, leave = 0, recede = 0, pu
         </div>
       </AbsoluteFill>
 
-      {/* chips and their wire */}
       {chips && L.chips && (
-        <div style={{ position: 'absolute', inset: 0, opacity: pose.o * pose.ui * chipsFade }}>
-          <svg width={L.W} height={L.H} style={{ position: 'absolute', inset: 0, overflow: 'visible' }}>
-            <defs>
-              <filter id="wire-glow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="3" />
-              </filter>
-            </defs>
-            {firstOn >= 0 && lastOn > firstOn && (
-              <line
-                x1={dotX}
-                x2={dotX}
-                y1={colTop + firstOn * chipGap}
-                y2={colTop + firstOn * chipGap + (lastOn - firstOn) * chipGap * Math.min(1, visible[lastOn] * 1.2)}
-                stroke={S.accent}
-                strokeOpacity={0.55}
-                strokeWidth={1.5}
-              />
-            )}
-            {wireT > 0.001 && (
-              <WirePath x0={winRight + 6} y0={fromY} x1={dotX - chipSize * 0.9} y1={chipY} t={wireT} />
-            )}
-          </svg>
-          {steps.map((st, i) =>
-            st.chip && visible[i] > 0.001 ? (
-              <div key={i} style={{ position: 'absolute', left: L.chips.x, top: colTop + i * chipGap, transform: 'translateY(-50%)' }}>
-                <Chip label={st.chip[0]} state={st.chip[1]} t={visible[i]} active={i === idx} size={chipSize} />
-              </div>
-            ) : null
-          )}
-        </div>
+        <ChipStack items={chipItems} top={L.chips.top} right={L.chips.right} size={L.chips.size} max={L.chips.max ?? 6} opacity={pose.o * pose.ui * chipsFade} />
       )}
 
       {/* caption with its mono step counter */}
@@ -292,19 +250,6 @@ function Ghost({ L, s, winH, pose, step }) {
         </GlassWindow>
       </div>
     </div>
-  )
-}
-
-function WirePath({ x0, y0, x1, y1, t }) {
-  const mx = (x0 + x1) / 2
-  const d = `M ${x0} ${y0} C ${mx} ${y0}, ${mx} ${y1}, ${x1} ${y1}`
-  const len = Math.hypot(x1 - x0, y1 - y0) * 1.3 + 40
-  return (
-    <g>
-      <path d={d} stroke={S.accent} strokeWidth={5} fill="none" opacity={0.35 * t} filter="url(#wire-glow)" strokeDasharray={len} strokeDashoffset={len * (1 - t)} />
-      <path d={d} stroke={S.accent} strokeWidth={1.6} fill="none" strokeDasharray={len} strokeDashoffset={len * (1 - t)} />
-      <circle cx={x0} cy={y0} r={4} fill={S.accent} opacity={t} />
-    </g>
   )
 }
 

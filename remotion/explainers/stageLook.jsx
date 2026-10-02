@@ -491,19 +491,22 @@ export function Wordmark({ size = 40 }) {
   word), the saffron button, the contact line and the wordmark. f is local.
 */
 export const END_LINE = 'Enquiries answered.\nBookings confirmed.\nFollow-ups sent.\nWithout anyone {typing.}'
+/* the first line's first word and the button's arrival, for the sound */
+export const END_HEADING_AT = 4
+export const END_BUTTON_AT = 34
 
 export function EndCard({ f, line = END_LINE }) {
   const { width: W, height: H } = useVideoConfig()
   const tall = H > W
   const u = (k) => arrive(f, k, 120)
-  const b = u(34)
+  const b = u(END_BUTTON_AT)
   const c = u(42)
   const lines = line.split('\n')
   return (
     <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center', padding: tall ? '0 64px' : 0 }}>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
         {lines.map((l, i) => (
-          <Line key={i} text={l} f={f} start={4 + i * 6} size={tall ? 92 : 96} lineHeight={1.08} color={i < lines.length - 1 ? S.inkSoft : S.ink} stagger={2} />
+          <Line key={i} text={l} f={f} start={END_HEADING_AT + i * 6} size={tall ? 92 : 96} lineHeight={1.08} color={i < lines.length - 1 ? S.inkSoft : S.ink} stagger={2} />
         ))}
         <div style={{ marginTop: tall ? 80 : 60, display: 'flex', flexDirection: tall ? 'column' : 'row', alignItems: 'center', gap: tall ? 44 : 44 }}>
           <div

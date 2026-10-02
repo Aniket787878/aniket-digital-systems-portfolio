@@ -1,13 +1,14 @@
 import { AbsoluteFill, useCurrentFrame } from 'remotion'
-import { S, SANS, Ground, Glow, Wordmark, MonoTag, Mono, KineticLine, CountUp, EndCard, useStageFonts, tween, settle, easeInOut } from './kit.jsx'
-import { Act } from './Act.jsx'
-import { CaptureAct } from './CaptureAct.jsx'
+import { S, SANS, Ground, Glow, Wordmark, MonoTag, Mono, KineticLine, CountUp, EndCard, END_HEADING_AT, END_BUTTON_AT, useStageFonts, tween, settle, easeInOut } from './kit.jsx'
+import { Act, actEvents } from './Act.jsx'
+import { CaptureAct, captureEvents } from './CaptureAct.jsx'
+import { Soundtrack, cue } from '../sound.jsx'
 import { DEMO_STORIES, TAG, captureStep } from './stories.js'
 import { SCHEMATIC_STORIES } from './schematics.jsx'
 
 /*
-  The showreel (HeroReel, 1440x900, ~46 s, silent loop): one turn of the
-  site's story loop with the real work as the proof. Stakes in three quick
+  The showreel (HeroReel, 1440x900, ~46 s, with sound; the site plays it
+  as a muted loop): one turn of the site's story loop with the real work as the proof. Stakes in three quick
   lines, the big question, then the three working demos back to back
   (real screens), the headfake, the clinic platform as a labelled
   schematic with its two true numbers, the rehook and the end card. The
@@ -42,6 +43,32 @@ const COUNT_AT = segEnd(SEGMENTS[3]) - 6 // counts over the receded schematic
 const REHOOK_AT = COUNT_AT + 78
 const END_AT = REHOOK_AT + 50
 export const HERO_LEN = END_AT + 186
+
+/*
+  The reel's sound (remotion/sound.jsx), from the beats above: each kinetic
+  line, each window arriving (and leaving, where nothing arrives straight
+  after), the acts' own camera moves, clicks and chips, the schematic
+  receding under the counts, the rehook and the end card.
+*/
+const CUES = [
+  ...LINES.map((l, i) => cue('thump', l.at + 2, i > 0 && i < 3 ? 0.65 : 0.85)),
+  ...SEGMENTS.flatMap((s, si) => {
+    const start = s.at + ENTER
+    const events = s.kind === 'real' ? captureEvents(s.steps, STEP) : actEvents(s.steps, STEP)
+    const next = SEGMENTS[si + 1]
+    const leaves = si < SEGMENTS.length - 1 && next.at - segEnd(s) > 20
+    return [
+      cue('whoosh', s.at, 0.9),
+      ...events.map((e) => cue(e.kind, start + e.f, e.gain)),
+      ...(leaves ? [cue('whooshDown', segEnd(s), 0.7)] : []),
+    ]
+  }),
+  cue('whooshDown', COUNT_AT - 6, 0.8),
+  cue('thump', COUNT_AT, 0.85),
+  cue('thump', REHOOK_AT + 2, 0.85),
+  cue('thump', END_AT + END_HEADING_AT + 1, 0.7),
+  cue('end', END_AT + END_BUTTON_AT),
+]
 
 const LAYOUT = {
   W: 1440,
@@ -161,6 +188,7 @@ export function HeroReel() {
         <Wordmark size={28} />
       </div>
       <TagSwap frame={frame} tag={tag} />
+      <Soundtrack cues={CUES} />
     </AbsoluteFill>
   )
 }

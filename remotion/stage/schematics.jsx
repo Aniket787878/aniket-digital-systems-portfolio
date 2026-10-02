@@ -27,6 +27,9 @@ const Title = ({ children, size = 30, style }) => (
 )
 const Pad = ({ children, style }) => <div style={{ position: 'absolute', inset: 0, padding: 40, ...style }}>{children}</div>
 const press = (f, at) => interpolate(f, [at - 3, at, at + 6], [0, 1, 0], clamp)
+/* The frame (in a screen's 0..96 clock) each button press peaks, shared
+   with the step below (`tap`) so the film's click sound lands on it. */
+const TAP = { enquire: 52, book: 34, discover: 54, triage: 52, pay: 40 }
 
 function Field({ label, fill, lines = 1 }) {
   return (
@@ -129,7 +132,7 @@ function PwaEnquire({ f }) {
         <Field label="Name" fill={tween(f, 6, 18)} />
         <Field label="Phone" fill={tween(f, 16, 28)} />
         <Field label="What would you like help with?" fill={tween(f, 26, 44)} lines={2} />
-        <Btn p={press(f, 52)} done={f > 56}>{f > 56 ? 'Sent' : 'Send enquiry'}</Btn>
+        <Btn p={press(f, TAP.enquire)} done={f > 56}>{f > 56 ? 'Sent' : 'Send enquiry'}</Btn>
       </Panel>
       <div style={{ paddingTop: 80 }}>
         <Ticks f={f} at={58} items={['Lead saved', 'Front desk told', 'Screening form sent']} />
@@ -174,7 +177,7 @@ function PwaBook({ f }) {
                     fontWeight: 500,
                     color: on ? S.onAccent : b ? 'rgba(255,255,255,0.2)' : S.accent,
                     boxShadow: on ? '0 0 30px rgba(245,135,30,0.5)' : 'none',
-                    transform: on ? `scale(${1 + press(f, 34) * 0.06})` : 'none',
+                    transform: on ? `scale(${1 + press(f, TAP.book) * 0.06})` : 'none',
                   }}
                 >
                   {b ? 'Booked' : `${11 + r}:00`}
@@ -386,7 +389,7 @@ function UdDiscover({ f }) {
         <Bar w="94%" /> <Bar w="78%" />
       </div>
       <div style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
-        <Btn p={press(f, 54)}>Take the first step</Btn>
+        <Btn p={press(f, TAP.discover)}>Take the first step</Btn>
         <Label>course · live therapy · help at any hour</Label>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginTop: 46 }}>
@@ -413,7 +416,7 @@ function UdTriage({ f }) {
         <Field label="Name" fill={tween(f, 6, 18)} />
         <Field label="Best way to reach you" fill={tween(f, 16, 28)} />
         <Field label="What’s been happening" fill={tween(f, 26, 44)} lines={2} />
-        <Btn p={press(f, 52)} done={f > 56}>{f > 56 ? 'Received' : 'Submit'}</Btn>
+        <Btn p={press(f, TAP.triage)} done={f > 56}>{f > 56 ? 'Received' : 'Submit'}</Btn>
       </Panel>
       <div style={{ paddingTop: 80 }}>
         <Ticks f={f} at={58} title="creates" items={['A lead, not an account', 'Coordinator told']} />
@@ -511,7 +514,7 @@ function UdPay({ f }) {
               </div>
             ))}
           </div>
-          <Btn p={press(f, 40)} done={paid} style={{ width: '100%', justifyContent: 'center', boxSizing: 'border-box' }}>{paid ? 'Paid' : 'Pay securely'}</Btn>
+          <Btn p={press(f, TAP.pay)} done={paid} style={{ width: '100%', justifyContent: 'center', boxSizing: 'border-box' }}>{paid ? 'Paid' : 'Pay securely'}</Btn>
         </Panel>
         <div style={{ paddingTop: 30 }}>
           <Ticks f={f} at={52} title="checked on the server" items={['Payment confirmed', 'Enrolment recorded', 'Portal account made']} />
@@ -576,7 +579,7 @@ function UdEnrol({ f }) {
   )
 }
 
-const sch = (Screen, stage, caption, chip, url) => ({ kind: 'schematic', Screen, stage, caption, chip, url })
+const sch = (Screen, stage, caption, chip, url, tap) => ({ kind: 'schematic', Screen, stage, caption, chip, url, tap })
 
 export const SCHEMATIC_STORIES = {
   'therapist-pwa': {
@@ -590,8 +593,8 @@ export const SCHEMATIC_STORIES = {
       { n: '11', label: 'therapists on one system' },
     ],
     steps: [
-      sch(PwaEnquire, 'Enquire', 'A public form becomes a lead, and the front desk is told.', ['Lead', 'saved'], 'clinic staff app · enquiries'),
-      sch(PwaBook, 'Book', 'Booking checks real availability, then confirms on WhatsApp.', ['Booking', 'confirmed'], 'clinic staff app · booking desk'),
+      sch(PwaEnquire, 'Enquire', 'A public form becomes a lead, and the front desk is told.', ['Lead', 'saved'], 'clinic staff app · enquiries', TAP.enquire),
+      sch(PwaBook, 'Book', 'Booking checks real availability, then confirms on WhatsApp.', ['Booking', 'confirmed'], 'clinic staff app · booking desk', TAP.book),
       sch(PwaSee, 'See', 'The session records on the device, a minute at a time, even offline.', ['Recording', 'on device'], 'clinic staff app · session'),
       sch(PwaNote, 'Note', 'A session note is drafted in a minute, behind checks that fail loudly.', ['Note', 'drafted'], 'clinic staff app · notes'),
       sch(PwaConsent, 'Consent', 'Consent is signed, sealed, stored and sent for countersigning.', ['Consent', 'sealed'], 'client forms · consent'),
@@ -606,11 +609,11 @@ export const SCHEMATIC_STORIES = {
     headfakeAt: 4,
     rehook: 'Twelve weeks. One *portal.*',
     steps: [
-      sch(UdDiscover, 'Discover', 'A calm public site explains the three parts of the program.', null, 'care journey · home'),
-      sch(UdTriage, 'Triage', 'The first form creates a lead, not an account.', ['Lead', 'created'], 'care journey · first form'),
+      sch(UdDiscover, 'Discover', 'A calm public site explains the three parts of the program.', null, 'care journey · home', TAP.discover),
+      sch(UdTriage, 'Triage', 'The first form creates a lead, not an account.', ['Lead', 'created'], 'care journey · first form', TAP.triage),
       sch(UdScreen, 'Screen', 'A coordinator books the screening call from the pipeline.', ['Call', 'booked'], 'care journey · admin'),
       sch(UdAssess, 'Assess', 'A clinician checks the fit before anything can be paid for.', ['Fit', 'signed off'], 'care journey · assessment'),
-      sch(UdPay, 'Pay', 'Payment is checked on the server. Only then is a portal made.', ['Payment', 'verified'], 'care journey · checkout'),
+      sch(UdPay, 'Pay', 'Payment is checked on the server. Only then is a portal made.', ['Payment', 'verified'], 'care journey · checkout', TAP.pay),
       sch(UdEnrol, 'Enrol', 'The course unlocks as the work gets done, gated on real sessions.', ['Portal', 'unlocked'], 'care journey · portal'),
     ],
   },

@@ -1,6 +1,7 @@
 import { AbsoluteFill, Img, staticFile, useCurrentFrame, useVideoConfig } from 'remotion'
 import { Icon } from '../icons.jsx'
-import { S, SANS, SERIF, useStageFonts, Ground, Tag, Line, Beat, Captions, World, camAt, Glass, Bar, Chip, Wire, wirePath, Bubble, FlowNode, EndCard, Mono, arrive, move, fadeIn, lerp, cl } from './stageLook.jsx'
+import { S, SANS, SERIF, useStageFonts, Ground, Tag, Line, Beat, Captions, World, camAt, Glass, Bar, Chip, Wire, wirePath, Bubble, FlowNode, EndCard, END_HEADING_AT, END_BUTTON_AT, Mono, arrive, move, fadeIn, lerp, cl } from './stageLook.jsx'
+import { Soundtrack, cue } from '../sound.jsx'
 
 /*
   The brand explainer, 57.5 s, in the Stage look. One component, two
@@ -136,6 +137,7 @@ export function ExplainerBrand() {
       {f >= F.count - 2 && f < F.end + 12 && <Counters f={f - F.count} L={L} tall={tall} />}
       {f >= F.end && <EndCard f={f - F.end} />}
       <Tag text={inProof ? 'Working demo · real screens' : 'Illustration'} />
+      <Soundtrack cues={CUES} />
     </Ground>
   )
 }
@@ -591,3 +593,34 @@ function Counters({ f, L, tall }) {
     </AbsoluteFill>
   )
 }
+
+/*
+  The sound (remotion/sound.jsx), from the beats above. Defined last, since
+  it reads constants declared all through the file. The opening line and
+  each ticker word; the pile's fragments landing like notifications; the
+  question; the camera pulling the pile into the flow; each node lighting
+  as the run reaches it; the flow leaving; the real screens arriving, each
+  push in, its highlight and the pull back; the counts; the end card.
+*/
+const CUES = [
+  cue('thump', 14 + 1, 0.8),
+  ...TICK_AT.map((t) => cue('thump', t + 1, 0.55)),
+  cue('whoosh', F.chaos, 0.7),
+  ...ITEMS.map((it) => cue('tick', F.chaos + it.at + 6, 0.3)),
+  cue('thump', F.chaosLine + 1, 0.8),
+  cue('thump', F.fake + 1),
+  cue('whoosh', F.snap - 4),
+  ...[F.formLit, ...RUN.map((r, i) => r + RUN_DUR[i])].map((t) => cue('tick', t + 1, 0.7)),
+  cue('whooshDown', F.flowOut, 0.7),
+  cue('whoosh', F.proof, 0.8),
+  cue('thump', F.proof + 4 + 1, 0.7),
+  ...APPS.flatMap((_, i) => {
+    const at = F.proof + P.first + i * P.every
+    return [cue('whoosh', at, 0.65), cue('tick', at + P.push - 2 + 1, 0.6), cue('whooshDown', at + P.push + P.hold, 0.45)]
+  }),
+  cue('whooshDown', F.proofEnd, 0.6),
+  cue('thump', F.count + 8 + 1, 0.8),
+  ...COUNTS.slice(1).map((_, i) => cue('tick', F.count + 8 + (i + 1) * 8 + 1, 0.5)),
+  cue('thump', F.end + END_HEADING_AT + 1, 0.7),
+  cue('end', F.end + END_BUTTON_AT),
+]

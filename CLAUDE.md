@@ -86,6 +86,21 @@ an empty player. Remotion is a dev
 dependency only; nothing from it ships in the site bundle. Renders need a
 scale giving even pixel sizes (H.264), hence 0.8 for the card loops.
 
+**Film sound.** The films, the hero reel and the explainers carry sound
+effects (96 kb/s AAC); the card loops (`Clip-*`, `Framed-*`) render
+`--muted`, with no audio track. The effects are synthesised in code by
+`python3 scripts/make-sfx.py` into `remotion/sfx/*.wav`, so there is no
+licence to track; never swap in downloaded audio. Cues are placed by
+`remotion/sound.jsx` (`cue()` and `<Soundtrack>`), driven by the same
+timing constants as the visuals, so a retimed beat moves its sound with it.
+**Music slot:** put a track at `remotion/audio/music.mp3` (or `.m4a`/`.wav`)
+and re-run the render script. It is normalised to -20 LUFS into the
+gitignored `remotion/audio/music-bed.wav` and mixed in from frame 0 with fades
+and a duck under the end tone. With no track, the films are effects only.
+On the site the lightbox films start with sound on, the case-page film
+autoplays muted with a "Sound on" toggle, and every other player stays muted.
+After any re-render, bump `FILM_V` in `data.js` so browsers fetch the new files.
+
 **Live on Vercel**, deploying from `main` on every push (team `aniket-s1`,
 project `aniket-portfolio`). `vercel.json` holds the SPA rewrite — delete it and
 every deep link 404s on refresh. Runbook: `docs/deploy.md`.

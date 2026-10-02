@@ -26,17 +26,11 @@
   -webkit-mask-composite: source-in;
 }
 
-/* The hero clips its overflow, so the glow would end on a hard line
-   at the bottom edge: fade it into the night instead. */
-.sh::after {
-  content: '';
-  position: absolute;
-  inset: auto 0 0;
-  z-index: -1;
-  height: 28%;
-  background: linear-gradient(180deg, transparent, var(--night));
-  pointer-events: none;
-}
+/* No fade layer at the bottom of the hero. A gradient to solid night here
+   hid the light stream behind it and then stopped dead at the hero's edge,
+   leaving a hard horizontal seam where the stream reappeared below. The
+   glow already reaches transparent (64% of its radius) before the edge,
+   and the dot grid fades out through its own mask. */
 
 /* One big glow, behind the window. */
 .sh-glow {

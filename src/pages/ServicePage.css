@@ -165,6 +165,32 @@
   align-items: flex-start;
 }
 
+/* One proof card (the websites area: this site; the five concept sites
+   are the showcase band just above, so they are not repeated here). One
+   wide card, picture beside the words, instead of a lone third-width
+   card. */
+.svc-cards[data-count='1'] {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 64rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 761px) {
+  .svc-cards[data-count='1'] .card {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .svc-cards[data-count='1'] .card-media {
+    flex: 0 0 58%;
+  }
+
+  .svc-cards[data-count='1'] .card-body {
+    justify-content: center;
+    padding: 1.5rem 1.75rem;
+  }
+}
+
 /* ---------- 3. Offers (paper) ---------- */
 
 /* However many offers the area has: two side by side, four as a 2 x 2,

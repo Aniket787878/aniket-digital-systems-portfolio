@@ -894,6 +894,17 @@
     aspect-ratio: 16 / 10;
   }
 
+  /* The real photo needs more height than the monogram: at 16:10 the
+     name caption sat on his chin. 5:4 from 40% keeps hair to chin clear
+     of the caption, which then sits on the shirt. */
+  .about-portrait.has-photo {
+    aspect-ratio: 5 / 4;
+  }
+
+  .about-portrait.has-photo .about-portrait-img {
+    object-position: 50% 40%;
+  }
+
   .about-portrait-mark {
     font-size: 6.5rem;
     bottom: 36%;

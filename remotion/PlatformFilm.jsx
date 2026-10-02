@@ -191,7 +191,6 @@ export function PlatformFilm({ slug }) {
         {real ? 'Working demo · real screens' : 'Schematic · client data never shown'}
       </div>
 
-      <div style={{ position: 'absolute', left: 0, bottom: 0, height: 4, width: `${interpolate(frame, [0, total], [0, 100], clamp)}%`, background: C.accent }} />
     </AbsoluteFill>
   )
 }

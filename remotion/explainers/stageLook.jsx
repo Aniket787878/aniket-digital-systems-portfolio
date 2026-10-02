@@ -11,7 +11,7 @@ import { Icon } from '../icons.jsx'
   docs/ideas/stage-films-brief.md: a near-black ground with a faint dot
   grid and one drifting saffron glow, Inter 600 headings with one
   Instrument Serif italic peach word, mono labels, dark glass panels with
-  a saffron rim light, and flow chips joined by a saffron wire.
+  a saffron rim light, and flow nodes joined by crisp saffron connectors.
 
   It lives here, not in remotion/shared.jsx, because the product films are
   being rebuilt on their own kit at the same time; the two get merged
@@ -401,38 +401,48 @@ export function Chip({ icon, label, sub, live = 1, size = 28, style, lit = 0 }) 
 
 /* ---------- wires ---------- */
 
-/* A curved path between two points, leaving and entering along a side. */
+/*
+  The connectors of the flow diagrams (node to node: they are the
+  illustration, so they stay). They must read as clean hairlines with no
+  stair-stepping or shimmer: a straight run when the two ends line up,
+  snapped to whole pixels (a 2 px stroke centred on a whole pixel fills
+  exactly two rows), otherwise one smooth cubic. No blur filters: a blurred
+  glow re-rasterised every frame under the camera's scale is what made the
+  old wires crawl.
+*/
+const snap = (v) => Math.round(v)
 export function wirePath(a, b, side = 'h') {
+  const ax = snap(a.x)
+  const ay = snap(a.y)
+  const bx = snap(b.x)
+  const by = snap(b.y)
+  if (side === 'h' && Math.abs(by - ay) < 2) return `M ${ax} ${ay} L ${bx} ${ay}`
+  if (side !== 'h' && Math.abs(bx - ax) < 2) return `M ${ax} ${ay} L ${ax} ${by}`
   if (side === 'h') {
-    const dx = Math.max(60, Math.abs(b.x - a.x) * 0.5)
-    return `M ${a.x} ${a.y} C ${a.x + dx * Math.sign(b.x - a.x || 1)} ${a.y}, ${b.x - dx * Math.sign(b.x - a.x || 1)} ${b.y}, ${b.x} ${b.y}`
+    const dx = Math.max(60, Math.abs(bx - ax) * 0.5) * Math.sign(bx - ax || 1)
+    return `M ${ax} ${ay} C ${ax + dx} ${ay}, ${bx - dx} ${by}, ${bx} ${by}`
   }
-  const dy = Math.max(60, Math.abs(b.y - a.y) * 0.5)
-  return `M ${a.x} ${a.y} C ${a.x} ${a.y + dy * Math.sign(b.y - a.y || 1)}, ${b.x} ${b.y - dy * Math.sign(b.y - a.y || 1)}, ${b.x} ${b.y}`
+  const dy = Math.max(60, Math.abs(by - ay) * 0.5) * Math.sign(by - ay || 1)
+  return `M ${ax} ${ay} C ${ax} ${ay + dy}, ${bx} ${by - dy}, ${bx} ${by}`
 }
 
 /*
-  A thin saffron wire. draw (0..1) lays it down; pulse (0..1) runs a bright
-  spark along it once, when the step really happens. Rendered as an SVG
-  layer the size of the frame (pass W, H).
+  A thin saffron connector. draw (0..1) lays it down; pulse (0..1) runs a
+  bright spark along it once, when the step really happens. Rendered as an
+  SVG layer the size of the frame (pass W, H).
 */
-export function Wire({ d, draw = 1, pulse = -1, W = 1920, H = 1080, uid, width = 2 }) {
+export function Wire({ d, draw = 1, pulse = -1, W = 1920, H = 1080, width = 2 }) {
   if (draw <= 0) return null
-  const len = 2000
+  const len = 1000
+  const dash = `${(Math.min(1, draw) * len).toFixed(2)} ${len * 2}`
+  const common = { d, fill: 'none', strokeLinecap: 'round', strokeLinejoin: 'round', pathLength: len }
   return (
-    <svg width={W} height={H} style={{ position: 'absolute', left: 0, top: 0, overflow: 'visible', pointerEvents: 'none' }}>
-      <defs>
-        <filter id={`wg-${uid}`} x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="5" />
-        </filter>
-      </defs>
-      <path d={d} fill="none" stroke="rgba(245,135,30,0.22)" strokeWidth={width * 4} filter={`url(#wg-${uid})`} pathLength={len} strokeDasharray={`${draw * len} ${len}`} />
-      <path d={d} fill="none" stroke="rgba(245,135,30,0.75)" strokeWidth={width} strokeLinecap="round" pathLength={len} strokeDasharray={`${draw * len} ${len}`} />
+    <svg width={W} height={H} shapeRendering="geometricPrecision" style={{ position: 'absolute', left: 0, top: 0, overflow: 'visible', pointerEvents: 'none' }}>
+      {/* a soft wide underlay instead of a blur: identical from frame to frame */}
+      <path {...common} stroke="rgba(245,135,30,0.13)" strokeWidth={width * 3.5} strokeDasharray={dash} />
+      <path {...common} stroke="rgba(245,135,30,0.82)" strokeWidth={width} strokeDasharray={dash} />
       {pulse > 0 && pulse < 1 && (
-        <>
-          <path d={d} fill="none" stroke="#ffd2a8" strokeWidth={width * 2} strokeLinecap="round" pathLength={len} strokeDasharray={`${len * 0.12} ${len}`} strokeDashoffset={-(pulse * len * 1.12 - len * 0.12)} />
-          <path d={d} fill="none" stroke="rgba(245,135,30,0.9)" strokeWidth={width * 7} strokeLinecap="round" filter={`url(#wg-${uid})`} pathLength={len} strokeDasharray={`${len * 0.1} ${len}`} strokeDashoffset={-(pulse * len * 1.1 - len * 0.1)} />
-        </>
+        <path {...common} stroke="#ffd2a8" strokeWidth={width * 1.75} strokeDasharray={`${len * 0.1} ${len * 2}`} strokeDashoffset={(-(pulse * len * 1.1 - len * 0.1)).toFixed(2)} />
       )}
     </svg>
   )

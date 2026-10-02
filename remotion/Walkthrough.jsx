@@ -3,7 +3,7 @@ import { projects } from '../src/data.js'
 import { WALKTHROUGHS } from './walkthroughs.js'
 import { STEP, modeSpec, trackAt, RecordingView } from './Screen.jsx'
 import { lerpCam } from './Camera.jsx'
-import { C, SANS, Wordmark, useFonts, splitTitle, tween, rise, clamp, easeInOut } from './shared.jsx'
+import { C, SANS, Wordmark, useFonts, splitTitle, tween, rise, easeInOut } from './shared.jsx'
 import { DuskScene } from './DuskScene.jsx'
 import { KineticText, PillLabel } from './KineticText.jsx'
 import { Icon } from './icons.jsx'
@@ -62,7 +62,6 @@ export function Walkthrough({ slug }) {
   const inSteps = local >= 0 && o < 0
   const cursorO = tween(local, 0, 10) * (1 - tween(o, 0, 8))
   const winO = 1 - tween(o, 44, 76)
-  const progress = interpolate(frame, [0, total], [0, 1], clamp)
 
   return (
     <AbsoluteFill style={{ background: C.bg, fontFamily: SANS, overflow: 'hidden' }}>
@@ -130,7 +129,6 @@ export function Walkthrough({ slug }) {
       </DuskScene>
 
       {/* Progress hairline */}
-      <div style={{ position: 'absolute', left: 0, bottom: 0, height: 4, width: `${progress * 100}%`, background: C.accent }} />
     </AbsoluteFill>
   )
 }

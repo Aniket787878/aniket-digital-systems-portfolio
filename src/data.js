@@ -53,7 +53,7 @@ export const images = {
    the stale copy while revalidating), so a returning visitor would keep
    seeing the old films. Change this whenever scripts/render-videos.sh
    output is committed. */
-export const FILM_V = '?v=2026-10-02b'
+export const FILM_V = '?v=2026-10-02c'
 
 /* ------------------------------------------------------------------
    PRODUCT FILMS — rendered from remotion/ by scripts/render-videos.sh.

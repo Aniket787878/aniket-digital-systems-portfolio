@@ -9,7 +9,8 @@ import { useReducedMotion } from 'motion/react'
   - hero: crisp, sweeping in from the top right and pinching white-hot
     just beside the hero buttons, so the eye lands on them;
   - between: it drifts behind the content, swaying left and right as the
-    page scrolls, blurred and dimmed so it never fights the text;
+    page scrolls, out of focus and dimmed so it never fights the text (the
+    softening is done in the shader, continuously; there is no CSS blur);
   - close: it pours in from the top right and ends on the "Book the
     free call" button: the pinch sits near the end of the spine, so the
     stream stops there instead of fanning on past it.
@@ -26,71 +27,9 @@ import { useReducedMotion } from 'motion/react'
   tab is hidden.
 */
 
-const WIDE = {
-  hero: { p: [[1.02, -0.16], [0.62, 0.3], [0.28, 0.98], [0.98, 1.2]], w: 0.34, wMin: 9, pinchT: 0.6, pinchW: 0.12, twist: 5.2, gain: 1 },
-  a: { p: [[0.44, -0.25], [-0.12, 0.3], [0.42, 0.72], [0.02, 1.25]], w: 0.62, wMin: 130, pinchT: 0.5, pinchW: 0.26, twist: 4.2, gain: 0.45 },
-  b: { p: [[0.08, -0.25], [0.6, 0.34], [-0.06, 0.66], [0.4, 1.25]], w: 0.62, wMin: 130, pinchT: 0.5, pinchW: 0.26, twist: 4.6, gain: 0.45 },
-  close: { p: [[1.0, -0.3], [0.55, 0.1], [0.1, 0.6], [0.45, 0.95]], w: 0.36, wMin: 8, pinchT: 0.82, pinchW: 0.12, twist: 5, gain: 1 }
-}
-
-// Phones: the hero stacks, so the ribbon runs more upright and narrower.
-// Between the hero and the close the text spans the whole screen and there
-// is no blur, so the ribbon there is wide, loose and very dim.
-const NARROW = {
-  hero: { p: [[1.6, -0.15], [1.05, 0.3], [0.7, 0.95], [1.4, 1.15]], w: 0.28, wMin: 6, pinchT: 0.6, pinchW: 0.13, twist: 4.6, gain: 0.75 },
-  a: { p: [[0.7, -0.2], [-0.2, 0.3], [0.9, 0.7], [0.2, 1.2]], w: 0.6, wMin: 150, pinchT: 0.5, pinchW: 0.26, twist: 4, gain: 0.55 },
-  b: { p: [[0.2, -0.2], [1.1, 0.35], [0.0, 0.65], [0.8, 1.2]], w: 0.6, wMin: 150, pinchT: 0.5, pinchW: 0.26, twist: 4.2, gain: 0.55 },
-  close: { p: [[1.3, -0.3], [0.9, 0.1], [0.1, 0.6], [0.5, 0.95]], w: 0.5, wMin: 7, pinchT: 0.82, pinchW: 0.13, twist: 4.6, gain: 0.95 }
-}
-
-const lerp = (a, b, k) => a + (b - a) * k
-const clamp01 = (x) => Math.min(1, Math.max(0, x))
-const smooth = (e0, e1, x) => {
-  const t = clamp01((x - e0) / (e1 - e0))
-  return t * t * (3 - 2 * t)
-}
-
-function bez(p, t) {
-  const u = 1 - t
-  const a = u * u * u
-  const b = 3 * u * u * t
-  const c = 3 * u * t * t
-  const d = t * t * t
-  return [a * p[0][0] + b * p[1][0] + c * p[2][0] + d * p[3][0], a * p[0][1] + b * p[1][1] + c * p[2][1] + d * p[3][1]]
-}
-
-// A key shape in pixels. `w` is a fraction of the viewport's short-ish
-// side (height on wide screens, width on phones). With a target, the
-// spine is shifted so its pinch sits on it.
-function place(key, W, H, wide, target) {
-  let p = key.p.map(([x, y]) => [x * W, y * H])
-  if (target) {
-    const [px, py] = bez(p, key.pinchT)
-    const dx = target[0] - px
-    const dy = target[1] - py
-    p = p.map(([x, y]) => [x + dx, y + dy])
-  }
-  return { ...key, p, wMax: key.w * (wide ? H : W), calm: target ? 0 : 1 }
-}
-
-function mix(a, b, k) {
-  return {
-    p: a.p.map(([x, y], i) => [lerp(x, b.p[i][0], k), lerp(y, b.p[i][1], k)]),
-    wMax: lerp(a.wMax, b.wMax, k),
-    wMin: lerp(a.wMin, b.wMin, k),
-    pinchT: lerp(a.pinchT, b.pinchT, k),
-    pinchW: lerp(a.pinchW, b.pinchW, k),
-    twist: lerp(a.twist, b.twist, k),
-    gain: lerp(a.gain, b.gain, k),
-    calm: lerp(a.calm ?? 1, b.calm ?? 1, k)
-  }
-}
-
-function centre(el, dx = 0, dy = 0) {
-  if (!el) return null
-  const r = el.getBoundingClientRect()
-  return [r.left + r.width / 2 + dx, r.top + r.height / 2 + dy]
-}
+// The key shapes, the text to keep clear and the maths that mixes them
+// live in RibbonScene.js, so they load with three.js instead of adding to
+// the main bundle.
 
 let webglOk
 function hasWebGL() {
@@ -114,11 +53,22 @@ export default function Ribbon() {
   useEffect(() => {
     if (!hasWebGL()) return undefined
     let ribbon = null
+    let S = null
     let raf = 0
     let alive = true
-    let lastBlur = -1
     let lastDraw = 0
     let eased = null
+    let lowRes = false
+    // Pixel ratios: full sharpness up to 2x in focus; out of focus the
+    // threads are wide and soft, so 1.5x is enough (about half the pixels).
+    const dprFull = Math.min(window.devicePixelRatio || 1, 2)
+    const dprCalm = Math.min(dprFull, 1.5)
+    // Text rectangles in page coordinates, re-measured every so often
+    // (the copy settles in with a small animation) and on resize.
+    const range = document.createRange()
+    const text = { hero: [], close: [] }
+    let measured = -1
+    let frameNo = 0
     // The two targets, looked up again only once they leave the page.
     const els = {}
     const find = (k, sel) => (els[k]?.isConnected ? els[k] : (els[k] = document.querySelector(sel)))
@@ -130,11 +80,11 @@ export default function Ribbon() {
       const W = window.innerWidth
       const H = window.innerHeight
       const wide = W >= 1024
-      // Seconds since the last frame, capped so a hidden tab coming back
-      // doesn't make the shape jump.
-      const dt = lastDraw ? Math.min((now - lastDraw) / 1000, 0.1) : 1
+      // Seconds since the last frame. Capped at a 20fps frame, so a long
+      // stall (or a hidden tab coming back) eases on instead of jumping.
+      const dt = lastDraw ? Math.min((now - lastDraw) / 1000, 0.05) : 1 / 60
       lastDraw = now
-      const K = wide ? WIDE : NARROW
+      const K = wide ? S.WIDE : S.NARROW
       const y = window.scrollY
 
       // Where the pinches go: just past the last hero button, and on the
@@ -147,37 +97,56 @@ export default function Ribbon() {
           })()
         : null
       const closeBtn = find('close', '.cl-primary')
-      const closeAt = centre(closeBtn)
+      const closeAt = S.centre(closeBtn)
       const closeTop = closeBtn ? closeBtn.closest('section')?.getBoundingClientRect().top ?? H : H
 
-      const h = 1 - smooth(0.08 * H, 0.95 * H, y)
-      const c = closeBtn ? smooth(0.95 * H, 0.3 * H, closeTop) : 0
+      const h = 1 - S.smooth(0.08 * H, 0.95 * H, y)
+      const c = closeBtn ? S.smooth(0.95 * H, 0.3 * H, closeTop) : 0
       const sway = 0.5 - 0.5 * Math.cos((Math.PI * y) / (2.2 * H))
 
-      let goal = mix(place(K.a, W, H, wide), place(K.b, W, H, wide), sway)
-      if (h > 0) goal = mix(goal, place(K.hero, W, H, wide, heroAt), h)
-      if (c > 0) goal = mix(goal, place(K.close, W, H, wide, closeAt), c)
+      let goal = S.mix(S.place(K.a, W, H, wide), S.place(K.b, W, H, wide), sway)
+      if (h > 0) goal = S.mix(goal, S.place(K.hero, W, H, wide, heroAt), h)
+      if (c > 0) goal = S.mix(goal, S.place(K.close, W, H, wide, closeAt), c)
       // The ribbon eases toward where the scroll says it should be instead
       // of snapping there, so a flick of the page reads as the current
       // swinging, not jumping. Reduced motion snaps.
-      const shape = (eased = eased && !reduce ? mix(eased, goal, 1 - Math.exp(-dt * 7)) : goal)
+      const shape = (eased = eased && !reduce ? S.mix(eased, goal, 1 - Math.exp(-dt * 7)) : goal)
 
       const focus = 1 - shape.calm
-      // Blur in whole pixels, written only when it changes: a filter
-      // change re-rasterises the layer, so not every frame.
-      const blur = wide ? Math.round((1 - focus) * 9) : 0
-      if (blur !== lastBlur) {
-        canvasRef.current.style.filter = blur ? `blur(${blur}px)` : 'none'
-        lastBlur = blur
+      // Fewer pixels while out of focus, with a gap between the two
+      // thresholds so it never flips back and forth.
+      if (wide && dprCalm < dprFull) {
+        if (!lowRes && shape.calm > 0.85) lowRes = true
+        else if (lowRes && shape.calm < 0.5) lowRes = false
+        ribbon.setDpr(lowRes ? dprCalm : dprFull)
       }
 
-      const [hx, hy] = bez(shape.p, shape.pinchT)
+      // The text to keep clear, faded in with its section's shape.
+      const rects = []
+      if (h > 0.01 || c > 0.01) {
+        if (frameNo - measured > 20 || measured < 0) {
+          for (const k of ['hero', 'close'])
+            text[k] = S.TEXT[k].map(([sel, dim]) => {
+              const el = document.querySelector(sel)
+              const r = el && S.textRect(el, range)
+              return r && [...r, dim]
+            })
+          measured = frameNo
+        }
+        for (const [k, wgt] of [['hero', h], ['close', c]]) {
+          if (wgt <= 0.01) continue
+          for (const r of text[k]) if (r) rects.push([r[0], r[1] - y, r[2], r[3] - y, r[4] * wgt])
+        }
+      }
+      frameNo++
+
+      const [hx, hy] = S.bez(shape.p, shape.pinchT)
       const halo = haloRef.current
       halo.style.transform = `translate3d(${hx.toFixed(1)}px, ${hy.toFixed(1)}px, 0)`
       halo.style.opacity = (0.15 + 0.85 * focus) * shape.gain
 
       const time = reduce ? 4 : (now - t0) / 1000
-      ribbon.frame(time, shape)
+      ribbon.frame(time, shape, rects)
       if (!reduce && !document.hidden) raf = requestAnimationFrame(draw)
     }
 
@@ -188,23 +157,29 @@ export default function Ribbon() {
     const resize = () => {
       if (!ribbon) return
       ribbon.resize(window.innerWidth, window.innerHeight)
+      measured = -1
       kick()
     }
 
     import('./RibbonScene.js')
-      .then(({ createRibbon }) => {
+      .then((mod) => {
         if (!alive || !canvasRef.current) return
+        S = mod
         const wide = window.innerWidth >= 1024
         try {
-          ribbon = createRibbon(canvasRef.current, {
+          ribbon = mod.createRibbon(canvasRef.current, {
             threads: wide ? 420 : 130,
             steps: wide ? 140 : 64,
             sparks: wide ? 240 : 40,
             // Full sharpness up to 2x: at 1x the hairline threads stair-step
             // on a phone's dense screen. Phones save their time on the thread
             // count instead.
-            dpr: Math.min(window.devicePixelRatio || 1, 2),
-            antialias: true
+            dpr: dprFull,
+            // Out of focus: wide screens soften each thread to a band about
+            // 18px across and draw a third of them (the glow is continuous by
+            // then); phones stay nearly crisp, just dim, as before.
+            soft: wide ? 8 : 0.6,
+            keepCalm: wide ? 0.34 : 1.12
           })
         } catch {
           return
@@ -217,7 +192,13 @@ export default function Ribbon() {
     // Reduced motion draws on demand; otherwise the loop is already
     // running, and these only restart it after the tab was hidden.
     const onScroll = () => (reduce || !raf) && kick()
-    const onVisible = () => !document.hidden && kick()
+    // Coming back to the tab: start timing afresh so the first frame
+    // doesn't count the time away.
+    const onVisible = () => {
+      if (document.hidden) return
+      lastDraw = 0
+      kick()
+    }
     window.addEventListener('resize', resize)
     window.addEventListener('scroll', onScroll, { passive: true })
     document.addEventListener('visibilitychange', onVisible)

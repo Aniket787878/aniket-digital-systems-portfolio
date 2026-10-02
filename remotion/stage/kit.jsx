@@ -483,7 +483,11 @@ export function SaffronButton({ children, size = 34, t = 1 }) {
 /*
   The end card, as on the site's closing band: a mono pill, the heading
   with its serif word, the saffron button and the wordmark. `f` is local.
+  The heading's first word and the button's arrival are exported for the
+  films' sound (remotion/sound.jsx).
 */
+export const END_HEADING_AT = 4
+export const END_BUTTON_AT = 16
 export function EndCard({ f, heading = 'Let’s find your first *leak.*', pill = 'free 15-minute call', button = 'Book a free call', scale = 1 }) {
   const u = (k) => settle(f, k)
   const rise = (k, d = 24) => ({ opacity: Math.min(1, u(k) * 1.4), transform: `translateY(${((1 - u(k)) * d * scale).toFixed(2)}px)` })
@@ -497,10 +501,10 @@ export function EndCard({ f, heading = 'Let’s find your first *leak.*', pill =
           </div>
         </div>
         <div style={{ marginTop: 34 * scale }}>
-          <KineticLine text={heading} f={f} start={4} size={124 * scale} stagger={3} />
+          <KineticLine text={heading} f={f} start={END_HEADING_AT} size={124 * scale} stagger={3} />
         </div>
-        <div style={{ marginTop: 56 * scale, ...rise(16, 30) }}>
-          <SaffronButton size={34 * scale} t={u(16)}>{button}</SaffronButton>
+        <div style={{ marginTop: 56 * scale, ...rise(END_BUTTON_AT, 30) }}>
+          <SaffronButton size={34 * scale} t={u(END_BUTTON_AT)}>{button}</SaffronButton>
         </div>
       </div>
       <div style={{ position: 'absolute', bottom: 70 * scale, left: 0, right: 0, display: 'flex', justifyContent: 'center', ...rise(24, 16) }}>

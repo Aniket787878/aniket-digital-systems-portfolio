@@ -1,7 +1,8 @@
 import { AbsoluteFill, useCurrentFrame } from 'remotion'
-import { Ground, Glow, Wordmark, MonoTag, KineticLine, CountUp, EndCard, useStageFonts, tween, settle, easeInOut } from './kit.jsx'
-import { Act } from './Act.jsx'
-import { CaptureAct } from './CaptureAct.jsx'
+import { Ground, Glow, Wordmark, MonoTag, KineticLine, CountUp, EndCard, END_HEADING_AT, END_BUTTON_AT, useStageFonts, tween, settle, easeInOut } from './kit.jsx'
+import { Act, actEvents } from './Act.jsx'
+import { CaptureAct, captureEvents } from './CaptureAct.jsx'
+import { Soundtrack, cue } from '../sound.jsx'
 import { DEMO_STORIES, TAG, demoSteps } from './stories.js'
 import { SCHEMATIC_STORIES } from './schematics.jsx'
 
@@ -53,6 +54,30 @@ export function storyFor(slug) {
 }
 
 export const stageFilmLength = (slug) => A0 + storyFor(slug).steps.length * STEP_LEN + HF + TAIL
+
+/* The film's sound, from the same beats as the pictures below. */
+export function stageFilmCues(slug) {
+  const story = storyFor(slug)
+  const n = story.steps.length
+  const k = story.headfakeAt
+  const hfAt = A0 + k * STEP_LEN
+  const actEnd = A0 + n * STEP_LEN + HF
+  // act frames -> film frames: the act's clock pauses through the headfake
+  const toFilm = (a) => A0 + a + (a >= k * STEP_LEN ? HF : 0)
+  const events = story.kind === 'real' ? captureEvents(story.steps, STEP_LEN) : actEvents(story.steps, STEP_LEN)
+  return [
+    cue('thump', 2 + 1), // stakes
+    cue('thump', LINE + 1, 0.85), // the big question
+    cue('whoosh', A0 - 12), // the window arrives
+    ...events.map((e) => cue(e.kind, toFilm(e.f), e.gain)),
+    cue('whooshDown', hfAt - 2, 0.8), // it recedes under the headfake (its return rides step k's cut)
+    cue('thump', hfAt + 2 + 1, 0.85),
+    cue('whooshDown', actEnd, 0.7), // the window leaves
+    cue('thump', story.counts ? actEnd + 6 : actEnd + 8 + 1, 0.85), // rehook
+    cue('thump', actEnd + END + END_HEADING_AT + 1, 0.7), // end card heading
+    cue('end', actEnd + END + END_BUTTON_AT),
+  ]
+}
 
 export function StageFilm({ slug }) {
   useStageFonts()
@@ -131,6 +156,7 @@ export function StageFilm({ slug }) {
         <Wordmark size={34} />
       </div>
       <MonoTag text={TAG[story.kind]} />
+      <Soundtrack cues={stageFilmCues(slug)} />
     </AbsoluteFill>
   )
 }

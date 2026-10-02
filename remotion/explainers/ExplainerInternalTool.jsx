@@ -1,6 +1,7 @@
 import { AbsoluteFill, useCurrentFrame } from 'remotion'
 import { Icon } from '../icons.jsx'
-import { S, useStageFonts, Ground, Tag, Beat, Captions, World, camAt, Glass, EndCard, Mono, arrive, move, fadeIn, lerp, cl } from './stageLook.jsx'
+import { S, useStageFonts, Ground, Tag, Beat, Captions, World, camAt, Glass, EndCard, END_HEADING_AT, END_BUTTON_AT, Mono, arrive, move, fadeIn, lerp, cl } from './stageLook.jsx'
+import { Soundtrack, cue } from '../sound.jsx'
 
 /*
   Internal Tool / Dashboard, 30 s, in the Stage look. Same story as before:
@@ -19,6 +20,33 @@ const CAPS = [
   { at: T.morph - 8, text: 'Now turn it into one clean {tool.}' },
   { at: 426, text: 'One source of {truth.}' },
   { at: T.roles, text: 'Everyone sees exactly what they {need.}', exit: T.end - 12 },
+]
+const KPIS = [
+  { label: 'Bookings this week', n: 48, icon: 'calendar' },
+  { label: 'Open enquiries', n: 12, icon: 'chat' },
+  { label: 'Awaiting payment', n: 3, icon: 'tag' },
+  { label: 'Rooms free today', n: 2, icon: 'grid' },
+]
+const EDIT_HOP = 30 // the other person's cursor jumps cell every second
+const CAM = [
+  { x: 960, y: 620, s: 0.86, rx: 16 },
+  { at: T.hookEnd - 4, dur: 22, x: 960, y: 590, s: 0.98, rx: 0 },
+  { at: T.morph, dur: 30, x: 960, y: 600, s: 1 },
+  { at: T.roles - 6, dur: 18, x: 1440, y: 720, s: 1.22 },
+]
+
+/* The sound (remotion/sound.jsx), from the beats above: the hook line,
+   every camera move, someone else's cursor hopping, the comment landing,
+   the morph, the tiles landing, the role switch and the end card. */
+const CUES = [
+  cue('thump', 6 + 1),
+  ...CAM.slice(1).map((k) => cue('whoosh', k.at, k.at === T.morph ? 1 : 0.7)),
+  ...[1, 2, 3].map((j) => cue('click', T.edit + j * EDIT_HOP, 0.4)),
+  cue('tick', T.note + 1, 0.8),
+  ...KPIS.map((_, i) => cue('tick', T.cards + 10 + i * 5 + 1, 0.5)),
+  cue('tick', T.roles + 16), // "Front desk" lights
+  cue('thump', T.end + END_HEADING_AT + 1, 0.7),
+  cue('end', T.end + END_BUTTON_AT),
 ]
 
 /* ---------- the spreadsheet ---------- */
@@ -79,12 +107,7 @@ const CELLS = (() => {
 export function ExplainerInternalTool() {
   useStageFonts()
   const f = useCurrentFrame()
-  const cam = camAt(f, [
-    { x: 960, y: 620, s: 0.86, rx: 16 },
-    { at: T.hookEnd - 4, dur: 22, x: 960, y: 590, s: 0.98, rx: 0 },
-    { at: T.morph, dur: 30, x: 960, y: 600, s: 1 },
-    { at: T.roles - 6, dur: 18, x: 1440, y: 720, s: 1.22 },
-  ])
+  const cam = camAt(f, CAM)
   // the sheet sits out of focus behind the opening line, then snaps sharp
   const focus = move(f, T.hookEnd - 6, 14)
   const dof = move(f, T.roles - 6, 18)
@@ -108,6 +131,7 @@ export function ExplainerInternalTool() {
       <Beat f={f} text={'Still running the business\nout of a {spreadsheet?}'} start={6} end={T.hookEnd - 8} size={120} />
       {f >= T.end && <EndCard f={f - T.end} />}
       <Tag />
+      <Soundtrack cues={CUES} />
     </Ground>
   )
 }
@@ -220,7 +244,7 @@ function Editing({ f }) {
     [1, 4],
     [6, 2],
   ]
-  const k = Math.min(spots.length - 1, Math.floor((f - T.edit) / 30))
+  const k = Math.min(spots.length - 1, Math.floor((f - T.edit) / EDIT_HOP))
   const [r, c] = spots[k]
   const o = fadeIn(f, T.edit, 8) * (1 - fadeIn(f, T.morph - 8, 10))
   const x = SHEET.x + c * CW
@@ -249,12 +273,7 @@ function Editing({ f }) {
 function Dashboard({ f, dof }) {
   const a = fadeIn(f, T.cards, 18)
   if (a <= 0) return null
-  const kpis = [
-    { label: 'Bookings this week', n: 48, icon: 'calendar' },
-    { label: 'Open enquiries', n: 12, icon: 'chat' },
-    { label: 'Awaiting payment', n: 3, icon: 'tag' },
-    { label: 'Rooms free today', n: 2, icon: 'grid' },
-  ]
+  const kpis = KPIS
   const bookings = [
     ['10:00', 'Room 2', 'Confirmed'],
     ['11:30', 'Room 1', 'Confirmed'],

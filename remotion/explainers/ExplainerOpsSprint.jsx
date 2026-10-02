@@ -1,6 +1,7 @@
 import { AbsoluteFill, useCurrentFrame } from 'remotion'
 import { Icon } from '../icons.jsx'
-import { S, useStageFonts, Ground, Tag, Line, Beat, Captions, World, camAt, Glass, Bar, Chip, Wire, wirePath, Bubble, EndCard, Mono, arrive, move, fadeIn, lerp, cl } from './stageLook.jsx'
+import { S, useStageFonts, Ground, Tag, Line, Beat, Captions, World, camAt, Glass, Bar, Chip, Wire, wirePath, Bubble, EndCard, END_HEADING_AT, END_BUTTON_AT, Mono, arrive, move, fadeIn, lerp, cl } from './stageLook.jsx'
+import { Soundtrack, cue } from '../sound.jsx'
 
 /*
   Ops Automation Sprint, 30 s, in the Stage look. Same story as before: one
@@ -37,6 +38,25 @@ const CAPS = [
   { at: STEP[3] - 4, text: 'Your team gets a {heads-up.}' },
   { at: STEP[4] - 4, text: 'Next morning, a gentle {reminder.}' },
   { at: STEP[5] - 4, text: 'Then follow-ups on {Day 3 and Day 7.}', exit: STOP[0] - 10 },
+]
+const SEND_AT = 60 // the form's "Send enquiry" press peaks this far into its panel
+
+/* The sound (remotion/sound.jsx), from the beats above: the two hook lines,
+   the camera settling on the flow, each panel arriving, the send press,
+   each node lighting as the step runs, the headfake and the end card. */
+const CUES = [
+  cue('thump', 8 + 1),
+  cue('thump', 28 + 1, 0.55),
+  cue('whoosh', HOOK_END + 4),
+  cue('whoosh', FORM_IN + 2, 0.6),
+  cue('tick', FORM_IN + 10 + 1, 0.8), // the 11:04 pm chip
+  cue('click', FORM_IN + SEND_AT),
+  ...STEP.slice(1).map((s) => cue('whoosh', s + 2, 0.55)),
+  ...STEP.map((s) => cue('tick', s + 6 + 1)),
+  cue('whooshDown', STOP[0] - 4, 0.8),
+  cue('thump', STOP[0] + 1),
+  cue('thump', END + END_HEADING_AT + 1, 0.7),
+  cue('end', END + END_BUTTON_AT),
 ]
 
 export function ExplainerOpsSprint() {
@@ -94,6 +114,7 @@ export function ExplainerOpsSprint() {
       <Beat f={f} text={'Stops the moment\nthey {book.}'} start={STOP[0]} end={STOP[1]} size={140} />
       {f >= END && <EndCard f={f - END} />}
       <Tag />
+      <Soundtrack cues={CUES} />
     </Ground>
   )
 }
@@ -167,8 +188,8 @@ function typed(text, f, a, b) {
 
 function StageForm({ f }) {
   const g = f
-  const sent = g > 62
-  const press = cl(1 - Math.abs(g - 60) / 4)
+  const sent = g > SEND_AT + 2
+  const press = cl(1 - Math.abs(g - SEND_AT) / 4)
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 44 }}>
       <Glass rim="left" style={{ position: 'relative', width: 640, padding: '28px 34px 32px' }}>

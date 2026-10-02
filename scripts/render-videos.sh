@@ -22,21 +22,46 @@ BROWSER=()
 PAR=(--concurrency="${CONCURRENCY:-4}")
 ONLY="${1:-}"
 
+# Sound (remotion/sound.jsx). The films and the explainers carry the
+# synthesised effects as 96 kb/s AAC; the card loops and the hero reel are
+# rendered --muted, so they carry no audio track at all.
+SOUND=(--audio-codec=aac --audio-bitrate=96k)
+
+# The optional music bed. Put the track at remotion/audio/music.mp3 (or .m4a
+# or .wav) and re-run this script: it is normalised (two-pass loudnorm,
+# linear where possible) to -20 LUFS integrated, -2 dBTP, into
+# remotion/audio/music-bed.wav, which the films pick up. Remove the track and
+# the bed goes too, so the films go back to effects only.
+MUSIC_SRC=$(ls remotion/audio/music.mp3 remotion/audio/music.m4a remotion/audio/music.wav 2>/dev/null | head -n1 || true)
+BED=remotion/audio/music-bed.wav
+if [ -n "$MUSIC_SRC" ]; then
+  if [ ! -f "$BED" ] || [ "$MUSIC_SRC" -nt "$BED" ]; then
+    m=$(ffmpeg -hide_banner -nostats -i "$MUSIC_SRC" -af loudnorm=I=-20:TP=-2:LRA=11:print_format=json -f null - 2>&1 | sed -n '/^{/,/^}/p')
+    v() { echo "$m" | sed -n "s/.*\"$1\" : \"\(.*\)\".*/\1/p"; }
+    ffmpeg -hide_banner -loglevel error -y -i "$MUSIC_SRC" \
+      -af "loudnorm=I=-20:TP=-2:LRA=11:measured_I=$(v input_i):measured_TP=$(v input_tp):measured_LRA=$(v input_lra):measured_thresh=$(v input_thresh):offset=$(v target_offset):linear=true" \
+      -ar 48000 -ac 2 -c:a pcm_s16le "$BED"
+    echo "music bed: $MUSIC_SRC -> $BED (was $(v input_i) LUFS)"
+  fi
+else
+  rm -f "$BED"
+fi
+
 # crf 28: the zoom camera makes the walkthroughs motion-heavy; 26 put them at
 # ~7 MB each, 28 brings them to ~5 MB with no visible loss on the captures.
 film() { # composition, output name, poster frame
   npx remotion render "$ENTRY" "$1" "$OUT/$2.mp4" --codec=h264 --crf=28 --x264-preset=slow \
-    --pixel-format=yuv420p "${PAR[@]}" "${BROWSER[@]}" --log=error
+    --pixel-format=yuv420p "${SOUND[@]}" "${PAR[@]}" "${BROWSER[@]}" --log=error
   npx remotion still "$ENTRY" "$1" "$OUT/posters/$2.jpg" --frame="$3" \
     --image-format=jpeg --jpeg-quality=82 "${BROWSER[@]}" --log=error
 }
-loop() { # composition, output path, scale
+loop() { # composition, output path, scale: a silent card loop
   npx remotion render "$ENTRY" "$1" "$2" --codec=h264 --crf=27 --x264-preset=slow --scale="$3" \
-    --pixel-format=yuv420p "${PAR[@]}" "${BROWSER[@]}" --log=error
+    --pixel-format=yuv420p --muted "${PAR[@]}" "${BROWSER[@]}" --log=error
 }
 explainer() { # composition, output name, poster frame, crf
   npx remotion render "$ENTRY" "$1" "$OUT/explainers/$2.mp4" --codec=h264 --crf="$4" --x264-preset=slow \
-    --pixel-format=yuv420p "${PAR[@]}" "${BROWSER[@]}" --log=error
+    --pixel-format=yuv420p "${SOUND[@]}" "${PAR[@]}" "${BROWSER[@]}" --log=error
   npx remotion still "$ENTRY" "$1" "$OUT/posters/$2.jpg" --frame="$3" \
     --image-format=jpeg --jpeg-quality=82 "${BROWSER[@]}" --log=error
 }
@@ -58,7 +83,11 @@ for slug in therapist-pwa care-journey; do
   film "Platform-$slug" "$slug" 234
 done
 if [ -z "$ONLY" ] || [ "$ONLY" = hero ]; then
-  loop HeroReel "$OUT/hero-reel.mp4" 1
+  # rendered --muted: the site only plays the reel as a silent home loop, so
+  # an audio track would be bytes nobody hears (its cues stay in HeroReel.jsx
+  # for the day it gets a full player)
+  npx remotion render "$ENTRY" HeroReel "$OUT/hero-reel.mp4" --codec=h264 --crf=27 --x264-preset=slow \
+    --pixel-format=yuv420p --muted "${PAR[@]}" "${BROWSER[@]}" --log=error
   npx remotion still "$ENTRY" HeroReel "$OUT/posters/hero-reel.jpg" --frame=300 \
     --image-format=jpeg --jpeg-quality=80 "${BROWSER[@]}" --log=error
 fi

@@ -28,6 +28,7 @@ const CUT = 9 // the next screen dissolves in over this many frames
 const MOVE = 18 // a camera move, ~0.6 s
 const CHIP_AT = 16 // the step's chip arrives once the camera has landed
 const RET = 24 // loops: frames the last step takes to hand back to the first
+const CLICK_AT = 21 // the click pulse starts this long after the pointer sets off
 
 const camSpring = (f) =>
   f <= 0 ? 0 : spring({ frame: f, fps: 30, config: { damping: 20, stiffness: 140, mass: 1 }, durationInFrames: MOVE })
@@ -114,8 +115,28 @@ function pointerAt(steps, idx, sf, stepLen, loop) {
     x: lerp(from.x, here.x, m),
     y: lerp(from.y, here.y, m) - Math.sin(m * Math.PI) * 18,
     o: (prev ? 1 : tween(sf, at, at + 8)) * out,
-    click: sf >= at + 21 ? Math.min(1, (sf - at - 21) / 20) : -1,
+    click: sf >= at + CLICK_AT ? Math.min(1, (sf - at - CLICK_AT) / 20) : -1,
   }
+}
+
+/*
+  The act's sound events, in act frames (the clock CaptureAct's `f` runs
+  on), from the same beats the pictures use: each camera move (a step's
+  first shot rides the cut; the very first rides the window's arrival,
+  which the film sounds), the pointer's click pulse and the chip landing.
+  The film maps them onto its own clock (see remotion/sound.jsx).
+*/
+export function captureEvents(steps, stepLen) {
+  const out = []
+  steps.forEach((st, idx) => {
+    const s = idx * stepLen
+    st.shots.forEach((_, i) => {
+      if (idx || i) out.push({ kind: 'whoosh', f: s + shotAt(i, stepLen), gain: 0.6 })
+    })
+    if (st.target) out.push({ kind: 'click', f: s + shotAt(st.click, stepLen) + CLICK_AT })
+    if (st.chip) out.push({ kind: 'tick', f: s + CHIP_AT + 1 })
+  })
+  return out
 }
 
 function Capture({ step }) {

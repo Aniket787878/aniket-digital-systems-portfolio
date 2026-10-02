@@ -82,6 +82,25 @@ export function Screen({ step, sf, stepLen, pointer = true, loopOut = false }) {
   )
 }
 
+/*
+  The act's sound events, in act frames: each screen cutting in (the
+  first rides the window's arrival, which the film sounds), a schematic's
+  button press (`tap`, in the screen's own 0..96 clock, from
+  schematics.jsx) and the chip landing. The film maps them onto its own
+  clock (see remotion/sound.jsx).
+*/
+export function actEvents(steps, stepLen) {
+  const out = []
+  steps.forEach((st, idx) => {
+    const s = idx * stepLen
+    if (idx > 0) out.push({ kind: 'whoosh', f: s, gain: 0.55 })
+    if (st.kind === 'schematic' && st.tap != null) out.push({ kind: 'click', f: s + (st.tap * stepLen) / 96 })
+    if (st.kind === 'capture' && st.target) out.push({ kind: 'click', f: s + CLICK })
+    if (st.chip) out.push({ kind: 'tick', f: s + CHIP + 1 })
+  })
+  return out
+}
+
 /* Where on the stage the subject of step i sits at local frame sf. */
 function subjectPoint(L, step, sf, stepLen) {
   const s = L.win.w / VW

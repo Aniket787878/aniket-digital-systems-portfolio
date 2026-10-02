@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { films, projects, site, images, proofTools, whatsappPrefill, mediaKind } from '../data.js'
 import { walkthroughs } from '../walkthroughs.js'
@@ -9,6 +10,7 @@ import SystemDiagram from '../components/SystemDiagram.jsx'
 import AnimatedFlow from '../components/AnimatedFlow.jsx'
 import Media from '../components/Media.jsx'
 import Walkthrough from '../components/Walkthrough.jsx'
+import { SoundIcon } from '../components/VideoDialog.jsx'
 import Counter from '../motion/Counter.jsx'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 
@@ -72,7 +74,7 @@ export default function ProjectDetailPage() {
   /* Who a project is built on, with the licence. Each entry is a link out
      (`href`), a link to another case study (`to`), or plain text. */
   const credit = Array.isArray(project.credit) ? project.credit.filter((c) => c && c.label) : []
-  // Silent, so autoplay is allowed — but not for anyone who asked for less motion.
+  // Muted, so autoplay is allowed — but not for anyone who asked for less motion.
   const autoPlay = !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
   const build = toList(project.system)
   const outcome = toList(project.outcome)
@@ -138,17 +140,11 @@ export default function ProjectDetailPage() {
           platforms are a labelled schematic, never read as footage. */}
       {film ? (
         <figure className="case-video-figure">
-          <video
-            className="case-video"
+          <FilmVideo
             src={film.src}
             poster={film.poster}
             autoPlay={autoPlay}
-            muted
-            loop
-            playsInline
-            controls={!autoPlay}
-            preload="metadata"
-            aria-label={`${film.kind === 'real' ? 'Walkthrough' : 'Illustrated film'} of ${title}`}
+            label={`${film.kind === 'real' ? 'Walkthrough' : 'Illustrated film'} of ${title}`}
           />
           <figcaption className="case-caption">
             {film.kind === 'real'
@@ -445,5 +441,55 @@ export default function ProjectDetailPage() {
         </div>
       </section>
     </article>
+  )
+}
+
+/* The case film plays muted on arrival (that is what lets it autoplay).
+   "Sound on" unmutes and starts it again from the top, because the
+   soundtrack is cut to the picture and joining it halfway explains
+   nothing; pressing again only mutes. */
+function FilmVideo({ src, poster, autoPlay, label }) {
+  const ref = useRef(null)
+  const [sound, setSound] = useState(false)
+
+  const toggle = () => {
+    const v = ref.current
+    if (!v) return
+    if (sound) {
+      v.muted = true
+      setSound(false)
+      return
+    }
+    v.muted = false
+    v.currentTime = 0
+    setSound(true)
+    v.play().catch(() => {
+      v.muted = true
+      setSound(false)
+    })
+  }
+
+  return (
+    <div className="case-video-wrap">
+      <video
+        ref={ref}
+        className="case-video"
+        src={src}
+        poster={poster}
+        autoPlay={autoPlay}
+        muted={!sound}
+        loop
+        playsInline
+        controls={!autoPlay}
+        preload="metadata"
+        aria-label={label}
+        // the native controls (reduced motion) have their own mute
+        onVolumeChange={(e) => setSound(!e.currentTarget.muted)}
+      />
+      <button type="button" className="case-sound" aria-label="Sound" aria-pressed={sound} onClick={toggle}>
+        <SoundIcon on={sound} />
+        {sound ? 'Sound off' : 'Sound on'}
+      </button>
+    </div>
   )
 }

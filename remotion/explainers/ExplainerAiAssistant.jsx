@@ -1,6 +1,7 @@
 import { AbsoluteFill, useCurrentFrame } from 'remotion'
 import { Icon } from '../icons.jsx'
-import { S, useStageFonts, Ground, Tag, Beat, Captions, World, camAt, Glass, Bar, Chip, Wire, wirePath, Pointer, Bubble, EndCard, Mono, arrive, move, fadeIn, lerp, cl } from './stageLook.jsx'
+import { S, useStageFonts, Ground, Tag, Beat, Captions, World, camAt, Glass, Bar, Chip, Wire, wirePath, Pointer, Bubble, EndCard, END_HEADING_AT, END_BUTTON_AT, Mono, arrive, move, fadeIn, lerp, cl } from './stageLook.jsx'
+import { Soundtrack, cue } from '../sound.jsx'
 
 /*
   AI Assistant Build, 30 s, in the Stage look. The story is unchanged: a
@@ -63,6 +64,24 @@ const CAM = [
   { at: T.send - 4, dur: 18, x: 1000, y: 570, s: 0.98 },
 ]
 
+/* The sound (remotion/sound.jsx), from the beats above: the questions
+   piling up behind the hook line, every camera move, the question and the
+   documents landing, the headfake, the approving tap, the send and the
+   end card. */
+const CUES = [
+  ...ASKS.map((_, i) => cue('tick', 4 + i * 7 + 1, 0.35)),
+  cue('thump', 8 + 1),
+  ...CAM.slice(1).map((k) => cue('whoosh', k.at, k.at === T.scene ? 1 : k.at === T.approve ? 0.8 : 0.55)),
+  cue('tick', T.ask + 1),
+  ...DOCS.map((_, i) => cue('tick', T.fan + i * 5 + 1, 0.55)),
+  cue('whooshDown', T.fake - 4, 0.8),
+  cue('thump', T.fake + 1),
+  cue('click', T.tap),
+  cue('tick', T.send + 22 + 1), // the "Sent" chip
+  cue('thump', T.end + END_HEADING_AT + 1, 0.7),
+  cue('end', T.end + END_BUTTON_AT),
+]
+
 export function ExplainerAiAssistant() {
   useStageFonts()
   const f = useCurrentFrame()
@@ -92,6 +111,7 @@ export function ExplainerAiAssistant() {
       <Beat f={f} text={'But it never\nsends {alone.}'} start={T.fake} end={T.fakeEnd} size={150} />
       {f >= T.end && <EndCard f={f - T.end} />}
       <Tag />
+      <Soundtrack cues={CUES} />
     </Ground>
   )
 }

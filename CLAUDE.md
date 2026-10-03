@@ -105,6 +105,16 @@ After any re-render, bump `FILM_V` in `data.js` so browsers fetch the new files.
 project `aniket-portfolio`). `vercel.json` holds the SPA rewrite — delete it and
 every deep link 404s on refresh. Runbook: `docs/deploy.md`.
 
+## How to work here (global Main + Subagent pattern)
+
+Follows `~/.claude/CLAUDE.md`: Sonnet 5.5 Medium main session; Haiku subagents
+for search, logs, renders and anything reading more than ~5 files (return paths
+and a summary, not contents); Sonnet for scoped edits and tests; Opus only when
+asked. Films follow `remotion/CLAUDE.md` (shot list approved before any code,
+preview before full render). High effort for architecture, multi-file
+migrations and deploys. Escalate one tier only after a failed attempt. One task
+per session.
+
 ## Layout
 
     src/      code        public/   static assets

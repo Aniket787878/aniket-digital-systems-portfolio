@@ -183,9 +183,9 @@ measure both at matching viewports before changing anything.
 - **Subagents: pick the cheapest model that can do the job** (Aniket's
   choice, 2026-09-30). Pass `model` on every launch: `haiku` for read-only
   reviews of prepared material, `sonnet` for code, audits and research,
-  `opus` (Opus 5.5) for the lead session, for design and creative direction,
-  and for the Remotion films (`remotion/`): the visual work is where the
-  stronger model shows, so it is not the place to save. Capture shared inputs (the
+  `opus` (Opus 5.5) only for one-off hard review or design questions. The
+  Remotion films (`remotion/`) follow the model rules in `remotion/CLAUDE.md`
+  (Sonnet builds; Opus only for shot list, complex timing and final review). Capture shared inputs (the
   site, docs) once with a script and hand agents the path, so no two agents
   crawl the same thing; code-writing agents work in a worktree and never
   push.

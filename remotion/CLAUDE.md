@@ -31,6 +31,7 @@ Hook or problem (3 to 5 s), context (5 to 10 s), demo of the feature (most of th
 - Voiceover on its own track, music at about 15 to 20% of voiceover volume, ducked under speech.
 - Short sound effects only on key transitions.
 - Generate or edit audio in code (Remotion Audio, ffmpeg, or Python pydub/librosa). Keep source audio in public/audio/.
+- The four 16:9 explainers carry a voiceover (en-IN-PrabhatNeural, remotion/voice/*.mp3), made by `python3 scripts/make-voice.py` from per-line start seconds; if a scene moves, edit the seconds there and re-run. They are the `Explainer-*-cinematic` compositions (kit: remotion/cinematic/Signals.jsx); the older `Explainer-*` ones are kept.
 - Never use copyrighted music. Use royalty-free or generated audio.
 
 ## Brand (Mindset Wellness): fill in before first use

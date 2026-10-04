@@ -131,7 +131,7 @@ export function ExplainerInternalTool() {
       <Beat f={f} text={'Still running the business\nout of a {spreadsheet?}'} start={6} end={T.hookEnd - 8} size={120} />
       {f >= T.end && <EndCard f={f - T.end} />}
       <Tag />
-      <Soundtrack cues={CUES} />
+      <Soundtrack cues={CUES} voice="internal-tool" />
     </Ground>
   )
 }

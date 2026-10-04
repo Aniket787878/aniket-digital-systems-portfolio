@@ -111,7 +111,7 @@ export function ExplainerAiAssistant() {
       <Beat f={f} text={'But it never\nsends {alone.}'} start={T.fake} end={T.fakeEnd} size={150} />
       {f >= T.end && <EndCard f={f - T.end} />}
       <Tag />
-      <Soundtrack cues={CUES} />
+      <Soundtrack cues={CUES} voice="ai-assistant" />
     </Ground>
   )
 }

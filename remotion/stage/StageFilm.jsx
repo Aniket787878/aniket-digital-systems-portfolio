@@ -156,7 +156,7 @@ export function StageFilm({ slug }) {
         <Wordmark size={34} />
       </div>
       <MonoTag text={TAG[story.kind]} />
-      <Soundtrack cues={stageFilmCues(slug)} />
+      <Soundtrack cues={stageFilmCues(slug)} voice={slug} />
     </AbsoluteFill>
   )
 }

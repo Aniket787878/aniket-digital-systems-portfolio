@@ -32,6 +32,7 @@ Hook or problem (3 to 5 s), context (5 to 10 s), demo of the feature (most of th
 - Short sound effects only on key transitions.
 - Generate or edit audio in code (Remotion Audio, ffmpeg, or Python pydub/librosa). Keep source audio in public/audio/.
 - The four 16:9 explainers carry a voiceover (en-IN-PrabhatNeural, remotion/voice/*.mp3), made by `python3 scripts/make-voice.py` from per-line start seconds; if a scene moves, edit the seconds there and re-run. They are the `Explainer-*-cinematic` compositions (kit: remotion/cinematic/Signals.jsx); the older `Explainer-*` ones are kept.
+- Music and voice mix: `python3 scripts/make-music.py` writes `remotion/audio/score-<film>.mp3` (generated bed + treated voice, ducked under speech). Its section marks are frame constants from each film; update them if a reveal, headfake or end card moves. Check with `python3 scripts/measure-audio.py`.
 - Never use copyrighted music. Use royalty-free or generated audio.
 
 ## Brand (Mindset Wellness): fill in before first use

@@ -15,7 +15,7 @@ touching the mix.
     tick        tiny glassy tick when a chip pill lands, quieter than click
     whoosh      air sweep with a rising band: camera pushes, windows arriving
     whoosh-down the same air with a falling band: windows receding, leaving
-    thump       low, rounded swell under a kinetic line's first word
+    thump       deep, rounded hit under a kinetic line's first word
     endtone     warm open chord that blooms as "Book a free call" lands
 """
 import os
@@ -157,7 +157,7 @@ def tick():
     """Glass: three inharmonic partials, the top ones dying first."""
     t = t_axis(0.05)
     att = soft_attack(t, 0.0007)
-    parts = [(2640, 1.0, 0.016), (4180, 0.45, 0.008), (6020, 0.18, 0.004)]
+    parts = [(1980, 1.0, 0.018), (3130, 0.35, 0.008), (4520, 0.1, 0.004)]  # was 2640 Hz: softer under the bed
     sig = sum(a * np.sin(2 * np.pi * f * t) * np.exp(-t / tau) for f, a, tau in parts) * att
     sig = biquad(sig, 'hp', 900)
     sig = room(sig, rt60=0.35, wet=0.22, tone=5000)
@@ -185,28 +185,30 @@ def whoosh(rising=True):
     common = pink(n)
     chans = []
     for side in (-1, 1):
-        src = 0.75 * common + 0.25 * pink(n)  # mostly shared: wide, not phasey
+        src = 0.55 * common + 0.45 * pink(n)  # half shared: wide, still not phasey
         band = sweep_bandpass(src, fc, 1.6)
         band = biquad(band, 'lp', 4200)
         band = biquad(band, 'hp', 140)
-        pan = 0.5 + 0.18 * side * (u - 0.5) * (1 if rising else -1)
+        pan = 0.5 + 0.4 * side * (u - 0.5) * (1 if rising else -1)  # travels across the field
         chans.append(band * env * np.sqrt(np.clip(pan, 0, 1)))
     return np.stack(chans, axis=1)
 
 
 # ---------------------------------------------------------------- thump
 def thump():
-    """A soft low swell: a sine that settles from 92 to 58 Hz, gently
+    """A deep, rounded hit: a sine that settles from 88 to 44 Hz, gently
     saturated so laptop and phone speakers still hear its upper harmonics,
-    with a whisper of dark noise for body."""
-    t = t_axis(0.5)
-    f = 58 + 34 * np.exp(-t / 0.035)
+    a soft knock of dark noise on the front, and a short stereo room so it
+    sits in the same space as the music bed's impacts."""
+    t = t_axis(0.7)
+    f = 44 + 44 * np.exp(-t / 0.045)
     tone = np.sin(2 * np.pi * np.cumsum(f) / SR)
-    env = soft_attack(t, 0.016) * np.exp(-t / 0.12)
-    sig = np.tanh(1.8 * tone * env) / np.tanh(1.8)
-    breath = biquad(pink(len(t)), 'lp', 380) * soft_attack(t, 0.04) * np.exp(-t / 0.09) * 0.12
-    sig = biquad(sig + breath, 'lp', 900)
-    return fade_out(sig, 0.12)
+    env = soft_attack(t, 0.006) * np.exp(-t / 0.18)
+    sig = np.tanh(2.0 * tone * env) / np.tanh(2.0)
+    knock = biquad(pink(len(t)), 'lp', 600) * soft_attack(t, 0.003) * np.exp(-t / 0.03) * 0.3
+    sig = biquad(sig + knock, 'lp', 1100)
+    sig = room(sig, rt60=0.6, wet=0.12, tone=1800)
+    return fade_out(trim(sig, 0.7), 0.15)
 
 
 # ---------------------------------------------------------------- end tone

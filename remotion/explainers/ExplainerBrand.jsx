@@ -137,7 +137,7 @@ export function ExplainerBrand() {
       {f >= F.count - 2 && f < F.end + 12 && <Counters f={f - F.count} L={L} tall={tall} />}
       {f >= F.end && <EndCard f={f - F.end} />}
       <Tag text={inProof ? 'Working demo · real screens' : 'Illustration'} />
-      <Soundtrack cues={CUES} voice="brand" />
+      <Soundtrack cues={CUES} voice="brand" score="brand-vertical" />
     </Ground>
   )
 }

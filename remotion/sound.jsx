@@ -24,7 +24,16 @@ import endtone from './sfx/endtone.wav'
     thump        the first word of a kinetic line     (low, rounded)
     end          "Book a free call" landing           (warm chord bloom)
 
-  Music. Drop a track at remotion/audio/music.mp3 (or .m4a/.wav) and re-run
+  Score. scripts/make-music.py writes remotion/audio/score-<film>.mp3 for
+  every voiced film: the voice (treated: EQ, gentle compression, de-esser,
+  a short room) over a generated music bed (pad, bass, kick and hats on a
+  tempo picked per film, risers into the reveal, impacts on it, a break
+  under the headfake, the end card's chord at the CTA), side-chained under
+  the words. A film names it with <Soundtrack voice="brand" /> (or score=
+  when two cuts share one voice), and the score replaces the dry voice.
+  The effects sit on top; render-videos.sh masters the film to -14 LUFS.
+
+  Music slot (films without a score). Drop a track at remotion/audio/music.mp3 (or .m4a/.wav) and re-run
   scripts/render-videos.sh: the script loudness-normalises it to -20 LUFS
   into remotion/audio/music-bed.wav (gitignored), and every sounded film
   then plays it from frame 0 under the effects, cut to the film's length,
@@ -62,6 +71,15 @@ const MUSIC = (() => {
 })()
 export const hasMusic = Boolean(MUSIC)
 
+/* The scores: remotion/audio/score-<film>.mp3 from scripts/make-music.py. */
+const SCORES = (() => {
+  const ctx = import.meta.webpackContext('./audio', { recursive: false, regExp: /^\.\/score-.*\.mp3$/ })
+  return Object.fromEntries(ctx.keys().map((k) => {
+    const m = ctx(k)
+    return [k.replace(/^\.\/score-|\.mp3$/g, ''), typeof m === 'string' ? m : m.default]
+  }))
+})()
+
 /* Voiceover. remotion/voice/<name>.mp3 is one mono track the length of its
    film, built by scripts/make-voice.py (en-IN-PrabhatNeural), so a film just
    names it: <Soundtrack cues={CUES} voice="brand" />. The effects sit
@@ -75,27 +93,33 @@ const VOICES = (() => {
 })()
 const VOICE_LEVEL = 1
 const VOICE_SFX = 0.55
+/* Over a score (voice + bed at -16 LUFS) the effects sit at this share of
+   their level: under the words, level with the bed's own hits. */
+const SCORE_SFX = 0.55
 
 const MUSIC_FADE_IN = 15 // 0.5 s
 const MUSIC_FADE_OUT = 45 // 1.5 s
 const DUCK = 0.5 // -6 dB under the end tone
 
-/* cues: [{ kind, at, gain }] from cue(). The music ducks under the end
-   tone's cue. */
-export function Soundtrack({ cues, voice }) {
+/* cues: [{ kind, at, gain }] from cue(). voice names the dry voiceover;
+   score (default: the voice's name) the scored mix that replaces it. The
+   music slot ducks under the end tone's cue. */
+export function Soundtrack({ cues, voice, score = voice }) {
   const { durationInFrames: D } = useVideoConfig()
   const list = tidy(cues, D)
-  const voiceSrc = voice ? VOICES[voice] : null
+  const scoreSrc = score ? SCORES[score] : null
+  const voiceSrc = scoreSrc ? null : voice ? VOICES[voice] : null
   const endAt = list.find((c) => c.kind === 'end')?.at
   return (
     <>
       {list.map((c, i) => (
         <Sequence key={i} from={c.at} durationInFrames={Math.min(90, D - c.at)} layout="none" name={`sfx ${c.kind}`}>
-          <Audio src={SRC[c.kind]} volume={Math.min(1, LEVEL[c.kind] * c.gain * SFX_GAIN * (voiceSrc ? VOICE_SFX : 1))} />
+          <Audio src={SRC[c.kind]} volume={Math.min(1, LEVEL[c.kind] * c.gain * SFX_GAIN * (scoreSrc ? SCORE_SFX : voiceSrc ? VOICE_SFX : 1))} />
         </Sequence>
       ))}
+      {scoreSrc && <Audio src={scoreSrc} volume={1} name={`score ${score}`} />}
       {voiceSrc && <Audio src={voiceSrc} volume={VOICE_LEVEL} name={`voice ${voice}`} />}
-      {MUSIC && <Audio src={MUSIC} volume={(f) => musicVolume(f, D, endAt)} name="music" />}
+      {MUSIC && !scoreSrc && <Audio src={MUSIC} volume={(f) => musicVolume(f, D, endAt)} name="music" />}
     </>
   )
 }

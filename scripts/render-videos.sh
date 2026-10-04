@@ -22,10 +22,31 @@ BROWSER=()
 PAR=(--concurrency="${CONCURRENCY:-4}")
 ONLY="${1:-}"
 
-# Sound (remotion/sound.jsx). The films and the explainers carry the
-# synthesised effects as 96 kb/s AAC; the card loops and the hero reel are
-# rendered --muted, so they carry no audio track at all.
-SOUND=(--audio-codec=aac --audio-bitrate=96k)
+# Sound (remotion/sound.jsx). The films and the explainers carry a score
+# (voice + generated music bed, remotion/audio/score-*.mp3) and the
+# synthesised effects. Remotion renders the mix at 320 kb/s, then master()
+# below sets it to -14 LUFS under a -2 dBFS limiter (true peak about -1.8)
+# and encodes it once as 128 kb/s stereo AAC, with the video stream copied.
+# The card loops and the hero reel are rendered --muted: no audio track.
+SOUND=(--audio-codec=aac --audio-bitrate=320k)
+
+# Rebuild the scores if a voice or the score script is newer than them
+# (python3 with numpy + scipy; see scripts/make-music.py).
+if [ -n "$(find remotion/voice/*.mp3 scripts/make-music.py -newer remotion/audio/score-brand.mp3 2>/dev/null)" ] \
+   || [ ! -f remotion/audio/score-brand.mp3 ]; then
+  python3 scripts/make-music.py
+fi
+
+master() { # mp4: measure, gain to -14 LUFS, limit, re-encode the audio only
+  local f="$1" i g
+  i=$(ffmpeg -hide_banner -nostats -i "$f" -vn -af ebur128 -f null - 2>&1 | sed -n 's/^ *I: *\(-\?[0-9.]*\) LUFS/\1/p' | tail -n1)
+  g=$(awk -v i="$i" 'BEGIN { printf "%.2f", -14 - i }')
+  ffmpeg -hide_banner -loglevel error -y -i "$f" -map 0:v -map 0:a -c:v copy \
+    -af "volume=${g}dB,alimiter=limit=0.75:attack=4:release=60:level=disabled" \
+    -ar 48000 -ac 2 -c:a aac -b:a 128k -movflags +faststart "${f%.mp4}.master.mp4"
+  mv "${f%.mp4}.master.mp4" "$f"
+  echo "mastered $f ($i LUFS, ${g} dB)"
+}
 
 # The optional music bed. Put the track at remotion/audio/music.mp3 (or .m4a
 # or .wav) and re-run this script: it is normalised (two-pass loudnorm,
@@ -52,6 +73,7 @@ fi
 film() { # composition, output name, poster frame
   npx remotion render "$ENTRY" "$1" "$OUT/$2.mp4" --codec=h264 --crf=28 --x264-preset=slow \
     --pixel-format=yuv420p "${SOUND[@]}" "${PAR[@]}" "${BROWSER[@]}" --log=error
+  master "$OUT/$2.mp4"
   npx remotion still "$ENTRY" "$1" "$OUT/posters/$2.jpg" --frame="$3" \
     --image-format=jpeg --jpeg-quality=82 "${BROWSER[@]}" --log=error
 }
@@ -62,6 +84,7 @@ loop() { # composition, output path, scale: a silent card loop
 explainer() { # composition, output name, poster frame, crf
   npx remotion render "$ENTRY" "$1" "$OUT/explainers/$2.mp4" --codec=h264 --crf="$4" --x264-preset=slow \
     --pixel-format=yuv420p "${SOUND[@]}" "${PAR[@]}" "${BROWSER[@]}" --log=error
+  master "$OUT/explainers/$2.mp4"
   npx remotion still "$ENTRY" "$1" "$OUT/posters/$2.jpg" --frame="$3" \
     --image-format=jpeg --jpeg-quality=82 "${BROWSER[@]}" --log=error
 }

@@ -94,14 +94,16 @@ fi
 
 # Explainers: composition, output name, poster frame (a frame where the idea
 # is fully on screen: the flow lit, the reply sent, the dashboard built),
-# CRF. The two ~58s brand cuts use a higher CRF to stay near 6 MB, since
+# CRF. The four 16:9 films are the cinematic cuts (Explainer-*-cinematic, voiced
+# by remotion/voice/*.mp3 from scripts/make-voice.py); the vertical brand cut is
+# the earlier layout with the same voice. The two ~58s brand cuts use a higher CRF to stay near 6 MB, since
 # they are sent over WhatsApp.
 EXPLAINERS=(
-  "Explainer-brand explainer-brand 842 27"
+  "Explainer-brand-cinematic explainer-brand 600 27"
   "Explainer-brand-vertical explainer-brand-vertical 842 27"
-  "Explainer-ops-sprint explainer-ops-sprint 664 25"
-  "Explainer-ai-assistant explainer-ai-assistant 574 25"
-  "Explainer-internal-tool explainer-internal-tool 500 25"
+  "Explainer-ops-sprint-cinematic explainer-ops-sprint 150 25"
+  "Explainer-ai-assistant-cinematic explainer-ai-assistant 300 25"
+  "Explainer-internal-tool-cinematic explainer-internal-tool 520 25"
 )
 for row in "${EXPLAINERS[@]}"; do
   read -r comp name poster crf <<<"$row"

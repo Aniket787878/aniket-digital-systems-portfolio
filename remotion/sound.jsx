@@ -62,23 +62,39 @@ const MUSIC = (() => {
 })()
 export const hasMusic = Boolean(MUSIC)
 
+/* Voiceover. remotion/voice/<name>.mp3 is one mono track the length of its
+   film, built by scripts/make-voice.py (en-IN-PrabhatNeural), so a film just
+   names it: <Soundtrack cues={CUES} voice="brand" />. The effects sit
+   under it at VOICE_SFX of their level so they never cover a word. */
+const VOICES = (() => {
+  const ctx = import.meta.webpackContext('./voice', { recursive: false, regExp: /\.mp3$/ })
+  return Object.fromEntries(ctx.keys().map((k) => {
+    const m = ctx(k)
+    return [k.replace(/^\.\/|\.mp3$/g, ''), typeof m === 'string' ? m : m.default]
+  }))
+})()
+const VOICE_LEVEL = 1
+const VOICE_SFX = 0.55
+
 const MUSIC_FADE_IN = 15 // 0.5 s
 const MUSIC_FADE_OUT = 45 // 1.5 s
 const DUCK = 0.5 // -6 dB under the end tone
 
 /* cues: [{ kind, at, gain }] from cue(). The music ducks under the end
    tone's cue. */
-export function Soundtrack({ cues }) {
+export function Soundtrack({ cues, voice }) {
   const { durationInFrames: D } = useVideoConfig()
   const list = tidy(cues, D)
+  const voiceSrc = voice ? VOICES[voice] : null
   const endAt = list.find((c) => c.kind === 'end')?.at
   return (
     <>
       {list.map((c, i) => (
         <Sequence key={i} from={c.at} durationInFrames={Math.min(90, D - c.at)} layout="none" name={`sfx ${c.kind}`}>
-          <Audio src={SRC[c.kind]} volume={Math.min(1, LEVEL[c.kind] * c.gain * SFX_GAIN)} />
+          <Audio src={SRC[c.kind]} volume={Math.min(1, LEVEL[c.kind] * c.gain * SFX_GAIN * (voiceSrc ? VOICE_SFX : 1))} />
         </Sequence>
       ))}
+      {voiceSrc && <Audio src={voiceSrc} volume={VOICE_LEVEL} name={`voice ${voice}`} />}
       {MUSIC && <Audio src={MUSIC} volume={(f) => musicVolume(f, D, endAt)} name="music" />}
     </>
   )

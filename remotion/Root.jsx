@@ -9,6 +9,10 @@ import { WALKTHROUGHS } from './walkthroughs.js'
 import { SCENES } from './platformScenes.jsx'
 import { DEMO_SCENES } from './demoScenes.jsx'
 import { ExplainerBrand, BRAND_LEN } from './explainers/ExplainerBrand.jsx'
+import { ExplainerBrandCinematic, BRAND_CINEMATIC_LEN } from './explainers/ExplainerBrandCinematic.jsx'
+import { ExplainerOpsSprintCinematic, OPS_CINEMATIC_LEN } from './explainers/ExplainerOpsSprintCinematic.jsx'
+import { ExplainerAiAssistantCinematic, AI_CINEMATIC_LEN } from './explainers/ExplainerAiAssistantCinematic.jsx'
+import { ExplainerInternalToolCinematic, TOOL_CINEMATIC_LEN } from './explainers/ExplainerInternalToolCinematic.jsx'
 import { ExplainerOpsSprint, OPS_LEN } from './explainers/ExplainerOpsSprint.jsx'
 import { ExplainerAiAssistant, AI_LEN } from './explainers/ExplainerAiAssistant.jsx'
 import { ExplainerInternalTool, TOOL_LEN } from './explainers/ExplainerInternalTool.jsx'
@@ -83,6 +87,10 @@ export const RemotionRoot = () => (
       />
     ))}
     <Composition id="Explainer-brand" component={ExplainerBrand} durationInFrames={BRAND_LEN} fps={30} width={1920} height={1080} />
+    <Composition id="Explainer-brand-cinematic" component={ExplainerBrandCinematic} durationInFrames={BRAND_CINEMATIC_LEN} fps={30} width={1920} height={1080} />
+    <Composition id="Explainer-ops-sprint-cinematic" component={ExplainerOpsSprintCinematic} durationInFrames={OPS_CINEMATIC_LEN} fps={30} width={1920} height={1080} />
+    <Composition id="Explainer-ai-assistant-cinematic" component={ExplainerAiAssistantCinematic} durationInFrames={AI_CINEMATIC_LEN} fps={30} width={1920} height={1080} />
+    <Composition id="Explainer-internal-tool-cinematic" component={ExplainerInternalToolCinematic} durationInFrames={TOOL_CINEMATIC_LEN} fps={30} width={1920} height={1080} />
     <Composition id="Explainer-brand-vertical" component={ExplainerBrand} durationInFrames={BRAND_LEN} fps={30} width={1080} height={1920} />
     <Composition id="Explainer-ops-sprint" component={ExplainerOpsSprint} durationInFrames={OPS_LEN} fps={30} width={1920} height={1080} />
     <Composition id="Explainer-ai-assistant" component={ExplainerAiAssistant} durationInFrames={AI_LEN} fps={30} width={1920} height={1080} />

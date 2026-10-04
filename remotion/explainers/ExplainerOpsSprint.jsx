@@ -114,7 +114,7 @@ export function ExplainerOpsSprint() {
       <Beat f={f} text={'Stops the moment\nthey {book.}'} start={STOP[0]} end={STOP[1]} size={140} />
       {f >= END && <EndCard f={f - END} />}
       <Tag />
-      <Soundtrack cues={CUES} />
+      <Soundtrack cues={CUES} voice="ops-sprint" />
     </Ground>
   )
 }

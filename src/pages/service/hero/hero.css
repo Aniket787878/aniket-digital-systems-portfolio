@@ -20,12 +20,16 @@
 }
 
 .sv-glow {
-  width: min(1100px, 110vw);
+  width: min(68.75rem, 110vw); /* was 1100px */
 }
 
 .sv-wrap {
   position: relative;
-  max-width: calc(1440px + var(--container-pad) * 2);
+  /* 90rem (= 1440px at the default root), not a literal px, so the
+     service-page hero grows with the large-screen scaling pass
+     (2026-10-06) — this was the exact 1440px ceiling the audit's P1
+     named for /websites, /software and /ai. */
+  max-width: calc(90rem + var(--container-pad) * 2);
   margin: 0 auto;
   padding: 0 var(--container-pad);
 }

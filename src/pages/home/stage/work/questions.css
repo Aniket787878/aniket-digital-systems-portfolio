@@ -19,7 +19,8 @@
 
 @media (min-width: 1024px) {
   .sq-inner {
-    width: min(1200px, 100% - 2 * var(--sw-inset));
+    /* var(--container-max), not a literal 1200px — see work.css for why. */
+    width: min(var(--container-max), 100% - 2 * var(--sw-inset));
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     gap: clamp(2.5rem, 5vw, 5rem);
     align-items: start;

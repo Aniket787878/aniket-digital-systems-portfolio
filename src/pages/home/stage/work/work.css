@@ -35,7 +35,10 @@
 @media (min-width: 1024px) {
   .sw-head,
   .sw-card {
-    width: min(1200px, 100% - 2 * var(--sw-inset));
+    /* var(--container-max), not a literal 1200px, so this grows with the
+       large-screen scaling pass (2026-10-06) alongside the rest of the
+       page instead of staying laptop-width forever (the audit's P1). */
+    width: min(var(--container-max), 100% - 2 * var(--sw-inset));
   }
 }
 
@@ -98,6 +101,15 @@
 .sw-caption {
   margin: 0.85rem 0 0 0.25rem;
   font-size: 0.6875rem;
+}
+
+/* 0.6875rem (11px) is under the 14px comfortable-reading floor on phones
+   (screen-size audit, 2026-10-06, P3) — raised here only, not globally, so
+   the compact desktop caption is untouched. */
+@media (max-width: 480px) {
+  .sw-caption {
+    font-size: 0.75rem;
+  }
 }
 
 .sw-copy {
@@ -274,6 +286,13 @@
   font-size: 0.6875rem;
   letter-spacing: 0.04em;
   color: var(--muted);
+}
+
+/* Same 11px phone floor as .sw-caption above. */
+@media (max-width: 480px) {
+  .sw-bar-label {
+    font-size: 0.75rem;
+  }
 }
 
 .sw-screen {

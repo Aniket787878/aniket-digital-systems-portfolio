@@ -70,11 +70,14 @@
   position: relative;
   z-index: 1;
   height: 100%;
-  max-width: calc(1440px + var(--container-pad) * 2);
+  /* 90rem (= 1440px at the default root), not a literal px, so this band
+     grows with the large-screen scaling pass (2026-10-06) instead of
+     capping out like the rest of the site did before it (the audit's P1). */
+  max-width: calc(90rem + var(--container-pad) * 2);
   margin: 0 auto;
   padding-inline: var(--container-pad);
   display: grid;
-  grid-template-columns: clamp(300px, 26vw, 390px) minmax(0, 1fr) clamp(250px, 20vw, 300px);
+  grid-template-columns: clamp(18.75rem, 26vw, 24.375rem) minmax(0, 1fr) clamp(15.625rem, 20vw, 18.75rem);
   column-gap: clamp(1rem, 2vw, 2.5rem);
   pointer-events: none;
 }
@@ -254,7 +257,7 @@
 }
 
 .sw3-static-head {
-  max-width: 640px;
+  max-width: 40rem; /* was 640px */
   margin-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 

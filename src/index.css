@@ -71,10 +71,12 @@
   --display-3: clamp(1.25rem, 2vw, 1.625rem);   /* sub titles */
 
   /* ---------- Radii ---------- */
-  --radius-lg: 20px;   /* big bands */
-  --radius-md: 14px;   /* cards, accordion rows */
-  --radius-sm: 10px;
-  --radius-xs: 8px;
+  /* rem, not px: cards and bands should round proportionally as the
+     large-screen scaling pass (2026-10-06) grows everything else. */
+  --radius-lg: 1.25rem;    /* big bands, was 20px */
+  --radius-md: 0.875rem;   /* cards, accordion rows, was 14px */
+  --radius-sm: 0.625rem;   /* was 10px */
+  --radius-xs: 0.5rem;     /* was 8px */
 
   /* ---------- Spacing ---------- */
   --space-1: 0.25rem;
@@ -104,8 +106,14 @@
 
      Was 1600 (measured off the Folioblox reference). Narrowed to 1200 in
      the 2026-09-27 restraint pass: at 1600 every band sprawled into short
-     islands of text with dead space between them. */
-  --container-max: 1200px;
+     islands of text with dead space between them.
+
+     In rem (75rem = 1200px at the default 16px root) so the large-screen
+     scaling pass (2026-10-06, see the html rule above) grows it past
+     1200px above 1600px viewports instead of leaving every page capped at
+     laptop width forever — the P1 finding in
+     docs/audits/2026-10-06-screens/report.md. */
+  --container-max: 75rem;
   --container-pad: clamp(1.5rem, 0.75rem + 2vw, 2.5rem);
   --measure: 60ch;
 
@@ -143,6 +151,37 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   background: var(--bg);
+}
+
+/* ---------- Large-screen scaling (owner's call, 2026-10-06) ----------
+   From 1600px the whole site (type, spacing, container, cards, nav) grows
+   proportionally with the viewport, so a 1920/2560/3440 screen reads like
+   the 1440-1600 design, just bigger — not a new layout, not a wider text
+   column. Every size built from rem (--text-*, --space-*, --container-max,
+   the component sizes converted alongside this) rides the root font-size
+   automatically; only 1px borders/hairlines and the px-based @media
+   breakpoints stay fixed, which is why this never changes layout, only
+   scale. Below 1600px this rule never applies, so the site is
+   pixel-identical to before it existed.
+   Capped at 2560px: 2560 / 1600 = 1.6x, so a 1440p/27" monitor gets the
+   full scale-up and an ultrawide (3440px) gets that same 1.6x page
+   centered in more black rather than growing without bound. */
+@media (min-width: 1600px) {
+  html {
+    /* Parenthesised as (vw / px) first so the division resolves to a
+       plain number before multiplying by 16px — `100vw / 1600 * 16px`
+       multiplies two lengths, which calc() silently rejects as invalid,
+       leaving font-size stuck at its previous value with no console
+       warning. Caught by checking computed style in Playwright, not by
+       eye. */
+    font-size: calc(16px * (100vw / 1600px));
+  }
+}
+
+@media (min-width: 2560px) {
+  html {
+    font-size: 25.6px; /* 16px * (2560 / 1600) — the 1.6x cap */
+  }
 }
 
 body {
@@ -2253,6 +2292,7 @@ a:hover {
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 0.35rem 0.75rem;
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
 
@@ -3018,11 +3058,13 @@ a:hover .text-link svg {
 /* ---------- Floating pill nav ---------- */
 .nav,
 .nav.nav-scrolled {
-  top: 14px;
+  /* rem, not px, so the pill grows with the large-screen scaling pass
+     (2026-10-06) instead of staying laptop-sized on a 2560px screen. */
+  top: 0.875rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-inline: 12px;
+  padding-inline: 0.75rem;
   background: none;
   border: 0;
   box-shadow: none;
@@ -3038,9 +3080,9 @@ a:hover .text-link svg {
   gap: clamp(1rem, 2.5vw, 2rem);
   width: auto;
   max-width: 100%;
-  height: 56px;
+  height: 3.5rem;
   margin: 0;
-  padding: 0 7px 0 18px;
+  padding: 0 0.4375rem 0 1.125rem;
   border-radius: 999px;
   /* Nearly solid: it floats over the light paper bands too, where a thin
      translucent dark reads as grey haze. */
@@ -3063,9 +3105,9 @@ a:hover .text-link svg {
 .nav-mark {
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
+  width: 1.625rem;
+  height: 1.625rem;
+  border-radius: 0.5rem;
   background: linear-gradient(160deg, #2a1a10, #140d09);
   border: 1px solid rgba(245, 135, 30, 0.35);
 }
@@ -3085,7 +3127,7 @@ a:hover .text-link svg {
 }
 
 .nav-actions .btn-saffron {
-  height: 42px;
+  height: 2.625rem;
   padding: 0 1.1rem;
   border-radius: 999px;
   font-size: 0.875rem;
@@ -3093,10 +3135,10 @@ a:hover .text-link svg {
 
 .nav-panel {
   pointer-events: auto;
-  width: min(100%, 420px);
-  margin-top: 8px;
+  width: min(100%, 26.25rem);
+  margin-top: 0.5rem;
   padding: 0.75rem 1.25rem 1.25rem;
-  border-radius: 20px;
+  border-radius: 1.25rem;
   background: rgba(20, 19, 18, 0.94);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }

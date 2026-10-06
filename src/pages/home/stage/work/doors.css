@@ -16,7 +16,8 @@
 
 @media (min-width: 1024px) {
   .sd-inner {
-    width: min(1200px, 100% - 2 * var(--sw-inset));
+    /* var(--container-max), not a literal 1200px — see work.css for why. */
+    width: min(var(--container-max), 100% - 2 * var(--sw-inset));
   }
 }
 
@@ -174,6 +175,14 @@
   color: var(--muted);
 }
 
+/* 11px is under the 14px comfortable-reading floor on phones (screen-size
+   audit, 2026-10-06, P3) — raised here only. */
+@media (max-width: 480px) {
+  .sd-mini-tag {
+    font-size: 0.75rem;
+  }
+}
+
 .sd-body {
   flex: 1;
   display: flex;
@@ -237,7 +246,7 @@
 
 .sd-sites-frame {
   width: 100%;
-  max-width: 340px;
+  max-width: 21.25rem; /* was 340px */
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -311,7 +320,7 @@
 .sd-plate {
   position: absolute;
   width: 78%;
-  max-width: 340px;
+  max-width: 21.25rem; /* was 340px */
   aspect-ratio: 16 / 10;
   border-radius: 8px;
   overflow: hidden;

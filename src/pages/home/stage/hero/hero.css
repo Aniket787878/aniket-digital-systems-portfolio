@@ -32,9 +32,11 @@
    glow already reaches transparent (64% of its radius) before the edge,
    and the dot grid fades out through its own mask. */
 
-/* One big glow, behind the window. */
+/* One big glow, behind the window. Tied to --container-max (not a literal
+   1200px) so it grows with the large-screen scaling pass (2026-10-06)
+   instead of staying a fixed size while the hero around it grows. */
 .sh-glow {
-  width: min(1200px, 95vw);
+  width: min(var(--container-max), 95vw);
   background: radial-gradient(
     circle,
     rgba(245, 135, 30, 0.26) 0%,
@@ -50,8 +52,11 @@
   display: grid;
   /* Wider than the page container: the headline needs ~8.4em for
      "Websites that bring" to hold four lines, and the window may run
-     off the right edge like a product shot. */
-  max-width: calc(1600px + var(--container-pad) * 2);
+     off the right edge like a product shot. 100rem (= 1600px at the
+     default root), not a literal px, so this grows with the large-screen
+     scaling pass (2026-10-06) instead of becoming relatively narrower
+     than the rest of the page past 1600px viewports. */
+  max-width: calc(100rem + var(--container-pad) * 2);
   grid-template-columns: minmax(0, 48fr) minmax(0, 52fr);
   align-items: center;
   gap: clamp(1.5rem, 3vw, 3rem);
@@ -156,10 +161,13 @@
 }
 
 .sh-persp {
-  perspective: 1800px;
+  /* rem, not px: keeps the 3D tilt reading the same once the window grows
+     under the large-screen scaling pass (2026-10-06) — a fixed px
+     perspective against a bigger element flattens the tilt. */
+  perspective: 112.5rem; /* was 1800px */
   perspective-origin: 30% 50%;
   width: 100%;
-  max-width: 900px;
+  max-width: 56.25rem; /* was 900px */
 }
 
 .sh-tilt {

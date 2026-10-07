@@ -108,11 +108,9 @@
      the 2026-09-27 restraint pass: at 1600 every band sprawled into short
      islands of text with dead space between them.
 
-     In rem (75rem = 1200px at the default 16px root) so the large-screen
-     scaling pass (2026-10-06, see the html rule above) grows it past
-     1200px above 1600px viewports instead of leaving every page capped at
-     laptop width forever — the P1 finding in
-     docs/audits/2026-10-06-screens/report.md. */
+     Grows in px steps on big screens (tiers right after :root) so a
+     1920/2560 screen gets a wider page, not a zoomed one — the P1
+     finding in docs/audits/2026-10-06-screens/report.md. */
   --container-max: 75rem;
   --container-pad: clamp(1.5rem, 0.75rem + 2vw, 2.5rem);
   --measure: 60ch;
@@ -135,6 +133,18 @@
   color-scheme: dark;
 }
 
+/* Wider page steps for big screens (px, not rem, so the gentle type
+   growth above doesn't compound with them). */
+@media (min-width: 1600px) {
+  :root { --container-max: 1360px; }
+}
+@media (min-width: 1920px) {
+  :root { --container-max: 1520px; }
+}
+@media (min-width: 2400px) {
+  :root { --container-max: 1680px; }
+}
+
 /* ============================================================
    Reset & base
    ============================================================ */
@@ -153,34 +163,18 @@ html {
   background: var(--bg);
 }
 
-/* ---------- Large-screen scaling (owner's call, 2026-10-06) ----------
-   From 1600px the whole site (type, spacing, container, cards, nav) grows
-   proportionally with the viewport, so a 1920/2560/3440 screen reads like
-   the 1440-1600 design, just bigger — not a new layout, not a wider text
-   column. Every size built from rem (--text-*, --space-*, --container-max,
-   the component sizes converted alongside this) rides the root font-size
-   automatically; only 1px borders/hairlines and the px-based @media
-   breakpoints stay fixed, which is why this never changes layout, only
-   scale. Below 1600px this rule never applies, so the site is
-   pixel-identical to before it existed.
-   Capped at 2560px: 2560 / 1600 = 1.6x, so a 1440p/27" monitor gets the
-   full scale-up and an ultrawide (3440px) gets that same 1.6x page
-   centered in more black rather than growing without bound. */
+/* ---------- Large screens: reflow, not zoom (2026-10-07) ----------
+   Replaces the 2026-10-06 pass that scaled the whole site up to 1.6x
+   above 1600px. Owner's verdict: a uniform zoom just looks blown up.
+   Now a big screen gets a wider page (the --container-max tiers below)
+   and more cards per row (per-component min-width tiers), while type
+   grows only gently: 16px at 1600px to 18px at 2560px, then holds.
+   Reading columns stay capped in ch/rem, so long text never runs wide.
+   Below 1600px nothing here applies. */
 @media (min-width: 1600px) {
   html {
-    /* Parenthesised as (vw / px) first so the division resolves to a
-       plain number before multiplying by 16px — `100vw / 1600 * 16px`
-       multiplies two lengths, which calc() silently rejects as invalid,
-       leaving font-size stuck at its previous value with no console
-       warning. Caught by checking computed style in Playwright, not by
-       eye. */
-    font-size: calc(16px * (100vw / 1600px));
-  }
-}
-
-@media (min-width: 2560px) {
-  html {
-    font-size: 25.6px; /* 16px * (2560 / 1600) — the 1.6x cap */
+    /* 12.667px + 0.2083vw = 16px at 1600, 18px at 2560 */
+    font-size: clamp(16px, 12.667px + 0.2083vw, 18px);
   }
 }
 
@@ -2394,6 +2388,25 @@ a:hover {
 @media (max-width: 900px) {
   .showcase-card {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .showcase-item-alt .showcase-media {
+    order: 0;
+  }
+}
+
+/* Big screens: two projects per row, each film above its text, instead
+   of eight full-width rows to scroll past (reflow, not zoom; 2026-10-07). */
+@media (min-width: 1920px) {
+  .showcase {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .showcase-card {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    align-content: start;
+    height: 100%;
   }
 
   .showcase-item-alt .showcase-media {

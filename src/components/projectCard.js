@@ -36,7 +36,7 @@ export function projectCard(slug, overrides = {}) {
     }
   } else if (film) {
     const real = film.kind === 'real'
-    label = real ? 'Working demo · real screens' : 'Client platform · illustrated'
+    label = real ? 'Working demo · real build' : 'Client platform · illustrated'
     media = real
       ? { type: 'film', src: film.framed, poster: film.framedPoster }
       : { type: 'film', src: film.src, poster: film.poster }

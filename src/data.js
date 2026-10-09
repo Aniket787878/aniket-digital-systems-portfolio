@@ -1866,7 +1866,7 @@ export const services = [
       },
       {
         q: 'Which AI do you use?',
-        a: 'Whichever fits the job: Claude for reading messy messages and drafting replies, Gemini for turning a recorded session into a draft note. Where a simple template does the job, there is no AI at all.'
+        a: 'Whichever fits the job: one model for reading messy messages and drafting replies, another for turning a recorded session into a draft note. The exact names are in each case study’s technical details. Where a simple template does the job, there is no AI at all.'
       },
       {
         q: 'What happens in the AI Roadmap Session?',
@@ -1911,14 +1911,14 @@ export const capabilities = [
     index: '02',
     title: 'Web & Apps',
     blurb:
-      'Websites, landing pages and installable PWAs, wired into the system behind them rather than sitting on their own.',
-    items: ['Websites', 'Funnels', 'PWAs', 'Apps']
+      'Websites, landing pages and installable phone apps, wired into the system behind them rather than sitting on their own.',
+    items: ['Websites', 'Funnels', 'Installable apps', 'Apps']
   },
   {
     index: '03',
     title: 'AI & Automation',
     blurb:
-      'n8n and Claude handling the repeat work: intake, routing, reminders, summaries, drafted replies, document generation.',
+      'AI and automations handling the repeat work: new enquiries, sending things to the right person, reminders, summaries, drafted replies and documents.',
     items: ['AI assistants', 'Integrations', 'Notifications', 'Documents']
   },
   {

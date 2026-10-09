@@ -53,7 +53,7 @@ export const images = {
    the stale copy while revalidating), so a returning visitor would keep
    seeing the old films. Change this whenever scripts/render-videos.sh
    output is committed. */
-export const FILM_V = '?v=2026-10-04c'
+export const FILM_V = '?v=2026-10-09'
 
 /* Project covers: one designed picture per project card, rendered from
    scripts/covers/ by scripts/render-covers.mjs into public/covers/. Each
@@ -1775,6 +1775,9 @@ export const services = [
     ],
     from: { usd: '$1,200', inr: '₹35,000' },
     media: { kind: 'image', src: '/this-site.jpg', badge: 'This site · real screens', alt: 'The home page of this website: a dark page with the headline Websites that bring the work in, software and AI that run the rest, and a saffron Book a free call button' },
+    /* The service door's picture (components/ServiceDoor.jsx), rendered from
+       scripts/covers/service-websites.html. */
+    cover: { src: `/covers/service-websites.png${COVER_V}`, alt: 'Illustration of how it works: a visitor sends the form on your website, and the enquiry lands in your inbox and on WhatsApp while the visitor gets a reply straight away.' },
     proofHead: ['The proof is the page you are on.', 'Built end to end, and live.'],
     proof: [
       {
@@ -1827,6 +1830,9 @@ export const services = [
     ],
     from: { usd: '$4,000', inr: '₹1.5L' },
     media: { kind: 'clip', slug: 'shared-inbox', badge: 'Real screens' },
+    /* The service door's picture (components/ServiceDoor.jsx), rendered from
+       scripts/covers/service-software.html. */
+    cover: { src: `/covers/service-software.png${COVER_V}`, alt: 'Illustration of how it works: three spreadsheets, WhatsApp threads and paper forms become one system with clients, bookings and payments in one place.' },
     proofHead: ['Two platforms in real use.', 'Three working tools, plus demo screens.'],
     proof: [
       {
@@ -1876,6 +1882,9 @@ export const services = [
     ],
     from: { usd: '$490', inr: '₹20,000' },
     media: { kind: 'explainer', key: 'ai-assistant', badge: 'Illustrated' },
+    /* The service door's picture (components/ServiceDoor.jsx), rendered from
+       scripts/covers/service-ai.html. */
+    cover: { src: `/covers/service-ai.png${COVER_V}`, alt: 'Illustration of how it works: a customer asks for a Tuesday evening slot late at night, the AI replies that 18:30 is free, and a person checks what matters.' },
     proofHead: ['AI already at work.', 'In a clinic, in working demos, and in demo screens.'],
     proof: [
       {

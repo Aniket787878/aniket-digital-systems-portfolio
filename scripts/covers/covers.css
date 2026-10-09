@@ -534,3 +534,23 @@ body {
   border-radius: 50%;
   background: var(--peach);
 }
+
+/* ---------- Service covers (service-*.html): the three service areas,
+   one picture each for the service doors. Illustrations of the idea, so
+   the tag says so; nothing here quotes a client or a test run. ---------- */
+
+/* A website, drawn as a page with one clear button. */
+.site-card { width: 270px; padding: 22px 24px; display: grid; gap: 12px; }
+.site-card .who { margin-bottom: 0; }
+.site-head { font-size: 27px; line-height: 1.12; letter-spacing: -0.035em; color: #cfcac4; }
+
+/* Scattered sources, tilted a little, before they become one system. */
+.scatter { display: grid; gap: 12px; justify-items: start; }
+.scatter .chip { font-size: 18px; color: var(--ink); padding: 9px 16px; }
+.scatter .chip:nth-child(1) { transform: rotate(-3deg); }
+.scatter .chip:nth-child(2) { transform: rotate(2deg) translateX(18px); }
+.scatter .chip:nth-child(3) { transform: rotate(-1.5deg) translateX(6px); }
+.system { width: 380px; padding: 22px 24px; }
+.system .rows { gap: 12px; }
+.system .row { font-size: 21px; }
+.system .row span:last-child { font-size: 17px; color: var(--muted); }

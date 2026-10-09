@@ -175,6 +175,13 @@ with itself.
   (client platforms), "Demo · made-up business" (demo screens). Never put
   invented numbers or client records on a cover. The case pages keep the
   films and real screens; without a `cover` a card falls back to them.
+- Also on the /about "The work" band (2026-10-09): each film card's poster is
+  the project cover, with the kind of film as a label in the card body and
+  one "Watch the film" button that opens the lightbox. Nothing on the picture.
+- Service doors (`components/ServiceDoor.jsx`, the two cards at the foot of
+  each service page) use `services[].cover = { src, alt }`, one per area,
+  from `scripts/covers/service-<slug>.html`, tagged "Illustration · how it
+  works", in the same `pc-` card as the projects.
 
 ### `stills`, `stillLabel`, `mediaKind` (2026-09-30)
 

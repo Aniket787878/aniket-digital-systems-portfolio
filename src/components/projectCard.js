@@ -42,6 +42,15 @@ export function projectCard(slug, overrides = {}) {
       : { type: 'film', src: film.src, poster: film.poster }
   }
 
+  /* A designed cover (data.js `projects[].cover`, scripts/covers/) wins on
+     the card: it explains the job in words that read at card size, where a
+     whole screen shrunk into the well did not. The label above still says
+     what kind of project it is; the films and real screens stay on the
+     case page. Without a cover the card falls back to the media above. */
+  if (project.cover) {
+    media = { type: 'image', src: project.cover.src, alt: project.cover.alt }
+  }
+
   return {
     id: slug,
     to: `/projects/${slug}`,

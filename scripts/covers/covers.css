@@ -1,0 +1,536 @@
+/* ------------------------------------------------------------------
+   Project covers: one designed picture per project card (rendered by
+   scripts/render-covers.mjs to public/covers/<slug>.png).
+
+   The canvas is 720x405 CSS px rendered at 2.22x (1600x900), so everything reads a little larger on a card. A card shows
+   it at 350 to 520px wide, so every size here is chosen for that: the
+   smallest text is 16px (32px in the file, about 7 to 10px on a card),
+   the words that carry the idea are 26px and up.
+
+   One family: the same night ground with a low dusk glow and the far
+   ridge, a kind tag top left, one focal moment in the middle, a three
+   step strip at the foot. Saffron only for the tick, the active step and
+   the "a person checks" mark.
+   ------------------------------------------------------------------ */
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 500;
+  src: url('../../node_modules/@fontsource/inter/files/inter-latin-500-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter';
+  font-weight: 500;
+  src: url('../../node_modules/@fontsource/inter/files/inter-latin-ext-500-normal.woff2') format('woff2');
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  --night: #0b0b0c;
+  --surface: #17171a;
+  --surface-2: #1f1f23;
+  --line: rgba(255, 255, 255, 0.09);
+  --ink: #f2f0ed;
+  --muted: #9a958f;
+  --dim: #6f6b66;
+  --accent: #f5871e;
+  --peach: #ffc89a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 720px;
+  height: 405px;
+  overflow: hidden;
+  background: var(--night);
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'cv11' 1;
+}
+
+/* ---------- The shared ground ---------- */
+
+.cover {
+  position: relative;
+  width: 720px;
+  height: 405px;
+  overflow: hidden;
+  background:
+    radial-gradient(75% 70% at 50% 122%, rgba(214, 110, 30, 0.55), rgba(90, 42, 12, 0.22) 45%, transparent 76%),
+    radial-gradient(60% 50% at 50% -10%, rgba(255, 255, 255, 0.035), transparent 70%),
+    linear-gradient(180deg, #0b0b0c 0%, #0e0c0b 60%, #140e0a 100%);
+}
+
+/* The far ridge, one quiet line of the site's dusk. */
+.cover::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 120px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 120' preserveAspectRatio='none'%3E%3Cpath d='M0 78 L70 60 L130 70 L210 42 L280 58 L350 36 L430 62 L500 48 L570 66 L640 40 L720 58 L800 50 L800 120 L0 120 Z' fill='%23100c0a'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat;
+  opacity: 0.9;
+}
+
+.cover > * { position: relative; z-index: 1; }
+
+/* ---------- Kind tag, top left ---------- */
+
+.tag {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
+.tag::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.tag.is-schematic::before { background: transparent; border: 1.5px dashed var(--muted); width: 9px; height: 9px; }
+.tag.is-demo::before { background: transparent; border: 1.5px solid var(--muted); }
+
+/* ---------- The focal area ---------- */
+
+.stage {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  top: 52px;
+  bottom: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+}
+
+.panel {
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow:
+    0 30px 60px -20px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Who is speaking / what this is, above a bubble or inside a panel. */
+.who {
+  font-size: 17px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  letter-spacing: 0;
+}
+
+/* An incoming message. */
+.msg {
+  max-width: 300px;
+  padding: 16px 20px;
+  border-radius: 20px 20px 20px 6px;
+  background: #232327;
+  border: 1px solid var(--line);
+  font-size: 25px;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+}
+
+/* The result: a tick and the outcome in big words. */
+.result {
+  padding: 24px 26px;
+  width: 360px;
+}
+
+.big.long { font-size: 30px; line-height: 1.15; }
+
+/* The panel that holds the outcome gets the one saffron edge. */
+.panel.lit {
+  border-color: rgba(245, 135, 30, 0.32);
+  box-shadow:
+    0 30px 70px -24px rgba(0, 0, 0, 0.75),
+    0 0 60px -20px rgba(245, 135, 30, 0.35),
+    inset 0 1px 0 rgba(255, 220, 190, 0.08);
+}
+
+.result .head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+.tick {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: grid;
+  place-items: center;
+}
+
+.tick::after {
+  content: '';
+  width: 11px;
+  height: 6px;
+  border-left: 2.5px solid #1a0f05;
+  border-bottom: 2.5px solid #1a0f05;
+  transform: translateY(-2px) rotate(-45deg);
+}
+
+.big {
+  font-size: 36px;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+
+.sub {
+  margin-top: 12px;
+  font-size: 19px;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.peach { color: var(--peach); }
+
+.arrow {
+  flex: none;
+  width: 36px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(245, 135, 30, 0.8));
+  position: relative;
+}
+
+.arrow::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: -4px;
+  width: 9px;
+  height: 9px;
+  border-top: 2px solid rgba(245, 135, 30, 0.9);
+  border-right: 2px solid rgba(245, 135, 30, 0.9);
+  transform: rotate(45deg);
+}
+
+/* Small rows inside a panel (a price list, a checklist). */
+.rows { display: grid; gap: 10px; }
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  font-size: 19px;
+  color: var(--ink);
+}
+.row span:last-child { color: var(--ink); }
+.row.dim { color: var(--muted); }
+.row.total {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 23px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 16px;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
+.chip.on {
+  color: var(--peach);
+  border-color: rgba(245, 135, 30, 0.45);
+  background: rgba(245, 135, 30, 0.1);
+}
+
+/* The "a person checks" mark: a head and shoulders in a ring. */
+.person {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  position: relative;
+  overflow: hidden;
+}
+.person::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 5px;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.person::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 16px;
+  width: 18px;
+  height: 14px;
+  margin-left: -9px;
+  border-radius: 9px 9px 0 0;
+  background: var(--accent);
+}
+
+/* Placeholder text lines for illustrated screens (no real words). */
+.lines { display: grid; gap: 8px; }
+.lines i {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- The three step strip, at the foot ---------- */
+
+.flow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  list-style: none;
+  font-size: 18px;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
+.flow li {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.flow li::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--dim);
+}
+
+.flow li.done::before { background: var(--dim); border-color: var(--dim); }
+.flow li.on { color: var(--ink); }
+.flow li.on::before { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px rgba(245, 135, 30, 0.18); }
+.flow li.person-step::before { display: none; }
+.flow li .person { width: 22px; height: 22px; border-width: 1.5px; }
+.flow li .person::before { top: 3px; width: 7px; height: 7px; margin-left: -3.5px; }
+.flow li .person::after { top: 11px; width: 13px; height: 11px; margin-left: -6.5px; }
+
+.flow .sep {
+  width: 28px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.16);
+}
+.flow .sep::before { display: none; }
+
+/* ---------- Per-cover pieces, shared where they repeat ---------- */
+
+.head-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+
+/* A website behind the widget: a light page shown as a quiet outline,
+   so the chat stays the focus. */
+.stage.site { justify-content: flex-start; gap: 0; }
+.page {
+  width: 360px;
+  padding: 26px 28px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.025);
+  opacity: 0.9;
+}
+.page-kicker { font-size: 16px; color: var(--muted); margin-bottom: 12px; }
+.page-head { font-size: 30px; line-height: 1.1; letter-spacing: -0.04em; color: #cfcac4; margin-bottom: 20px; }
+.widget {
+  width: 380px;
+  margin-left: -40px;
+  padding: 22px 22px 18px;
+  display: grid;
+  gap: 12px;
+}
+.widget .who { margin-bottom: 0; }
+.widget .msg { justify-self: end; border-radius: 20px 20px 6px 20px; font-size: 21px; padding: 12px 16px; }
+.reply {
+  justify-self: start;
+  padding: 12px 16px;
+  border-radius: 20px 20px 20px 6px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 21px;
+  line-height: 1.3;
+}
+.callback {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 17px;
+  color: var(--peach);
+}
+.callback .person { width: 24px; height: 24px; border-width: 1.5px; }
+.callback .person::before { top: 3px; width: 8px; height: 8px; margin-left: -4px; }
+.callback .person::after { top: 12px; width: 15px; height: 12px; margin-left: -7.5px; }
+
+/* A signed document. */
+.doc { width: 290px; padding: 22px 24px; }
+.doc-title { font-size: 23px; line-height: 1.2; letter-spacing: -0.025em; margin-bottom: 16px; }
+.signed {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.2);
+  font-size: 19px;
+}
+.signed .dim { font-size: 16px; color: var(--muted); }
+
+/* Channels converging on one inbox. */
+.sources { display: grid; gap: 12px; justify-items: end; }
+.sources .chip { font-size: 18px; color: var(--ink); padding: 9px 16px; }
+.inbox { width: 400px; padding: 20px 22px; }
+.thread {
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 19px;
+}
+.thread p:first-child { display: flex; justify-content: space-between; align-items: baseline; }
+.thread .ch { font-size: 16px; color: var(--muted); }
+.thread .subj { font-size: 16px; color: var(--muted); margin-top: 3px; }
+.thread.is-on { background: rgba(255, 255, 255, 0.05); box-shadow: inset 3px 0 0 var(--accent); }
+
+/* A URL typed in. */
+.msg.url { border-radius: 12px; font-size: 24px; letter-spacing: 0; padding: 16px 22px; }
+
+/* A score bar. */
+.score { display: flex; align-items: center; gap: 12px; margin-top: 18px; }
+.score .bar { flex: 1; height: 10px; border-radius: 5px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.score .bar i { display: block; height: 100%; border-radius: 5px; background: var(--accent); }
+.score .n { font-size: 32px; letter-spacing: -0.03em; }
+.score .of { font-size: 16px; color: var(--muted); }
+
+/* A recording waveform. */
+.rec { width: 200px; }
+.wave { display: flex; align-items: center; gap: 7px; height: 90px; }
+.wave i { flex: 1; border-radius: 4px; background: linear-gradient(180deg, var(--peach), rgba(245, 135, 30, 0.5)); opacity: 0.85; }
+
+/* A draft note with its sections. */
+.note { width: 380px; padding: 22px 24px; }
+.note .sec { font-size: 16px; color: var(--muted); margin: 12px 0 8px; }
+.note .head-row { margin-bottom: 4px; }
+.approve, .ck {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.approve {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 20px;
+  color: var(--peach);
+}
+
+/* A checklist. */
+.checks { width: 300px; padding: 22px 24px; display: grid; gap: 14px; }
+.checks .who { margin-bottom: 0; }
+.ck { font-size: 19px; }
+.tk {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  display: grid;
+  place-items: center;
+}
+.tk::after {
+  content: '';
+  width: 8px;
+  height: 4px;
+  border-left: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  transform: translateY(-1px) rotate(-45deg);
+}
+
+/* A priced draft. */
+.quote { width: 330px; padding: 22px 24px; }
+.quote .row { font-size: 18px; white-space: nowrap; }
+.choices { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.choices .chip { font-size: 17px; }
+
+/* A contact form, drawn. */
+.form { width: 260px; padding: 22px 24px; display: grid; gap: 12px; }
+.form .who { margin-bottom: 0; }
+.field {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 17px;
+  color: var(--muted);
+}
+.send {
+  justify-self: start;
+  padding: 9px 22px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #1a0f05;
+  font-size: 18px;
+}
+.steps { display: grid; gap: 14px; }
+.steps p {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 26px;
+  letter-spacing: -0.03em;
+}
+.steps p::before {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--peach);
+}

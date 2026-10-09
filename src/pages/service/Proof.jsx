@@ -17,7 +17,9 @@ function toCard(entry) {
       id: item.key,
       kind: 'site',
       label: item.badge,
-      media: { type: 'image', src: item.image, alt: item.imageAlt }
+      media: item.cover
+        ? { type: 'image', src: item.cover, alt: item.coverAlt }
+        : { type: 'image', src: item.image, alt: item.imageAlt }
     }
   }
   return projectCard(item.slug, item.note ? { note: item.note } : {})

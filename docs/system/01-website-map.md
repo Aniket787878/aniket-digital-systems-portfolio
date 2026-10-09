@@ -157,6 +157,23 @@ with itself.
 - Source for all of it: `remotion/` + `public/walkthroughs/`, rendered by
   `scripts/render-videos.sh`.
 
+### Project covers, `projects[].cover`, `COVER_V` (2026-10-09)
+
+- Every project card (the `/projects` grid and the service-page proof cards)
+  shows a designed cover, `projects[].cover = { src, alt }`, instead of a
+  shrunk screen or a hover film: one moment that explains the job, in words
+  that read at card size, plus a three-step strip. Built as HTML in
+  `scripts/covers/<slug>.html` (one `covers.css`), rendered by
+  `PLAYWRIGHT=... node scripts/render-covers.mjs [slug]` to
+  `public/covers/<slug>.png` (1600x900, compressed). Bump `COVER_V` after a
+  re-render. The /websites "This website" proof entry has its own `cover`.
+- Each cover carries a small corner tag that matches its card label:
+  "Words from a real test run" / "Drawn from the working demo" (quotes the
+  recorded run or the captured screens), "Illustration · no client data"
+  (client platforms), "Demo · made-up business" (demo screens). Never put
+  invented numbers or client records on a cover. The case pages keep the
+  films and real screens; without a `cover` a card falls back to them.
+
 ### `stills`, `stillLabel`, `mediaKind` (2026-09-30)
 
 - `stills[slug]`: `{ kind, cover: { file, focus }, card? }` for a demo with real

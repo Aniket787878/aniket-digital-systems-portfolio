@@ -191,6 +191,79 @@
   }
 }
 
+/* Mixed proof (software, AI): one small plain heading per kind (client
+   platforms, working demos, demo screens), each group sized to its own
+   count so no row ends on a lone card. All groups share the full content
+   width, so their edges line up down the band. */
+.svc-groups {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 3.75rem);
+}
+
+.svc-group-head {
+  margin-bottom: 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.svc-group-head span {
+  margin-right: 0.35rem;
+  color: #fff;
+}
+
+.svc-groups .svc-cards[data-count] {
+  max-width: none;
+}
+
+/* A group of one is the wide card: picture beside the words. Phones keep
+   the one-card-a-row grid from below. */
+@media (min-width: 641px) {
+  .svc-groups .svc-cards[data-count='2'] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .svc-groups .svc-cards[data-count='1'] .card,
+  .svc-groups .svc-cards[data-count='3'] > li:first-child .card {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .svc-groups .svc-cards[data-count='1'] .card-media,
+  .svc-groups .svc-cards[data-count='3'] > li:first-child .card-media {
+    flex: 0 0 56%;
+  }
+
+  .svc-groups .svc-cards[data-count='1'] .card-body,
+  .svc-groups .svc-cards[data-count='3'] > li:first-child .card-body {
+    justify-content: center;
+    padding: 1.5rem 1.75rem;
+  }
+}
+
+/* Three in a row on a wide screen; between phone and desktop, two columns
+   would leave the third alone, so the first goes wide above the other two. */
+@media (min-width: 1000.02px) {
+  .svc-groups .svc-cards[data-count='3'] > li:first-child .card {
+    flex-direction: column;
+  }
+
+  .svc-groups .svc-cards[data-count='3'] > li:first-child .card-media {
+    flex: none;
+  }
+
+  .svc-groups .svc-cards[data-count='3'] > li:first-child .card-body {
+    justify-content: flex-start;
+    padding: 1.1rem 0.9rem 0.8rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1000px) {
+  .svc-groups .svc-cards[data-count='3'] > li:first-child {
+    grid-column: 1 / -1;
+  }
+}
+
 /* ---------- 3. Offers (paper) ---------- */
 
 /* However many offers the area has: two side by side, four as a 2 x 2,

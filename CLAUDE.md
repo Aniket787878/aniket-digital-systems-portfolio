@@ -226,7 +226,10 @@ measure both at matching viewports before changing anything.
 Branded domain (set `site.origin` in `data.js`; canonical, OG, JSON-LD,
 robots.txt and sitemap.xml are generated from it by the `siteMeta` plugin in
 `vite.config.js`) · `site.bookingUrl` (Cal.com; setting it makes "Book a
-15-min call" the primary button everywhere) ·
+15-min call" the secondary button everywhere, beside the primary "Get your
+free AI check", see `components/FunnelCta.jsx`) · Vercel Web Analytics switched
+on in the project dashboard (the script tag is already in production builds;
+custom events need a plan that includes them) ·
 a `Service` column in the "Portfolio leads" sheet (the form now sends `service`;
 the live n8n workflow needs the column before it can file it) · case-study numbers · testimonial · CV PDF
 and a real headshot (the `/about` page now exists and renders labelled slots for

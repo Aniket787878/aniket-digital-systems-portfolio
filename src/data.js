@@ -255,12 +255,13 @@ export const heroReel = {
 
 /* The home hero's two lines (site.headline). Pick pending: Aniket is
    choosing between these four, so they live side by side and the hero
-   reads whichever one site.headline points at. Option A is the default.
-   The last word of the second line is set in the serif. */
+   reads whichever one site.headline points at. Picked 2026-10-09: option C,
+   worded "Hand the repeated work to AI." with "AI" set in the serif
+   (site.headlineAccent). */
 export const heroOptions = [
   ['Your enquiries answered. Bookings confirmed. Follow-ups sent.', 'By AI, with a person checking what matters.'],
   ['AI that answers, books and follows up.', 'Websites and software that bring the work in.'],
-  ['Hand the repeat work to AI.', 'Keep the decisions.'],
+  ['Hand the repeated work to AI.', 'Keep the decisions.'],
   ['Find out what AI can take off your plate.', 'Then we build it, live by a fixed date.']
 ]
 
@@ -288,7 +289,9 @@ export const site = {
      Buyers are service businesses broadly (clinics, studios, agencies,
      consultancies, growing teams). The hero, the meta description, the
      JSON-LD and the OG card (scripts/render-og.mjs) all read from here. */
-  headline: heroOptions[0],
+  headline: heroOptions[2],
+  /* The one word of the headline set in the serif accent. */
+  headlineAccent: 'AI',
   subtitle:
     'AI, websites and custom software for service businesses: clinics, studios, agencies, consultancies and growing teams. Built as one system, live by a fixed date.',
   /* The home hero's lede: says what the headline doesn't (who it is for,

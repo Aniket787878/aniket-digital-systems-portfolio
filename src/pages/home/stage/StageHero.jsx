@@ -25,11 +25,19 @@ const EASE = [0.22, 1, 0.36, 1]
    splits across two lines of a 4rem heading. */
 const [LINE_1, LINE_2] = site.headline.map((line) => line.replace(/-/g, '\u2011'))
 const LONG = site.headline.join(' ').length > 55
-/* The second line (site.headline, picked from heroOptions) closes on its
-   one serif word. */
-const LAST = LINE_2.lastIndexOf(' ')
-const LINE_2_HEAD = LINE_2.slice(0, LAST)
-const LINE_2_TAIL = LINE_2.slice(LAST + 1)
+/* One word of the headline (site.headlineAccent) is set in the serif. */
+const accent = (line) => {
+  const at = line.indexOf(site.headlineAccent)
+  if (!site.headlineAccent || at < 0) return line
+  const end = at + site.headlineAccent.length
+  return (
+    <>
+      {line.slice(0, at)}
+      <span className="stage-serif">{line.slice(at, end)}</span>
+      {line.slice(end)}
+    </>
+  )
+}
 
 const FILM = explainers.brand
 
@@ -81,10 +89,10 @@ export default function StageHero() {
 
           <h1 className={`stage-title sh-title${LONG ? ' is-long' : ''}`} id="sh-title">
             <m.span className="sh-line" {...(reduce ? {} : settle(0.1))}>
-              {LINE_1}
+              {accent(LINE_1)}
             </m.span>{' '}
             <m.span className="sh-line" {...(reduce ? {} : settle(0.25))}>
-              {LINE_2_HEAD} <span className="stage-serif">{LINE_2_TAIL}</span>
+              {accent(LINE_2)}
             </m.span>
           </h1>
 

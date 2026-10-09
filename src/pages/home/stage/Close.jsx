@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { m, useMotionValueEvent, useReducedMotion, useScroll } from 'motion/react'
-import { CheckCta, TalkCta } from '../../../components/FunnelCta.jsx'
+import { StartCta, TalkCta } from '../../../components/FunnelCta.jsx'
 import { svgPath } from './loop/lemniscate.js'
 import '../../service/showcase/stage.css'
 import './loop/loop.css'
@@ -10,8 +10,8 @@ import './loop/loop.css'
   down the gutter, turns along the button row and wraps once around the
   primary button, so the whole page's line ends on the call.
 
-  One primary (the free AI check) and one secondary (the call, see
-  components/FunnelCta.jsx). Email lives on the contact page and footer.
+  One primary ("Get started": website, software or AI, each with its own
+  free plan) and one secondary (the call, see components/FunnelCta.jsx). Email lives on the contact page and footer.
 */
 
 const WIDE = '(min-width: 1024px)'
@@ -126,18 +126,18 @@ export default function Close() {
       <m.div className="container cl-inner" {...settle} onAnimationComplete={() => remeasure.current()}>
         <p className="stage-pill stage-mono cl-pill">
           <span className="stage-dot" aria-hidden="true" />
-          Free AI check
+          Get started
         </p>
         <h2 id="cl-title" className="stage-title cl-title">
           Let&rsquo;s find your first <span className="stage-serif">leak.</span>
         </h2>
         <p className="stage-lede cl-lede">
-          Answer a few plain questions about your week. You see straight away which jobs AI could take off
-          your plate, and what each would look like. No call needed, no obligation.
+          Pick a website, software or AI, and answer a few plain questions. You see straight away what fits,
+          what it starts at and the next step. No call needed, no obligation.
         </p>
         <div className="cl-actions">
           <span className="cl-primary" ref={primary}>
-            <CheckCta placement="home-close" magnet />
+            <StartCta placement="home-close" magnet />
           </span>
           <TalkCta />
         </div>

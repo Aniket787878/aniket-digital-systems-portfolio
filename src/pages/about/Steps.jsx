@@ -67,12 +67,13 @@ export default function Steps() {
       {pinned ? <Pinned /> : <Stacked />}
 
       <div className="container">
-        {/* Step one needs no idea of the fix: the check finds the part
-            that is breaking. Points onward, into the page's one ask. */}
+        {/* Points onward, into the page's one ask: /start, where the
+            visitor picks a website, software or AI (or the AI check, if
+            they are not sure yet). */}
         <Rehook
           tone="paper"
-          question="Not sure which part is breaking?"
-          label="The free AI check finds it in three minutes"
+          question="Ready for step one?"
+          label="Start with what you want to build"
           placement="about-steps"
         />
       </div>

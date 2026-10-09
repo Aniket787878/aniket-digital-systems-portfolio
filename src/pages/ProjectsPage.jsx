@@ -1,7 +1,7 @@
 import { projects, whatsappPrefill } from '../data.js'
 import ProjectCard from '../components/ProjectCard.jsx'
 import { projectCard } from '../components/projectCard.js'
-import { CheckCta, TalkCta, Rehook } from '../components/FunnelCta.jsx'
+import { StartCta, TalkCta, Rehook } from '../components/FunnelCta.jsx'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 
 export default function ProjectsPage() {
@@ -25,7 +25,7 @@ export default function ProjectsPage() {
       <Rehook
         className="projects-rehook"
         question="Reading these for your own business?"
-        label="See which one fits, in three minutes"
+        label="Start with what you want to build"
         placement="projects-top"
       />
       {/* The same card as the service-page proof grids (components/
@@ -49,19 +49,19 @@ export default function ProjectsPage() {
       </ul>
 
       {/* After the proof, the rehook with context: no dead end at the
-          bottom of the list. One primary (the free AI check), the call
+          bottom of the list. One primary ("Get started"), the call
           second (components/FunnelCta.jsx). */}
       <section className="case-cta projects-cta" aria-labelledby="projects-cta-title">
         <h2 className="case-cta-title" id="projects-cta-title">
           Want one of these for your business?
         </h2>
         <p className="case-cta-body">
-          You don&rsquo;t need to know which one yet. The free AI check asks a few plain questions about
-          your week and shows you, on the spot, the three jobs worth handing over first. Then you know
-          what to build, what it costs and the date it goes live.
+          Pick a website, software or AI and answer a few plain questions. You see, on the spot, what
+          fits and what it starts at. Not sure which? The free AI check is there too. Then you know what
+          to build, what it costs and the date it goes live.
         </p>
         <div className="case-cta-actions">
-          <CheckCta placement="projects-close" />
+          <StartCta placement="projects-close" />
           <TalkCta message={whatsappPrefill.contact} whatsappLabel="Message me on WhatsApp" contactLabel="Start a conversation" />
         </div>
       </section>

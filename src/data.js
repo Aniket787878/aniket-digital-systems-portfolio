@@ -534,7 +534,12 @@ export const whatsappPrefill = {
   footer: 'Hi Aniket, quick question about the systems you build.',
   /* The AI check's result. `{jobs}` is replaced with the top three. */
   aiCheck: 'Hi Aniket, I just did the free AI check on your site. I’d like to talk about the AI Roadmap. My top three were: {jobs}.',
-  nav: 'Hi Aniket, I’m on your site and would like to talk about a project for my business.'
+  nav: 'Hi Aniket, I’m on your site and would like to talk about a project for my business.',
+  /* The end of the website / software plans (pages/start/). {pkg} is the
+     package the plan suggested. */
+  startWebsite: 'Hi Aniket, I just planned my website on your site. The plan suggested the {pkg}. Can we talk it through?',
+  startSoftware: 'Hi Aniket, I just planned my software on your site. The plan suggested the {pkg}. Can we talk it through?',
+  start: 'Hi Aniket, I’m not sure yet what I need. Can we talk it through?'
 }
 
 export const projects = [
@@ -2180,4 +2185,210 @@ export const aiCheck = {
       looks: 'An assistant that answers the questions you hear every day from your own information, for clients or for your team, and says where each answer came from. A person checks anything that matters.'
     }
   }
+}
+
+/*
+  The three ways in (/start, pages/start/StartPage.jsx): "What do you want
+  to build?" Website, Software or AI, equal, each to its own free plan.
+  Websites and software run the same engine as the AI check
+  (pages/start/FlowPage.jsx, rules in pages/start/rules.js); AI goes to
+  the existing check at /ai-check. Added 2026-10-09: Aniket asked why a
+  website or software buyer was sent to an AI check.
+
+  The one-line description and the starting price on each choice are the
+  area's own `promise` and `from` in `services`, never restated here.
+*/
+export const startChoices = [
+  { slug: 'websites', to: '/start/website', label: 'Plan your website' },
+  { slug: 'software', to: '/start/software', label: 'Plan your software' },
+  { slug: 'ai', to: '/ai-check', label: 'Get your free AI check' }
+]
+
+/* The answers both new flows share: the kind of business is the AI
+   check's own list, so the lead sheet reads the same either way. */
+const businessStep = aiCheck.steps.find((s) => s.id === 'business')
+const whenStep = {
+  id: 'when',
+  kind: 'one',
+  question: 'When do you need it?',
+  options: [
+    { value: 'asap', label: 'As soon as possible' },
+    { value: 'month', label: 'Within a month' },
+    { value: 'quarter', label: 'In the next 1 to 3 months' },
+    { value: 'open', label: 'No fixed date yet' }
+  ]
+}
+/* Options come from `budgetBands` in the visitor's currency, so the
+   value sent is the same one the contact form sends. */
+const budgetStep = {
+  id: 'budget',
+  kind: 'budget',
+  question: 'What budget do you have in mind?',
+  hint: 'A rough band is fine. It only helps me suggest the right starting point.'
+}
+
+/*
+  The two plans. `steps` are asked one per screen, then name, email and
+  an optional WhatsApp number. `needs` and `modules` are what the result
+  can show; which ones, and which package, is decided in
+  pages/start/rules.js from the answers alone.
+*/
+export const startFlows = {
+  websites: {
+    service: 'websites',
+    source: 'start-website',
+    docTitle: 'Plan your website · Aniket',
+    pill: 'Free website plan · about 3 minutes',
+    stakes: 'Most visitors decide in a few seconds whether to stay or leave.',
+    title: ['What should your website ', 'do?'],
+    lede: 'A few plain questions about your business and what the site has to do. You see straight away which package fits, what it starts at and how long it takes. Then a free call to firm it up.',
+    steps: [
+      businessStep,
+      {
+        id: 'current',
+        kind: 'one',
+        question: 'Do you have a website now?',
+        options: [
+          { value: 'none', label: 'No website yet' },
+          { value: 'old', label: 'An old one that brings nothing in' },
+          { value: 'rebuild', label: 'One that works, but needs rebuilding or more' }
+        ]
+      },
+      {
+        id: 'needs',
+        kind: 'many',
+        question: 'What must the site do?',
+        hint: 'Pick every one you need.',
+        options: [
+          { value: 'services', label: 'Show our services and prices' },
+          { value: 'enquiries', label: 'Take enquiries' },
+          { value: 'bookings', label: 'Take bookings' },
+          { value: 'whatsapp', label: 'A WhatsApp button' },
+          { value: 'payments', label: 'Take payments' },
+          { value: 'blog', label: 'Post news or updates' },
+          { value: 'assistant', label: 'Answer questions with an AI assistant' }
+        ]
+      },
+      {
+        id: 'pages',
+        kind: 'one',
+        question: 'Roughly how many pages?',
+        hint: 'Home, services, about and contact is four. A guess is fine.',
+        options: [
+          { value: 'upto5', label: 'Up to 5' },
+          { value: '6-10', label: '6 to 10' },
+          { value: '10+', label: 'More than 10' },
+          { value: 'unsure', label: 'Not sure yet' }
+        ]
+      },
+      whenStep,
+      budgetStep
+    ],
+    /* One line per "must do" answer: what it looks like on the site. */
+    needs: {
+      services: 'Clear pages for what you offer and what it costs, so people arrive at the call already knowing.',
+      enquiries: 'An enquiry form that lands in your inbox and on WhatsApp, with an instant reply to the visitor.',
+      bookings: 'Booking from the site into the calendar your team already checks.',
+      whatsapp: 'A WhatsApp button on every page, opening a chat with your team.',
+      payments: 'Payment taken in the same flow as the booking or the order.',
+      blog: 'A simple place to post news and updates yourself, no developer needed.',
+      assistant: 'An assistant that answers from your own services, prices and policies, and hands ready buyers to you.'
+    }
+  },
+  software: {
+    service: 'software',
+    source: 'start-software',
+    docTitle: 'Plan your software · Aniket',
+    pill: 'Free software plan · about 3 minutes',
+    stakes: 'Messages in four apps. Nobody sure who replied.',
+    title: ['What should your software ', 'fix?'],
+    lede: 'A few plain questions about how the work runs today and who would use the new system. You see straight away the scope that fits, its price range and the first screens it would have. Then a free call to firm it up.',
+    steps: [
+      {
+        id: 'mess',
+        kind: 'many',
+        question: 'What is messy today?',
+        hint: 'Pick every one that sounds like your week.',
+        options: [
+          { value: 'sheets', label: 'Spreadsheets nobody fully trusts' },
+          { value: 'whatsapp', label: 'Work lost in WhatsApp threads' },
+          { value: 'paper', label: 'Paper forms' },
+          { value: 'apps', label: 'Too many apps that do not talk' },
+          { value: 'portal', label: 'Clients have nowhere to log in' },
+          { value: 'reports', label: 'Reports put together by hand' },
+          { value: 'payments', label: 'Payments chased by hand' }
+        ]
+      },
+      {
+        id: 'users',
+        kind: 'many',
+        question: 'Who would use it?',
+        options: [
+          { value: 'clients', label: 'Our clients' },
+          { value: 'staff', label: 'Our staff' },
+          { value: 'managers', label: 'Managers or owners' }
+        ]
+      },
+      aiCheck.steps.find((s) => s.id === 'team'),
+      aiCheck.steps.find((s) => s.id === 'tools'),
+      {
+        id: 'must',
+        kind: 'many',
+        question: 'What must it have?',
+        hint: 'Pick every one you need from day one.',
+        options: [
+          { value: 'bookings', label: 'Bookings' },
+          { value: 'payments', label: 'Payments' },
+          { value: 'portal', label: 'A client portal' },
+          { value: 'roles', label: 'Staff roles, each seeing their own part' },
+          { value: 'reports', label: 'Reports' },
+          { value: 'documents', label: 'Documents and signatures' }
+        ]
+      },
+      whenStep,
+      budgetStep
+    ],
+    /* The screens a first version could open with. All of them are kinds
+       of screen already built for the projects on this site. */
+    modules: {
+      dashboard: { name: 'A dashboard for today', looks: 'What is on today, who is on it and what is running late, on one screen everyone opens in the morning.' },
+      records: { name: 'Client records', looks: 'Every client in one place, with their history, bookings and documents, instead of a row in three spreadsheets.' },
+      inbox: { name: 'One inbox', looks: 'WhatsApp, email and website messages in one list, each with an owner, so nobody wonders who replied.' },
+      bookings: { name: 'Bookings', looks: 'Free slots for staff, rooms or equipment, booked in a tap and kept in step with your calendar.' },
+      payments: { name: 'Payments and invoices', looks: 'Who owes what, a link to pay, and a reminder for late ones, without anyone chasing by hand.' },
+      portal: { name: 'A client portal', looks: 'Clients log in to see their bookings, fill in forms and pay, and see only their own things.' },
+      roles: { name: 'Staff roles and tasks', looks: 'Each person sees their own work and only what they are allowed to, with tasks that have an owner and a date.' },
+      reports: { name: 'Reports', looks: 'The numbers you now pull together by hand, kept up to date on their own.' },
+      documents: { name: 'Forms and signatures', looks: 'Forms filled in online, signed on the screen and saved as a PDF in the right client’s file.' }
+    }
+  }
+}
+
+/*
+  The path, per area, for the path strip on each service page and at the
+  end of each plan (components/PathStrip.jsx). AI keeps `funnelPath`
+  (check, Roadmap, build, Care Plan). Websites and software start with
+  their own free plan, then a free call and a written fixed-price
+  proposal, then the same build and Care Plan steps.
+*/
+const planStep = (name) => ({
+  key: 'plan',
+  name,
+  text: 'A few plain questions. You see on the spot what fits and what it starts at.',
+  note: 'Free · about 3 minutes'
+})
+const proposalStep = {
+  key: 'proposal',
+  name: 'Free call and written proposal',
+  text: 'A free call about your answers, then a one-page proposal with a fixed price and the date it goes live.',
+  note: 'Free · fixed price in writing'
+}
+const buildStep = {
+  ...funnelPath[2],
+  text: 'Built and tested with you, then handed over with a walkthrough. Live by the date in writing, or you don’t pay the second half.'
+}
+export const servicePaths = {
+  websites: [planStep('Free website plan'), proposalStep, buildStep, funnelPath[3]],
+  software: [planStep('Free software plan'), proposalStep, buildStep, funnelPath[3]],
+  ai: funnelPath
 }

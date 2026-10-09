@@ -38,10 +38,11 @@ export default function OtherAreas({ area }) {
         </m.ul>
 
         {/* The band's rehook: three doors can stall a visitor who does
-            not know which comes first, so it hands them to the check. */}
+            not know which comes first, so it hands them to /start (which
+            offers the AI check to anyone still unsure). */}
         <Rehook
           question="Not sure which of the three comes first?"
-          label="The free AI check tells you"
+          label="Start here and see what fits"
           placement={`${area.slug}-others`}
         />
       </div>

@@ -11,8 +11,9 @@ import { track } from '../analytics.js'
 import BookingCta from '../components/BookingCta.jsx'
 import WhatsAppCta from '../components/WhatsAppCta.jsx'
 import PathStrip from '../components/PathStrip.jsx'
-import Icon from '../components/icons.jsx'
 import { result, summary } from './aicheck/rules.js'
+import { Progress, Question, Contact } from './flow/Steps.jsx'
+import { stepIn, EMAIL_OK } from './flow/shared.js'
 import './service/showcase/stage.css'
 import './AiCheckPage.css'
 
@@ -36,12 +37,9 @@ import './AiCheckPage.css'
 
 const STEPS = aiCheck.steps
 const CONTACT = STEPS.length // index of the last (contact) step
-const TOTAL = STEPS.length + 1
-const EASE = [0.22, 1, 0.36, 1]
 const ROADMAP = packages.find((pkg) => pkg.name === 'AI Roadmap Session')
 
 const EMPTY = { business: '', enquiries: '', speed: '', time: [], tools: [], team: '' }
-const EMAIL_OK = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export default function AiCheckPage() {
   useDocumentTitle('Free AI check · Aniket')
@@ -79,6 +77,7 @@ export default function AiCheckPage() {
     if (!started.current) {
       started.current = true
       track('ai_check_start')
+      track('flow_start', { service: 'ai' })
     }
     setError('')
     setAnswers((prev) => {
@@ -132,6 +131,7 @@ export default function AiCheckPage() {
     }
 
     track('ai_check_submit', { business: answers.business, enquiries: answers.enquiries })
+    track('flow_submit', { service: 'ai' })
 
     const payload = {
       name: clean.name,
@@ -193,7 +193,7 @@ export default function AiCheckPage() {
           <Result res={res} send={send} text={text} name={name} email={email} resultRef={resultRef} onRestart={restart} />
         ) : (
           <div className="stage-glass ac-card">
-            <Progress step={step} />
+            <Progress step={step} questions={STEPS.length} />
             {step < CONTACT ? (
               <Question
                 key={STEPS[step].id}
@@ -208,6 +208,10 @@ export default function AiCheckPage() {
               />
             ) : (
               <Contact
+                idPrefix="ac"
+                title="Last step: who is the result for?"
+                hint={`Your result shows on the next screen straight away. I get a copy of your answers too, so I can reply personally. ${site.replyPromise}`}
+                submitLabel="See my result"
                 name={name}
                 email={email}
                 phone={phone}
@@ -226,188 +230,6 @@ export default function AiCheckPage() {
         )}
       </div>
     </section>
-  )
-}
-
-function Progress({ step }) {
-  const n = step + 1
-  return (
-    <div className="ac-progress">
-      <p className="stage-mono ac-count">
-        {step < CONTACT ? `Question ${n} of ${STEPS.length}` : 'Last step'}
-      </p>
-      <div
-        className="ac-bar"
-        role="progressbar"
-        aria-label="Progress through the check"
-        aria-valuemin={1}
-        aria-valuemax={TOTAL}
-        aria-valuenow={n}
-      >
-        <span style={{ width: `${(n / TOTAL) * 100}%` }} />
-      </div>
-    </div>
-  )
-}
-
-const stepIn = {
-  initial: { opacity: 0, y: 8 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.35, ease: EASE }
-}
-
-function Question({ q, value, onAnswer, onNext, onBack, error, headRef, last }) {
-  const many = q.kind === 'many'
-  const headId = `ac-q-${q.id}`
-  const hintId = q.hint ? `${headId}-hint` : undefined
-  const errId = `${headId}-error`
-  return (
-    <m.form className="ac-step" onSubmit={onNext} noValidate {...stepIn}>
-      <fieldset className="ac-fieldset" aria-labelledby={headId} aria-describedby={[hintId, error ? errId : null].filter(Boolean).join(' ') || undefined}>
-        <h2 className="ac-question" id={headId} tabIndex={-1} ref={headRef}>
-          {q.question}
-        </h2>
-        {q.hint && (
-          <p className="ac-hint" id={hintId}>
-            {q.hint}
-          </p>
-        )}
-        <div className={`ac-options${many ? ' is-many' : ''}`}>
-          {q.options.map((option) => {
-            const checked = many ? value.includes(option.value) : value === option.value
-            return (
-              <label key={option.value} className={`ac-option${checked ? ' is-on' : ''}`}>
-                <input
-                  type={many ? 'checkbox' : 'radio'}
-                  name={q.id}
-                  value={option.value}
-                  checked={checked}
-                  onChange={() => onAnswer(q.id, option.value, many)}
-                />
-                <span className="ac-mark" aria-hidden="true" />
-                <span>{option.label}</span>
-              </label>
-            )
-          })}
-        </div>
-      </fieldset>
-
-      {error && (
-        <p className="ac-error" id={errId} role="alert">
-          {error}
-        </p>
-      )}
-
-      <div className="ac-nav">
-        {onBack ? (
-          <button type="button" className="ac-back" onClick={onBack}>
-            Back
-          </button>
-        ) : (
-          <span />
-        )}
-        <button type="submit" className="btn-saffron ac-next">
-          {q.optional && (!value || value.length === 0) ? 'Skip' : last ? 'Last step' : 'Next'}
-          <span className="btn-pill-icon" aria-hidden="true">
-            <Icon name="arrow" size={16} />
-          </span>
-        </button>
-      </div>
-    </m.form>
-  )
-}
-
-function Contact({ name, email, phone, trap, setName, setEmail, setPhone, setTrap, onSubmit, onBack, error, headRef }) {
-  return (
-    <m.form className="ac-step" onSubmit={onSubmit} noValidate {...stepIn}>
-      <h2 className="ac-question" tabIndex={-1} ref={headRef}>
-        Last step: who is the result for?
-      </h2>
-      <p className="ac-hint">
-        Your result shows on the next screen straight away. I get a copy of your answers too, so I can reply
-        personally. {site.replyPromise}
-      </p>
-
-      <div className="ac-fields">
-        <div className="ac-field">
-          <label htmlFor="ac-name">Your name</label>
-          <input
-            id="ac-name"
-            className="ac-input"
-            type="text"
-            autoComplete="name"
-            required
-            maxLength={100}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div className="ac-field">
-          <label htmlFor="ac-email">Your email</label>
-          <input
-            id="ac-email"
-            className="ac-input"
-            type="email"
-            autoComplete="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="ac-field">
-          <label htmlFor="ac-phone">
-            Your WhatsApp number <span className="ac-optional">(optional)</span>
-          </label>
-          <input
-            id="ac-phone"
-            className="ac-input"
-            type="tel"
-            autoComplete="tel"
-            inputMode="tel"
-            maxLength={30}
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-        </div>
-
-        {/* Honeypot, the same as the contact form's: off-screen, out of
-            the tab order and hidden from assistive tech. */}
-        <div className="contact-hp ac-hp" aria-hidden="true">
-          <label htmlFor="ac-company-website">Company website</label>
-          <input
-            id="ac-company-website"
-            name="company_website"
-            type="text"
-            tabIndex={-1}
-            autoComplete="off"
-            value={trap}
-            onChange={(e) => setTrap(e.target.value)}
-          />
-        </div>
-      </div>
-
-      {error && (
-        <p className="ac-error" role="alert">
-          {error}
-        </p>
-      )}
-
-      <div className="ac-nav">
-        <button type="button" className="ac-back" onClick={onBack}>
-          Back
-        </button>
-        <button type="submit" className="btn-saffron ac-next">
-          See my result
-          <span className="btn-pill-icon" aria-hidden="true">
-            <Icon name="arrow" size={16} />
-          </span>
-        </button>
-      </div>
-
-      <p className="ac-privacy">
-        Used only to reply to you. <Link className="u-link" to="/privacy">Privacy note</Link>.
-      </p>
-    </m.form>
   )
 }
 

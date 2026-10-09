@@ -254,14 +254,26 @@ measure both at matching viewports before changing anything.
 Branded domain (set `site.origin` in `data.js`; canonical, OG, JSON-LD,
 robots.txt and sitemap.xml are generated from it by the `siteMeta` plugin in
 `vite.config.js`) · `site.bookingUrl` (Cal.com; setting it makes "Book a
-15-min call" the secondary button everywhere, beside the primary "Get your
-free AI check", see `components/FunnelCta.jsx`) · Vercel Web Analytics switched
+15-min call" the secondary button everywhere, beside the primary, see
+`components/FunnelCta.jsx`; the plans' result screens then show "Book a
+free call" first) · Vercel Web Analytics switched
 on in the project dashboard (the script tag is already in production builds;
 custom events need a plan that includes them) ·
 a `Service` column in the "Portfolio leads" sheet (the form now sends `service`;
 the live n8n workflow needs the column before it can file it) · case-study numbers · testimonial · CV PDF
 and a real headshot (the `/about` page now exists and renders labelled slots for
 both) · real screenshots.
+
+**Funnel (2026-10-09, start flows).** The primary button is "Get started"
+to `/start` (website, software or AI); each service page uses its own free
+step 1: "Plan your website" (`/start/website`), "Plan your software"
+(`/start/software`), "Get your free AI check" (`/ai-check`). All three
+send leads through `/api/lead` with the contact form's fields
+(`service` websites / software / ai, `source` start-website /
+start-software / ai-check), so the n8n intake is unchanged. Questions in
+`startFlows` / `aiCheck` (`data.js`), result rules in
+`pages/start/rules.js` and `pages/aicheck/rules.js`; prices only ever
+come from `packages`. Map: `docs/system/01-website-map.md`.
 
 Resolved 2026-09-11: real email (`aniket.html@gmail.com`) and WhatsApp number
 (`+91 9136582842`) are set, so every WhatsApp CTA is live.

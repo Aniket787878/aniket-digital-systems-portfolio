@@ -23,11 +23,12 @@ export default function PrivacyPage() {
         no account, no tracking cookies from the form.
       </p>
 
-      <h2 className="case-section-title">What the free AI check collects</h2>
+      <h2 className="case-section-title">What the free AI check and the website and software plans collect</h2>
       <p className="page-lede">
-        Your answers to its questions, your name, your email and your
-        WhatsApp number if you give it. They go the same way as the contact
-        form and are kept and deleted the same way.
+        Your answers to their questions (including the budget band you
+        pick in a plan), your name, your email and your WhatsApp number if
+        you give it. They go the same way as the contact form and are kept
+        and deleted the same way.
       </p>
 
       <h2 className="case-section-title">Visit counts</h2>
@@ -75,7 +76,7 @@ export default function PrivacyPage() {
       <Rehook
         className="rehook-start"
         question="Ready when you are:"
-        label="take the free AI check, about three minutes"
+        label="pick a website, software or AI, about three minutes"
         placement="privacy"
       />
     </section>

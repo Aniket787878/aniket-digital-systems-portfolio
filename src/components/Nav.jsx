@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { CheckCta, TalkCta } from './FunnelCta.jsx'
+import { StartCta, TalkCta } from './FunnelCta.jsx'
 import { whatsappPrefill } from '../data.js'
 
 /*
@@ -21,17 +21,19 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  /* One primary per view: while a page's own "Get your free AI check"
-     button is on screen, the nav's copy steps back to an outline so two
-     saffron buttons never compete. Checked once per frame at most, on
-     scroll, resize and route change (the page's buttons are found fresh
-     each time, so new routes need no wiring). */
+  /* One primary per view: while a page's own primary (any saffron
+     StartCta: "Get started", "Plan your website", "Plan your software"
+     or "Get your free AI check", marked data-primary) is on screen, the
+     nav's "Get started" steps back to an outline so two saffron buttons
+     never compete. Checked once per frame at most, on scroll, resize and
+     route change (the page's buttons are found fresh each time, so new
+     routes need no wiring). */
   useEffect(() => {
     let raf = 0
     const check = () => {
       raf = 0
       const h = window.innerHeight
-      const own = document.querySelectorAll('main a[href="/ai-check"].btn-saffron, main a[href="/ai-check"].btn-pill-accent')
+      const own = document.querySelectorAll('main a[data-primary].btn-saffron')
       let seen = false
       for (const el of own) {
         const r = el.getBoundingClientRect()
@@ -40,8 +42,10 @@ export default function Nav() {
           break
         }
       }
-      // On the check itself the nav's button leads nowhere new.
-      setQuiet(seen || window.location.pathname === '/ai-check')
+      // Inside a plan (or the chooser) the page's own Next button is the
+      // primary, and the nav's would only lead back to the start.
+      const path = window.location.pathname
+      setQuiet(seen || path === '/ai-check' || path === '/start' || path.startsWith('/start/'))
     }
     const queue = () => {
       if (!raf) raf = requestAnimationFrame(check)
@@ -119,10 +123,10 @@ export default function Nav() {
           <NavLink to="/contact">Contact</NavLink>
         </nav>
 
-        {/* One primary everywhere: the free AI check. The bar is tight,
-            so the label is short here. */}
+        {/* One primary everywhere: "Get started", to the chooser
+            (website, software or AI, each with its own free plan). */}
         <div className={`nav-actions${quiet ? ' is-quiet' : ''}`}>
-          <CheckCta placement="nav" label="Free AI check" />
+          <StartCta placement="nav" />
         </div>
 
         <button
@@ -170,9 +174,9 @@ export default function Nav() {
           <NavLink to="/projects">Projects</NavLink>
           <NavLink to="/about">About</NavLink>
           <NavLink to="/contact">Contact</NavLink>
-          {/* Room to breathe here: the free AI check first, then the
-              call (booking link, else WhatsApp). Contact is in the list. */}
-          <CheckCta placement="nav-panel" className="btn-saffron nav-panel-cta" />
+          {/* Room to breathe here: "Get started" first, then the call
+              (booking link, else WhatsApp). Contact is in the list. */}
+          <StartCta placement="nav-panel" className="btn-saffron nav-panel-cta" />
           <TalkCta className="btn-light nav-panel-cta" message={whatsappPrefill.nav} />
         </nav>
       )}

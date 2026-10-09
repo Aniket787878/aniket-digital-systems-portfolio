@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { MotionConfig, LazyMotion, domAnimation } from 'motion/react'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import Interactions from './interactions/Interactions.jsx'
@@ -12,6 +12,8 @@ import ProjectDetailPage from './pages/ProjectDetailPage.jsx'
 import AboutPage from './pages/AboutPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
 import AiCheckPage from './pages/AiCheckPage.jsx'
+import StartPage from './pages/start/StartPage.jsx'
+import FlowPage from './pages/start/FlowPage.jsx'
 import PrivacyPage from './pages/PrivacyPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import ConceptPage from './concepts/ConceptPage.jsx'
@@ -59,6 +61,13 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/ai-check" element={<AiCheckPage />} />
+          {/* "Get started": what do you want to build? Each choice has its
+              own free plan; AI's is the existing check. The plans are keyed
+              so moving between them starts fresh. */}
+          <Route path="/start" element={<StartPage />} />
+          <Route path="/start/website" element={<FlowPage key="websites" flowKey="websites" />} />
+          <Route path="/start/software" element={<FlowPage key="software" flowKey="software" />} />
+          <Route path="/start/ai" element={<Navigate to="/ai-check" replace />} />
           <Route path="/websites" element={<ServicePage key="websites" slug="websites" />} />
           <Route path="/software" element={<ServicePage key="software" slug="software" />} />
           <Route path="/ai" element={<ServicePage key="ai" slug="ai" />} />

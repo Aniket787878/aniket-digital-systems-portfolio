@@ -795,6 +795,7 @@
 }
 
 .about-film-watch {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -808,6 +809,19 @@
   color: var(--ink-dark);
   cursor: pointer;
   transition: border-color var(--dur-mid) ease;
+}
+
+/* Measures 150x39px on a phone -- short of the 44px thumb-target floor.
+   Invisible ::after rather than padding, so the pill's visual size doesn't
+   change. */
+.about-film-watch::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100%, 44px);
+  height: 44px;
 }
 
 .about-film-watch-icon {

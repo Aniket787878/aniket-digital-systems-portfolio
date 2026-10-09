@@ -28,9 +28,16 @@ const BEATS = [
    most, because its seven steps need room to fold. 340vh was too long a
    hold per beat (a normal scroll could leave the middle line still
    blurred); cut by ~40% (2026-10 UX pass), scaling every beat's hold by
-   the same amount so the weights still read the same. */
-const BAND_VH = 204
-const WEIGHTS = [1, 0.85, 1.55, 0.9]
+   the same amount so the weights still read the same.
+
+   2026-10-09 (smooth-scroll pass): the headfake still left its row of
+   steps blurred. Its fold, fade and the two "after" chips were packed into
+   ~60px of scroll each, so almost any resting point caught one of them
+   mid-blur. The headfake now gets more of the pin (weight 2, band 340vh since 2026-10-09, slower on request)
+   and the steps sit sharp before folding and the result sits sharp after
+   (see Collapse), so every resting point but a short crossfade is clean. */
+const BAND_VH = 340
+const WEIGHTS = [1, 0.85, 2, 0.9]
 const TOTAL = WEIGHTS.reduce((a, b) => a + b, 0)
 const SPANS = WEIGHTS.map((w, i) => {
   const from = WEIGHTS.slice(0, i).reduce((a, b) => a + b, 0) / TOTAL
@@ -39,6 +46,10 @@ const SPANS = WEIGHTS.map((w, i) => {
 /* Where each beat sits on the stream (fraction of the band's height).
    The stream's tip is held at the middle of the screen, so it passes
    beat i when the pin is at that beat's middle. */
+/* Share of each beat's span spent fading in (and again fading out). Was
+   0.3; at 0.18 a beat is sharp for 64% of its span instead of 40%, so a
+   reader who stops scrolling almost always stops on clean type. */
+const EDGE = 0.18
 const DOTS = SPANS.map(({ from, to }) => (50 + (BAND_VH - 100) * ((from + to) / 2)) / BAND_VH)
 
 export default function Stakes() {
@@ -83,10 +94,10 @@ function Beat({ beat, i, q }) {
      the first beat is already in focus when the pin starts, the last one
      stays in focus as the pin lets go. One beat leaves before the next
      arrives, so two lines of big type never sit on top of each other.
-     The fade-in/out edge is 30% of THIS beat's own span, not a fixed
+     The fade-in/out edge is EDGE of THIS beat's own span, not a fixed
      slice of the whole band, so every beat (long or short) reaches full
      sharpness by the same point in its own scroll progress. */
-  const edge = (b - a) * 0.3
+  const edge = (b - a) * EDGE
   const range = [first ? 0 : a, first ? 0.001 : a + edge, last ? 0.999 : b - edge, last ? 1 : b]
   const opacity = useTransform(q, range, [first ? 1 : 0, 1, 1, last ? 1 : 0])
   const blur = useTransform(q, range, [first ? 0 : 10, 0, 0, last ? 0 : 10])
@@ -111,9 +122,14 @@ function Collapse({ q, from, to }) {
   const row = useRef(null)
   const [dx, setDx] = useState([])
   const span = to - from
-  const k = useTransform(q, [from + span * 0.28, from + span * 0.58], [0, 1], { clamp: true })
-  const fade = useTransform(q, [from + span * 0.48, from + span * 0.62], [0, 1], { clamp: true })
-  const show = useTransform(q, [from + span * 0.56, from + span * 0.72], [0, 1], { clamp: true })
+  /* In this beat's own progress (EDGE = 0.18 fade in, 0.82 fade out):
+     0.18-0.28 the seven steps sit sharp; 0.28-0.46 they slide together;
+     0.42-0.52 they fade; 0.46-0.56 the two that are left arrive; 0.56-0.82
+     those two sit sharp. Blur only ever accompanies a fade, never the
+     slide, so nothing readable is ever left soft. */
+  const k = useTransform(q, [from + span * 0.28, from + span * 0.46], [0, 1], { clamp: true })
+  const fade = useTransform(q, [from + span * 0.42, from + span * 0.52], [0, 1], { clamp: true })
+  const show = useTransform(q, [from + span * 0.46, from + span * 0.56], [0, 1], { clamp: true })
 
   useLayoutEffect(() => {
     const el = row.current

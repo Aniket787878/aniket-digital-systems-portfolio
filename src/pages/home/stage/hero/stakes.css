@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------
    Stakes (prefix sk-): the first story loop, right after the hero.
-   Desktop pins one 100vh stage inside a 340vh band; phones and
+   Desktop pins one 100vh stage inside a BAND_VH (340vh) band; phones and
    reduced motion get the four beats as plain stacked blocks.
    ---------------------------------------------------------------- */
 
@@ -117,8 +117,10 @@
 .sk-manual .sk-chip {
   transform: translateX(calc(var(--dx) * var(--k))) scale(calc(1 - 0.45 * var(--k)));
   opacity: calc(1 - var(--f));
-  filter: blur(calc(var(--k) * 3px + var(--f) * 6px));
-  will-change: transform, opacity, filter;
+  /* Blur only as the steps fade out, not while they slide: a row of
+     words softened mid-slide is what read as "still loading". */
+  filter: blur(calc(var(--f) * 6px));
+  will-change: transform, opacity;
 }
 
 .sk-collapse .sk-auto {

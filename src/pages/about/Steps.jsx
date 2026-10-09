@@ -1,53 +1,116 @@
-import { useState } from 'react'
+import { useRef, useState, useSyncExternalStore } from 'react'
 import { fx } from '../../interactions/attrs.js'
-import { m } from 'motion/react'
+import { m, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from 'motion/react'
 import { founder, packages, whatsappPrefill } from '../../data.js'
 import { reveal } from '../../motion/variants.js'
 import Icon from '../../components/icons.jsx'
 import { PillLabel, TickList } from '../../components/ui.jsx'
 import { handleTabKey } from './tabs.js'
 import { Rehook } from '../../components/FunnelCta.jsx'
+import { glideTo } from '../../scroll/smooth.js'
 
 const EASE = [0.22, 1, 0.36, 1]
 const pad = (n) => String(n).padStart(2, '0')
 
-/* ---------------------------------------------------------------
-   How a project runs, as a stepper visitors click through: enquiry,
-   call, scope, build, handover. Content is `founder.steps` (data.js),
-   each line a promise the site already makes. Beside each step sits a
-   small drawn artifact of what that step produces: the message, the
-   call, the one-page proposal, the timelines, the handover list.
+/* Tablet and up: the scroll-driven stepper. Phones get the stacked list. */
+const PINNED = '(min-width: 768px)'
+const subscribe = (cb) => {
+  const mq = window.matchMedia(PINNED)
+  mq.addEventListener('change', cb)
+  return () => mq.removeEventListener('change', cb)
+}
+const usePinnedLayout = () =>
+  useSyncExternalStore(subscribe, () => window.matchMedia(PINNED).matches, () => true)
 
-   All five panels stay in the DOM, stacked in one grid cell, so the
-   band is as tall as its tallest step and nothing below it jumps when
-   the step changes. Inactive panels are visibility:hidden, which also
-   takes them out of the tab order and the accessibility tree.
+/* Scroll per step while the band is pinned, in vh. About one screen per
+   step (2026-10-09, Aniket: "make this section a scrolling one"). */
+const STEP_VH = 120
+
+/* ---------------------------------------------------------------
+   How a project runs: enquiry, call, scope, build, handover. Content is
+   `founder.steps` (data.js), each line a promise the site already makes.
+   Beside each step sits a small drawn artifact of what that step
+   produces: the message, the call, the one-page proposal, the timelines,
+   the handover list.
+
+   Tablet and desktop: the band pins (a sticky frame inside a track
+   STEP_VH per step taller than the screen) and scrolling walks the steps
+   01 to 05; the rail's line fills with the scroll itself. A dot click
+   glides to that step's stretch of the track (through Lenis when it
+   runs). Phones and reduced motion: the five steps stacked, nothing
+   pinned and nothing hidden.
+
+   In the pinned build all five panels stay in the DOM, stacked in one grid
+   cell, so the frame is as tall as its tallest step. Inactive panels are
+   visibility:hidden (after their fade), which also takes them out of the
+   tab order and the accessibility tree.
    --------------------------------------------------------------- */
 export default function Steps() {
-  const steps = founder.steps
-  const [active, setActive] = useState(0)
-  const last = steps.length - 1
+  const reduce = useReducedMotion()
+  const wide = usePinnedLayout()
+  const pinned = wide && !reduce
 
   return (
     <section className="paper about-steps" aria-labelledby="about-steps-title">
       <div className="container">
         <m.header className="about-band-head" {...reveal}>
           <PillLabel icon="flow">How I work</PillLabel>
-          <h2 className="h2" {...fx('split')} id="about-steps-title">
+          {/* Keyed: StringSplit rewrites the heading's markup, so a layout
+              switch that changes the line must mount a fresh heading. */}
+          <h2 className="h2" {...fx('split')} id="about-steps-title" key={pinned ? 'pin' : 'list'}>
             From first message to handover.
-            <span className="soft">Five steps. Pick one.</span>
+            <span className="soft">{pinned ? 'Five steps. Scroll through them.' : 'Five steps, in order.'}</span>
           </h2>
         </m.header>
+      </div>
 
-        <m.div {...reveal}>
-          <div
-            className="about-steps-rail"
-            role="tablist"
-            aria-label="Steps of a project"
-            style={{ '--progress': active / last }}
-          >
+      {pinned ? <Pinned /> : <Stacked />}
+
+      <div className="container">
+        {/* Step one needs no idea of the fix: the check finds the part
+            that is breaking. Points onward, into the page's one ask. */}
+        <Rehook
+          tone="paper"
+          question="Not sure which part is breaking?"
+          label="The free AI check finds it in three minutes"
+          placement="about-steps"
+        />
+      </div>
+    </section>
+  )
+}
+
+function Pinned() {
+  const steps = founder.steps
+  const n = steps.length
+  const track = useRef(null)
+  const [active, setActive] = useState(0)
+
+  const { scrollYProgress: p } = useScroll({ target: track, offset: ['start start', 'end end'] })
+  /* Step i owns [i/n, (i+1)/n) of the pin. The line reaches dot i in the
+     middle of that stretch, so the fill and the active dot always agree. */
+  useMotionValueEvent(p, 'change', (v) => {
+    const i = Math.min(n - 1, Math.max(0, Math.floor(v * n)))
+    setActive((prev) => (prev === i ? prev : i))
+  })
+  const fill = useTransform(p, (v) => Math.min(1, Math.max(0, (v * n - 0.5) / (n - 1))))
+
+  /* The middle of step i's stretch, in page pixels. */
+  const go = (i) => {
+    const el = track.current
+    if (!el) return
+    const top = el.getBoundingClientRect().top + window.scrollY
+    const run = el.offsetHeight - window.innerHeight
+    glideTo(Math.round(top + ((i + 0.5) / n) * run))
+  }
+
+  return (
+    <div className="about-steps-track-scroll" ref={track} style={{ height: `calc(100vh + ${n * STEP_VH}vh)` }}>
+      <div className="about-steps-pin">
+        <div className="container">
+          <div className="about-steps-rail" role="tablist" aria-label="Steps of a project">
             <span className="about-steps-track" aria-hidden="true">
-              <span className="about-steps-fill" />
+              <m.span className="about-steps-fill is-scrubbed" style={{ scaleX: fill }} />
             </span>
             {steps.map((step, i) => (
               <button
@@ -59,8 +122,8 @@ export default function Steps() {
                 aria-controls={`about-step-panel-${step.key}`}
                 tabIndex={i === active ? 0 : -1}
                 className={`about-steps-tab${i === active ? ' is-active' : ''}${i < active ? ' is-done' : ''}`}
-                onClick={() => setActive(i)}
-                onKeyDown={(e) => handleTabKey(e, i, steps.length, setActive)}
+                onClick={() => go(i)}
+                onKeyDown={(e) => handleTabKey(e, i, n, go)}
               >
                 <span className="about-steps-dot">
                   {i < active ? <Icon name="check" size={14} strokeWidth={2.4} /> : pad(i + 1)}
@@ -73,7 +136,6 @@ export default function Steps() {
           <div className="about-steps-stage">
             {steps.map((step, i) => {
               const on = i === active
-              const Artifact = ARTIFACTS[step.key]
               return (
                 <m.div
                   key={step.key}
@@ -82,63 +144,53 @@ export default function Steps() {
                   aria-labelledby={`about-step-tab-${step.key}`}
                   className={`about-steps-panel${on ? ' is-active' : ''}`}
                   initial={false}
-                  animate={on ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-                  transition={{ duration: 0.45, ease: EASE }}
+                  /* Slides in the direction of travel: a step already
+                     passed leaves upward, one still to come waits below. */
+                  animate={on ? { opacity: 1, y: 0 } : { opacity: 0, y: i < active ? -14 : 14 }}
+                  transition={{ duration: 0.5, ease: EASE }}
                 >
-                  <div className="about-steps-copy">
-                    <p className="about-steps-count">
-                      Step {i + 1} of {steps.length}
-                    </p>
-                    <h3 className="about-steps-title">{step.title}</h3>
-                    <p className="about-steps-text">{step.text}</p>
-                    <TickList items={step.gets} className="about-steps-gets" />
-                    <div className="about-steps-nav">
-                      <button
-                        type="button"
-                        className="about-steps-btn"
-                        onClick={() => setActive(i - 1)}
-                        disabled={i === 0}
-                      >
-                        <span className="about-steps-back" aria-hidden="true">
-                          <Icon name="arrow" size={16} />
-                        </span>
-                        Back
-                      </button>
-                      {i < last ? (
-                        <button
-                          type="button"
-                          className="about-steps-btn is-next"
-                          onClick={() => setActive(i + 1)}
-                        >
-                          Next: {steps[i + 1].label}
-                          <Icon name="arrow" size={16} />
-                        </button>
-                      ) : (
-                        <button type="button" className="about-steps-btn is-next" onClick={() => setActive(0)}>
-                          Start again
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  <div className="about-steps-art" aria-hidden="true">
-                    <Artifact on={on} />
-                  </div>
+                  <StepBody step={step} i={i} n={n} on={on} />
                 </m.div>
               )
             })}
           </div>
-        </m.div>
-
-        {/* Step one needs no idea of the fix: the check finds the part
-            that is breaking. Points onward, into the page's one ask. */}
-        <Rehook
-          tone="paper"
-          question="Not sure which part is breaking?"
-          label="The free AI check finds it in three minutes"
-          placement="about-steps"
-        />
+        </div>
       </div>
-    </section>
+    </div>
+  )
+}
+
+function Stacked() {
+  const steps = founder.steps
+  return (
+    <div className="container">
+      <ol className="about-steps-list">
+        {steps.map((step, i) => (
+          <m.li key={step.key} className="about-steps-panel is-listed" {...reveal}>
+            <StepBody step={step} i={i} n={steps.length} on />
+          </m.li>
+        ))}
+      </ol>
+    </div>
+  )
+}
+
+function StepBody({ step, i, n, on }) {
+  const Artifact = ARTIFACTS[step.key]
+  return (
+    <>
+      <div className="about-steps-copy">
+        <p className="about-steps-count">
+          Step {i + 1} of {n}
+        </p>
+        <h3 className="about-steps-title">{step.title}</h3>
+        <p className="about-steps-text">{step.text}</p>
+        <TickList items={step.gets} className="about-steps-gets" />
+      </div>
+      <div className="about-steps-art" aria-hidden="true">
+        <Artifact on={on} />
+      </div>
+    </>
   )
 }
 

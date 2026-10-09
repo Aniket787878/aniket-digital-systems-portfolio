@@ -4,6 +4,7 @@ import Icon from '../../components/icons.jsx'
 import { CheckCta, TalkCta } from '../../components/FunnelCta.jsx'
 import { whatsappPrefill } from '../../data.js'
 import { useCurrency, inCurrency } from '../../currency.js'
+import { glideTo } from '../../scroll/smooth.js'
 import SitesScene from './hero/SitesScene.jsx'
 import InboxScene from './hero/InboxScene.jsx'
 import DeskScene from './hero/DeskScene.jsx'
@@ -98,7 +99,7 @@ export default function ServiceHero({ area }) {
   // The showpiece is the hero's next sibling (ServicePage.jsx).
   const toShowcase = () => {
     const next = ref.current && ref.current.nextElementSibling
-    if (next) next.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
+    if (next) glideTo(next)
   }
 
   useEffect(() => {

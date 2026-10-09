@@ -36,7 +36,7 @@
 
 .hl-track {
   position: relative;
-  height: 320vh;
+  height: 460vh;
 }
 
 .hl-pin {
@@ -155,14 +155,34 @@
   pointer-events: none;
 }
 
+/* Loop and copy are one unit, centred in the site container (2026-10-09:
+   the loop used to sit on the stream line at the far left and the copy at
+   the far right edge, leaving a ~700px hole on wide screens). Column one is
+   the loop's box (.hl-loopbox, empty; LoopScene fits the ∞ to it), capped
+   at 65rem and at 120vh so the loop never outgrows the stage's height;
+   column two is the copy. justify-content centres the pair, so on a wide
+   screen the spare width goes to both outer margins, not into the middle.
+   The left padding keeps the loop clear of the stream line. */
 .hl-layout {
+  --hl-gap: clamp(2.5rem, 5vw, 6rem);
   position: absolute;
   inset: 0;
-  display: flex;
-  justify-content: flex-end;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--container-max) + var(--container-pad) * 2);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, min(65rem, 120vh)) auto;
+  justify-content: center;
   align-items: center;
-  padding: 5rem clamp(1.5rem, 4vw, 4.5rem) 2rem;
+  column-gap: var(--hl-gap);
+  padding: 5rem var(--container-pad) 2rem max(var(--container-pad), calc(var(--hl-sx) + 40px));
   pointer-events: none;
+}
+
+.hl-loopbox {
+  height: 1px;
+  min-width: 0;
 }
 
 .hl-copy {

@@ -16,7 +16,7 @@ import './AboutPage.css'
   one idea per band, alternating the Dusk grounds like the home page:
 
     1. Portrait hero (night)   who he is, in one short paragraph
-    2. Steps (paper)           a stepper from first message to handover
+    2. Steps (paper)           scroll-driven stepper, first message to handover
     3. Toolbox (night)         the stack, sorted by what it does for you
     4. Films (paper)           the five builds, one tap each
     5. Cta (dusk)              the home page's closing band, reused

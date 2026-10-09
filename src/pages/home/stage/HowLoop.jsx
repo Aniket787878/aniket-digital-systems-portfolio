@@ -119,11 +119,12 @@ function Pinned({ onFail }) {
   const pin = useRef(null)
   const probe = useRef(null)
   const copy = useRef(null)
+  const loopbox = useRef(null)
   const inPath = useRef(null)
   const outPath = useRef(null)
   const again = useRef(null)
   const labels = useRef([])
-  const metrics = useRef({ ready: false, sx: 0, right: 0, cy: 0, H: 0 })
+  const metrics = useRef({ ready: false, sx: 0, lx: 0, lw: 0, cy: 0, H: 0 })
   const enter = useRef(0)
   const [active, setActive] = useState(-1)
   const [done, setDone] = useState(false)
@@ -145,21 +146,30 @@ function Pinned({ onFail }) {
 
   useEffect(() => {
     enter.current = enterProgress.get()
+    /* The loop and the copy are one centred unit inside the site container
+       (.hl-layout's grid): the scene fits the loop to the empty first
+       column (.hl-loopbox) and centres it on the copy's middle, and the
+       stream of light bends in from --stream-x to meet its left tip. */
     const measure = () => {
-      if (!pin.current || !probe.current || !copy.current) return
+      if (!pin.current || !probe.current || !copy.current || !loopbox.current) return
       const base = pin.current.getBoundingClientRect()
       const c = copy.current.getBoundingClientRect()
+      const box = loopbox.current.getBoundingClientRect()
       const mt = metrics.current
       mt.sx = probe.current.getBoundingClientRect().left - base.left
-      mt.right = c.left - base.left
+      mt.lx = box.left - base.left
+      mt.lw = box.width
       mt.H = base.height
-      mt.cy = base.height * 0.53
+      mt.cy = c.top + c.height / 2 - base.top
       mt.ready = true
+      pin.current.style.setProperty('--glow-x', `${Math.round(mt.lx + mt.lw / 2)}px`)
+      pin.current.style.setProperty('--glow-y', `${Math.round(mt.cy)}px`)
     }
     measure()
     const ro = new ResizeObserver(measure)
     ro.observe(pin.current)
     ro.observe(copy.current)
+    ro.observe(loopbox.current)
     return () => ro.disconnect()
   }, [enterProgress])
 
@@ -174,12 +184,16 @@ function Pinned({ onFail }) {
       const H = mt.H
       const sx = mt.sx
       const [tx, ty] = tip
+      // The bend from the stream line to the tip: taller the further the
+      // tip sits from the line (a wide screen centres the loop well in from
+      // it), never above the top of the frame.
+      const dy = Math.max(150, Math.min(Math.abs(tx - sx) * 0.8, ty - 24, H - ty - 24))
       if (inPath.current) {
-        inPath.current.setAttribute('d', `M${sx} -2 L${sx} ${ty - 150} C${sx} ${ty - 70} ${tx} ${ty - 80} ${tx} ${ty}`)
+        inPath.current.setAttribute('d', `M${sx} -2 L${sx} ${ty - dy} C${sx} ${ty - dy * 0.47} ${tx} ${ty - dy * 0.53} ${tx} ${ty}`)
         inPath.current.style.strokeDashoffset = String(1 - clamp01(enter.current * 1.1))
       }
       if (outPath.current) {
-        outPath.current.setAttribute('d', `M${tx} ${ty} C${tx} ${ty + 80} ${sx} ${ty + 70} ${sx} ${ty + 150} L${sx} ${H + 2}`)
+        outPath.current.setAttribute('d', `M${tx} ${ty} C${tx} ${ty + dy * 0.53} ${sx} ${ty + dy * 0.47} ${sx} ${ty + dy} L${sx} ${H + 2}`)
         outPath.current.style.strokeDashoffset = String(1 - clamp01((head - 0.97) / 0.03) * clamp01((scrollYProgress.get() - 0.88) / 0.1))
       }
       if (again.current) {
@@ -235,6 +249,7 @@ function Pinned({ onFail }) {
         </p>
 
         <div className="hl-layout">
+          <div className="hl-loopbox" ref={loopbox} aria-hidden="true" />
           <m.div className="hl-copy" ref={copy} {...settle}>
             <Eyebrow />
             <Heading />

@@ -1451,24 +1451,27 @@ export const proofTools = [
 
 /* The About page toolbox: the same tools, sorted by what each does for the
    client rather than listed as a tag wall. Notes come from `proofTools`
-   where one exists; the rest describe how the projects above use them. */
+   where one exists; the rest describe how the projects above use them.
+   Names are plain words for what each does, never the product name
+   (n8n, MSG91, Razorpay, Claude, Gemini): tool names belong only inside
+   the closed "Technical details, for developers" panels. */
 export const toolbox = [
   {
     key: 'repeat',
     outcome: 'The repeat work happens on its own',
     tools: [
-      { name: 'n8n', note: 'The engine that runs your automations in the background. It sits on your own account, so you own it.' },
-      { name: 'WhatsApp · MSG91', note: 'Confirmations and reminders arrive where your clients already are.' },
-      { name: 'Google Calendar', note: 'Bookings land on the calendar your team already checks, with the Meet link attached.' },
-      { name: 'Razorpay', note: 'Payment taken inside the booking flow, so nobody chases it by hand.' }
+      { name: 'Automations that run in the background', note: 'The engine that runs your automations in the background. It sits on your own account, so you own it.' },
+      { name: 'WhatsApp and SMS messages', note: 'Confirmations and reminders arrive where your clients already are.' },
+      { name: 'Your team calendar', note: 'Bookings land on the calendar your team already checks, with the video call link attached.' },
+      { name: 'Online payments', note: 'Payment taken inside the booking flow, so nobody chases it by hand.' }
     ]
   },
   {
     key: 'judgement',
     outcome: 'Messy input gets read for you',
     tools: [
-      { name: 'Claude (AI)', note: 'Reads messy messages, drafts replies and writes summaries, with a person checking the ones that matter.' },
-      { name: 'Gemini (AI)', note: 'Turns a recorded session into a draft note that the therapist checks before it is saved.' }
+      { name: 'AI that reads and drafts', note: 'Reads messy messages, drafts replies and writes summaries, with a person checking the ones that matter.' },
+      { name: 'AI that writes up a session', note: 'Turns a recorded session into a draft note that the therapist checks before it is saved.' }
     ]
   },
   {

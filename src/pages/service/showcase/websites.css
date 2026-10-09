@@ -159,7 +159,7 @@
    its top, which before the pin would read as a gap under the lede. */
 .wo-track {
   position: relative;
-  height: 400vh;
+  height: 560vh;
   margin-top: calc(var(--nav-h) * -1 + 1rem);
 }
 

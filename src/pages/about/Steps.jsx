@@ -24,7 +24,7 @@ const usePinnedLayout = () =>
 
 /* Scroll per step while the band is pinned, in vh. About one screen per
    step (2026-10-09, Aniket: "make this section a scrolling one"). */
-const STEP_VH = 80
+const STEP_VH = 120
 
 /* ---------------------------------------------------------------
    How a project runs: enquiry, call, scope, build, handover. Content is

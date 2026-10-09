@@ -33,10 +33,10 @@ const BEATS = [
    2026-10-09 (smooth-scroll pass): the headfake still left its row of
    steps blurred. Its fold, fade and the two "after" chips were packed into
    ~60px of scroll each, so almost any resting point caught one of them
-   mid-blur. The headfake now gets more of the pin (weight 2, band 230vh)
+   mid-blur. The headfake now gets more of the pin (weight 2, band 340vh since 2026-10-09, slower on request)
    and the steps sit sharp before folding and the result sits sharp after
    (see Collapse), so every resting point but a short crossfade is clean. */
-const BAND_VH = 230
+const BAND_VH = 340
 const WEIGHTS = [1, 0.85, 2, 0.9]
 const TOTAL = WEIGHTS.reduce((a, b) => a + b, 0)
 const SPANS = WEIGHTS.map((w, i) => {

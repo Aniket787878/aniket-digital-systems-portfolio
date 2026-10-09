@@ -34,7 +34,7 @@ const GROUPS = [
     head: 'Client platforms',
     note: 'Built for a client. Shown as illustrations, because the real screens hold client records.'
   },
-  { key: 'real', head: 'Working demos', note: 'Real screens of working builds.' },
+  { key: 'real', head: 'Working demos', note: 'Working builds, tested for real. Each cover quotes a real test run; the real screens are in the case study.' },
   { key: 'demo', head: 'Demo screens', note: 'Designed screens for a made-up business. Not built.' }
 ]
 

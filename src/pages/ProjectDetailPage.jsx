@@ -1,4 +1,3 @@
-import { useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { films, projects, site, images, proofTools, whatsappPrefill, mediaKind, labelFor } from '../data.js'
 import { walkthroughs } from '../walkthroughs.js'
@@ -7,7 +6,6 @@ import SystemDiagram from '../components/SystemDiagram.jsx'
 import AnimatedFlow from '../components/AnimatedFlow.jsx'
 import Media from '../components/Media.jsx'
 import Walkthrough from '../components/Walkthrough.jsx'
-import { SoundIcon } from '../components/VideoDialog.jsx'
 import Counter from '../motion/Counter.jsx'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 
@@ -424,52 +422,30 @@ export default function ProjectDetailPage() {
   )
 }
 
-/* The case film plays muted on arrival (that is what lets it autoplay).
-   "Sound on" unmutes and starts it again from the top, because the
-   soundtrack is cut to the picture and joining it halfway explains
-   nothing; pressing again only mutes. */
+/* The case film plays muted on arrival (that is what lets it autoplay),
+   and stays muted: every film on the site is silent since 2026-10-09
+   (CLAUDE.md, Film sound), so there is no sound toggle and the files carry
+   no audio track. */
 function FilmVideo({ src, poster, autoPlay, label }) {
-  const ref = useRef(null)
-  const [sound, setSound] = useState(false)
-
-  const toggle = () => {
-    const v = ref.current
-    if (!v) return
-    if (sound) {
-      v.muted = true
-      setSound(false)
-      return
-    }
-    v.muted = false
-    v.currentTime = 0
-    setSound(true)
-    v.play().catch(() => {
-      v.muted = true
-      setSound(false)
-    })
-  }
-
   return (
     <div className="case-video-wrap">
       <video
-        ref={ref}
         className="case-video"
         src={src}
         poster={poster}
         autoPlay={autoPlay}
-        muted={!sound}
+        muted
         loop
         playsInline
         controls={!autoPlay}
         preload="metadata"
         aria-label={label}
-        // the native controls (reduced motion) have their own mute
-        onVolumeChange={(e) => setSound(!e.currentTarget.muted)}
+        // the native controls (reduced motion) have their own mute button;
+        // the film stays silent whatever it is set to
+        onVolumeChange={(e) => {
+          if (!e.currentTarget.muted) e.currentTarget.muted = true
+        }}
       />
-      <button type="button" className="case-sound" aria-label="Sound" aria-pressed={sound} onClick={toggle}>
-        <SoundIcon on={sound} />
-        {sound ? 'Sound off' : 'Sound on'}
-      </button>
     </div>
   )
 }

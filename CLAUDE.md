@@ -114,19 +114,19 @@ an empty player. Remotion is a dev
 dependency only; nothing from it ships in the site bundle. Renders need a
 scale giving even pixel sizes (H.264), hence 0.8 for the card loops.
 
-**Film sound.** The voiced films carry a score, `remotion/audio/score-<film>.mp3`
-from `python3 scripts/make-music.py` (re-run after `make-voice.py` or a beat move):
-the voice, lightly treated, over a music bed generated in code (pad, bass, kick,
-hats, risers, impacts, tempo per film) side-chained under the words. The
-effects (`python3 scripts/make-sfx.py` -> `remotion/sfx/*.wav`) sit on top via
-`remotion/sound.jsx` (`cue()`, `<Soundtrack>`), driven by the same timing
-constants as the visuals. The render script masters each film to -14 LUFS
-(128 kb/s stereo AAC). `python3 scripts/measure-audio.py` measures a film
-against the reference reels. Never swap in downloaded audio. The card loops
-(`Clip-*`, `Framed-*`) and the hero reel render `--muted`. The old
-`remotion/audio/music.*` slot still works for a film with no score.
-On the site the lightbox films start with sound on, the case-page film
-autoplays muted with a "Sound on" toggle, and every other player stays muted.
+**Film sound: off on the site since 2026-10-09, at Aniket's request** ("the
+videos sound and sound SFX are so bad"). Every player is muted with no sound
+UI (the lightbox `VideoDialog`, the case-page film, the loops), and the mp4s
+in `public/videos/` carry no audio track (stripped with `ffmpeg -an -c:v
+copy`). `scripts/render-videos.sh` now renders the films and explainers
+`--muted` and skips mastering unless `SITE_AUDIO=1`. **Any future sound needs
+Aniket's approval of a sample first**, and never downloaded or copyrighted
+music. The audio tooling stays in the repo for that: the score
+`remotion/audio/score-<film>.mp3` from `python3 scripts/make-music.py` (voice
+over a music bed generated in code), effects from `python3 scripts/make-sfx.py`
+-> `remotion/sfx/*.wav` placed by `remotion/sound.jsx` (`cue()`,
+`<Soundtrack>`), the `master()` step (-14 LUFS, 128 kb/s AAC) and
+`python3 scripts/measure-audio.py`. Do not delete them.
 After any re-render, bump `FILM_V` in `data.js` so browsers fetch the new files.
 
 **Live on Vercel**, deploying from `main` on every push (team `aniket-s1`,

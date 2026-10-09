@@ -9,7 +9,7 @@ import { frame, cancelFrame } from 'motion/react'
 
   Settings, tuned on the pinned Stakes band (home), where every wheel notch
   scrubs a blur/fade reveal:
-   - lerp 0.1: each frame closes 10% of the gap to the target. Gentle, ends
+   - lerp 0.08: each frame closes 8% of the gap to the target. Gentle, ends
      in well under a second, never floaty. (Not duration + easing: that
      restarts its curve on every notch, which reads as stutter on a long,
      fast wheel spin.)
@@ -27,7 +27,7 @@ import { frame, cancelFrame } from 'motion/react'
 */
 export function create() {
   const lenis = new Lenis({
-    lerp: 0.1,
+    lerp: 0.08,
     wheelMultiplier: 1,
     smoothWheel: true,
     syncTouch: false,

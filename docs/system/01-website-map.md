@@ -58,7 +58,7 @@ misspelled `Refrence files/` (now `docs/reference/folioblox.html`).
 | `/ai-check` | `src/pages/AiCheckPage.jsx` + `src/pages/aicheck/rules.js` | Done (2026-10-09) | The free AI check, step 1 of the path (`funnelPath` in `data.js`): six questions (`aiCheck` in `data.js`) and a contact step, then an instant result worked out in the browser (top three jobs, rough hours labelled an estimate) and the AI Roadmap as step 2. Answers go to `/api/lead` with the contact form's fields (`service: 'ai'`, answers in `workflow_broken`, `source: 'ai-check · <referrer>'`), so the n8n intake needs no change. Since 2026-10-09 (start flows) the AI step 1: `/ai`'s primary buttons and the AI choice on `/start` point here; `/start/ai` redirects here. Shares its question engine with the plans (`src/pages/flow/Steps.jsx`) |
 | `/start` | `src/pages/start/StartPage.jsx` | Done (2026-10-09) | "What do you want to build?" Three equal choices (Websites, Software, AI; line and price are each area's `promise` and `from`), to `/start/website`, `/start/software` or `/ai-check` (`startChoices` in `data.js`). Quiet links: "Not sure which? Start with the free AI check" and "Prefer to just talk?" (booking, else WhatsApp, else /contact). The nav's and home hero's "Get started" land here. Event `start_choose { choice }` |
 | `/start/website`, `/start/software` | `src/pages/start/FlowPage.jsx` + `src/pages/start/rules.js` | Done (2026-10-09) | The free website plan and free software plan: the AI check's engine and look, questions in `startFlows` in `data.js` (budget step uses `budgetBands` in the visitor's currency), then a contact step and an instant result: the suggested package from `packages` with its real price and timeline (website: Business Website, or Website + AI Assistant when the AI assistant is ticked; software: Internal Tool / Dashboard, or Custom Platform when clients log in and 3+ must-haves, or 4+ must-haves), what it covers for their answers (website) or the first three screens (software), honest notes (more than 5 pages, budget under the starting price) and "a starting point, not a quote". Then the area's `PathStrip` and book a call / WhatsApp. Lead: `/api/lead`, same fields as the contact form, `service: 'websites' | 'software'`, `budget_band` as picked, answers in `workflow_broken`, `source: 'start-website · <referrer>'` / `'start-software · …'`. Events `flow_start`, `flow_submit { service }` |
-| `/websites`, `/software`, `/ai` | `src/pages/ServicePage.jsx` + `src/pages/service/` | Done (2026-09-30) | One page per service area (`services` in `data.js`), the pages outreach links point at. Bands: dusk hero with three "what you get" cards, proof (night, project cards plus this site's own screens), the area's price cards (paper), the area's FAQ (the home `Faq` band with `items`), the other two areas as doors (night), the home closing `Cta` with `service` so its links preselect the area in the contact form |
+| `/websites`, `/software`, `/ai` | `src/pages/ServicePage.jsx` + `src/pages/service/` | Done (2026-09-30) | One page per service area (`services` in `data.js`), the pages outreach links point at. Bands: dusk hero with three "what you get" cards, proof (night, project cards plus this site's own screens), the area's prices band (paper; since 2026-10-09 one "from" price, what is always included and the area's plan button, no package cards), the area's FAQ (the home `Faq` band with `items`), the other two areas as doors (night), the home closing `Cta` with `service` so its links preselect the area in the contact form |
 | `/projects` | `src/pages/ProjectsPage.jsx` | Done | Reads `src/data.js`. Eight projects since 2026-09-30: the three n8n assistants (06 to 08) show a cropped still until they have films |
 | `/projects/:slug` | `src/pages/ProjectDetailPage.jsx` | Done | Renders `problem`, `system`, `outcome` and `outcomeNote`. A project with a `stills` entry and no film gets the step-through gallery (`components/Walkthrough.jsx`) in the film's place, and its `credit` as a "Built on" row |
 | `/about` | `src/pages/AboutPage.jsx` | Done | The identity layer that puts a real person behind the work (see `docs/research/06`; the solo framing there was superseded 2026-09-27). Composition only, bands in `src/pages/about/`: portrait hero (dusk monogram card until `founder.photo` is set), a five-step stepper (`founder.steps`; pinned and scroll-driven from 768px, a stacked list on phones and under reduced motion), the toolbox grouped by outcome (`toolbox`), the five project films in the site's dialog player, then the home closing CTA. Story renders only once `founder.story` is written |
@@ -135,15 +135,43 @@ always import `site.email`.
 | `capabilities` | `{ index, title, blurb, items[] }[]` | One consumer now: the Capabilities band (2b), which renders all four fields. The hero used to repeat `index` + `title` as a numbered range; that duplicated 2b word for word and cost the hero 179px it did not have, so it is gone |
 | `services` | `{ slug, path, name, formLabel, example, icon, docTitle, title[2], sub, promise, points[3], from, media, proofHead[2], proof[], faq[] }[]` | The three service areas (2026-09-30). Drives the three service pages, the home Services band's doors, the closing band's price anchor and the contact form's "What do you need?" options. `proof` entries are project slugs or `{ key, title, subtitle, note, image, badge, to, cta }` for proof that is not a project (this site, its form) |
 | `packages` | `{ lane, name, price, timeline, timelineChart, featured, explainer, forWho, deliverable, includes[] }[]` | The offers from `02-service-catalog.md`, grouped by `lane` (a `services` slug), in selling order within each. `featured` marks each area's "Start here". `timelineChart` picks the bars on the About page's timeline |
-| `carePlan` | `{ name, price, blurb }` | Retainer line under the pricing grid |
+| `carePlan` | `{ name, price, blurb }` | Retainer. Its price shows only on the plans' result screens (2026-10-09); pages say "optional" |
 | `founder` | `{ name, role, intro, story, photo, basedIn, steps[], principles[], quickFacts[] }` | The `/about` identity layer. `photo` is empty until a real file lands in `public/` (set `photo: '/aniket.jpg'`; the page shows a drawn dusk monogram card meanwhile). `story` renders only when written. `steps` restate promises made elsewhere on the site. `principles` is currently unused by the page. Nothing invented |
 | `toolbox` | `[{ key, outcome, tools[{ name, note }] }]` | The `/about` toolbox, sorted by what each tool does for the client. Notes reuse `proofTools` where one exists |
 | `testimonials` | `{ quote, name, role, business }[]` | **Empty on purpose** — the Testimonials band (3b) renders an honest "references on request" state until a real, attributed quote lands. No placeholder quotes (CLAUDE.md) |
 | `images` | `{ process{}, projects{}, gallery[] }` | **All placeholders.** See *Images* below |
 
-**Price duplication:** `packages[0].price` and `site.pricingAnchor` state the same
-number twice — the anchor names Offer A's floor. Move both or the site disagrees
-with itself.
+**Price duplication:** `packages[0].price` and each area's `services[].from` state
+the same floor twice (`site.pricingAnchor` and the FAQ's cost answer are filled
+with / restate the `from` values). Move them together or the site disagrees with
+itself.
+
+**Where prices show (Aniket, 2026-10-09).** Pages show one "from" price per area
+(`services[].from`): service page prices band, hero foot, `/start` cards, home
+doors, closing `Cta` anchor, the FAQ cost answer, JSON-LD (`minPrice` per area).
+A package's own price (and the Care Plan's) appears only on the result screens
+of `/start/website`, `/start/software` (`FlowPage.jsx`) and `/ai-check` (the AI
+Roadmap price, step 2), after the visitor has answered and left their details.
+`funnelPath` / `servicePaths` notes are price-free ("Fixed fee", "Optional").
+`PriceCard` / `CarePlanCard` in `components/Pricing.jsx` are no longer rendered.
+
+**Lead fields and result URLs (2026-10-09, `docs/outreach/2026-10-09-funnel-strategy.md`).**
+All three flows and the contact form keep the original payload and add
+`phone`, `timing`, `package`, `lead_temp`, `utm_source`, `utm_medium`,
+`utm_campaign`, `landing_page` (`src/leadExtras.js`; landing captured in
+`main.jsx` into sessionStorage). Temperature: plans are cold when the budget is
+below the package's start (Custom Platform uses the Internal Tool's floor) or
+"no fixed date yet", hot when the budget fits, it is wanted within a month and
+a WhatsApp number was given, else warm; the AI check (no budget or date asked)
+is cold for 1 to 2 people with under 10 enquiries a week, hot with a number and
+30+ enquiries or 3+ people, else warm; the contact form sends warm. Routes are
+`/start/website/:view?`, `/start/software/:view?`, `/ai-check/:view?`: `result`
+is the result screen, a refresh there (nothing in memory) returns to the start,
+the back button returns to the contact step, anything else redirects. Result
+buttons (`pages/flow/NextStep.jsx`): hot "WhatsApp me now" (Aniket's number,
+answers prefilled) + call or message; warm the call buttons as before; cold
+"Here's what to read next" (website-answer-widget / therapist-pwa /
+appointment-desk) + the call as a light button.
 
 ### `films`, `heroReel`, `stackMarquee` (2026-09-27)
 
@@ -290,8 +318,9 @@ that order fixed. The reasoning is repeated in a comment in `HomePage.jsx`.
 | 5 | FAQ | `Faq.jsx` | `faq` (the service pages pass their own `items`) |
 | 6 | Closing CTA | `Cta.jsx` | `site.pricingAnchor` filled from each area's `services[].from` |
 
-The full price cards moved to the service pages on 2026-09-30; the home page
-only says what the three areas are and where each starts.
+The full price cards moved to the service pages on 2026-09-30, and off the
+site on 2026-10-09 (package prices only on the plans' result screens); the home
+page only says what the three areas are and where each starts.
 
 ### Funnel: every page ends on a free first step (2026-10-09)
 
@@ -312,7 +341,7 @@ Plan.
 | Route | Funnel beats |
 |---|---|
 | `/` | Hero "Get started" + Book a free call, trust line kept; close band "Get started". The ∞ loop (`funnelPath`) still tells the AI path |
-| `/websites`, `/software`, `/ai` | Hero, close band and the Offers path rehook use the area's own step 1 ("Plan your website" / "Plan your software" / "Get your free AI check"); hero foot "Free website plan first, no obligation" etc. Offers band: `PATH_INTRO` and the area's `PathStrip`. Websites showcase ends "Plan your website". OtherAreas ends "Not sure which of the three comes first?" to `/start` |
+| `/websites`, `/software`, `/ai` | Hero, close band and the prices band's button use the area's own step 1 ("Plan your website" / "Plan your software" / "Get your free AI check"); hero foot "Free website plan first, no obligation" etc. Prices band: the area's "from" price, "Always included", the plan button, then `PATH_INTRO` and the area's `PathStrip`. Websites showcase ends "Plan your website". OtherAreas ends "Not sure which of the three comes first?" to `/start` |
 | `/projects` | Rehook under the lede and the closing box: "Get started" (`/start`) + call |
 | `/projects/:slug` | Closing box names the project; its button is the plan of the one area whose `proof` lists the project (e.g. care-journey to the software plan, appointment-desk to the AI check), else "Get started" (projects in two areas' proof) |
 | `/about` | Hero "Get started"; Steps band rehook to `/start` |

@@ -1,5 +1,12 @@
 # n8n — Lead Intake Workflow
 
+> **Upgrade prepared, not deployed (2026-10):** `lead-intake-workflow-v2.json`
+> (new sheet columns, [HOT]/[WARM]/[COLD] alerts with a one-tap `wa.me` link to
+> the lead, per-service auto-replies) and `followups-workflow.json` (day 1, 3,
+> 7 and 14 emails while Stage is "New"). How to install and roll back:
+> [`UPGRADE-2026-10.md`](UPGRADE-2026-10.md). WhatsApp stays click-to-chat
+> links only; no WhatsApp account or API is connected.
+
 > **Live since 2026-09-27** on the n8n instance, as three workflows:
 > "Portfolio — Lead intake" (webhook path `portfolio-leads`), "Portfolio —
 > Lead intake errors" (its error workflow, emails Aniket) and "Portfolio —

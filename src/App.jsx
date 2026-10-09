@@ -60,13 +60,13 @@ export default function App() {
             would update a text node that is no longer in the document. */}
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/ai-check" element={<AiCheckPage />} />
+          <Route path="/ai-check/:view?" element={<AiCheckPage />} />
           {/* "Get started": what do you want to build? Each choice has its
               own free plan; AI's is the existing check. The plans are keyed
               so moving between them starts fresh. */}
           <Route path="/start" element={<StartPage />} />
-          <Route path="/start/website" element={<FlowPage key="websites" flowKey="websites" />} />
-          <Route path="/start/software" element={<FlowPage key="software" flowKey="software" />} />
+          <Route path="/start/website/:view?" element={<FlowPage key="websites" flowKey="websites" />} />
+          <Route path="/start/software/:view?" element={<FlowPage key="software" flowKey="software" />} />
           <Route path="/start/ai" element={<Navigate to="/ai-check" replace />} />
           <Route path="/websites" element={<ServicePage key="websites" slug="websites" />} />
           <Route path="/software" element={<ServicePage key="software" slug="software" />} />

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { m } from 'motion/react'
-import { budgetBands, site, startFlows, whatsappPrefill } from '../../data.js'
+import { budgetBands, carePlan, site, startFlows, whatsappPrefill } from '../../data.js'
 import { useDocumentTitle } from '../../useDocumentTitle.js'
 import { useCurrency, inCurrency } from '../../currency.js'
 import { WEBHOOK_URL } from '../../leadWebhook.js'
@@ -14,7 +14,9 @@ import PathStrip from '../../components/PathStrip.jsx'
 import Icon from '../../components/icons.jsx'
 import { Progress, Question, Contact } from '../flow/Steps.jsx'
 import { stepIn, EMAIL_OK } from '../flow/shared.js'
-import { websiteResult, softwareResult, summary } from './rules.js'
+import { websiteResult, softwareResult, summary, labelOf, belowStart, INTERNAL_TOOL, PLATFORM } from './rules.js'
+import { normalisePhone, planTemp, landingFields } from '../../leadExtras.js'
+import { NextStepActions } from '../flow/NextStep.jsx'
 import '../service/showcase/stage.css'
 import '../AiCheckPage.css'
 import './Start.css'
@@ -37,8 +39,26 @@ import './Start.css'
 const emptyFor = (flow) =>
   Object.fromEntries(flow.steps.map((s) => [s.id, s.kind === 'many' ? [] : '']))
 
+/* The flow's own address, and its result's: /start/website and
+   /start/website/result. The result gets its own URL so a page view
+   counts a finished plan (strategy item 11). */
+const BASE = { websites: '/start/website', software: '/start/software' }
+
+/* Below the package's starting price? Null when the band is "not sure"
+   (or empty), so the temperature can tell "doesn't fit" from "unknown".
+   The Custom Platform has no price of its own, so the Internal Tool's
+   floor stands in for it: a platform never starts below that. */
+function budgetBelow(band, pack) {
+  if (!band || band === 'not_sure') return null
+  return belowStart(band, pack === PLATFORM ? INTERNAL_TOOL : pack)
+}
+
 export default function FlowPage({ flowKey }) {
   const flow = startFlows[flowKey]
+  const base = BASE[flowKey]
+  const { view } = useParams()
+  const navigate = useNavigate()
+  const onResultUrl = view === 'result'
   const steps = flow.steps
   const CONTACT = steps.length
   useDocumentTitle(flow.docTitle)
@@ -53,7 +73,11 @@ export default function FlowPage({ flowKey }) {
   const [res, setRes] = useState(null)
   const [send, setSend] = useState('idle')
   const [text, setText] = useState('')
+  const [temp, setTemp] = useState('warm')
   const started = useRef(false)
+  /* Set between the submit and the move to the result URL, so the effect
+     below does not mistake that one render for the back button. */
+  const toResult = useRef(false)
   const inFlight = useRef(false)
   const headRef = useRef(null)
   const resultRef = useRef(null)
@@ -67,6 +91,20 @@ export default function FlowPage({ flowKey }) {
     const box = target?.closest('.ac-card, .ac-result')
     if (box && box.getBoundingClientRect().top < 0) box.scrollIntoView({ block: 'start' })
   }, [step, res])
+
+  /* The result URL and the result state move together. A result URL with
+     no result in memory (a refresh, a shared link) goes back to the start
+     of the plan; leaving the result URL (the browser's back button) goes
+     back to the contact step, with every answer still filled in. */
+  useEffect(() => {
+    if (onResultUrl) {
+      toResult.current = false
+      if (!res) navigate(base, { replace: true })
+    } else if (res && !toResult.current) {
+      setRes(null)
+      setSend('idle')
+    }
+  }, [onResultUrl, res, base, navigate])
 
   /* The budget question's options are the contact form's bands, in the
      visitor's currency. */
@@ -117,10 +155,15 @@ export default function FlowPage({ flowKey }) {
 
     const outcome = flowKey === 'websites' ? websiteResult(answers) : softwareResult(answers)
     const message = summary(flowKey, answers, outcome, clean.phone)
+    const phoneNorm = normalisePhone(clean.phone)
+    const leadTemp = planTemp({ budgetBelow: budgetBelow(answers.budget, outcome.pack), when: answers.when, phone: phoneNorm })
     setText(message)
+    setTemp(leadTemp)
     moved.current = true
     setError('')
     setRes(outcome)
+    toResult.current = true
+    navigate(`${base}/result`)
 
     /* A filled honeypot is a bot: show it the result, send nothing. */
     if (trap) {
@@ -138,7 +181,13 @@ export default function FlowPage({ flowKey }) {
       service: flow.service,
       budget_band: answers.budget || 'not_sure',
       source: `${flow.source} · ${document.referrer || 'direct'}`,
-      submitted_at: new Date().toISOString()
+      submitted_at: new Date().toISOString(),
+      /* The structured fields (leadExtras.js), after the original ones. */
+      phone: phoneNorm,
+      timing: answers.when ? labelOf(flow, 'when', answers.when) : '',
+      package: `${outcome.pack.name} (${inCurrency(outcome.pack.price, currency)})`,
+      lead_temp: leadTemp,
+      ...landingFields()
     }
 
     inFlight.current = true
@@ -165,7 +214,11 @@ export default function FlowPage({ flowKey }) {
     setRes(null)
     setSend('idle')
     setStep(0)
+    navigate(base)
   }
+
+  /* /start/website/anything-else is not a page. */
+  if (view && !onResultUrl) return <Navigate to={base} replace />
 
   return (
     <section className="stage ac" aria-labelledby="ac-title">
@@ -191,6 +244,7 @@ export default function FlowPage({ flowKey }) {
           <Result
             flowKey={flowKey}
             res={res}
+            temp={temp}
             send={send}
             text={text}
             name={name}
@@ -240,7 +294,7 @@ export default function FlowPage({ flowKey }) {
   )
 }
 
-function Result({ flowKey, res, send, text, name, email, resultRef, onRestart }) {
+function Result({ flowKey, res, temp, send, text, name, email, resultRef, onRestart }) {
   const currency = useCurrency()
   const flow = startFlows[flowKey]
   const website = flowKey === 'websites'
@@ -324,8 +378,14 @@ function Result({ flowKey, res, send, text, name, email, resultRef, onRestart })
           A <strong>starting point</strong>, not a quote.
         </p>
         <p className="ac-total-note">
-          We&rsquo;ll firm it up on the call. It comes from simple rules on your answers and the prices on
-          this site, not from seeing your business yet.
+          We&rsquo;ll firm it up on the call. It comes from simple rules on your answers and my fixed package
+          prices, not from seeing your business yet.
+        </p>
+        {/* The package price is shown here, and only here (2026-10-09): the
+            service pages carry one "from" price. The Care Plan's price
+            follows it for the same reason. */}
+        <p className="ac-total-note">
+          Once it is live, the {carePlan.name} is optional: {inCurrency(carePlan.price, currency)}.
         </p>
       </div>
 
@@ -338,25 +398,34 @@ function Result({ flowKey, res, send, text, name, email, resultRef, onRestart })
           with a fixed price and the date it goes live.
         </p>
         <PathStrip service={flowKey} current={1} tone="dark" label="Where you are on the path" />
-        <div className="ac-actions" onClick={onActions}>
-          {hasBooking ? (
-            <>
-              <BookingCta className="btn-saffron" label="Book a free call" />
-              <WhatsAppCta message={prefill} label="Ask on WhatsApp" className="btn-light" />
-            </>
-          ) : hasWhatsApp ? (
-            <>
-              <WhatsAppCta message={prefill} label="Book a free call on WhatsApp" className="btn-saffron" />
-              <Link to={`/${flowKey}#prices`} className="btn-light">
-                See the prices
-              </Link>
-            </>
-          ) : (
-            <Link to={`/contact?service=${flowKey}#write`} className="btn-saffron">
-              Ask for a free call
-            </Link>
-          )}
-        </div>
+        <NextStepActions
+          temp={temp}
+          service={flowKey}
+          waText={`Hi Aniket, I just did the ${label.toLowerCase()} on your site.\n\nName: ${name}\n\n${text}`}
+          contact={`/contact?service=${flowKey}#write`}
+          onActions={onActions}
+          warm={
+            <div className="ac-actions" onClick={onActions}>
+              {hasBooking ? (
+                <>
+                  <BookingCta className="btn-saffron" label="Book a free call" />
+                  <WhatsAppCta message={prefill} label="Ask on WhatsApp" className="btn-light" />
+                </>
+              ) : hasWhatsApp ? (
+                <>
+                  <WhatsAppCta message={prefill} label="Book a free call on WhatsApp" className="btn-saffron" />
+                  <Link to={`/${flowKey}#prices`} className="btn-light">
+                    What every build includes
+                  </Link>
+                </>
+              ) : (
+                <Link to={`/contact?service=${flowKey}#write`} className="btn-saffron">
+                  Ask for a free call
+                </Link>
+              )}
+            </div>
+          }
+        />
         <p className="ac-guarantee">{site.guarantee}</p>
         <button type="button" className="ac-back ac-restart" onClick={onRestart}>
           Start the plan again

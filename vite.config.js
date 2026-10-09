@@ -1,10 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { site, seo, packages, projects } from './src/data.js'
+import { site, seo, services, projects } from './src/data.js'
 
 /* ------------------------------------------------------------------
    siteMeta: writes everything that depends on the site's address or its
-   positioning from ONE place (site.origin, seo, packages in src/data.js):
+   positioning from ONE place (site.origin, seo, services in src/data.js):
 
    - the %…% tokens in index.html (title, description, canonical, og:*,
      twitter:*, and the JSON-LD block)
@@ -58,14 +58,21 @@ function jsonLd() {
         hasOfferCatalog: {
           '@type': 'OfferCatalog',
           name: 'Services',
-          itemListElement: packages.map((pkg) => ({
+          /* One offer per service area with its "from" price only
+             (2026-10-09): package prices are shown on the plans' result
+             screens, never published here. */
+          itemListElement: services.map((area) => ({
             '@type': 'Offer',
-            priceCurrency: 'USD',
-            description: `${pkg.price.usd}, ${pkg.timeline.toLowerCase()}`,
+            url: abs(area.path),
+            priceSpecification: {
+              '@type': 'PriceSpecification',
+              priceCurrency: 'USD',
+              minPrice: Number(area.from.usd.replace(/[^0-9.]/g, ''))
+            },
             itemOffered: {
               '@type': 'Service',
-              name: pkg.name,
-              description: pkg.deliverable
+              name: area.name,
+              description: area.promise
             }
           }))
         }

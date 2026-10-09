@@ -258,18 +258,78 @@
 
 /* ---------- 3. Offers (paper) ---------- */
 
-/* However many offers the area has: two side by side, four as a 2 x 2,
-   three in a row. The home grid's fixed three columns left a gap. */
-.svc-price-grid[data-count='2'],
-.svc-price-grid[data-count='4'] {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+/* One "from" price, what is always included, and the area's free plan
+   (Offers.jsx, 2026-10-09): one white card as wide as the path under it. */
+.svc-from {
   max-width: 56rem;
-  margin-inline: auto;
+  margin: 2.25rem auto 0;
+  padding: clamp(1.4rem, 3vw, 2.25rem);
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid #e7e1d9;
 }
 
-.svc-offers .care-card {
-  max-width: 56rem;
-  margin-inline: auto;
+.svc-from-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+}
+
+.svc-from-line {
+  font-size: clamp(1.5rem, 1.2rem + 1.3vw, 2.25rem);
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink-dark);
+}
+
+.svc-from-line strong {
+  font-weight: 500;
+  color: var(--accent-deep);
+}
+
+.svc-from-note {
+  max-width: 40rem;
+  margin-top: 0.6rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--muted-dark);
+  text-wrap: pretty;
+}
+
+.svc-from-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem 2.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #efe9e1;
+}
+
+.svc-from-sub {
+  margin-bottom: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-dark);
+}
+
+.svc-from-ask {
+  display: grid;
+  justify-items: start;
+  gap: 0.75rem;
+}
+
+.svc-from-ask-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  color: var(--muted-dark);
 }
 
 /* The FAQ follows the offers on the same paper ground: a section break,
@@ -286,14 +346,8 @@
     max-width: 34rem;
   }
 
-  .svc-price-grid[data-count='2'],
-  .svc-price-grid[data-count='4'] {
+  .svc-from-body {
     grid-template-columns: minmax(0, 1fr);
-    max-width: 34rem;
-  }
-
-  .svc-offers .care-card {
-    max-width: 34rem;
   }
 }
 
@@ -315,8 +369,8 @@
   text-overflow: ellipsis;
 }
 
-/* The four-step path above the price cards (Offers.jsx), on all three
-   areas; as wide as the two-column price grid under it. */
+/* The four-step path under the "from" price (Offers.jsx), on all three
+   areas; as wide as the price card above it. */
 .svc-path {
   margin: 2.5rem auto 2.75rem;
   max-width: 56rem;

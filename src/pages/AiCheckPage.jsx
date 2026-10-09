@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { m } from 'motion/react'
 import { aiCheck, packages, site, whatsappPrefill } from '../data.js'
 import { useDocumentTitle } from '../useDocumentTitle.js'
@@ -12,6 +12,8 @@ import BookingCta from '../components/BookingCta.jsx'
 import WhatsAppCta from '../components/WhatsAppCta.jsx'
 import PathStrip from '../components/PathStrip.jsx'
 import { result, summary } from './aicheck/rules.js'
+import { normalisePhone, aiTemp, landingFields } from '../leadExtras.js'
+import { NextStepActions } from './flow/NextStep.jsx'
 import { Progress, Question, Contact } from './flow/Steps.jsx'
 import { stepIn, EMAIL_OK } from './flow/shared.js'
 import './service/showcase/stage.css'
@@ -41,8 +43,16 @@ const ROADMAP = packages.find((pkg) => pkg.name === 'AI Roadmap Session')
 
 const EMPTY = { business: '', enquiries: '', speed: '', time: [], tools: [], team: '' }
 
+/* The check's own address, and its result's (/ai-check/result), so a
+   page view counts a finished check (strategy item 11). */
+const BASE = '/ai-check'
+
 export default function AiCheckPage() {
   useDocumentTitle('Free AI check · Aniket')
+  const { view } = useParams()
+  const navigate = useNavigate()
+  const onResultUrl = view === 'result'
+  const currency = useCurrency()
   const [answers, setAnswers] = useState(EMPTY)
   const [step, setStep] = useState(0)
   const [error, setError] = useState('')
@@ -54,7 +64,11 @@ export default function AiCheckPage() {
   const [res, setRes] = useState(null)
   const [send, setSend] = useState('idle')
   const [text, setText] = useState('')
+  const [temp, setTemp] = useState('warm')
   const started = useRef(false)
+  /* Set between the submit and the move to the result URL (see the
+     effect below). */
+  const toResult = useRef(false)
   const inFlight = useRef(false)
   const headRef = useRef(null)
   const resultRef = useRef(null)
@@ -72,6 +86,19 @@ export default function AiCheckPage() {
     const box = target?.closest('.ac-card, .ac-result')
     if (box && box.getBoundingClientRect().top < 0) box.scrollIntoView({ block: 'start' })
   }, [step, res])
+
+  /* The result URL and the result state move together: no result in
+     memory on the result URL (a refresh) goes back to the first question;
+     the back button from the result goes back to the contact step. */
+  useEffect(() => {
+    if (onResultUrl) {
+      toResult.current = false
+      if (!res) navigate(BASE, { replace: true })
+    } else if (res && !toResult.current) {
+      setRes(null)
+      setSend('idle')
+    }
+  }, [onResultUrl, res, navigate])
 
   function answer(id, value, many) {
     if (!started.current) {
@@ -119,10 +146,15 @@ export default function AiCheckPage() {
 
     const outcome = result(answers)
     const message = summary(answers, outcome, clean.phone)
+    const phoneNorm = normalisePhone(clean.phone)
+    const leadTemp = aiTemp({ enquiries: answers.enquiries, team: answers.team, phone: phoneNorm })
     setText(message)
+    setTemp(leadTemp)
     moved.current = true
     setError('')
     setRes(outcome)
+    toResult.current = true
+    navigate(`${BASE}/result`)
 
     /* A filled honeypot is a bot: show it the result, send nothing. */
     if (trap) {
@@ -141,7 +173,15 @@ export default function AiCheckPage() {
       service: 'ai',
       budget_band: 'not_sure',
       source: `ai-check · ${document.referrer || 'direct'}`,
-      submitted_at: new Date().toISOString()
+      submitted_at: new Date().toISOString(),
+      /* The structured fields (leadExtras.js). The check asks no date, so
+         timing stays empty; the package is step 2, the AI Roadmap, at the
+         price the result shows. */
+      phone: phoneNorm,
+      timing: '',
+      package: `${ROADMAP.name} (${inCurrency(ROADMAP.price, currency)})`,
+      lead_temp: leadTemp,
+      ...landingFields()
     }
 
     inFlight.current = true
@@ -168,7 +208,11 @@ export default function AiCheckPage() {
     setRes(null)
     setSend('idle')
     setStep(0)
+    navigate(BASE)
   }
+
+  /* /ai-check/anything-else is not a page. */
+  if (view && !onResultUrl) return <Navigate to={BASE} replace />
 
   return (
     <section className="stage ac" aria-labelledby="ac-title">
@@ -190,7 +234,7 @@ export default function AiCheckPage() {
         </header>
 
         {res ? (
-          <Result res={res} send={send} text={text} name={name} email={email} resultRef={resultRef} onRestart={restart} />
+          <Result res={res} temp={temp} send={send} text={text} name={name} email={email} resultRef={resultRef} onRestart={restart} />
         ) : (
           <div className="stage-glass ac-card">
             <Progress step={step} questions={STEPS.length} />
@@ -235,7 +279,7 @@ export default function AiCheckPage() {
 
 const range = ([low, high]) => `${low} to ${high} hours a week`
 
-function Result({ res, send, text, name, email, resultRef, onRestart }) {
+function Result({ res, temp, send, text, name, email, resultRef, onRestart }) {
   const currency = useCurrency()
   const jobs = res.top.map((j) => j.name.toLowerCase()).join(', ')
   const prefill = whatsappPrefill.aiCheck.replace('{jobs}', jobs)
@@ -322,29 +366,40 @@ function Result({ res, send, text, name, email, resultRef, onRestart }) {
           written plan with every job ranked by time saved against cost, and a fixed quote for the first build.
         </p>
         <PathStrip current={1} tone="dark" label="Where you are on the path" />
+        {/* The Roadmap's price is shown here, on the result, not on /ai
+            (2026-10-09): pages carry one "from" price per area. */}
         <p className="ac-price">
           <strong>{inCurrency(ROADMAP.price, currency)}</strong>, {ROADMAP.timeline.toLowerCase()}. The fee is taken
           off your build if you go ahead.
         </p>
-        <div className="ac-actions" onClick={onActions}>
-          {hasBooking ? (
-            <>
-              <BookingCta className="btn-saffron" label="Book a call about the Roadmap" />
-              <WhatsAppCta message={prefill} label="Ask on WhatsApp" className="btn-light" />
-            </>
-          ) : hasWhatsApp ? (
-            <>
-              <WhatsAppCta message={prefill} label="Start my AI Roadmap" className="btn-saffron" />
-              <Link to="/ai#prices" className="btn-light">
-                See what is in it
-              </Link>
-            </>
-          ) : (
-            <Link to="/contact?service=ai#write" className="btn-saffron">
-              Ask about the Roadmap
-            </Link>
-          )}
-        </div>
+        <NextStepActions
+          temp={temp}
+          service="ai"
+          waText={`Hi Aniket, I just did the free AI check on your site.\n\nName: ${name}\n\n${text}`}
+          contact="/contact?service=ai#write"
+          onActions={onActions}
+          warm={
+            <div className="ac-actions" onClick={onActions}>
+              {hasBooking ? (
+                <>
+                  <BookingCta className="btn-saffron" label="Book a call about the Roadmap" />
+                  <WhatsAppCta message={prefill} label="Ask on WhatsApp" className="btn-light" />
+                </>
+              ) : hasWhatsApp ? (
+                <>
+                  <WhatsAppCta message={prefill} label="Start my AI Roadmap" className="btn-saffron" />
+                  <Link to="/ai#prices" className="btn-light">
+                    What every build includes
+                  </Link>
+                </>
+              ) : (
+                <Link to="/contact?service=ai#write" className="btn-saffron">
+                  Ask about the Roadmap
+                </Link>
+              )}
+            </div>
+          }
+        />
         <p className="ac-guarantee">{site.guarantee}</p>
         <button type="button" className="ac-back ac-restart" onClick={onRestart}>
           Start the check again

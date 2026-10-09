@@ -16,6 +16,10 @@ import { ExplainerInternalToolCinematic, TOOL_CINEMATIC_LEN } from './explainers
 import { ExplainerOpsSprint, OPS_LEN } from './explainers/ExplainerOpsSprint.jsx'
 import { ExplainerAiAssistant, AI_LEN } from './explainers/ExplainerAiAssistant.jsx'
 import { ExplainerInternalTool, TOOL_LEN } from './explainers/ExplainerInternalTool.jsx'
+import { ExplainerBrandV3, ExplainerBrandV3Tall, BRAND_V3_LEN } from './explainers/ExplainerBrandV3.jsx'
+import { ExplainerOpsSprintV3, OPS_V3_LEN } from './explainers/ExplainerOpsSprintV3.jsx'
+import { ExplainerAiAssistantV3, AI_V3_LEN } from './explainers/ExplainerAiAssistantV3.jsx'
+import { ExplainerInternalToolV3, TOOL_V3_LEN } from './explainers/ExplainerInternalToolV3.jsx'
 
 /* Card previews: a short silent loop per tool. */
 export const CARD_PICKS = {
@@ -95,6 +99,12 @@ export const RemotionRoot = () => (
     <Composition id="Explainer-ops-sprint" component={ExplainerOpsSprint} durationInFrames={OPS_LEN} fps={30} width={1920} height={1080} />
     <Composition id="Explainer-ai-assistant" component={ExplainerAiAssistant} durationInFrames={AI_LEN} fps={30} width={1920} height={1080} />
     <Composition id="Explainer-internal-tool" component={ExplainerInternalTool} durationInFrames={TOOL_LEN} fps={30} width={1920} height={1080} />
+    {/* v3: voiceless, 120 BPM beat grid (films-2026-10-09/shot-list.md) */}
+    <Composition id="Explainer-Brand-v3" component={ExplainerBrandV3} durationInFrames={BRAND_V3_LEN} fps={30} width={1920} height={1080} />
+    <Composition id="Explainer-Brand-Vertical-v3" component={ExplainerBrandV3Tall} durationInFrames={BRAND_V3_LEN} fps={30} width={1080} height={1920} />
+    <Composition id="Explainer-OpsSprint-v3" component={ExplainerOpsSprintV3} durationInFrames={OPS_V3_LEN} fps={30} width={1920} height={1080} />
+    <Composition id="Explainer-AiAssistant-v3" component={ExplainerAiAssistantV3} durationInFrames={AI_V3_LEN} fps={30} width={1920} height={1080} />
+    <Composition id="Explainer-InternalTool-v3" component={ExplainerInternalToolV3} durationInFrames={TOOL_V3_LEN} fps={30} width={1920} height={1080} />
     <Composition id="HeroReel" component={HeroReel} durationInFrames={HERO_LEN} fps={30} width={1440} height={900} />
   </>
 )

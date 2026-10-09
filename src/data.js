@@ -53,7 +53,7 @@ export const images = {
    the stale copy while revalidating), so a returning visitor would keep
    seeing the old films. Change this whenever scripts/render-videos.sh
    output is committed. */
-export const FILM_V = '?v=2026-10-09'
+export const FILM_V = '?v=2026-10-09b'
 
 /* Project covers: one designed picture per project card, rendered from
    scripts/covers/ by scripts/render-covers.mjs into public/covers/. Each
@@ -221,24 +221,24 @@ export const explainersReady = true
 export const explainers = {
   brand: {
     title: 'What I build, in one minute',
-    src: `/videos/explainers/explainer-brand.mp4${FILM_V}`,
-    vertical: `/videos/explainers/explainer-brand-vertical.mp4${FILM_V}`,
-    poster: `/videos/posters/explainer-brand.jpg${FILM_V}`
+    src: `/videos/explainers/explainer-brand-v3.mp4${FILM_V}`,
+    vertical: `/videos/explainers/explainer-brand-vertical-v3.mp4${FILM_V}`,
+    poster: `/videos/posters/explainer-brand-v3.jpg${FILM_V}`
   },
   'ops-sprint': {
     title: 'Ops Automation Sprint',
-    src: `/videos/explainers/explainer-ops-sprint.mp4${FILM_V}`,
-    poster: `/videos/posters/explainer-ops-sprint.jpg${FILM_V}`
+    src: `/videos/explainers/explainer-ops-sprint-v3.mp4${FILM_V}`,
+    poster: `/videos/posters/explainer-ops-sprint-v3.jpg${FILM_V}`
   },
   'ai-assistant': {
     title: 'AI Assistant Build',
-    src: `/videos/explainers/explainer-ai-assistant.mp4${FILM_V}`,
-    poster: `/videos/posters/explainer-ai-assistant.jpg${FILM_V}`
+    src: `/videos/explainers/explainer-ai-assistant-v3.mp4${FILM_V}`,
+    poster: `/videos/posters/explainer-ai-assistant-v3.jpg${FILM_V}`
   },
   'internal-tool': {
     title: 'Internal Tool / Dashboard',
-    src: `/videos/explainers/explainer-internal-tool.mp4${FILM_V}`,
-    poster: `/videos/posters/explainer-internal-tool.jpg${FILM_V}`
+    src: `/videos/explainers/explainer-internal-tool-v3.mp4${FILM_V}`,
+    poster: `/videos/posters/explainer-internal-tool-v3.jpg${FILM_V}`
   }
 }
 

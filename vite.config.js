@@ -76,7 +76,7 @@ function jsonLd() {
   return JSON.stringify(graph).replace(/</g, '\\u003c')
 }
 
-const routes = ['/', '/websites', '/software', '/ai', '/projects', '/about', '/contact', '/privacy', ...projects.map((p) => `/projects/${p.slug}`)]
+const routes = ['/', '/ai-check', '/websites', '/software', '/ai', '/projects', '/about', '/contact', '/privacy', ...projects.map((p) => `/projects/${p.slug}`)]
 
 function sitemap() {
   const today = new Date().toISOString().slice(0, 10)
@@ -123,8 +123,31 @@ function siteMeta() {
   }
 }
 
+/* ------------------------------------------------------------------
+   Vercel Web Analytics without the @vercel/analytics package: the same
+   two pieces it adds at runtime, written into index.html on production
+   builds only (in dev the /_vercel path does not exist). The `va` queue
+   holds events until the script arrives; src/analytics.js sends to it.
+   It records nothing until Analytics is switched on for the project in
+   the Vercel dashboard. No cookies; see the privacy note.
+   ------------------------------------------------------------------ */
+function vercelAnalytics() {
+  return {
+    name: 'vercel-analytics',
+    apply: 'build',
+    transformIndexHtml: () => [
+      {
+        tag: 'script',
+        children: 'window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};',
+        injectTo: 'head'
+      },
+      { tag: 'script', attrs: { defer: true, src: '/_vercel/insights/script.js' }, injectTo: 'head' }
+    ]
+  }
+}
+
 export default defineConfig({
-  plugins: [react(), siteMeta()],
+  plugins: [react(), siteMeta(), vercelAnalytics()],
   server: {
     allowedHosts: ['.monkeycode-ai.live']
   }

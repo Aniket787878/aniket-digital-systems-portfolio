@@ -22,6 +22,20 @@ export default function PrivacyPage() {
         no account, no tracking cookies from the form.
       </p>
 
+      <h2 className="case-section-title">What the free AI check collects</h2>
+      <p className="page-lede">
+        Your answers to its questions, your name, your email and your
+        WhatsApp number if you give it. They go the same way as the contact
+        form and are kept and deleted the same way.
+      </p>
+
+      <h2 className="case-section-title">Visit counts</h2>
+      <p className="page-lede">
+        The site counts page visits and button clicks with Vercel Web
+        Analytics, to see which pages help people. It sets no cookies and
+        does not identify you or follow you to other sites.
+      </p>
+
       <h2 className="case-section-title">Why</h2>
       <p className="page-lede">
         Only to reply to you and to prepare for a call about your project. It

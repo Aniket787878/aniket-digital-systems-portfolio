@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { films, projects, services, site, images, proofTools, whatsappPrefill, mediaKind, labelFor } from '../data.js'
 import { walkthroughs } from '../walkthroughs.js'
@@ -6,6 +7,8 @@ import SystemDiagram from '../components/SystemDiagram.jsx'
 import AnimatedFlow from '../components/AnimatedFlow.jsx'
 import Media from '../components/Media.jsx'
 import Walkthrough from '../components/Walkthrough.jsx'
+import VideoDialog from '../components/VideoDialog.jsx'
+import Icon from '../components/icons.jsx'
 import Counter from '../motion/Counter.jsx'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 
@@ -64,6 +67,17 @@ export default function ProjectDetailPage() {
   const project = position === -1 ? null : projects[position]
 
   useDocumentTitle(project ? `${project.title} · Aniket` : 'Project not found · Aniket')
+
+  // The lightbox the inline film opens into (case-film-sound, 2026-10-09):
+  // the inline film stays muted/autoplay/looping, a click opens this with
+  // the sound toggle, and closing it sends focus back to the button that
+  // opened it, same as any other dialog trigger.
+  const [dialogFilm, setDialogFilm] = useState(null)
+  const filmTriggerRef = useRef(null)
+  const closeFilmDialog = () => {
+    setDialogFilm(null)
+    filmTriggerRef.current?.focus()
+  }
 
   if (!project) {
     return (
@@ -161,6 +175,11 @@ export default function ProjectDetailPage() {
             poster={film.poster}
             autoPlay={autoPlay}
             label={`${film.kind === 'real' ? 'Walkthrough' : 'Illustrated film'} of ${title}`}
+            title={title}
+            triggerRef={filmTriggerRef}
+            onOpen={() =>
+              setDialogFilm({ title, src: film.src, poster: film.poster, sound: film.sound })
+            }
           />
           <figcaption className="case-caption">
             {film.kind === 'real'
@@ -437,34 +456,47 @@ export default function ProjectDetailPage() {
           <TalkCta message={whatsappPrefill.contact} whatsappLabel="Message me on WhatsApp" contactLabel="Start a conversation" />
         </div>
       </section>
+
+      <VideoDialog film={dialogFilm} onClose={closeFilmDialog} />
     </article>
   )
 }
 
-/* The case film plays muted on arrival (that is what lets it autoplay),
-   and stays muted: every film on the site is silent since 2026-10-09
-   (CLAUDE.md, Film sound), so there is no sound toggle and the files carry
-   no audio track. */
-function FilmVideo({ src, poster, autoPlay, label }) {
+/* The case film plays muted on arrival (that is what lets it autoplay)
+   and keeps looping, same as always (CLAUDE.md, Film sound). Since
+   case-film-sound (2026-10-09) the whole frame is one button: clicking
+   or tapping it opens the film in VideoDialog, where a film with real
+   audio (data.js `films[slug].sound`) gets a sound toggle. Reduced
+   motion drops the inline autoplay (the poster shows instead), so the
+   button is the only way to watch it either way, and native controls
+   live in the dialog, not here. */
+function FilmVideo({ src, poster, autoPlay, label, title, onOpen, triggerRef }) {
   return (
     <div className="case-video-wrap">
-      <video
-        className="case-video"
-        src={src}
-        poster={poster}
-        autoPlay={autoPlay}
-        muted
-        loop
-        playsInline
-        controls={!autoPlay}
-        preload="metadata"
-        aria-label={label}
-        // the native controls (reduced motion) have their own mute button;
-        // the film stays silent whatever it is set to
-        onVolumeChange={(e) => {
-          if (!e.currentTarget.muted) e.currentTarget.muted = true
-        }}
-      />
+      <button
+        type="button"
+        className="case-video-trigger"
+        onClick={onOpen}
+        ref={triggerRef}
+        aria-label={`Play ${title} with sound options`}
+      >
+        <video
+          className="case-video"
+          src={src}
+          poster={poster}
+          autoPlay={autoPlay}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-label={label}
+          tabIndex={-1}
+        />
+        <span className="case-video-pill" aria-hidden="true">
+          <Icon name="play" size={10} />
+          Watch with sound
+        </span>
+      </button>
     </div>
   )
 }

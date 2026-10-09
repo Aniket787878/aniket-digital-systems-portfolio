@@ -82,16 +82,19 @@ export const COVER_V = '?v=2026-10-09'
 export const films = {
   'therapist-pwa': {
     kind: 'schematic',
+    sound: true,
     src: `/videos/therapist-pwa.mp4${FILM_V}`,
     poster: `/videos/posters/therapist-pwa.jpg${FILM_V}`
   },
   'care-journey': {
     kind: 'schematic',
+    sound: true,
     src: `/videos/care-journey.mp4${FILM_V}`,
     poster: `/videos/posters/care-journey.jpg${FILM_V}`
   },
   'consent-signer': {
     kind: 'real',
+    sound: true,
     src: `/videos/consent-signer.mp4${FILM_V}`,
     poster: `/videos/posters/consent-signer.jpg${FILM_V}`,
     clip: `/videos/clips/consent-signer.mp4${FILM_V}`,
@@ -101,6 +104,7 @@ export const films = {
   },
   'shared-inbox': {
     kind: 'real',
+    sound: true,
     src: `/videos/shared-inbox.mp4${FILM_V}`,
     poster: `/videos/posters/shared-inbox.jpg${FILM_V}`,
     clip: `/videos/clips/shared-inbox.mp4${FILM_V}`,
@@ -110,6 +114,7 @@ export const films = {
   },
   'lead-research': {
     kind: 'real',
+    sound: true,
     src: `/videos/lead-research.mp4${FILM_V}`,
     poster: `/videos/posters/lead-research.jpg${FILM_V}`,
     clip: `/videos/clips/lead-research.mp4${FILM_V}`,
@@ -221,22 +226,26 @@ export const explainersReady = true
 export const explainers = {
   brand: {
     title: 'What I build, in one minute',
+    sound: true,
     src: `/videos/explainers/explainer-brand-v3.mp4${FILM_V}`,
     vertical: `/videos/explainers/explainer-brand-vertical-v3.mp4${FILM_V}`,
     poster: `/videos/posters/explainer-brand-v3.jpg${FILM_V}`
   },
   'ops-sprint': {
     title: 'Ops Automation Sprint',
+    sound: true,
     src: `/videos/explainers/explainer-ops-sprint-v3.mp4${FILM_V}`,
     poster: `/videos/posters/explainer-ops-sprint-v3.jpg${FILM_V}`
   },
   'ai-assistant': {
     title: 'AI Assistant Build',
+    sound: true,
     src: `/videos/explainers/explainer-ai-assistant-v3.mp4${FILM_V}`,
     poster: `/videos/posters/explainer-ai-assistant-v3.jpg${FILM_V}`
   },
   'internal-tool': {
     title: 'Internal Tool / Dashboard',
+    sound: true,
     src: `/videos/explainers/explainer-internal-tool-v3.mp4${FILM_V}`,
     poster: `/videos/posters/explainer-internal-tool-v3.jpg${FILM_V}`
   }

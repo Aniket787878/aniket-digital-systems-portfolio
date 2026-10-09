@@ -109,7 +109,20 @@ const paths = {
     </>
   ),
   code: <path d="m8.5 7.5-4.5 4.5 4.5 4.5M15.5 7.5l4.5 4.5-4.5 4.5M13.5 5l-3 14" />,
-  arrow: <path d="M5 12h14m0 0-6-6m6 6-6 6" />
+  arrow: <path d="M5 12h14m0 0-6-6m6 6-6 6" />,
+  soundOn: (
+    <>
+      <path d="M4 10v4h3.5L12 17.5v-11L7.5 10H4z" />
+      <path d="M15 9.5a4 4 0 0 1 0 5" />
+      <path d="M17.3 7a7 7 0 0 1 0 10" />
+    </>
+  ),
+  soundOff: (
+    <>
+      <path d="M4 10v4h3.5L12 17.5v-11L7.5 10H4z" />
+      <path d="M15.5 9.5l4 4M19.5 9.5l-4 4" />
+    </>
+  )
 }
 
 export default function Icon({ name, size = 18, className, strokeWidth = 1.6 }) {

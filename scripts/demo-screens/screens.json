@@ -1,0 +1,88 @@
+{
+  "missed-enquiry-rescue": [
+    {
+      "name": "01-enquiry",
+      "caption": "A buyer writes at 21:40, after the office has closed, and gets the price at once from the agency’s own listings"
+    },
+    {
+      "name": "02-questions",
+      "caption": "Four short questions, one per message: flat size, budget, when they plan to buy, and area"
+    },
+    {
+      "name": "03-slots",
+      "caption": "It reads the calendar and offers free site-visit times"
+    },
+    {
+      "name": "04-booked",
+      "caption": "The visit is booked and logged, and a strong lead is passed to a sales person"
+    },
+    {
+      "name": "05-handover",
+      "caption": "Asked for a better price or about a loan, it does not haggle or advise: a person will call"
+    },
+    {
+      "name": "06-leads",
+      "caption": "What the sales team sees in the morning: each lead marked hot, warm or cold by a fixed rule, with the reason"
+    },
+    {
+      "name": "07-reminder",
+      "caption": "A reminder the day before the visit, and one friendly nudge for a buyer who went quiet"
+    }
+  ],
+  "proposal-drafter": [
+    {
+      "name": "01-brief",
+      "caption": "A new client fills in a short brief on the studio’s website, in their own words"
+    },
+    {
+      "name": "02-received",
+      "caption": "They get a reference straight away. Behind the scenes, the assistant lists the work asked for, without any prices"
+    },
+    {
+      "name": "03-draft",
+      "caption": "The assistant drafts the wording: what we heard, what we will make, and questions before we start"
+    },
+    {
+      "name": "04-price",
+      "caption": "Every price comes from the studio’s own rate card by fixed rules. What is not on the card is left for a person"
+    },
+    {
+      "name": "05-decision",
+      "caption": "The owner decides: approve and send, approve with changes, or do not send"
+    },
+    {
+      "name": "06-log",
+      "caption": "Every proposal is logged with the owner’s decision. A vague brief stops with the owner and nothing goes out"
+    },
+    {
+      "name": "07-follow-up",
+      "caption": "Three working days without a reply, a follow-up draft waits for the owner. It never goes out by itself"
+    }
+  ],
+  "trial-class-desk": [
+    {
+      "name": "01-ask",
+      "caption": "Someone asks about evening classes and prices, and gets answers from the studio’s own timetable and price list"
+    },
+    {
+      "name": "02-booked",
+      "caption": "A trial seat is checked and booked, with the time and what to bring"
+    },
+    {
+      "name": "03-health",
+      "caption": "A health question gets a fixed reply before any AI runs: a coach calls first, no advice given"
+    },
+    {
+      "name": "04-reminder",
+      "caption": "The evening before, a reminder"
+    },
+    {
+      "name": "05-register",
+      "caption": "After class, the coach marks who came. The system never guesses"
+    },
+    {
+      "name": "06-follow-up",
+      "caption": "A thank-you for whoever came, one try-again invite for whoever did not, and a nudge to the coach for anyone not marked"
+    }
+  ]
+}

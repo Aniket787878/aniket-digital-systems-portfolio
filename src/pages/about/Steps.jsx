@@ -6,6 +6,7 @@ import { reveal } from '../../motion/variants.js'
 import Icon from '../../components/icons.jsx'
 import { PillLabel, TickList } from '../../components/ui.jsx'
 import { handleTabKey } from './tabs.js'
+import { Rehook } from '../../components/FunnelCta.jsx'
 
 const EASE = [0.22, 1, 0.36, 1]
 const pad = (n) => String(n).padStart(2, '0')
@@ -127,6 +128,15 @@ export default function Steps() {
             })}
           </div>
         </m.div>
+
+        {/* Step one needs no idea of the fix: the check finds the part
+            that is breaking. Points onward, into the page's one ask. */}
+        <Rehook
+          tone="paper"
+          question="Not sure which part is breaking?"
+          label="The free AI check finds it in three minutes"
+          placement="about-steps"
+        />
       </div>
     </section>
   )

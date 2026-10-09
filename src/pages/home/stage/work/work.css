@@ -42,6 +42,16 @@
   }
 }
 
+/* Tablets (640-1023px) stack film over copy in one column; at full
+   width the copy ran ~120 characters a line. A reading-width deck,
+   centred, keeps lines near 75ch and the films still large. */
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .sw-head,
+  .sw-card {
+    width: min(42rem, 100% - 2 * var(--container-pad));
+  }
+}
+
 .sw-head {
   position: relative;
   margin-bottom: clamp(2.5rem, 6vw, 4.5rem);

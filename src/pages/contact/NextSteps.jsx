@@ -5,6 +5,7 @@ import Icon from '../../components/icons.jsx'
 import { PillLabel } from '../../components/ui.jsx'
 import { reveal } from '../../motion/variants.js'
 import { handleTabKey } from '../about/tabs.js'
+import { Rehook } from '../../components/FunnelCta.jsx'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -111,6 +112,13 @@ export default function NextSteps() {
             })}
           </div>
         </m.div>
+
+        {/* The page's last stop is the check, never a dead end. */}
+        <Rehook
+          question="Not ready to write yet?"
+          label="Take the free AI check first"
+          placement="contact-next"
+        />
       </div>
     </section>
   )

@@ -53,3 +53,30 @@ export function TalkCta({
     </Link>
   )
 }
+
+/* ---------------------------------------------------------------
+   Rehook: the quiet line that ends a band and points onward (the
+   story loop's last beat), so no band is a dead end. A question in
+   muted type, then an underlined link. Defaults to the free AI check;
+   pass `to` for the next band or page. A text link, never a button,
+   so it never competes with the one primary in view.
+   `tone` is 'night' (light text) or 'paper' (dark text).
+   --------------------------------------------------------------- */
+export function Rehook({ question, label, to = CHECK_PATH, placement, tone = 'night', className = '' }) {
+  const toCheck = to === CHECK_PATH
+  return (
+    <p className={`rehook rehook-${tone}${className ? ` ${className}` : ''}`}>
+      {question && <span className="rehook-q">{question} </span>}
+      <Link
+        to={to}
+        className="rehook-link"
+        onClick={toCheck ? () => track('cta_click', { placement: placement || 'rehook' }) : undefined}
+      >
+        {label}
+        <span className="rehook-arrow" aria-hidden="true">
+          &rarr;
+        </span>
+      </Link>
+    </p>
+  )
+}

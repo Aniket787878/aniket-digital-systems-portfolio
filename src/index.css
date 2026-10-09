@@ -3356,10 +3356,11 @@ a:hover .text-link svg {
   margin-top: var(--space-3);
 }
 
-/* Phones: every button a step smaller (48px → 42px, 15px → 14px type).
+/* Phones: every button a step smaller (48px → 44px, 15px → 14px type).
    `html` lifts specificity above the page sheets, which load later and
-   would otherwise win a tie (see CLAUDE.md rule 2). 42px stays a
-   comfortable tap target. */
+   would otherwise win a tie (see CLAUDE.md rule 2). 44px, not 42: the
+   2026-10-09 audit measured every primary button 2px under the 44px
+   touch-target minimum. */
 @media (max-width: 640px) {
   html .btn-saffron,
   html .btn-light,
@@ -3367,7 +3368,7 @@ a:hover .text-link svg {
   html .btn-pill,
   html .btn-pill-accent,
   html .btn {
-    height: 42px;
+    height: 44px;
     padding: 0 1.1rem;
     font-size: 0.875rem;
     gap: 0.45rem;
@@ -3445,4 +3446,207 @@ a:hover .text-link svg {
   transform: translate(-50%, -50%);
   width: max(100%, 44px);
   height: 44px;
+}
+
+/* ============================================================
+   Funnel (components/FunnelCta.jsx): the rehook line that ends a
+   band and points onward. Quiet on purpose: a muted question and
+   an underlined link, never a second saffron button in the view.
+   ============================================================ */
+.rehook {
+  margin: clamp(2rem, 4vw, 3rem) auto 0;
+  max-width: 44rem;
+  text-align: center;
+  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
+  line-height: 1.6;
+  text-wrap: balance;
+}
+
+.rehook-night .rehook-q {
+  color: var(--muted);
+}
+
+/* On the contact hero's lit sky the muted grey loses contrast. */
+.contact-hero-rehook .rehook-q {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.rehook-paper .rehook-q {
+  color: var(--muted-dark);
+}
+
+.rehook-link {
+  /* Inline padding grows the hit area to ~44px without opening up the
+     line spacing when the question wraps. */
+  padding-block: 0.75rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: rgba(245, 135, 30, 0.6);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+  transition: color var(--dur-mid) var(--ease-out);
+}
+
+.rehook-night .rehook-link {
+  color: var(--ink);
+}
+
+.rehook-paper .rehook-link {
+  color: var(--ink-dark);
+}
+
+.rehook-night .rehook-link:hover {
+  color: var(--peach);
+}
+
+.rehook-paper .rehook-link:hover {
+  color: var(--accent-deep);
+}
+
+.rehook-arrow {
+  display: inline-block;
+  margin-left: 0.35em;
+  transition: transform var(--dur-mid) var(--ease-out);
+}
+
+.rehook-link:hover .rehook-arrow {
+  transform: translateX(3px);
+}
+
+.rehook-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Left-aligned variant, for pages whose copy runs left (/projects,
+   /privacy, the contact hero). */
+.rehook-start,
+.projects-rehook {
+  margin-inline: 0;
+  text-align: left;
+}
+
+.projects-rehook {
+  margin-top: 1rem;
+}
+
+.projects-cta {
+  margin-top: clamp(3rem, 6vw, 5rem);
+}
+
+/* Nav CTA, quiet state (Nav.jsx): the page's own saffron button is in
+   view, so the nav's copy becomes an outline. Same size and place, so
+   nothing shifts; the transition is colour only. */
+.nav-actions.is-quiet .btn-saffron {
+  background: transparent;
+  color: var(--peach);
+  border-color: rgba(245, 135, 30, 0.55);
+  box-shadow: none;
+}
+
+.nav-actions.is-quiet .btn-saffron:hover {
+  color: #1f0d00;
+  background: var(--accent);
+}
+
+/* Phones: the media badge ("Illustrated · client records never shown")
+   covered half of a ~280px-wide film. It becomes a caption strip under
+   the picture, inside the same rounded frame, so the label stays whole
+   and the film stays visible. */
+@media (max-width: 560px) {
+  .showcase-badge {
+    position: static;
+    display: flex;
+    width: 100%;
+    border: 0;
+    border-top: 1px solid var(--line);
+    border-radius: 0;
+    padding: 0.55rem 0.8rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    line-height: 1.35;
+    background: var(--night-2, #141416);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .showcase-badge::before {
+    flex: none;
+  }
+}
+
+/* Headings break into even lines instead of leaving one word alone on
+   the last line ("The tools, sorted / by" on a 320px phone), and body
+   copy avoids a single-word last line. Progressive: browsers without
+   text-wrap simply wrap as before. */
+h1,
+h2,
+h3,
+.h2,
+.stage-title,
+.dusk-title,
+.page-title {
+  text-wrap: balance;
+}
+
+p,
+li,
+dd {
+  text-wrap: pretty;
+}
+
+/* Case-study prose: `.page:not(.page-wide) > *` (62rem) out-ranks
+   `.case-section`'s own 60ch cap on specificity, so "The problem" and
+   "Why it works" ran ~140 characters a line on a laptop. Re-assert the
+   reading measure for the prose sections only; the card and diagram
+   sections (.case-section-wide) keep their width. */
+.page:not(.page-wide) > .case-section:not(.case-section-wide) {
+  max-width: 46rem;
+}
+
+.page:not(.page-wide) > .page-lede {
+  max-width: 48rem;
+}
+
+/* Touch targets (2026-10-09 audit): small text links and pill buttons
+   measured 24-40px tall on phones. Links get padding cancelled by a
+   negative margin (bigger hit box, same layout); buttons that already
+   have a fixed height get an invisible 44px ::after, the pattern the
+   nav and currency pills use. Phones only, so desktop is untouched. */
+@media (max-width: 767.98px) {
+  /* `html` so a page sheet's own padding (loaded later) can't win a tie. */
+  html .footer-alt-cta,
+  html .text-link,
+  html .sw-link,
+  html .sw-rehook-name,
+  html .hl-rehook-link,
+  html .back-link,
+  html .u-link,
+  html .ai-rehook a {
+    padding-block: 12px;
+    margin-block: -12px;
+  }
+
+  .sh-watch,
+  .ac-restart,
+  .about-steps-btn,
+  .case-sound,
+  .watch-link {
+    position: relative;
+  }
+
+  .sh-watch::after,
+  .ac-restart::after,
+  .about-steps-btn::after,
+  .case-sound::after,
+  .watch-link::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: max(100%, 44px);
+    height: 44px;
+  }
 }

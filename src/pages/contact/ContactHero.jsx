@@ -7,6 +7,7 @@ import { site, whatsappPrefill } from '../../data.js'
 import { hasWhatsApp, whatsappHref } from '../../whatsapp.js'
 import { hasBooking, bookingUrl } from '../../booking.js'
 import { heroContainer, heroItem } from '../../motion/variants.js'
+import { Rehook } from '../../components/FunnelCta.jsx'
 
 /* Seeded once: the same range on every visit, and not the home hero's. */
 const FAR = ridge({ seed: 37, base: 200, amp: 60, detail: 0.8 })
@@ -156,6 +157,17 @@ export default function ContactHero() {
             </li>
           ))}
         </m.ul>
+        {/* For the visitor who is not sure what to ask for yet: the check
+            answers that first. A text link, so the routes above stay the
+            page's actions. */}
+        <m.div variants={heroItem}>
+          <Rehook
+            className="contact-hero-rehook"
+            question="Not sure yet what you need?"
+            label="The free AI check shows you in three minutes"
+            placement="contact-hero"
+          />
+        </m.div>
       </m.div>
     </section>
   )

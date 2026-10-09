@@ -1,0 +1,62 @@
+[
+  {
+    "file": "01-ask.png",
+    "caption": "Someone asks about evening classes and prices, and gets answers from the studio’s own timetable and price list",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "02-booked.png",
+    "caption": "A trial seat is checked and booked, with the time and what to bring",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "03-health.png",
+    "caption": "A health question gets a fixed reply before any AI runs: a coach calls first, no advice given",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "04-reminder.png",
+    "caption": "The evening before, a reminder",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "05-register.png",
+    "caption": "After class, the coach marks who came. The system never guesses",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "06-follow-up.png",
+    "caption": "A thank-you for whoever came, one try-again invite for whoever did not, and a nudge to the coach for anyone not marked",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  }
+]

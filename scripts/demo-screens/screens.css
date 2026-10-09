@@ -1,0 +1,375 @@
+/* Demo screens: designed mock-ups of three flows for made-up businesses.
+   Not captures of a running system. Every screen carries the visible label
+   "Demo screen · made-up business" in its top bar.
+
+   One canvas per screen, 1440x900 CSS px (rendered at 2x), the same capture
+   space as public/walkthroughs/, so ScreenStill and Walkthrough crop them the
+   same way. Keep everything that matters inside x 120..1320, y 50..850: the
+   16:9 card crop trims ~45px top and bottom, the 4:3 step crop ~120px a side.
+
+   Dusk look: Inter at 500 only, night and paper grounds, saffron as
+   punctuation. Generic chat styling, not any messaging app's trade dress. */
+
+@font-face {
+  font-family: Inter;
+  font-weight: 500;
+  src: url('../../node_modules/@fontsource/inter/files/inter-latin-500-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: Inter;
+  font-weight: 500;
+  src: url('../../node_modules/@fontsource/inter/files/inter-latin-ext-500-normal.woff2') format('woff2');
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  --night: #0b0b0c;
+  --night-2: #141416;
+  --night-3: #1d1d20;
+  --paper: #f5f3ef;
+  --paper-2: #ebe7e1;
+  --ink: #f2f0ed;
+  --ink-soft: #c4c4c4;
+  --muted: #9a958f;
+  --ink-dark: #161412;
+  --muted-dark: #6d6862;
+  --accent: #f5871e;
+  --accent-deep: #b8560a;
+  --accent-tint: #fbe6d2;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-dark: rgba(22, 20, 18, 0.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  width: 1440px;
+  height: 900px;
+  overflow: hidden;
+  position: relative;
+  font-family: Inter, sans-serif;
+  font-weight: 500;
+  color: var(--ink);
+  background:
+    radial-gradient(1100px 520px at 50% 118%, rgba(200, 102, 28, 0.32), transparent 70%),
+    radial-gradient(900px 500px at 85% -10%, rgba(245, 135, 30, 0.08), transparent 70%),
+    var(--night);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Top bar: whose screen, and the honest label ---------- */
+.top {
+  position: absolute;
+  left: 140px;
+  right: 140px;
+  top: 58px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.biz { font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.biz b { font-weight: 500; color: var(--ink); }
+.biz .dot { color: var(--accent); margin: 0 10px; }
+.demo-label {
+  font-size: 16px;
+  color: var(--accent);
+  border: 1.5px solid rgba(245, 135, 30, 0.7);
+  border-radius: 999px;
+  padding: 7px 16px;
+  background: rgba(245, 135, 30, 0.08);
+}
+
+/* ---------- Stage ---------- */
+.stage {
+  position: absolute;
+  left: 140px;
+  right: 140px;
+  top: 116px;
+  bottom: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 64px;
+}
+
+/* ---------- Phone with a generic chat ---------- */
+.phone {
+  flex: 0 0 430px;
+  height: 724px;
+  border-radius: 50px;
+  border: 10px solid #26262a;
+  background: var(--night-2);
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.status {
+  height: 38px;
+  padding: 12px 30px 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+.chat-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #1a0900;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  flex: none;
+}
+.chat-name { font-size: 18px; }
+.chat-sub { font-size: 14px; color: var(--muted); margin-top: 2px; }
+.thread {
+  flex: 1;
+  padding: 14px 14px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+  overflow: hidden;
+}
+.day {
+  align-self: center;
+  font-size: 13px;
+  color: var(--muted);
+  background: var(--night-3);
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+.msg {
+  max-width: 84%;
+  padding: 11px 14px 8px;
+  border-radius: 18px;
+  font-size: 18px;
+  line-height: 1.38;
+}
+.msg .t { display: block; text-align: right; font-size: 12px; color: var(--muted); margin-top: 3px; }
+.msg.biz-msg { align-self: flex-start; background: var(--night-3); border-bottom-left-radius: 6px; }
+.msg.me { align-self: flex-end; background: #3b240f; border-bottom-right-radius: 6px; }
+.msg.me .t { color: #c59a73; }
+.msg.fixed { border: 1.5px dashed rgba(245, 135, 30, 0.6); }
+.composer {
+  height: 62px;
+  margin: 0 12px 12px;
+  border-radius: 999px;
+  background: var(--night-3);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  font-size: 16px;
+  color: var(--muted);
+}
+
+/* ---------- Paper note beside the phone ---------- */
+.note {
+  flex: 0 0 540px;
+  background: var(--paper);
+  color: var(--ink-dark);
+  border-radius: 26px;
+  padding: 34px 36px;
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.7);
+}
+.kick { font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-deep); margin-bottom: 10px; }
+.note h2, .win h2 { font-size: 30px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.18; margin-bottom: 18px; }
+.note p { font-size: 19px; line-height: 1.45; color: #3b3732; }
+.note p + p { margin-top: 12px; }
+.note .small, .small { font-size: 16px; color: var(--muted-dark); line-height: 1.45; }
+
+.facts { list-style: none; border-top: 1px solid var(--line-dark); margin: 4px 0 16px; }
+.facts li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line-dark);
+  font-size: 18px;
+}
+.facts li span:first-child { color: var(--muted-dark); }
+.facts li.hl { background: var(--accent-tint); margin: 0 -12px; padding: 11px 12px; border-radius: 10px; border-bottom-color: transparent; }
+
+.checks { list-style: none; margin-bottom: 16px; }
+.checks li { display: flex; gap: 12px; align-items: baseline; font-size: 19px; padding: 8px 0; line-height: 1.4; }
+.checks li::before {
+  content: '';
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+.checks li span { color: var(--muted-dark); }
+
+.rule {
+  background: #fff;
+  border: 1px solid var(--line-dark);
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 17px;
+  line-height: 1.45;
+  color: #3b3732;
+}
+.rule + .rule { margin-top: 10px; }
+.rule b { font-weight: 500; color: var(--ink-dark); }
+
+.quote {
+  background: #fff;
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 17px;
+  line-height: 1.45;
+  color: #3b3732;
+  margin-bottom: 14px;
+}
+
+/* ---------- Tags ---------- */
+.tag {
+  display: inline-block;
+  font-size: 14px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.tag.hot { background: var(--accent); color: #1a0900; }
+.tag.warm { background: var(--accent-tint); color: var(--accent-deep); }
+.tag.cold { background: var(--paper-2); color: var(--muted-dark); }
+.tag.ok { background: #e3efe4; color: #2f5d36; }
+.tag.no { background: var(--paper-2); color: var(--muted-dark); }
+
+/* ---------- Laptop: a plain app window on paper ---------- */
+.win {
+  width: 1160px;
+  height: 724px;
+  background: var(--paper);
+  color: var(--ink-dark);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+}
+.win-bar {
+  height: 46px;
+  flex: none;
+  background: var(--paper-2);
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  gap: 8px;
+  position: relative;
+}
+.win-bar i { width: 12px; height: 12px; border-radius: 50%; background: #cfc8be; }
+.win-bar .win-title { position: absolute; left: 0; right: 0; text-align: center; font-size: 15px; color: var(--muted-dark); }
+.win-body { flex: 1; padding: 34px 44px; overflow: hidden; }
+.win-body.split { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+.win-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
+.win-head h2 { margin-bottom: 0; }
+.win-sub { font-size: 17px; color: var(--muted-dark); }
+
+/* Form bits */
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 15px; color: var(--muted-dark); margin-bottom: 6px; }
+.input {
+  background: #fff;
+  border: 1px solid #d9d3ca;
+  border-radius: 12px;
+  padding: 11px 14px;
+  font-size: 17px;
+  line-height: 1.45;
+}
+.input.area { min-height: 128px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.ticks { display: flex; flex-wrap: wrap; gap: 8px; }
+.tick {
+  font-size: 16px;
+  border: 1px solid #d9d3ca;
+  background: #fff;
+  border-radius: 999px;
+  padding: 7px 14px;
+  color: var(--muted-dark);
+}
+.tick.on { background: var(--ink-dark); border-color: var(--ink-dark); color: var(--paper); }
+.btn {
+  display: inline-block;
+  background: var(--accent);
+  color: #1a0900;
+  font-size: 17px;
+  border-radius: 999px;
+  padding: 12px 24px;
+}
+.btn.ghost { background: transparent; color: var(--ink-dark); border: 1px solid #cfc8be; }
+
+/* Choice list (owner decision, register) */
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border: 1.5px solid #d9d3ca;
+  border-radius: 14px;
+  padding: 14px 18px;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.choice .radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #b9b1a6; flex: none; }
+.choice.on { border-color: var(--accent); background: #fff8f1; }
+.choice.on .radio { border-color: var(--accent); background: radial-gradient(circle, var(--accent) 45%, transparent 50%); }
+.choice small { display: block; font-size: 15px; color: var(--muted-dark); margin-top: 2px; }
+
+/* Tables (sheets, price table) */
+table { width: 100%; border-collapse: collapse; font-size: 16.5px; }
+th { text-align: left; font-weight: 500; font-size: 14px; color: var(--muted-dark); text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 12px; border-bottom: 1px solid #d9d3ca; }
+td { padding: 13px 12px; border-bottom: 1px solid var(--line-dark); vertical-align: top; line-height: 1.38; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+tr.total td { font-size: 19px; border-bottom: none; border-top: 2px solid var(--ink-dark); }
+tr.muted td { color: var(--muted-dark); }
+.panel {
+  background: #fff;
+  border: 1px solid var(--line-dark);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+.panel + .panel { margin-top: 14px; }
+.panel h3 { font-size: 15px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-deep); margin-bottom: 8px; }
+.panel p, .panel li { font-size: 17px; line-height: 1.5; color: #3b3732; }
+.panel ul { padding-left: 20px; }
+.banner {
+  background: var(--accent-tint);
+  color: var(--accent-deep);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 16.5px;
+  margin-bottom: 18px;
+}
+
+/* Message cards (outbox, follow-ups) */
+.cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.mcard { background: #fff; border: 1px solid var(--line-dark); border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.mcard .who { font-size: 15px; color: var(--muted-dark); }
+.mcard .text { font-size: 17px; line-height: 1.48; color: #2b2723; }
+.mcard .foot { margin-top: auto; font-size: 14px; color: var(--muted-dark); border-top: 1px solid var(--line-dark); padding-top: 10px; }
+.row2 .rule + .rule { margin-top: 0; }
+/* The window takes its content's height (up to the stage), so a short
+   screen is not a paper slab with an empty bottom half. */
+.win { height: auto; max-height: 724px; }
+.win-body { padding-bottom: 40px; }
+.nowrap { white-space: nowrap; }
+/* Earlier messages scroll up out of view, as in any chat; fade them out
+   rather than slicing a line in half under the header. */
+.thread { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 56px); mask-image: linear-gradient(to bottom, transparent 0, #000 56px); }

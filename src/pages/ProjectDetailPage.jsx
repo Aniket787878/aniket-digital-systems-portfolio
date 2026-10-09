@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { films, projects, site, images, proofTools, whatsappPrefill, mediaKind } from '../data.js'
+import { films, projects, site, images, proofTools, whatsappPrefill, mediaKind, labelFor } from '../data.js'
 import { walkthroughs } from '../walkthroughs.js'
 import { CheckCta, TalkCta } from '../components/FunnelCta.jsx'
 import SystemDiagram from '../components/SystemDiagram.jsx'
@@ -97,7 +97,8 @@ export default function ProjectDetailPage() {
     : []
   const availability = toText(site && site.availability)
 
-  const eyebrow = [toText(project.subtitle), mediaKind(project.slug) === 'real' ? 'Working demo' : 'Client project']
+  const kind = mediaKind(project.slug)
+  const eyebrow = [toText(project.subtitle), kind === 'real' ? 'Working demo' : kind === 'demo' ? labelFor(project.slug).kind : 'Client project']
     .filter(Boolean)
     .join(' · ')
 
@@ -150,7 +151,7 @@ export default function ProjectDetailPage() {
           </figcaption>
         </figure>
       ) : steps.length > 0 ? (
-        <Walkthrough steps={steps} title={title} />
+        <Walkthrough steps={steps} title={title} label={labelFor(project.slug)} />
       ) : (
         flow.length >= 2 && (
           <figure className="case-flow-figure">
@@ -402,7 +403,9 @@ export default function ProjectDetailPage() {
       )}
 
       <section className="case-cta">
-        <h2 className="case-cta-title">Want this running in your business?</h2>
+        {/* The rehook after the proof, with this project's name as the
+            context, into the one primary action. */}
+        <h2 className="case-cta-title">Want something like the {title} in your business?</h2>
         <p className="case-cta-body">
           Which part of your week is still on WhatsApp threads and spreadsheets:
           bookings, intake, follow-ups or payments? The free AI check shows you in a
@@ -413,8 +416,8 @@ export default function ProjectDetailPage() {
         {/* One primary (the free AI check), the call second
             (components/FunnelCta.jsx). */}
         <div className="case-cta-actions">
-          <CheckCta placement="case-study" className="btn-pill btn-pill-accent" />
-          <TalkCta className="btn-pill" message={whatsappPrefill.contact} whatsappLabel="Message me on WhatsApp" contactLabel="Start a conversation" />
+          <CheckCta placement="case-study" />
+          <TalkCta message={whatsappPrefill.contact} whatsappLabel="Message me on WhatsApp" contactLabel="Start a conversation" />
         </div>
       </section>
     </article>

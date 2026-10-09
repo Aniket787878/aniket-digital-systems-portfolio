@@ -1,6 +1,6 @@
 import { AbsoluteFill, useCurrentFrame } from 'remotion'
 import { S, SANS, Glass, Bar } from './stageLook.jsx'
-import { arriveT, leaveT, ramp, live, glideT, lerp, EASE } from '../cinematic/motion3.js'
+import { arriveT, leaveT, ramp, glideT, lerp, EASE } from '../cinematic/motion3.js'
 import { Words, Headline, Caption, Tag3, Label, PAPER, wordStarts } from '../cinematic/Kinetic3.jsx'
 import { MorphPill, COL, Spinner, Check, Pointer3 } from '../cinematic/Morph3.jsx'
 import { floodState, contract } from '../cinematic/Transitions3.jsx'

@@ -1,7 +1,7 @@
 import { AbsoluteFill, useCurrentFrame } from 'remotion'
 import { S, SANS, Glass } from './stageLook.jsx'
 import { Icon } from '../icons.jsx'
-import { arriveT, leaveT, ramp, live, spr, glideT, lerp, textWidth, EASE, BEAT } from '../cinematic/motion3.js'
+import { arriveT, leaveT, ramp, live, spr, glideT, lerp, textWidth, EASE } from '../cinematic/motion3.js'
 import { Words, Headline, Caption, Tag3, Odometer, Label, Strike, PAPER, wordStarts } from '../cinematic/Kinetic3.jsx'
 import { MorphPill, COL, Spinner, Check, Pointer3 } from '../cinematic/Morph3.jsx'
 import { floodState, dotState, contract } from '../cinematic/Transitions3.jsx'
@@ -74,7 +74,6 @@ const FAKE_CARD = { x: 960, y: 640, w: 840, h: 190 }
 const BOOKED = { x: 960, y: 640, w: 620, h: 116 }
 const UNDER = { x: 960, y: 640, w: 180, h: 18 }
 
-const night = { fill: COL.glass, line: COL.lineDim, glow: 0 }
 const card = { fill: COL.card, line: COL.linePaper, glow: 0 }
 
 function qDot() {
@@ -202,7 +201,6 @@ export function ExplainerOpsSprintV3() {
   const f = useCurrentFrame()
   if (!ready) return <AbsoluteFill style={{ background: S.bg }} />
   const paper = f >= T.paperOn && f < T.fake
-  const t = paper ? 'paper' : 'night'
   // one camera: a gentle push toward the new row, back before the morning flood
   const cam = [
     { x: CX, y: 540, s: 1 },

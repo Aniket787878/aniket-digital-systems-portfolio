@@ -1,7 +1,7 @@
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from 'remotion'
 import { S, SANS, MONO, Glass, Bar } from './stageLook.jsx'
 import { SignalField } from '../cinematic/Signals.jsx'
-import { arriveT, leaveT, glideT, ramp, live, spr, cl, lerp, textWidth, EASE, BEAT } from '../cinematic/motion3.js'
+import { arriveT, leaveT, glideT, ramp, live, spr, lerp, textWidth, EASE, BEAT } from '../cinematic/motion3.js'
 import { Words, Headline, Caption, Tag3, Odometer, Label, wordStarts } from '../cinematic/Kinetic3.jsx'
 import { MorphPill, COL } from '../cinematic/Morph3.jsx'
 import { floodState, dotState, contract } from '../cinematic/Transitions3.jsx'
@@ -384,8 +384,8 @@ function Demo({ f, L, tall }) {
       <Caption f={f} text={c.answer} at={B3.answer + 2} exit={B3.booked - 8} />
       <Ghost f={f} L={L} />
       <Caption f={f} text={c.booked} at={B3.booked + 2} exit={B3.fake - 1} />
-      <Week f={f} L={L} tall={tall} />
-      <Recap f={f} L={L} tall={tall} />
+      <Week f={f} L={L} />
+      <Recap f={f} L={L} />
     </AbsoluteFill>
   )
 }
@@ -406,7 +406,7 @@ function Ghost({ f, L }) {
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-function Week({ f, L, tall }) {
+function Week({ f, L }) {
   const o = live(f, B3.booked + 4, B3.recap, 20, 12)
   const rem = live(f, B3.reminder, B3.recap, 16, 10)
   if (o <= 0) return null
@@ -445,7 +445,7 @@ function Week({ f, L, tall }) {
 }
 
 /* the camera pulls back: message, chip and reply return beside the slot */
-function Recap({ f, L, tall }) {
+function Recap({ f, L }) {
   if (f < B3.recap) return null
   const r = L.recap
   const items = [
@@ -481,7 +481,7 @@ function Proof({ f, L, tall }) {
   const cw = L.win.w
   const gap = cw + 600
   const wx = (i) => L.CX + i * gap
-  const fx = (i, k) => {
+  const fx = (i) => {
     const s = SHOTS[i][tall ? 'tall' : 'wide']
     return { x: wx(i) - cw / 2 + cw * s.focus[0], y: L.win.y - s.body / 2 + 32 + s.body * s.focus[1] }
   }

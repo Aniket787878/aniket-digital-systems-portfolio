@@ -5,6 +5,7 @@ import Interactions from './interactions/Interactions.jsx'
 import SmoothScroll from './scroll/SmoothScroll.jsx'
 import Nav from './components/Nav.jsx'
 import Footer from './components/Footer.jsx'
+import ActionDock from './components/ActionDock.jsx'
 import HomePage from './pages/HomePage.jsx'
 import ServicePage from './pages/ServicePage.jsx'
 import ProjectsPage from './pages/ProjectsPage.jsx'
@@ -81,6 +82,7 @@ export default function App() {
         </Routes>
       </main>
       {!concept && <Footer />}
+      {!concept && <ActionDock />}
     </div>
     </MotionConfig>
     </LazyMotion>

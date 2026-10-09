@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { StartCta, TalkCta } from './FunnelCta.jsx'
 import { whatsappPrefill } from '../data.js'
+import { usePrimaryInView } from '../usePrimaryInView.js'
 
 /*
   Fixed overlay header: transparent while it sits on the hero, then a
@@ -11,7 +12,6 @@ import { whatsappPrefill } from '../data.js'
 export default function Nav() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [quiet, setQuiet] = useState(false)
   const { pathname } = useLocation()
 
   useEffect(() => {
@@ -22,46 +22,30 @@ export default function Nav() {
   }, [])
 
   /* One primary per view: while a page's own primary (any saffron
-     StartCta: "Get started", "Plan your website", "Plan your software"
-     or "Get your free AI check", marked data-primary) is on screen, the
-     nav's "Get started" steps back to an outline so two saffron buttons
-     never compete. Checked once per frame at most, on scroll, resize and
-     route change (the page's buttons are found fresh each time, so new
-     routes need no wiring). */
+     StartCta, marked data-primary) or its WhatsApp link is on screen,
+     the nav's "Get started" steps back to an outline so two saffron
+     buttons never compete. The "is it on screen" check itself now lives
+     in usePrimaryInView.js, shared with the phone action dock
+     (components/ActionDock.jsx, Spec 1), which hides this same button
+     outright rather than outlining it. */
+  const ownPrimaryInView = usePrimaryInView()
+  // Inside a plan (or the chooser) the page's own Next button is the
+  // primary, and the nav's would only lead back to the start.
+  const quiet =
+    ownPrimaryInView ||
+    pathname === '/ai-check' ||
+    pathname.startsWith('/ai-check/') ||
+    pathname === '/start' ||
+    pathname.startsWith('/start/')
+
+  /* Tells the action dock the mobile menu is open (it hides while the
+     menu is), since the dock and this header live in separate
+     components and the dock has no other way to see this state. */
   useEffect(() => {
-    let raf = 0
-    const check = () => {
-      raf = 0
-      const h = window.innerHeight
-      const own = document.querySelectorAll('main a[data-primary].btn-saffron')
-      let seen = false
-      for (const el of own) {
-        const r = el.getBoundingClientRect()
-        if (r.width > 0 && r.bottom > 0 && r.top < h) {
-          seen = true
-          break
-        }
-      }
-      // Inside a plan (or the chooser) the page's own Next button is the
-      // primary, and the nav's would only lead back to the start.
-      const path = window.location.pathname
-      setQuiet(seen || path === '/ai-check' || path.startsWith('/ai-check/') || path === '/start' || path.startsWith('/start/'))
-    }
-    const queue = () => {
-      if (!raf) raf = requestAnimationFrame(check)
-    }
-    // After the route's first paint, and again once entrances settle.
-    queue()
-    const late = setTimeout(queue, 900)
-    window.addEventListener('scroll', queue, { passive: true })
-    window.addEventListener('resize', queue)
-    return () => {
-      cancelAnimationFrame(raf)
-      clearTimeout(late)
-      window.removeEventListener('scroll', queue)
-      window.removeEventListener('resize', queue)
-    }
-  }, [pathname])
+    document.documentElement.classList.toggle('nav-menu-open', open)
+    window.dispatchEvent(new Event('navmenu'))
+    return () => document.documentElement.classList.remove('nav-menu-open')
+  }, [open])
 
   // Escape closes the mobile panel — the standard exit for a disclosure
   // menu. Only bound while it is open, so it never swallows Escape

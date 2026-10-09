@@ -1,0 +1,104 @@
+/* ---------------------------------------------------------------
+   Spec 1: the thumb-zone action dock. Desktop never sees this file at
+   all (ActionDock.jsx returns null above 760px), so everything here is
+   implicitly phone-only.
+   --------------------------------------------------------------- */
+
+.action-dock {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: 90;
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(17, 16, 15, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 -10px 40px -14px rgba(0, 0, 0, 0.6), 0 14px 40px -14px rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  backdrop-filter: blur(18px) saturate(1.5);
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.action-dock[data-state='shown'] {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.action-dock[data-state='hidden'] {
+  transform: translateY(calc(100% + 16px));
+  opacity: 0;
+  visibility: hidden;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in;
+}
+
+.action-dock a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 52px;
+  padding: 0 1rem;
+  border-radius: 999px;
+  font: 500 15px/1 var(--font-sans);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.dock-call {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.action-dock .dock-call .btn-pill-icon {
+  width: auto;
+  height: auto;
+  background: none;
+  border: 0;
+}
+
+.action-dock .dock-call .btn-pill-icon svg {
+  width: 18px;
+  height: 18px;
+  color: #25d366;
+}
+
+.dock-next,
+.dock-solo {
+  justify-content: center;
+}
+
+.dock-solo {
+  grid-column: 1 / -1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action-dock {
+    transition: opacity 0.12s linear;
+  }
+
+  .action-dock[data-state='shown'],
+  .action-dock[data-state='hidden'] {
+    transform: none;
+    transition-duration: 0.12s;
+  }
+}
+
+/* Header "Get started" hides while the dock shows (Decisions already
+   made: one saffron button at a time, on a phone as everywhere else). */
+body.has-dock .nav-actions .btn-saffron {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+}
+
+/* So the dock never sits over the footer's last line. */
+body.has-dock .footer {
+  padding-bottom: 88px;
+}

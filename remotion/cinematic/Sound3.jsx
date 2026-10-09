@@ -33,7 +33,7 @@ const PEAK_KEY = { whooshDown: 'whoosh-down', end: 'endtone' }
 /* Linear gain per kind: the effects sit about 6 dB under the bed's peaks;
    key is the quiet per-word tap (about -24 dB). */
 const LEVEL = { click: 0.5, tick: 0.4, whoosh: 0.55, whooshDown: 0.5, thump: 0.6, end: 0.65, pop: 0.45, key: 0.09, glass: 0.32, flood: 0.55, paper: 0.45, strike: 0.5, roll: 0.35 }
-const GAIN = 0.8
+const GAIN = 1.25
 
 export const cue3 = (kind, at, gain = 1) => ({ kind, at: Math.round(at - (PEAKS[PEAK_KEY[kind] || kind] ?? 0)), gain })
 

@@ -163,6 +163,46 @@ html {
   background: var(--bg);
 }
 
+/* ---------- Smooth scrolling (Lenis, src/scroll) ----------
+   Lenis's own base sheet (lenis/dist/lenis.css, v1.3), inlined so it needs
+   no extra request. Every rule is scoped to html.lenis, which only exists
+   while Lenis runs (never under reduced motion, never touch-only).
+   Lenis sets scrollTop with behavior "instant", so the scroll-behavior
+   above does not fight it; it still smooths keyboard and native jumps when
+   Lenis is not running. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+/* Added: the clip above (while the film lightbox holds the page) would
+   drop the scrollbar and shift the whole page sideways by its width. */
+html.lenis-stopped {
+  scrollbar-gutter: stable;
+}
+
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch],
+.lenis [data-lenis-prevent-vertical],
+.lenis [data-lenis-prevent-horizontal] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+.lenis.lenis-autoToggle {
+  transition-property: overflow;
+  transition-duration: 1ms;
+  transition-behavior: allow-discrete;
+}
+
 /* ---------- Large screens: reflow, not zoom (2026-10-07) ----------
    Replaces the 2026-10-06 pass that scaled the whole site up to 1.6x
    above 1600px. Owner's verdict: a uniform zoom just looks blown up.

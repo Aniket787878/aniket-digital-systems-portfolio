@@ -2,6 +2,7 @@ import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, m, useInView, useMotionValueEvent, useScroll } from 'motion/react'
 import { concepts } from '../../../../concepts/registry.js'
+import { glideTo } from '../../../../scroll/smooth.js'
 import { BrowserBar, OpenLink } from './parts.jsx'
 import { TAG, counter, heroSrc, stripSrc } from './shared.js'
 
@@ -76,7 +77,7 @@ export default function Orbit() {
     if (!el) return
     const top = el.getBoundingClientRect().top + window.scrollY
     const run = el.offsetHeight - window.innerHeight
-    window.scrollTo({ top: top + progressFor(i) * run, behavior: 'smooth' })
+    glideTo(top + progressFor(i) * run)
   }
 
   const c = concepts[front]

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
+import { holdScroll } from '../scroll/smooth.js'
 
 /*
   A native <dialog> lightbox for the explainer films. No player chrome:
@@ -22,6 +23,11 @@ export default function VideoDialog({ film, onClose }) {
     if (film && !dialog.open) dialog.showModal()
     if (!film && dialog.open) dialog.close()
   }, [film])
+
+  /* Hold the page still behind the open lightbox: smooth scrolling stops
+     (and Lenis clips <html>), so the wheel cannot glide the page away
+     underneath the film. Released on close and on unmount. */
+  useEffect(() => (film ? holdScroll() : undefined), [film])
 
   /* Started from code rather than the autoplay attribute: a browser that
      refuses audible playback (Safari can, even after the click) rejects
@@ -55,6 +61,7 @@ export default function VideoDialog({ film, onClose }) {
     <dialog
       ref={ref}
       className="video-dialog"
+      data-lenis-prevent
       onClose={close}
       onClick={(e) => {
         if (e.target === ref.current) close()

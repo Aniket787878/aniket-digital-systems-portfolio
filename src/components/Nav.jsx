@@ -158,6 +158,7 @@ export default function Nav() {
         <nav
           className="nav-panel"
           aria-label="Mobile"
+          data-lenis-prevent
           onClick={() => setOpen(false)}
         >
           <NavLink to="/" end>

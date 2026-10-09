@@ -1,5 +1,6 @@
 import { useLayoutEffect } from 'react'
 import { useLocation, useNavigationType } from 'react-router-dom'
+import { jumpTo, syncScroll } from '../scroll/smooth.js'
 
 /* Scroll offset per history entry, keyed by location.key.
 
@@ -39,6 +40,10 @@ const positions = new Map()
     the reader was standing before the scroll-to-top happens. In a passive
     effect it would run after, and faithfully save zero every time.
 
+  - the jump goes through jumpTo()/syncScroll() (src/scroll/smooth.js) so
+    the smooth-scroll layer, if it is mid-glide from the last wheel turn,
+    lands with the page instead of gliding the new one to the old target.
+
   - it keys on location.key, not pathname, so tapping the nav link for the
     page you are already on also returns you to the top. That is a real
     click path — it is what the mobile menu offers.
@@ -58,8 +63,9 @@ export default function ScrollToTop() {
     const target = !pop && hash ? document.getElementById(decodeURIComponent(hash.slice(1))) : null
     if (target) {
       target.scrollIntoView({ block: 'start', behavior: 'instant' })
+      syncScroll()
     } else {
-      window.scrollTo({ top: pop ? saved : 0, left: 0, behavior: 'instant' })
+      jumpTo(pop ? saved : 0)
     }
 
     return () => {

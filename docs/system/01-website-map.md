@@ -55,7 +55,9 @@ misspelled `Refrence files/` (now `docs/reference/folioblox.html`).
 | Path | File | Status | Notes |
 |------|------|--------|-------|
 | `/` | `src/pages/HomePage.jsx` + `src/pages/home/` | Done | `HomePage.jsx` is composition only; one file per band — see *Home page composition* below |
-| `/ai-check` | `src/pages/AiCheckPage.jsx` + `src/pages/aicheck/rules.js` | Done (2026-10-09) | The free AI check, step 1 of the path (`funnelPath` in `data.js`): six questions (`aiCheck` in `data.js`) and a contact step, then an instant result worked out in the browser (top three jobs, rough hours labelled an estimate) and the AI Roadmap as step 2. Answers go to `/api/lead` with the contact form's fields (`service: 'ai'`, answers in `workflow_broken`, `source: 'ai-check · <referrer>'`), so the n8n intake needs no change. Every page's primary button (`components/FunnelCta.jsx`) points here |
+| `/ai-check` | `src/pages/AiCheckPage.jsx` + `src/pages/aicheck/rules.js` | Done (2026-10-09) | The free AI check, step 1 of the path (`funnelPath` in `data.js`): six questions (`aiCheck` in `data.js`) and a contact step, then an instant result worked out in the browser (top three jobs, rough hours labelled an estimate) and the AI Roadmap as step 2. Answers go to `/api/lead` with the contact form's fields (`service: 'ai'`, answers in `workflow_broken`, `source: 'ai-check · <referrer>'`), so the n8n intake needs no change. Since 2026-10-09 (start flows) the AI step 1: `/ai`'s primary buttons and the AI choice on `/start` point here; `/start/ai` redirects here. Shares its question engine with the plans (`src/pages/flow/Steps.jsx`) |
+| `/start` | `src/pages/start/StartPage.jsx` | Done (2026-10-09) | "What do you want to build?" Three equal choices (Websites, Software, AI; line and price are each area's `promise` and `from`), to `/start/website`, `/start/software` or `/ai-check` (`startChoices` in `data.js`). Quiet links: "Not sure which? Start with the free AI check" and "Prefer to just talk?" (booking, else WhatsApp, else /contact). The nav's and home hero's "Get started" land here. Event `start_choose { choice }` |
+| `/start/website`, `/start/software` | `src/pages/start/FlowPage.jsx` + `src/pages/start/rules.js` | Done (2026-10-09) | The free website plan and free software plan: the AI check's engine and look, questions in `startFlows` in `data.js` (budget step uses `budgetBands` in the visitor's currency), then a contact step and an instant result: the suggested package from `packages` with its real price and timeline (website: Business Website, or Website + AI Assistant when the AI assistant is ticked; software: Internal Tool / Dashboard, or Custom Platform when clients log in and 3+ must-haves, or 4+ must-haves), what it covers for their answers (website) or the first three screens (software), honest notes (more than 5 pages, budget under the starting price) and "a starting point, not a quote". Then the area's `PathStrip` and book a call / WhatsApp. Lead: `/api/lead`, same fields as the contact form, `service: 'websites' | 'software'`, `budget_band` as picked, answers in `workflow_broken`, `source: 'start-website · <referrer>'` / `'start-software · …'`. Events `flow_start`, `flow_submit { service }` |
 | `/websites`, `/software`, `/ai` | `src/pages/ServicePage.jsx` + `src/pages/service/` | Done (2026-09-30) | One page per service area (`services` in `data.js`), the pages outreach links point at. Bands: dusk hero with three "what you get" cards, proof (night, project cards plus this site's own screens), the area's price cards (paper), the area's FAQ (the home `Faq` band with `items`), the other two areas as doors (night), the home closing `Cta` with `service` so its links preselect the area in the contact form |
 | `/projects` | `src/pages/ProjectsPage.jsx` | Done | Reads `src/data.js`. Eight projects since 2026-09-30: the three n8n assistants (06 to 08) show a cropped still until they have films |
 | `/projects/:slug` | `src/pages/ProjectDetailPage.jsx` | Done | Renders `problem`, `system`, `outcome` and `outcomeNote`. A project with a `stills` entry and no film gets the step-through gallery (`components/Walkthrough.jsx`) in the film's place, and its `credit` as a "Built on" row |
@@ -284,28 +286,34 @@ that order fixed. The reasoning is repeated in a comment in `HomePage.jsx`.
 The full price cards moved to the service pages on 2026-09-30; the home page
 only says what the three areas are and where each starts.
 
-### Funnel: every page ends on the free AI check (2026-10-09)
+### Funnel: every page ends on a free first step (2026-10-09)
 
-One primary action, `/ai-check`, from `components/FunnelCta.jsx`:
-`CheckCta` (the only saffron button in a view), `TalkCta` (the call,
-second) and `Rehook` (a muted question plus an underlined link that ends a
-band and points onward; defaults to the check, never a button). The nav's
-"Free AI check" turns to an outline while a page's own check button is on
-screen, and is always quiet on `/ai-check`, where the footer drops its
-button.
+Rewired the same day ("for website why AI check button?"): the primary is
+`StartCta` in `components/FunnelCta.jsx`, destinations in `src/flows.js`.
+"Get started" goes to `/start`; with `service` it goes to that area's own
+plan: websites "Plan your website" (`/start/website`), software "Plan your
+software" (`/start/software`), ai "Get your free AI check" (`/ai-check`,
+`CheckCta`). `TalkCta` is the call, second; `Rehook` defaults to `/start`.
+Every saffron `StartCta` carries `data-primary`; the nav's "Get started"
+turns to an outline while one is on screen, and is always quiet on
+`/start*` and `/ai-check`. The footer drops its button on `/start*`.
+`PathStrip` takes `service` (`servicePaths` in `data.js`): AI keeps check,
+Roadmap, build, Care Plan; websites and software are their own free plan,
+a free call and written fixed-price proposal, build by a fixed date, Care
+Plan.
 
 | Route | Funnel beats |
 |---|---|
-| `/` | Unchanged: hero ask, story loop down the page, "Step one takes about three minutes", close |
-| `/websites`, `/software`, `/ai` | The websites showcase ends "Start with the free AI check" (was "Let’s talk" to /contact). Offers band opens with how this area starts (`PATH_INTRO` in `service/Offers.jsx`), the 4-step `PathStrip` on all three (was /ai only) and a rehook to the check; OtherAreas ends "Not sure which of the three comes first?"; then the closing `Cta` |
-| `/projects` | Rehook under the lede, and a closing "Want one of these for your business?" box (check + call) |
-| `/projects/:slug` | Closing box names the project ("Want something like the X in your business?") |
-| `/about` | Steps band ends with a rehook to the check, then the closing `Cta` |
-| `/contact` | Hero rehook for visitors not sure what they need; NextSteps ends on the check. Form and email unchanged |
-| `/privacy` | Ends on a rehook to the check |
+| `/` | Hero "Get started" + Book a free call, trust line kept; close band "Get started". The ∞ loop (`funnelPath`) still tells the AI path |
+| `/websites`, `/software`, `/ai` | Hero, close band and the Offers path rehook use the area's own step 1 ("Plan your website" / "Plan your software" / "Get your free AI check"); hero foot "Free website plan first, no obligation" etc. Offers band: `PATH_INTRO` and the area's `PathStrip`. Websites showcase ends "Plan your website". OtherAreas ends "Not sure which of the three comes first?" to `/start` |
+| `/projects` | Rehook under the lede and the closing box: "Get started" (`/start`) + call |
+| `/projects/:slug` | Closing box names the project; its button is the plan of the one area whose `proof` lists the project (e.g. care-journey to the software plan, appointment-desk to the AI check), else "Get started" (projects in two areas' proof) |
+| `/about` | Hero "Get started"; Steps band rehook to `/start` |
+| `/contact` | Hero and NextSteps rehooks to `/start`. Form and email unchanged |
+| `/privacy` | Mentions the website and software plans beside the AI check; ends on a rehook to `/start` |
 
 No sticky mobile bar: the nav is fixed on phones and already carries the
-check button at every scroll position, so a bottom bar would duplicate it.
+"Get started" button at every scroll position, so a bottom bar would duplicate it.
 
 ## Layout contract
 

@@ -48,7 +48,7 @@ export function PriceCard({ pkg, currency, onWatch }) {
 }
 
 /* The card's button. Always dark: the one saffron button in any view is
-   the free AI check (components/FunnelCta.jsx), so a grid of offers
+   the page's free first step (StartCta, components/FunnelCta.jsx), so a grid of offers
    never shows three competing primaries. With a booking link: the call
    plus WhatsApp as a quiet text link. Without one: WhatsApp, prefilled
    with the offer name. The AI Roadmap card (the one with a `step`) is

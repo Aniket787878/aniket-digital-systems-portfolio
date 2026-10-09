@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { films, projects, site, images, proofTools, whatsappPrefill, mediaKind, labelFor } from '../data.js'
+import { films, projects, services, site, images, proofTools, whatsappPrefill, mediaKind, labelFor } from '../data.js'
 import { walkthroughs } from '../walkthroughs.js'
-import { CheckCta, TalkCta } from '../components/FunnelCta.jsx'
+import { StartCta, TalkCta } from '../components/FunnelCta.jsx'
 import SystemDiagram from '../components/SystemDiagram.jsx'
 import AnimatedFlow from '../components/AnimatedFlow.jsx'
 import Media from '../components/Media.jsx'
@@ -39,6 +39,25 @@ const toolNote = (tool) => {
     proofTools.find((t) => t.name.toLowerCase() === name) ||
     proofTools.find((t) => name.startsWith(`${t.name.toLowerCase()} `))
   return hit ? hit.note : ''
+}
+
+/* Which area a case study is clearly about: the one service whose proof
+   list (services[].proof in data.js) names it. A project that backs two
+   areas (the clinic platform, the proposal drafter) is about more than
+   one, so its closing button goes to /start instead. */
+function areaOf(slug) {
+  const found = services.filter((area) =>
+    area.proof.some((item) => (typeof item === 'string' ? item : item.slug) === slug)
+  )
+  return found.length === 1 ? found[0].slug : null
+}
+
+/* The closing band's middle sentence, per area. */
+const CLOSE_ASK = {
+  websites: 'The free website plan asks a few plain questions and shows you, on the spot, which package fits and what it starts at.',
+  software: 'The free software plan asks a few plain questions and shows you, on the spot, the scope that fits and the first screens it would have.',
+  ai: 'The free AI check shows you in a few minutes which of them AI could take on first.',
+  start: 'Pick a website, software or AI, answer a few plain questions, and see on the spot what fits and what it starts at.'
 }
 
 export default function ProjectDetailPage() {
@@ -98,6 +117,7 @@ export default function ProjectDetailPage() {
   const availability = toText(site && site.availability)
 
   const kind = mediaKind(project.slug)
+  const area = areaOf(project.slug)
   const eyebrow = [toText(project.subtitle), kind === 'real' ? 'Working demo' : kind === 'demo' ? labelFor(project.slug).kind : 'Client project']
     .filter(Boolean)
     .join(' · ')
@@ -408,15 +428,14 @@ export default function ProjectDetailPage() {
         <h2 className="case-cta-title">Want something like the {title} in your business?</h2>
         <p className="case-cta-body">
           Which part of your week is still on WhatsApp threads and spreadsheets:
-          bookings, intake, follow-ups or payments? The free AI check shows you in a
-          few minutes which of them AI could take on first. Then we can talk about
-          what it costs and the date it goes live.
+          bookings, intake, follow-ups or payments? {CLOSE_ASK[area || 'start']} Then we
+          can talk about what it costs and the date it goes live.
         </p>
         {availability && <p className="case-cta-note">{availability}</p>}
-        {/* One primary (the free AI check), the call second
-            (components/FunnelCta.jsx). */}
+        {/* One primary (the matching area's free plan, else "Get
+            started"), the call second (components/FunnelCta.jsx). */}
         <div className="case-cta-actions">
-          <CheckCta placement="case-study" />
+          <StartCta service={area} placement="case-study" />
           <TalkCta message={whatsappPrefill.contact} whatsappLabel="Message me on WhatsApp" contactLabel="Start a conversation" />
         </div>
       </section>

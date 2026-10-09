@@ -1,20 +1,23 @@
-import { funnelPath } from '../data.js'
+import { funnelPath, servicePaths } from '../data.js'
 import { useCurrency, inCurrency } from '../currency.js'
 import './PathStrip.css'
 
 /* ---------------------------------------------------------------
-   The four-step path (funnelPath in data.js) as one compact row:
-   free AI check, AI Roadmap, build by a fixed date, Care Plan. Used
-   where the Roadmap is sold (the /ai prices) and on the AI check's
-   result, so the paid first step is always seen as step 2 of 4.
+   The four-step path as one compact row, per area (`service`, from
+   servicePaths in data.js): for AI, the free AI check, AI Roadmap,
+   build by a fixed date, Care Plan (funnelPath); for websites and
+   software, their own free plan, a free call and written fixed-price
+   proposal, the build, the Care Plan. Used on each service page's
+   prices and at the end of each plan. No `service` means the AI path.
    `current` marks the step the visitor is on (0-based); `tone` is
    'light' on the paper ground, 'dark' on the stage.
    --------------------------------------------------------------- */
-export default function PathStrip({ current = -1, tone = 'light', label = 'How it works, step by step' }) {
+export default function PathStrip({ service, current = -1, tone = 'light', label = 'How it works, step by step' }) {
   const currency = useCurrency()
+  const steps = servicePaths[service] || funnelPath
   return (
     <ol className={`path-strip path-strip-${tone}`} aria-label={label}>
-      {funnelPath.map((step, i) => (
+      {steps.map((step, i) => (
         <li
           key={step.key}
           className={`path-step${i === current ? ' is-current' : ''}${i < current ? ' is-done' : ''}`}

@@ -157,14 +157,14 @@ export default function ContactHero() {
             </li>
           ))}
         </m.ul>
-        {/* For the visitor who is not sure what to ask for yet: the check
-            answers that first. A text link, so the routes above stay the
-            page's actions. */}
+        {/* For the visitor who is not sure what to ask for yet: /start
+            (website, software or AI, each with a few plain questions). A
+            text link, so the routes above stay the page's actions. */}
         <m.div variants={heroItem}>
           <Rehook
             className="contact-hero-rehook"
             question="Not sure yet what you need?"
-            label="The free AI check shows you in three minutes"
+            label="Pick website, software or AI and see what fits"
             placement="contact-hero"
           />
         </m.div>

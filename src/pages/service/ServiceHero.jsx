@@ -1,7 +1,8 @@
 import { useEffect, useRef, useSyncExternalStore } from 'react'
 import { m, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react'
 import Icon from '../../components/icons.jsx'
-import { CheckCta, TalkCta } from '../../components/FunnelCta.jsx'
+import { StartCta, TalkCta } from '../../components/FunnelCta.jsx'
+import { FLOW } from '../../flows.js'
 import { whatsappPrefill } from '../../data.js'
 import { useCurrency, inCurrency } from '../../currency.js'
 import { glideTo } from '../../scroll/smooth.js'
@@ -153,11 +154,13 @@ export default function ServiceHero({ area }) {
             </m.p>
 
             <m.div className="sv-actions" variants={settle}>
-              <CheckCta placement={`${area.slug}-hero`} magnet />
+              {/* The area's own free first step: the website plan, the
+                  software plan or the AI check (FLOW in FunnelCta.jsx). */}
+              <StartCta service={area.slug} placement={`${area.slug}-hero`} magnet />
               <TalkCta message={prefill} contact={`/contact?service=${area.slug}#write`} />
             </m.div>
             <m.p className="stage-mono sv-foot" variants={settle}>
-              From {inCurrency(area.from, currency)}. Free AI check first, no obligation.
+              From {inCurrency(area.from, currency)}. {FLOW[area.slug].name} first, no obligation.
             </m.p>
           </div>
 

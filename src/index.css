@@ -3670,7 +3670,6 @@ dd {
 
   .sh-watch,
   .ac-restart,
-  .about-steps-btn,
   .case-sound,
   .watch-link {
     position: relative;
@@ -3678,7 +3677,6 @@ dd {
 
   .sh-watch::after,
   .ac-restart::after,
-  .about-steps-btn::after,
   .case-sound::after,
   .watch-link::after {
     content: '';

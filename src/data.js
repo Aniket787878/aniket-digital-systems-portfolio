@@ -130,22 +130,30 @@ export const films = {
    data and replayed for the capture (scripts/capture-demos.mjs checks
    every reply word for word against the test log). Not live traffic, not
    real patients.
+
+   `card` (optional) is a tighter rect for the project cards (components/
+   ProjectCard.jsx), which are smaller than any other surface: the part a
+   visitor can read at card size, the reply or the checked result, rather
+   than the whole screen. Other surfaces keep `cover.focus`.
    ------------------------------------------------------------------ */
 export const stills = {
   'appointment-desk': {
     kind: 'real',
-    cover: { file: '/walkthroughs/appointment-desk/03.png', focus: { x: 280, y: 458, w: 880, h: 420 } }
+    cover: { file: '/walkthroughs/appointment-desk/03.png', focus: { x: 280, y: 458, w: 880, h: 420 } },
+    card: { x: 300, y: 470, w: 830, h: 420 }
   },
   'knowledge-assistant': {
     kind: 'real',
-    cover: { file: '/walkthroughs/knowledge-assistant/02.png', focus: { x: 280, y: 530, w: 880, h: 348 } }
+    cover: { file: '/walkthroughs/knowledge-assistant/02.png', focus: { x: 280, y: 530, w: 880, h: 348 } },
+    card: { x: 300, y: 540, w: 830, h: 360 }
   },
   'website-answer-widget': {
     kind: 'real',
     /* Wider than the step's own focus, so the card shows the clinic's
        headline beside the chat panel: the point is that it sits on a
        website. */
-    cover: { file: '/walkthroughs/website-answer-widget/04.png', focus: { x: 260, y: 150, w: 1180, h: 664 } }
+    cover: { file: '/walkthroughs/website-answer-widget/04.png', focus: { x: 260, y: 150, w: 1180, h: 664 } },
+    card: { x: 250, y: 140, w: 1180, h: 380 }
   },
   /* Demo screens: designed mock-ups of a flow for a made-up business,
      drawn from the plan's dummy data (scripts/demo-screens/, rendered by
@@ -156,15 +164,18 @@ export const stills = {
      and drop the label. */
   'missed-enquiry-rescue': {
     kind: 'demo',
-    cover: { file: '/demo-screens/missed-enquiry-rescue/01-enquiry.png', focus: { x: 120, y: 60, w: 1200, h: 790 } }
+    cover: { file: '/demo-screens/missed-enquiry-rescue/01-enquiry.png', focus: { x: 120, y: 60, w: 1200, h: 790 } },
+    card: { x: 200, y: 165, w: 1060, h: 596 }
   },
   'proposal-drafter': {
     kind: 'demo',
-    cover: { file: '/demo-screens/proposal-drafter/04-price.png', focus: { x: 120, y: 60, w: 1200, h: 790 } }
+    cover: { file: '/demo-screens/proposal-drafter/04-price.png', focus: { x: 120, y: 60, w: 1200, h: 790 } },
+    card: { x: 150, y: 220, w: 1140, h: 560 }
   },
   'trial-class-desk': {
     kind: 'demo',
-    cover: { file: '/demo-screens/trial-class-desk/02-booked.png', focus: { x: 120, y: 60, w: 1200, h: 790 } }
+    cover: { file: '/demo-screens/trial-class-desk/02-booked.png', focus: { x: 120, y: 60, w: 1200, h: 790 } },
+    card: { x: 200, y: 165, w: 1060, h: 596 }
   }
 }
 

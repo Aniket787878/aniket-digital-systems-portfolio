@@ -374,6 +374,16 @@
   .hl-figure-label .stage-mono {
     font-size: 0.75rem;
   }
+
+  /* The two bottom labels sit ~140px apart on a 320-360px phone and ran
+     into each other on one line; let each wrap in its own narrow box. */
+  .hl-figure-label {
+    white-space: normal;
+    width: max-content;
+    max-width: 7.5rem;
+    text-align: center;
+    line-height: 1.25;
+  }
 }
 
 .hl-figure-label.is-lit {
@@ -386,7 +396,9 @@
 
 .hl-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  /* Always the four path steps: 2 x 2, or one row of four on a wide
+     screen. auto-fit left a 3 + 1 orphan on tablets (768-1000px). */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
   margin: 0;
   padding: 0;
@@ -409,6 +421,18 @@
 
 .hl-stream-static {
   display: none;
+}
+
+@media (max-width: 520px) {
+  .hl-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .hl-cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 1024px) {

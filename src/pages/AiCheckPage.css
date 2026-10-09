@@ -43,12 +43,16 @@
    lede are dropped altogether at this width since there is nothing to
    restore them to. Desktop is unaffected. */
 @media (max-width: 760px) {
-  .ac-head.is-result .stage-pill,
-  .ac-head.is-result .ac-stakes,
-  .ac-head.is-result .ac-lede,
-  .ac-head.is-compact .stage-pill,
-  .ac-head.is-compact .ac-stakes,
-  .ac-head.is-compact .ac-lede {
+  /* `.ac .ac-head …` (4 classes), not `.ac-head.is-result …` (3): Start.css's
+     `.ac-head .sf-back + .stage-pill { display: flex }` ties at 3 classes
+     and sits later in the cascade (Start.css imports after this file), so
+     it would otherwise win the tie and keep the pill visible. */
+  .ac .ac-head.is-result .stage-pill,
+  .ac .ac-head.is-result .ac-stakes,
+  .ac .ac-head.is-result .ac-lede,
+  .ac .ac-head.is-compact .stage-pill,
+  .ac .ac-head.is-compact .ac-stakes,
+  .ac .ac-head.is-compact .ac-lede {
     display: none;
   }
 
@@ -561,6 +565,33 @@
 
   .ac-job {
     padding: 1.15rem 1.15rem;
+  }
+}
+
+@media (max-width: 760px) {
+  /* With the intro header compacted to just the back link, the result's
+     own generous top spacing (sized for sitting well below a full
+     header) is now most of the gap between the nav and the price —
+     tightened here so the price and the hand-off button land on the
+     same screen (Spec 2's accept check). Placed after the base
+     `.ac-result` etc. rules above so it wins their specificity tie. */
+  .ac-result {
+    margin-top: 0.5rem;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .ac-headfake {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .ac-send {
+    margin: 0.5rem 0 0;
+  }
+
+  .ac-result-title {
+    margin-top: 0.5rem;
   }
 }
 

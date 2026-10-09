@@ -297,3 +297,18 @@
     transform: none;
   }
 }
+
+@media (max-width: 760px) {
+  /* Spec 2: tightens the gap above the price on the result screen so it
+     lands on the same screen as the hand-off button below it (the back
+     link and the package card's own top spacing, sized for desktop,
+     were otherwise most of the 844px). */
+  .sf-back {
+    margin-bottom: 0.75rem;
+  }
+
+  .sf-pack {
+    margin-top: 0.75rem;
+    padding: 1.25rem;
+  }
+}

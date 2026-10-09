@@ -682,6 +682,12 @@ a:hover {
   transition: background-color var(--dur-mid) ease,
     border-color var(--dur-mid) ease;
   border-bottom: 1px solid transparent;
+  /* Fixed to the top/left/right edges: on a notched/rounded-corner phone
+     (viewport-fit=cover, index.html) env() is the inset the hardware needs;
+     elsewhere it's 0, so max() keeps this a no-op. */
+  padding-top: max(0px, env(safe-area-inset-top));
+  padding-left: max(0px, env(safe-area-inset-left));
+  padding-right: max(0px, env(safe-area-inset-right));
 }
 
 .nav-scrolled {

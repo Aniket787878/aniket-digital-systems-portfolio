@@ -14,10 +14,15 @@
      PLAYWRIGHT=/tmp/pgcheck/node_modules/playwright/index.mjs \
        node scripts/render-demo-screens.mjs [slug]
    One light job: a single browser, one page at a time.
+
+   Each screenshot is then shrunk by scripts/compress-png.py (Python with
+   Pillow and numpy): about 500KB to about 100KB a screen at the same 2x
+   size, text untouched. Skip it with COMPRESS=0 to see the raw capture.
    ------------------------------------------------------------------ */
 import { readFile, writeFile, mkdir } from 'node:fs/promises'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { dirname, resolve } from 'node:path'
+import { execFileSync } from 'node:child_process'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const src = resolve(root, 'scripts/demo-screens')
@@ -53,6 +58,11 @@ for (const [slug, screens] of Object.entries(manifest)) {
     await page.screenshot({ path: resolve(out, file) })
     steps.push({ file, caption: screen.caption, focus: screen.focus || DEFAULT_FOCUS })
     console.log(`  ${slug}/${file}`)
+  }
+  if (process.env.COMPRESS !== '0') {
+    execFileSync('python3', [resolve(root, 'scripts/compress-png.py'), ...steps.map((s) => resolve(out, s.file))], {
+      stdio: 'inherit'
+    })
   }
   await writeFile(resolve(out, 'steps.json'), `${JSON.stringify(steps, null, 2)}\n`)
 }

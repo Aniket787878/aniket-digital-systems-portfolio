@@ -81,7 +81,10 @@ export function pillAt(f, states) {
   return { L, R, T, B, r, fill, line, glow, o, idx }
 }
 
-export function MorphPill({ f, states, z = 20, contentFade = 12, shadow = true, children }) {
+export function MorphPill({ f, states: raw, z = 20, contentFade = 12, shadow = true, children }) {
+  // a state without a `content` key keeps the content before it (null clears it)
+  const states = []
+  raw.forEach((s, i) => states.push('content' in s || i === 0 ? s : { ...s, content: states[i - 1].content }))
   const g = pillAt(f, states)
   if (g.o <= 0.002) return null
   const w = Math.max(0, g.R - g.L)

@@ -16,17 +16,17 @@ import { COL } from './Morph3.jsx'
 
 export function floodState(at, W, H, fill = COL.saffron, dur = DUR.flood) {
   const D = Math.hypot(W, H) * 1.15
-  return { at, x: W / 2, y: H / 2, w: D, h: D, r: D / 2, fill, line: [fill[0], fill[1], fill[2], 0], glow: 0, ease: { dur, curve: EASE.flood } }
+  return { at, x: W / 2, y: H / 2, w: D, h: D, r: D / 2, fill, line: [fill[0], fill[1], fill[2], 0], glow: 0, content: null, ease: { dur, curve: EASE.flood } }
 }
 
 /* a full-frame rectangle (the paper ground as a pill state) */
 export function frameState(at, W, H, fill = COL.paper, dur = DUR.flood) {
   const D = Math.hypot(W, H) * 1.15
-  return { at, x: W / 2, y: H / 2, w: D, h: D, r: D / 2, fill, line: [0, 0, 0, 0], glow: 0, ease: { dur, curve: EASE.flood } }
+  return { at, x: W / 2, y: H / 2, w: D, h: D, r: D / 2, fill, line: [0, 0, 0, 0], glow: 0, content: null, ease: { dur, curve: EASE.flood } }
 }
 
 /* a dot (the start of a flood, or the end of a contract) */
-export const dotState = (at, x, y, d = 18, fill = COL.saffron, extra = {}) => ({ at, x, y, w: d, h: d, r: d / 2, fill, line: [fill[0], fill[1], fill[2], 0], ...extra })
+export const dotState = (at, x, y, d = 18, fill = COL.saffron, extra = {}) => ({ at, x, y, w: d, h: d, r: d / 2, fill, line: [fill[0], fill[1], fill[2], 0], content: null, ...extra })
 
 /* contract on the flood curve over dur frames into a target state */
 export const contract = (state, dur = 15) => ({ ...state, ease: { dur, curve: EASE.flood } })

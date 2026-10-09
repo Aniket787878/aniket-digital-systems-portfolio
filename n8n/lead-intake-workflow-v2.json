@@ -1,0 +1,433 @@
+{
+  "name": "Portfolio lead intake v2 (Sheets + Gmail, lead temp)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "portfolio-leads",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "a070e180-f290-45fd-af02-5214f94e74cf",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "9ff877d3-6c6f-49bc-a365-a2fec93686ad"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6583e1df-707d-48e8-b4fa-574dc8004f51",
+              "name": "Submitted At",
+              "value": "={{ $json.body.submitted_at || $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "0e968f40-de32-4df7-8732-31368d7a1476",
+              "name": "Name",
+              "value": "={{ ($json.body.name || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "d19b3ba7-cdb8-4c4c-9b3b-f2027eb56953",
+              "name": "Email",
+              "value": "={{ ($json.body.email || '').trim().toLowerCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "429f6dbc-1454-473c-ade0-f14893fa0327",
+              "name": "Company",
+              "value": "={{ ($json.body.company || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "480fd03a-395e-48ae-b1bc-21ba27e4eb03",
+              "name": "Workflow",
+              "value": "={{ ($json.body.workflow_broken || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "cffa7cce-bbdf-4c32-9a44-83b73ff9f146",
+              "name": "Budget",
+              "value": "={{ $json.body.budget_band || 'not_sure' }}",
+              "type": "string"
+            },
+            {
+              "id": "bc986701-52d0-43e3-b90b-18e24a392c67",
+              "name": "Source",
+              "value": "={{ $json.body.source || 'direct' }}",
+              "type": "string"
+            },
+            {
+              "id": "9e4be1be-d87f-4ae4-b38c-f64870569ca6",
+              "name": "Stage",
+              "value": "New",
+              "type": "string"
+            },
+            {
+              "id": "7c1f3a52-9d4e-4b8a-a1f6-2e5d8c9b0f13",
+              "name": "Service",
+              "value": "={{ $json.body.service || 'not_sure' }}",
+              "type": "string"
+            },
+            {
+              "id": "9fec2437-f779-4795-99cc-30487fa76f6e",
+              "name": "Phone",
+              "value": "={{ ($json.body.phone || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "9fc1fb81-91a9-4d41-a5c1-6920f54157b1",
+              "name": "Timing",
+              "value": "={{ ($json.body.timing || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "52e8b46e-efcd-439c-a00a-0b793e94798d",
+              "name": "Package",
+              "value": "={{ ($json.body.package || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "848354c1-d41f-43e7-8382-99ff3b81795e",
+              "name": "Lead temp",
+              "value": "={{ ['hot','warm','cold'].includes(($json.body.lead_temp || '').toLowerCase()) ? $json.body.lead_temp.toLowerCase() : 'warm' }}",
+              "type": "string"
+            },
+            {
+              "id": "914f5a85-1289-4263-9251-348185a3eb98",
+              "name": "UTM source",
+              "value": "={{ ($json.body.utm_source || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "1523d696-466c-47f7-b017-b121bc685899",
+              "name": "UTM campaign",
+              "value": "={{ [($json.body.utm_campaign || '').trim(), ($json.body.utm_medium || '').trim()].filter(Boolean).join(' / ') }}",
+              "type": "string"
+            },
+            {
+              "id": "f0a366cd-3007-4919-a9de-3bc98d989f81",
+              "name": "Landing page",
+              "value": "={{ ($json.body.landing_page || '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "b8a1bc6c-7c87-4ed8-a09d-c33bf2ba757d",
+              "name": "Follow-ups sent",
+              "value": "0",
+              "type": "string"
+            },
+            {
+              "id": "78004568-c12e-4dbc-9a24-3d55c64fb217",
+              "name": "Last follow-up",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "703af3d4-566a-48c3-9300-edbe7a8c252a",
+      "name": "Clean fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "df095456-5b9e-4a3e-a1bf-82eaefad042d",
+              "leftValue": "={{ $json.Name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "cd47ba3c-bacc-40a7-ab9d-949f4b9aabdb",
+              "leftValue": "={{ $json.Email }}",
+              "rightValue": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            },
+            {
+              "id": "32ae92ba-7576-4378-a30c-dad30e36c170",
+              "leftValue": "={{ $json.Workflow.length }}",
+              "rightValue": 20,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9a2d0bec-4b13-45dd-bb89-729d205aaf4c",
+      "name": "Validate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"status\":400,\"error\":\"missing_required_fields\"}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "d1b078c2-9b32-456b-933f-544201f03bb4",
+      "name": "Reject 400",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_SHEET_ID",
+          "mode": "id",
+          "cachedResultName": "Portfolio leads"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Leads",
+          "mode": "name",
+          "cachedResultName": "Leads"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {
+          "handlingExtraData": "ignoreIt"
+        }
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REPLACE_WITH_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets (aniket.html@gmail.com)"
+        }
+      },
+      "id": "0848f9d4-e22b-4436-9c17-7134f0a96c05",
+      "name": "Add to Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        660,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Builds the alert and the auto-reply for one lead, from the row that\n// was just saved (Clean fields). Runs once per item. Plain words only.\n// WhatsApp appears only as click-to-chat links (wa.me): nothing here\n// sends a WhatsApp message.\nconst SITE = 'https://aniket-portfolio-six-bice.vercel.app';\nconst ANIKET_WA = 'https://wa.me/919136582842';\n// Set once Cal.com exists (site.bookingUrl on the site). Empty = \"reply\n// to this email\" is the way to book.\nconst BOOKING_URL = '';\n\nconst f = $('Clean fields').item.json;\nconst first = (f.Name || '').split(' ')[0] || 'there';\nconst temp = ['hot', 'warm', 'cold'].includes((f['Lead temp'] || '').toLowerCase())\n  ? f['Lead temp'].toLowerCase()\n  : 'warm';\nconst src = (f.Source || '').toLowerCase();\nconst kind = src.startsWith('start-website') ? 'websites'\n  : src.startsWith('start-software') ? 'software'\n  : src.startsWith('ai-check') ? 'ai'\n  : 'form';\nconst what = { websites: 'free website plan', software: 'free software plan', ai: 'free AI check', form: 'message' }[kind];\n\n// Three lines of their answers: the top three jobs for the AI check,\n// the first three answers for a plan.\nconst lines = (f.Workflow || '').split('\\n').map((l) => l.trim()).filter(Boolean);\nlet recap = [];\nif (kind === 'ai') {\n  const at = lines.findIndex((l) => l.startsWith('Top 3'));\n  recap = at >= 0 ? lines.slice(at + 1, at + 4) : lines.slice(1, 4);\n} else if (kind !== 'form') {\n  recap = lines.slice(1, 4);\n}\n\n// One-tap WhatsApp reply to the LEAD's own number, for Aniket.\nconst digits = (f.Phone || '').replace(/\\D/g, '');\nconst leadWa = digits.length >= 10\n  ? `https://wa.me/${digits}?text=${encodeURIComponent(`Hi ${first}, Aniket here. Thanks for the ${what} on my site. Is now a good time for a quick chat about it?`)}`\n  : '';\n\nconst guarantee = 'Fixed price, fixed date. If it isn\\'t live by the date in writing, you don\\'t pay the second half.';\nconst book = BOOKING_URL\n  ? `Book a free 15-minute call here: ${BOOKING_URL}\\nOr just reply to this email.`\n  : `To book a free 15-minute call, reply with two times that suit you, or message me on WhatsApp: ${ANIKET_WA}`;\n\nconst alertSubject = `[${temp.toUpperCase()}] New lead: ${f.Name} (${f.Service}${f.Package ? ', ' + f.Package : ''})`;\nconst alertBody = [\n  `${f.Name} <${f.Email}>`,\n  `Lead temp: ${temp.toUpperCase()}`,\n  leadWa ? `Reply on WhatsApp (one tap): ${leadWa}` : 'No WhatsApp number given: reply by email (Reply-To is set).',\n  `Phone: ${f.Phone || 'not given'}`,\n  `Looking for: ${f.Service}`,\n  `Package shown: ${f.Package || 'none (contact form)'}`,\n  `When: ${f.Timing || 'not asked'}`,\n  `Budget: ${f.Budget}`,\n  `Company: ${f.Company || 'not given'}`,\n  `Source: ${f.Source}`,\n  `UTM: ${f['UTM source'] || '-'} / ${f['UTM campaign'] || '-'}`,\n  `Landing page: ${f['Landing page'] || '-'}`,\n  '',\n  'Their answers:',\n  f.Workflow,\n  '',\n  temp === 'hot'\n    ? 'HOT: budget fits, wanted soon, number given. A personal reply as soon as you can.'\n    : temp === 'warm'\n      ? 'WARM: a personal reply the same day.'\n      : 'COLD: the follow-up emails cover it; reply personally if it looks worth it.',\n  'Saved to the Portfolio leads sheet. Move Stage off \"New\" once you have replied, which stops the follow-ups.'\n].join('\\n');\n\nconst recapText = recap.length ? `Here is what you told me, in short:\\n${recap.map((l) => '- ' + l).join('\\n')}\\n\\n` : '';\nlet replySubject;\nlet replyBody;\nif (kind === 'websites') {\n  replySubject = f.Package ? `Your website plan: ${f.Package.split(' (')[0]}` : 'Your website plan';\n  replyBody = `Hi ${first},\\n\\nThanks for planning your website on my site.\\n\\n${recapText}The plan suggested the ${f.Package || 'package on your screen'}. That is a starting point, not a quote. On a free 15-minute call we go through your pages and your date, and then you get a one-page proposal with a fixed price.\\n\\n${guarantee}\\n\\n${book}\\n\\nI'll reply within 24 hours, usually sooner.\\n\\nAniket\\n${SITE}`;\n} else if (kind === 'software') {\n  replySubject = f.Package ? `Your software plan: ${f.Package.split(' (')[0]}` : 'Your software plan';\n  replyBody = `Hi ${first},\\n\\nThanks for planning your software on my site.\\n\\n${recapText}The plan suggested the ${f.Package || 'package on your screen'}. That is a starting point, not a quote. On a free 15-minute call we go through how the work runs today, and then you get a one-page proposal with a fixed price and a live date. A larger platform is quoted once we have mapped it together.\\n\\n${guarantee}\\n\\n${book}\\n\\nI'll reply within 24 hours, usually sooner.\\n\\nAniket\\n${SITE}`;\n} else if (kind === 'ai') {\n  replySubject = 'Your free AI check: your top three jobs';\n  replyBody = `Hi ${first},\\n\\nThanks for doing the free AI check on my site.\\n\\n${recapText}The hours are a rough estimate from your answers, not a measurement. The next step, if you want real numbers, is the AI Roadmap${f.Package ? ' (' + f.Package.replace(/^.*\\(/, '').replace(/\\)$/, '') + ')' : ''}: a 60-minute session on how your week really runs, then a short written plan with every job ranked by time saved against cost, and a fixed quote for the first build. The fee is taken off that build if you go ahead.\\n\\n${book}\\n\\nI'll reply within 24 hours, usually sooner.\\n\\nAniket\\n${SITE}`;\n} else {\n  replySubject = 'Got your message, I\\'ll reply within 24 hours';\n  replyBody = `Hi ${first},\\n\\nThanks for getting in touch. I've got your note about:\\n\\n\"${(f.Workflow || '').slice(0, 280)}\"\\n\\nI'll read it properly and reply within 24 hours, usually sooner. If it isn't something I can genuinely help with, I'll tell you that too.\\n\\nIn the meantime, here's some of the work: ${SITE}/projects\\n\\nAniket\\n${SITE}`;\n}\n\nreturn { json: { ...f, _alertSubject: alertSubject, _alertBody: alertBody, _replySubject: replySubject, _replyBody: replyBody } };\n"
+      },
+      "id": "438661b6-2114-4600-a5b4-94a22abb4c92",
+      "name": "Compose messages",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "aniket.html@gmail.com",
+        "subject": "={{ $('Compose messages').item.json._alertSubject }}",
+        "emailType": "text",
+        "message": "={{ $('Compose messages').item.json._alertBody }}",
+        "options": {
+          "appendAttribution": false,
+          "replyTo": "={{ $('Compose messages').item.json.Email }}"
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REPLACE_WITH_GMAIL_CREDENTIAL_ID",
+          "name": "Gmail (aniket.html@gmail.com)"
+        }
+      },
+      "id": "f35c838d-c921-4def-91ef-9e4a3080af1b",
+      "name": "Alert Aniket",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1100,
+        200
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Compose messages').item.json.Email }}",
+        "subject": "={{ $('Compose messages').item.json._replySubject }}",
+        "emailType": "text",
+        "message": "={{ $('Compose messages').item.json._replyBody }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REPLACE_WITH_GMAIL_CREDENTIAL_ID",
+          "name": "Gmail (aniket.html@gmail.com)"
+        }
+      },
+      "id": "d7f2c686-9b7e-4e57-ac69-13bb64253bd8",
+      "name": "Auto-reply",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1320,
+        200
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"status\":\"ok\"}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "a71876e4-4009-4664-8ee5-a977b7728bb4",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1540,
+        200
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Clean fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean fields": {
+      "main": [
+        [
+          {
+            "node": "Validate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate": {
+      "main": [
+        [
+          {
+            "node": "Add to Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reject 400",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to Sheet": {
+      "main": [
+        [
+          {
+            "node": "Compose messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose messages": {
+      "main": [
+        [
+          {
+            "node": "Alert Aniket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alert Aniket": {
+      "main": [
+        [
+          {
+            "node": "Auto-reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-reply": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata"
+  },
+  "pinData": {}
+}

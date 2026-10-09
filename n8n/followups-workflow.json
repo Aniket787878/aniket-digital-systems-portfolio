@@ -1,0 +1,220 @@
+{
+  "name": "Portfolio lead follow-ups (day 1, 3, 7, 14, email only)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 10 * * *"
+            }
+          ]
+        }
+      },
+      "id": "d70cda98-b626-43df-beb4-0eabe2792dba",
+      "name": "Every day 10:00 IST",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_SHEET_ID",
+          "mode": "id",
+          "cachedResultName": "Portfolio leads"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Leads",
+          "mode": "name",
+          "cachedResultName": "Leads"
+        },
+        "options": {}
+      },
+      "id": "72ad5e14-4ccb-4410-8ac5-ff5f12ec5349",
+      "name": "Read leads",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REPLACE_WITH_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets (aniket.html@gmail.com)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Daily follow-ups for leads still at Stage \"New\": day 1, 3, 7 and 14\n// after Submitted At, by email only, one per run, then stop. Moving\n// Stage off \"New\" (any value) stops them at once. Nothing here sends a\n// WhatsApp message; links to WhatsApp are click-to-chat only.\nconst SITE = 'https://aniket-portfolio-six-bice.vercel.app';\nconst ANIKET_WA = 'https://wa.me/919136582842';\nconst BOOKING_URL = '';\nconst DAYS = [1, 3, 7, 14];\n\n// The one case study per area, with its honest label.\nconst READ = {\n  websites: { title: 'Website Answer Widget', url: `${SITE}/projects/website-answer-widget`, label: 'a working demo on dummy data, not a client project', what: 'a chat bubble on a clinic website that answers from the clinic\\'s own documents and takes a callback when it can\\'t' },\n  software: { title: 'Clinic Staff App', url: `${SITE}/projects/therapist-pwa`, label: 'a real system an eleven-therapist clinic runs its day on', what: 'client records, bookings, consent forms and AI-drafted session notes the therapist approves' },\n  ai: { title: 'Appointment Desk', url: `${SITE}/projects/appointment-desk`, label: 'a working demo on dummy data, not a client project', what: 'an AI front desk that answers fees and hours, books free slots and hands anything clinical to a person' },\n  form: { title: 'the projects page', url: `${SITE}/projects`, label: 'client work and working demos, each labelled', what: 'websites, software and AI built for service businesses' }\n};\nconst OBSTACLE = {\n  websites: 'The question I hear most about websites is \"what will it really cost, and will it actually be finished?\" The price is fixed in writing before anything starts, with the date it goes live. Half up front, half on delivery, and if it isn\\'t live by that date you don\\'t pay the second half. The domain and the site are set up in your name.',\n  software: 'The question I hear most about software is \"will we be locked in?\" Everything runs on your own accounts and is set up in your name, and handover includes a walkthrough so your team can change the obvious things without calling me. The price and the live date are fixed in writing first.',\n  ai: 'The question I hear most about AI is \"will it make things up?\" It answers from the information you give it, and wherever a wrong answer would cost you, a person checks it first. In the clinic system on my site the AI drafts the session note and the therapist approves it before it is saved.',\n  form: 'The question I hear most is \"what will it really cost?\" Every project has a fixed price and a live date in writing before anything starts. Half up front, half on delivery, and if it isn\\'t live by that date you don\\'t pay the second half.'\n};\n\nconst book = BOOKING_URL\n  ? `Book a free 15-minute call: ${BOOKING_URL}`\n  : `Reply with two times that suit you for a free 15-minute call, or message me on WhatsApp: ${ANIKET_WA}`;\n\nconst now = Date.now();\nconst out = [];\nfor (const item of $input.all()) {\n  const r = item.json;\n  if ((r.Stage || '').trim() !== 'New') continue;\n  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(r.Email || '')) continue;\n  const at = Date.parse(r['Submitted At']);\n  if (!Number.isFinite(at)) continue;\n  const days = Math.floor((now - at) / 86400000);\n  const sent = Number(r['Follow-ups sent']) || 0;\n  if (sent >= DAYS.length || days < DAYS[sent]) continue;\n\n  const first = (r.Name || '').split(' ')[0] || 'there';\n  const src = (r.Source || '').toLowerCase();\n  const kind = src.startsWith('start-website') ? 'websites'\n    : src.startsWith('start-software') ? 'software'\n    : src.startsWith('ai-check') ? 'ai'\n    : 'form';\n  const plan = { websites: 'website plan', software: 'software plan', ai: 'AI check', form: 'message' }[kind];\n  const pkg = (r.Package || '').split(' (')[0];\n  const read = READ[kind];\n  let subject;\n  let body;\n  if (sent === 0) {\n    subject = `One question about your ${plan}`;\n    body = `Hi ${first},\\n\\nI've looked at your ${plan}${pkg ? ' (the ' + pkg + ')' : ''}. One question before we talk: what would make this worth doing for you? More enquiries, fewer hours on admin, or something else?\\n\\nA line in reply is plenty. ${book}\\n\\nAniket`;\n  } else if (sent === 1) {\n    subject = `Something like what you described: ${read.title}`;\n    body = `Hi ${first},\\n\\nOne thing on my site that is close to what you described: ${read.title}, ${read.what}. It is ${read.label}.\\n\\n${read.url}\\n\\nIf it is near what you need, ${book.charAt(0).toLowerCase() + book.slice(1)}\\n\\nAniket`;\n  } else if (sent === 2) {\n    subject = 'The question I hear most';\n    body = `Hi ${first},\\n\\n${OBSTACLE[kind]}\\n\\nIf that was what held you back, ${book.charAt(0).toLowerCase() + book.slice(1)}\\n\\nAniket`;\n  } else {\n    const later = /1 to 3 months/i.test(r.Timing || '') ? 'in a month or so' : 'in a few weeks';\n    subject = `Should I close your ${plan}?`;\n    body = `Hi ${first},\\n\\nI haven't heard back, which is completely fine. Should I close your ${plan}? If the timing is just wrong, reply \"later\" and I'll check in ${later}. Otherwise this is my last email about it.\\n\\nAniket\\n${SITE}`;\n  }\n  out.push({ json: { row_number: r.row_number, Email: r.Email, _subject: subject, _body: body, 'Follow-ups sent': sent + 1, 'Last follow-up': new Date(now).toISOString() } });\n}\nreturn out;\n"
+      },
+      "id": "bc593ea6-b776-4e9e-a20a-1f2e9babda6c",
+      "name": "Pick due follow-ups",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "={{ $json._subject }}",
+        "emailType": "text",
+        "message": "={{ $json._body }}",
+        "options": {
+          "appendAttribution": false,
+          "replyTo": "aniket.html@gmail.com"
+        }
+      },
+      "id": "977f7a3a-6f3e-4328-b096-2eb492dea197",
+      "name": "Send follow-up",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        660,
+        300
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REPLACE_WITH_GMAIL_CREDENTIAL_ID",
+          "name": "Gmail (aniket.html@gmail.com)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_SHEET_ID",
+          "mode": "id",
+          "cachedResultName": "Portfolio leads"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Leads",
+          "mode": "name",
+          "cachedResultName": "Leads"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Pick due follow-ups').item.json.row_number }}",
+            "Follow-ups sent": "={{ $('Pick due follow-ups').item.json['Follow-ups sent'] }}",
+            "Last follow-up": "={{ $('Pick due follow-ups').item.json['Last follow-up'] }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Follow-ups sent",
+              "displayName": "Follow-ups sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last follow-up",
+              "displayName": "Last follow-up",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9b2d45e2-1acd-4a93-9d2c-3338a12b0319",
+      "name": "Mark as sent",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        880,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REPLACE_WITH_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets (aniket.html@gmail.com)"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Every day 10:00 IST": {
+      "main": [
+        [
+          {
+            "node": "Read leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read leads": {
+      "main": [
+        [
+          {
+            "node": "Pick due follow-ups",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pick due follow-ups": {
+      "main": [
+        [
+          {
+            "node": "Send follow-up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send follow-up": {
+      "main": [
+        [
+          {
+            "node": "Mark as sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata"
+  },
+  "pinData": {}
+}

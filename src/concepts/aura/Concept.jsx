@@ -24,6 +24,20 @@ function subscribeMobile(cb) {
 }
 const useMobile = () => useSyncExternalStore(subscribeMobile, () => window.matchMedia(MOBILE).matches, () => false)
 
+/* Matches aura.css's tightest hero breakpoint (max-width: 430px), where the
+   hero copy's padding-top is reduced to 58svh to clear the fixed portfolio
+   badge. The 3D headline's default vertical placement (drawType, Scene.jsx)
+   assumes the generous 72svh offset used at 431-767px; below 430px it needs
+   to sit higher so it doesn't cross into the HTML copy underneath. */
+const NARROW_PHONE = '(max-width: 430px)'
+function subscribeNarrowPhone(cb) {
+  const mq = window.matchMedia(NARROW_PHONE)
+  mq.addEventListener('change', cb)
+  return () => mq.removeEventListener('change', cb)
+}
+const useNarrowPhone = () =>
+  useSyncExternalStore(subscribeNarrowPhone, () => window.matchMedia(NARROW_PHONE).matches, () => false)
+
 function hasWebGL() {
   try {
     const c = document.createElement('canvas')
@@ -168,6 +182,7 @@ export default function Concept() {
   const reducedPref = useReducedMotion()
   const reduced = !!reducedPref
   const mobile = useMobile()
+  const narrowPhone = useNarrowPhone()
   const full = !reduced && !mobile
   const [gl] = useState(hasWebGL)
   const [glFailed, setGlFailed] = useState(false)
@@ -265,7 +280,13 @@ export default function Concept() {
             {live3d ? (
               <GLBoundary fallback={<FlatBottle />} onFail={() => setGlFailed(true)}>
                 <Suspense fallback={null}>
-                  <Scene full={full} reduced={reduced} active={active} onReady={() => setReady(true)} />
+                  <Scene
+                    full={full}
+                    reduced={reduced}
+                    active={active}
+                    narrowPhone={narrowPhone}
+                    onReady={() => setReady(true)}
+                  />
                 </Suspense>
               </GLBoundary>
             ) : (

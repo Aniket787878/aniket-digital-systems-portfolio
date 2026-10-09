@@ -35,6 +35,54 @@
   margin: 1.1rem 0 0;
 }
 
+/* Specs 2 and 4 (2026-10-09): on phones, once there is a result or the
+   plan is past question 1, the intro header shrinks to just the back
+   link, so the result's price (Spec 2) or the next question (Spec 4)
+   is the first thing below the nav. The title stays in the document (it
+   is still the page's h1) but is visually hidden; the pill, stakes and
+   lede are dropped altogether at this width since there is nothing to
+   restore them to. Desktop is unaffected. */
+@media (max-width: 760px) {
+  /* `.ac .ac-head …` (4 classes), not `.ac-head.is-result …` (3): Start.css's
+     `.ac-head .sf-back + .stage-pill { display: flex }` ties at 3 classes
+     and sits later in the cascade (Start.css imports after this file), so
+     it would otherwise win the tie and keep the pill visible. */
+  .ac .ac-head.is-result .stage-pill,
+  .ac .ac-head.is-result .ac-stakes,
+  .ac .ac-head.is-result .ac-lede,
+  .ac .ac-head.is-compact .stage-pill,
+  .ac .ac-head.is-compact .ac-stakes,
+  .ac .ac-head.is-compact .ac-lede {
+    display: none;
+  }
+
+  .ac:has(.ac-head.is-result) {
+    padding-top: calc(var(--nav-h) + 72px);
+  }
+
+  .ac:has(.ac-head.is-compact) {
+    padding-top: calc(var(--nav-h) + 84px);
+  }
+}
+
+.sr-only-phone {
+  position: static;
+}
+
+@media (max-width: 760px) {
+  .sr-only-phone {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
 /* ---------- the card ---------- */
 
 .ac-card,
@@ -465,6 +513,51 @@
   margin-top: 1.5rem;
 }
 
+/* ---------- Spec 4: plans "step mode" (phones only) ---------- */
+
+@media (max-width: 760px) {
+  .ac-card {
+    scroll-margin-top: 80px;
+    padding-bottom: 96px;
+  }
+
+  .ac-nav-fixed {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: rgba(17, 16, 15, 0.94);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    -webkit-backdrop-filter: blur(18px) saturate(1.5);
+    backdrop-filter: blur(18px) saturate(1.5);
+  }
+
+  .ac-nav-fixed .ac-back {
+    height: 48px;
+    padding: 0 0.5rem;
+    font-size: 0.9375rem;
+  }
+
+  .ac-nav-fixed .ac-next {
+    height: 52px;
+    padding: 0 28px;
+    font-size: 1rem;
+  }
+
+  .ac-error-bar {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 100%;
+    margin: 0 0 0.5rem;
+    font-size: 0.8125rem;
+  }
+}
+
 @media (max-width: 640px) {
   .ac-options {
     grid-template-columns: minmax(0, 1fr);
@@ -472,6 +565,33 @@
 
   .ac-job {
     padding: 1.15rem 1.15rem;
+  }
+}
+
+@media (max-width: 760px) {
+  /* With the intro header compacted to just the back link, the result's
+     own generous top spacing (sized for sitting well below a full
+     header) is now most of the gap between the nav and the price —
+     tightened here so the price and the hand-off button land on the
+     same screen (Spec 2's accept check). Placed after the base
+     `.ac-result` etc. rules above so it wins their specificity tie. */
+  .ac-result {
+    margin-top: 0.5rem;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .ac-headfake {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .ac-send {
+    margin: 0.5rem 0 0;
+  }
+
+  .ac-result-title {
+    margin-top: 0.5rem;
   }
 }
 

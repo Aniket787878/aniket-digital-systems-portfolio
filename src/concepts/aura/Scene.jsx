@@ -103,7 +103,7 @@ function fontsReady() {
   ]).catch(() => {})
 }
 
-function drawType(aspect) {
+function drawType(aspect, narrowPhone) {
   const portrait = aspect < 0.9
   const W = portrait ? 1024 : 2048
   const H = Math.round(W / aspect)
@@ -118,7 +118,14 @@ function drawType(aspect) {
   // the bottle and one below, so the words still read on a phone.
   const lines = [['Skin, in its', false], ['best light.', true]]
   const fs = portrait ? W * 0.175 : W * 0.132
-  const ys = portrait ? [H * 0.19, H * 0.83] : [H * 0.47 - fs * 0.15, H * 0.47 + fs * 0.75]
+  // At <=430px (aura.css's tightest hero breakpoint) the HTML copy starts at
+  // 58svh of the hero while this canvas still fills 78svh, so the second
+  // line needs to land well above that line instead of its default 0.83
+  // (set for the 72svh offset used at 431-767px) or it crosses into the
+  // paragraph underneath it.
+  const ys = portrait
+    ? [H * 0.19, H * (narrowPhone ? 0.6 : 0.83)]
+    : [H * 0.47 - fs * 0.15, H * 0.47 + fs * 0.75]
   lines.forEach(([txt, italic], i) => {
     g.font = `${italic ? 'italic ' : ''}400 ${fs}px "Instrument Serif", Georgia, serif`
     if ('letterSpacing' in g) g.letterSpacing = `${Math.round(-fs * 0.025)}px`
@@ -265,7 +272,7 @@ const clip = new THREE.Plane(new THREE.Vector3(0, -1, 0), 10)
 
 /* ---------- scene ---------- */
 
-function Studio({ full, reduced, onReady }) {
+function Studio({ full, reduced, onReady, narrowPhone }) {
   const { camera, viewport } = useThree()
   const vp0 = viewport.getCurrentViewport(camera, [0, 0, 0])
   const vpType = viewport.getCurrentViewport(camera, [0, 0, TYPE_Z])
@@ -293,7 +300,10 @@ function Studio({ full, reduced, onReady }) {
   }, [])
 
   const aspectKey = Math.round(aspect * 20) / 20
-  const typeTex = useMemo(() => (fontsOk ? drawType(aspectKey) : null), [fontsOk, aspectKey])
+  const typeTex = useMemo(
+    () => (fontsOk ? drawType(aspectKey, narrowPhone) : null),
+    [fontsOk, aspectKey, narrowPhone]
+  )
   const labelTex = useMemo(() => (fontsOk ? drawLabel() : null), [fontsOk])
   const store = useRef({ v: new THREE.Vector3(), s: { a: 0, b: 0, c: 0 }, frames: 0, sent: false, intro: 0 })
 
@@ -550,7 +560,7 @@ function Studio({ full, reduced, onReady }) {
   )
 }
 
-export default function Scene({ full, reduced, active, onReady }) {
+export default function Scene({ full, reduced, active, onReady, narrowPhone }) {
   return (
     <Canvas
       frameloop={active ? (reduced ? 'demand' : 'always') : 'never'}
@@ -562,7 +572,7 @@ export default function Scene({ full, reduced, active, onReady }) {
         gl.localClippingEnabled = true
       }}
     >
-      <Studio full={full} reduced={reduced} onReady={onReady} />
+      <Studio full={full} reduced={reduced} onReady={onReady} narrowPhone={narrowPhone} />
       {reduced && <Settle />}
     </Canvas>
   )

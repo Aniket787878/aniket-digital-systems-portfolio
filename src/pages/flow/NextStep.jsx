@@ -29,18 +29,23 @@ const READ_NEXT = {
   ai: 'appointment-desk'
 }
 
-export function NextStepActions({ temp, service, waText, warm, contact, onActions }) {
+/* `compact` (Spec 2, the result hand-off under the price): render only
+   the one primary button in every temperature branch, no secondary link
+   and no "read next" card — those stay in the lower, repeated block,
+   where this component is rendered a second time with compact unset. */
+export function NextStepActions({ temp, service, waText, warm, contact, onActions, compact = false }) {
   if (temp === 'hot' && hasWhatsApp) {
     return (
       <div className="ac-actions" onClick={onActions}>
         <WhatsAppCta message={waText} label="WhatsApp me now" className="btn-saffron" />
-        {hasBooking ? (
-          <BookingCta className="btn-light" label="Or book a free call" />
-        ) : (
-          <Link to={contact} className="btn-light">
-            Or send a message
-          </Link>
-        )}
+        {!compact &&
+          (hasBooking ? (
+            <BookingCta className="btn-light" label="Or book a free call" />
+          ) : (
+            <Link to={contact} className="btn-light">
+              Or send a message
+            </Link>
+          ))}
       </div>
     )
   }
@@ -49,7 +54,7 @@ export function NextStepActions({ temp, service, waText, warm, contact, onAction
     const project = projects.find((p) => p.slug === READ_NEXT[service])
     return (
       <>
-        {project && (
+        {!compact && project && (
           <div className="stage-glass nx-read">
             <p className="stage-mono nx-read-kicker">Here&rsquo;s what to read next</p>
             <h3 className="ac-job-name">{project.title}</h3>
@@ -61,11 +66,11 @@ export function NextStepActions({ temp, service, waText, warm, contact, onAction
         )}
         <div className="ac-actions" onClick={onActions}>
           {hasBooking ? (
-            <BookingCta className="btn-light" label="Book a free call" />
+            <BookingCta className={compact ? 'btn-saffron' : 'btn-light'} label="Book a free call" />
           ) : hasWhatsApp ? (
-            <WhatsAppCta message={waText} label="Book a free call on WhatsApp" className="btn-light" />
+            <WhatsAppCta message={waText} label="Book a free call on WhatsApp" className={compact ? 'btn-saffron' : 'btn-light'} />
           ) : (
-            <Link to={contact} className="btn-light">
+            <Link to={contact} className={compact ? 'btn-saffron' : 'btn-light'}>
               Ask for a free call
             </Link>
           )}

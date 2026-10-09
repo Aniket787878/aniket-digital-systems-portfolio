@@ -11,7 +11,8 @@ import {
 } from 'motion/react'
 import '../../service/showcase/stage.css'
 import './hero/hero.css'
-import { site, explainers, explainersReady } from '../../../data.js'
+import { site, explainers, explainersReady, lowestFrom } from '../../../data.js'
+import { useCurrency, inCurrency } from '../../../currency.js'
 import VideoDialog from '../../../components/VideoDialog.jsx'
 import { StartCta, TalkCta } from '../../../components/FunnelCta.jsx'
 import FlowWindow from './hero/FlowWindow.jsx'
@@ -57,6 +58,7 @@ const settle = (delay) => ({
 export default function StageHero() {
   const ref = useRef(null)
   const reduce = useReducedMotion()
+  const currency = useCurrency()
   const wide = useWide()
   const visible = usePageVisible()
   const inView = useInView(ref, { amount: 0.15 })
@@ -107,10 +109,13 @@ export default function StageHero() {
             <StartCta placement="home-hero" magnet />
             <TalkCta />
           </m.div>
-          {/* The trust line: the reply promise and the guarantee, both
-              said in data.js once and quoted here word for word. */}
+          {/* The trust line (Move 5, 2026-10-09): the from-price, read
+              live from `services` so it tracks the toggle and can never
+              drift from the pages, then the guarantee, said in data.js
+              once and quoted here word for word. */}
           <m.p className="sh-trust" {...(reduce ? {} : settle(0.6))}>
-            {site.replyPromise} {site.guarantee}
+            <span className="sh-trust-price">From {inCurrency(lowestFrom, currency)}. Free 15-minute call first.</span>{' '}
+            {site.guarantee}
           </m.p>
           {explainersReady && (
             <m.p className="sh-watch-row" {...(reduce ? {} : settle(0.65))}>

@@ -14,6 +14,7 @@ import PathStrip from '../components/PathStrip.jsx'
 import { result, summary } from './aicheck/rules.js'
 import { normalisePhone, aiTemp, landingFields } from '../leadExtras.js'
 import { NextStepActions } from './flow/NextStep.jsx'
+import { setResultHandoff, clearResultHandoff } from '../resultHandoff.js'
 import { Progress, Question, Contact } from './flow/Steps.jsx'
 import { stepIn, EMAIL_OK } from './flow/shared.js'
 import './service/showcase/stage.css'
@@ -218,13 +219,13 @@ export default function AiCheckPage() {
     <section className="stage ac" aria-labelledby="ac-title">
       <div className="stage-glow ac-glow" aria-hidden="true" />
       <div className="container ac-inner">
-        <header className="ac-head">
+        <header className={`ac-head${res ? ' is-result' : step >= 1 ? ' is-compact' : ''}`}>
           <p className="stage-pill stage-mono">
             <span className="stage-dot" aria-hidden="true" />
             Free AI check · about 3 minutes
           </p>
           <p className="ac-stakes">The repeat work in a week is easy to miss. It arrives a few minutes at a time.</p>
-          <h1 className="stage-title ac-title" id="ac-title">
+          <h1 className={`stage-title ac-title${res || step >= 1 ? ' sr-only-phone' : ''}`} id="ac-title">
             What could AI take off your <span className="stage-serif">plate?</span>
           </h1>
           <p className="stage-lede ac-lede">
@@ -245,6 +246,7 @@ export default function AiCheckPage() {
                 value={answers[STEPS[step].id]}
                 onAnswer={answer}
                 onNext={onNext}
+                onAutoAdvance={() => go(step + 1)}
                 onBack={step > 0 ? () => go(step - 1) : null}
                 error={error}
                 headRef={headRef}
@@ -296,6 +298,22 @@ function Result({ res, temp, send, text, name, email, resultRef, onRestart }) {
   const onActions = (event) => {
     if (event.target.closest('a')) track('cta_click', { placement: 'ai-check-result' })
   }
+  const handoffText = `Hi Aniket, I just did the free AI check on your site.\n\nName: ${name}\n\n${text}`
+  const topActions = (event) => {
+    onActions(event)
+    if (event.target.closest('a,button')) track('result_cta', { position: 'top', temp })
+  }
+  const bottomActions = (event) => {
+    onActions(event)
+    if (event.target.closest('a,button')) track('result_cta', { position: 'bottom', temp })
+  }
+
+  /* Tells the phone action dock (Spec 1) which message to send once the
+     in-page hand-off above has scrolled out of view. */
+  useEffect(() => {
+    setResultHandoff({ text: handoffText, label: 'Send my result on WhatsApp' })
+    return clearResultHandoff
+  }, [handoffText])
 
   return (
     <m.div className="ac-result" {...stepIn}>
@@ -332,6 +350,47 @@ function Result({ res, temp, send, text, name, email, resultRef, onRestart }) {
         </p>
       )}
 
+      {/* Spec 2 (2026-10-09): the total moves up next to the result title
+          and the hand-off follows it right away, so the number and the
+          button sit together, the hottest moment on the result. */}
+      <div className="ac-total">
+        <p className="ac-total-line">
+          Together, roughly <strong>{range(res.total)}</strong> back.
+        </p>
+        <p className="ac-total-note">
+          Rough estimate, we&rsquo;ll firm it up together. It comes from a simple rule of thumb on your answers
+          (enquiries a week and team size), not from measuring your week.
+        </p>
+      </div>
+
+      <div className="ac-handoff">
+        <NextStepActions
+          compact
+          temp={temp}
+          service="ai"
+          waText={handoffText}
+          contact="/contact?service=ai#write"
+          onActions={topActions}
+          warm={
+            <div className="ac-actions ac-actions-solo" onClick={topActions}>
+              {hasBooking ? (
+                <BookingCta className="btn-saffron ac-handoff-btn" label="Book a call about the Roadmap" />
+              ) : hasWhatsApp ? (
+                <WhatsAppCta message={prefill} label="Start my AI Roadmap on WhatsApp" className="btn-saffron ac-handoff-btn" />
+              ) : (
+                <Link to="/contact?service=ai#write" className="btn-saffron ac-handoff-btn">
+                  Ask about the Roadmap
+                </Link>
+              )}
+            </div>
+          }
+        />
+        <p className="ac-handoff-note">
+          Opens WhatsApp with your result named, so you don&rsquo;t have to explain it again. Free 15-minute call, a
+          reply within 24 hours.
+        </p>
+      </div>
+
       <ol className="ac-jobs">
         {res.top.map((job, i) => (
           <li key={job.id} className="stage-glass ac-job">
@@ -346,16 +405,6 @@ function Result({ res, temp, send, text, name, email, resultRef, onRestart }) {
           </li>
         ))}
       </ol>
-
-      <div className="ac-total">
-        <p className="ac-total-line">
-          Together, roughly <strong>{range(res.total)}</strong> back.
-        </p>
-        <p className="ac-total-note">
-          Rough estimate, we&rsquo;ll firm it up together. It comes from a simple rule of thumb on your answers
-          (enquiries a week and team size), not from measuring your week.
-        </p>
-      </div>
 
       <div className="ac-next-step">
         <h2 className="stage-title ac-next-title">
@@ -375,11 +424,11 @@ function Result({ res, temp, send, text, name, email, resultRef, onRestart }) {
         <NextStepActions
           temp={temp}
           service="ai"
-          waText={`Hi Aniket, I just did the free AI check on your site.\n\nName: ${name}\n\n${text}`}
+          waText={handoffText}
           contact="/contact?service=ai#write"
-          onActions={onActions}
+          onActions={bottomActions}
           warm={
-            <div className="ac-actions" onClick={onActions}>
+            <div className="ac-actions" onClick={bottomActions}>
               {hasBooking ? (
                 <>
                   <BookingCta className="btn-saffron" label="Book a call about the Roadmap" />

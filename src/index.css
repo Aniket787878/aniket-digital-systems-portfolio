@@ -3478,7 +3478,7 @@ a:hover .text-link svg {
 .rehook-link {
   /* Inline padding grows the hit area to ~44px without opening up the
      line spacing when the question wraps. */
-  padding-block: 0.7rem;
+  padding-block: 0.75rem;
   font-weight: 500;
   text-decoration: underline;
   text-decoration-color: rgba(245, 135, 30, 0.6);
@@ -3615,14 +3615,17 @@ dd {
    have a fixed height get an invisible 44px ::after, the pattern the
    nav and currency pills use. Phones only, so desktop is untouched. */
 @media (max-width: 767.98px) {
-  .footer-alt-cta,
-  .text-link,
-  .sw-link,
-  .back-link,
-  .u-link,
-  .ai-rehook a {
-    padding-block: 10px;
-    margin-block: -10px;
+  /* `html` so a page sheet's own padding (loaded later) can't win a tie. */
+  html .footer-alt-cta,
+  html .text-link,
+  html .sw-link,
+  html .sw-rehook-name,
+  html .hl-rehook-link,
+  html .back-link,
+  html .u-link,
+  html .ai-rehook a {
+    padding-block: 12px;
+    margin-block: -12px;
   }
 
   .sh-watch,

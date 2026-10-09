@@ -169,6 +169,14 @@
   line-height: 1.55;
 }
 
+/* Move 5 (2026-10-09): the from-price is the first thing read here, in
+   peach so it reads as a promise rather than the muted fine print around
+   it. */
+.sh-trust-price {
+  color: var(--peach);
+  font-weight: 500;
+}
+
 /* The film moved under the trust line (2026-10-09) so the button row
    holds one primary and one secondary only: here it is a quiet text
    link, not a third button. */

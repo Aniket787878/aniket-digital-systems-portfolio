@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { m } from 'motion/react'
-import { budgetBands, site, startFlows, whatsappPrefill } from '../../data.js'
+import { budgetBands, carePlan, site, startFlows, whatsappPrefill } from '../../data.js'
 import { useDocumentTitle } from '../../useDocumentTitle.js'
 import { useCurrency, inCurrency } from '../../currency.js'
 import { WEBHOOK_URL } from '../../leadWebhook.js'
@@ -324,8 +324,14 @@ function Result({ flowKey, res, send, text, name, email, resultRef, onRestart })
           A <strong>starting point</strong>, not a quote.
         </p>
         <p className="ac-total-note">
-          We&rsquo;ll firm it up on the call. It comes from simple rules on your answers and the prices on
-          this site, not from seeing your business yet.
+          We&rsquo;ll firm it up on the call. It comes from simple rules on your answers and my fixed package
+          prices, not from seeing your business yet.
+        </p>
+        {/* The package price is shown here, and only here (2026-10-09): the
+            service pages carry one "from" price. The Care Plan's price
+            follows it for the same reason. */}
+        <p className="ac-total-note">
+          Once it is live, the {carePlan.name} is optional: {inCurrency(carePlan.price, currency)}.
         </p>
       </div>
 
@@ -348,7 +354,7 @@ function Result({ flowKey, res, send, text, name, email, resultRef, onRestart })
             <>
               <WhatsAppCta message={prefill} label="Book a free call on WhatsApp" className="btn-saffron" />
               <Link to={`/${flowKey}#prices`} className="btn-light">
-                See the prices
+                What every build includes
               </Link>
             </>
           ) : (

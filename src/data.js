@@ -1531,8 +1531,12 @@ export const toolbox = [
   The productized offers, grouped by service area (`lane` matches a
   `services[].slug`). Within an area they are in the order they are meant
   to be sold: the cheapest first yes leads, the larger builds follow.
-  Each service page shows its own area; the About page's timeline chart
-  shows the ones marked `timeline: true`.
+  Since 2026-10-09 no page lists them: the service pages show one "from"
+  price per area (`services[].from`), and a package's own price only
+  appears on the result screens of the plans (/start/website,
+  /start/software) and the AI check, after the visitor has answered and
+  left their details. The About page's timeline chart shows the ones
+  marked `timelineChart` (names and timelines, no prices).
 
   Prices are per currency. USD is the default for visitors outside India;
   INR is shown to visitors whose browser language or timezone says India,
@@ -1707,11 +1711,12 @@ export const carePlan = {
   funnel-audit.md, section 5): free AI check, then the AI Roadmap as the
   paid first step (its fee taken off the build), then the build by a
   fixed date, then the Care Plan. Shown on the home page's "How it works"
-  loop, on the /ai prices and on the AI check's result. Prices are read
-  from `packages` and `carePlan`, never restated, so they cannot drift.
+  loop, on the /ai prices and on the AI check's result. No package prices
+  in the notes (2026-10-09): pages show one "from" price per area, and the
+  exact package and price only on the plans' and the AI check's result
+  screens, after the visitor has answered and left their details. Those
+  screens read the price from `packages`.
 */
-const roadmapPackage = packages.find((pkg) => pkg.name === 'AI Roadmap Session')
-const inBoth = (fn) => ({ usd: fn('usd'), inr: fn('inr') })
 
 export const funnelPath = [
   {
@@ -1724,7 +1729,7 @@ export const funnelPath = [
     key: 'roadmap',
     name: 'AI Roadmap',
     text: 'A 60-minute session on how your week really runs, then a short written plan: every idea ranked by time saved against cost, and a fixed quote for the first build.',
-    note: inBoth((c) => `${roadmapPackage.price[c]} · taken off your build`)
+    note: 'Fixed fee · taken off your build'
   },
   {
     key: 'build',
@@ -1736,7 +1741,7 @@ export const funnelPath = [
     key: 'care',
     name: 'Care plan',
     text: 'Once it is live, I keep an eye on it, fix anything that breaks within 24 hours and improve it a few hours a month. Then we find the next job.',
-    note: inBoth((c) => `${carePlan.price[c]} · optional`)
+    note: 'Optional · monthly'
   }
 ]
 
@@ -2003,9 +2008,11 @@ export const faq = [
   },
   {
     q: 'What does it cost?',
+    /* From prices only (one per area, the same as `services[].from`);
+       the exact package and price are on the plans' result screens. */
     a: {
-      usd: 'Websites start at $1,200, or $2,400 with an AI assistant built in. One task fully automated is a fixed $690, and an AI Roadmap Session is $490, taken off your first build if you go ahead. An internal tool runs $4,000 to $8,000. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me. Every price is fixed before work starts: half to begin, half when it goes live.',
-      inr: 'Websites start at ₹35,000, or ₹75,000 with an AI assistant built in. One task fully automated is a fixed ₹30,000, and an AI Roadmap Session is ₹20,000, taken off your first build if you go ahead. An internal tool runs ₹1.5L to ₹3L. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me. Every price is fixed before work starts: half to begin, half when it goes live.'
+      usd: 'Websites start from $1,200, custom software from $4,000, and AI from $490. For the exact package and price, answer a few plain questions in the free plan for what you need: you see the package and price that fits your answers straight away. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me. Every price is fixed before work starts: half to begin, half when it goes live.',
+      inr: 'Websites start from ₹35,000, custom software from ₹1.5L, and AI from ₹20,000. For the exact package and price, answer a few plain questions in the free plan for what you need: you see the package and price that fits your answers straight away. Anything bigger is quoted once we have mapped the process, because the price depends on how many systems have to talk to each other, not on how many hours it takes me. Every price is fixed before work starts: half to begin, half when it goes live.'
     }
   },
   {
@@ -2365,7 +2372,7 @@ export const startFlows = {
 const planStep = (name) => ({
   key: 'plan',
   name,
-  text: 'A few plain questions. You see on the spot what fits and what it starts at.',
+  text: 'A few plain questions. You see on the spot the package and price that fit your answers.',
   note: 'Free · about 3 minutes'
 })
 const proposalStep = {

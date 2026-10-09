@@ -95,7 +95,7 @@ function Eyebrow() {
   )
 }
 
-/* The step's price or time, in the visitor's currency. */
+/* The step's cost in plain words, or its time. */
 function Note({ stop }) {
   const currency = useCurrency()
   return <p className="stage-mono hl-card-note">{inCurrency(stop.note, currency)}</p>

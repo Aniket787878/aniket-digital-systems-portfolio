@@ -322,6 +322,8 @@ function Result({ res, send, text, name, email, resultRef, onRestart }) {
           written plan with every job ranked by time saved against cost, and a fixed quote for the first build.
         </p>
         <PathStrip current={1} tone="dark" label="Where you are on the path" />
+        {/* The Roadmap's price is shown here, on the result, not on /ai
+            (2026-10-09): pages carry one "from" price per area. */}
         <p className="ac-price">
           <strong>{inCurrency(ROADMAP.price, currency)}</strong>, {ROADMAP.timeline.toLowerCase()}. The fee is taken
           off your build if you go ahead.
@@ -336,7 +338,7 @@ function Result({ res, send, text, name, email, resultRef, onRestart }) {
             <>
               <WhatsAppCta message={prefill} label="Start my AI Roadmap" className="btn-saffron" />
               <Link to="/ai#prices" className="btn-light">
-                See what is in it
+                What every build includes
               </Link>
             </>
           ) : (

@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { m } from 'motion/react'
 import Icon from '../../components/icons.jsx'
@@ -9,9 +11,26 @@ import Icon from '../../components/icons.jsx'
    fieldset), and the contact step with the honeypot. The look is
    AiCheckPage.css (prefix ac-); motion goes through Motion, so the one
    <MotionConfig reducedMotion="user"> in App.jsx covers it.
+
+   Spec 4 (2026-10-09, "step mode"): on phones, Back/Next render through
+   a portal to document.body instead of inside the form, because the
+   form is transformed by Motion (stepIn) and a `position: fixed` child
+   of a transformed element anchors to that element, not the viewport.
    --------------------------------------------------------------- */
 
 import { stepIn } from './shared.js'
+
+function useIsPhone() {
+  const [phone, setPhone] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 760)
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 760px)')
+    const on = () => setPhone(mq.matches)
+    on()
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
+  return phone
+}
 
 /* `questions` is how many question screens there are; the contact step
    is one more, so the bar reaches the end only on it. */
@@ -30,14 +49,60 @@ export function Progress({ step, questions, label = 'Progress through the check'
 
 /* One question. `q.kind` is 'one' (radio) or 'many' (checkboxes);
    `q.options` must already be resolved (the budget bands come from the
-   visitor's currency, so the page passes them in). */
-export function Question({ q, value, onAnswer, onNext, onBack, error, headRef, last }) {
+   visitor's currency, so the page passes them in).
+
+   `onAutoAdvance`, if given, is called 280ms after a single-choice
+   answer (Spec 4): the selected state stays visible for that long, then
+   the page moves on by itself — the same effect as a Next tap, so the
+   parent's own `go(step + 1)` is reused rather than duplicated here. A
+   second tap resets the timer, same as the spec's "a second tap inside
+   that window cancels and restarts it". Multi-choice never auto-advances. */
+export function Question({ q, value, onAnswer, onNext, onAutoAdvance, onBack, error, headRef, last }) {
   const many = q.kind === 'many'
+  const isPhone = useIsPhone()
   const headId = `ac-q-${q.id}`
   const hintId = q.hint ? `${headId}-hint` : undefined
   const errId = `${headId}-error`
+  const formId = `ac-form-${q.id}`
+  const timer = useRef(null)
+
+  useEffect(() => () => clearTimeout(timer.current), [])
+
+  const handleChange = (optionValue) => {
+    onAnswer(q.id, optionValue, many)
+    if (!many && onAutoAdvance) {
+      clearTimeout(timer.current)
+      timer.current = setTimeout(onAutoAdvance, 280)
+    }
+  }
+
+  const nextLabel = q.optional && (!value || value.length === 0) ? 'Skip' : last ? 'Last step' : 'Next'
+
+  const nav = (
+    <div className={`ac-nav${isPhone ? ' ac-nav-fixed' : ''}`}>
+      {isPhone && error && (
+        <p className="ac-error ac-error-bar" id={errId} role="alert">
+          {error}
+        </p>
+      )}
+      {onBack ? (
+        <button type="button" className="ac-back" onClick={onBack}>
+          Back
+        </button>
+      ) : (
+        <span />
+      )}
+      <button type="submit" form={formId} className="btn-saffron ac-next">
+        {nextLabel}
+        <span className="btn-pill-icon" aria-hidden="true">
+          <Icon name="arrow" size={16} />
+        </span>
+      </button>
+    </div>
+  )
+
   return (
-    <m.form className="ac-step" onSubmit={onNext} noValidate {...stepIn}>
+    <m.form id={formId} className="ac-step" data-step-kind="question" onSubmit={onNext} noValidate {...stepIn}>
       <fieldset
         className="ac-fieldset"
         aria-labelledby={headId}
@@ -61,7 +126,7 @@ export function Question({ q, value, onAnswer, onNext, onBack, error, headRef, l
                   name={q.id}
                   value={option.value}
                   checked={checked}
-                  onChange={() => onAnswer(q.id, option.value, many)}
+                  onChange={() => handleChange(option.value)}
                 />
                 <span className="ac-mark" aria-hidden="true" />
                 <span>{option.label}</span>
@@ -71,27 +136,13 @@ export function Question({ q, value, onAnswer, onNext, onBack, error, headRef, l
         </div>
       </fieldset>
 
-      {error && (
+      {!isPhone && error && (
         <p className="ac-error" id={errId} role="alert">
           {error}
         </p>
       )}
 
-      <div className="ac-nav">
-        {onBack ? (
-          <button type="button" className="ac-back" onClick={onBack}>
-            Back
-          </button>
-        ) : (
-          <span />
-        )}
-        <button type="submit" className="btn-saffron ac-next">
-          {q.optional && (!value || value.length === 0) ? 'Skip' : last ? 'Last step' : 'Next'}
-          <span className="btn-pill-icon" aria-hidden="true">
-            <Icon name="arrow" size={16} />
-          </span>
-        </button>
-      </div>
+      {isPhone ? createPortal(nav, document.body) : nav}
     </m.form>
   )
 }
@@ -132,6 +183,7 @@ export function Contact({
             className="ac-input"
             type="text"
             autoComplete="name"
+            enterKeyHint="next"
             required
             maxLength={100}
             value={name}
@@ -145,6 +197,7 @@ export function Contact({
             className="ac-input"
             type="email"
             autoComplete="email"
+            enterKeyHint="next"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -160,6 +213,7 @@ export function Contact({
             type="tel"
             autoComplete="tel"
             inputMode="tel"
+            enterKeyHint="send"
             maxLength={30}
             value={phone}
             onChange={(e) => setPhone(e.target.value)}

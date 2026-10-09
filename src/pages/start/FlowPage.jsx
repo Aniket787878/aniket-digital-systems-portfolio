@@ -263,6 +263,7 @@ export default function FlowPage({ flowKey }) {
                 value={answers[steps[step].id]}
                 onAnswer={answer}
                 onNext={onNext}
+                onAutoAdvance={() => go(step + 1)}
                 onBack={step > 0 ? () => go(step - 1) : null}
                 error={error}
                 headRef={headRef}

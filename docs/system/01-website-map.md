@@ -276,7 +276,7 @@ button.
 | Route | Funnel beats |
 |---|---|
 | `/` | Unchanged: hero ask, story loop down the page, "Step one takes about three minutes", close |
-| `/websites`, `/software`, `/ai` | Offers band opens with how this area starts (`PATH_INTRO` in `service/Offers.jsx`), the 4-step `PathStrip` on all three (was /ai only) and a rehook to the check; OtherAreas ends "Not sure which of the three comes first?"; then the closing `Cta` |
+| `/websites`, `/software`, `/ai` | The websites showcase ends "Start with the free AI check" (was "Let’s talk" to /contact). Offers band opens with how this area starts (`PATH_INTRO` in `service/Offers.jsx`), the 4-step `PathStrip` on all three (was /ai only) and a rehook to the check; OtherAreas ends "Not sure which of the three comes first?"; then the closing `Cta` |
 | `/projects` | Rehook under the lede, and a closing "Want one of these for your business?" box (check + call) |
 | `/projects/:slug` | Closing box names the project ("Want something like the X in your business?") |
 | `/about` | Steps band ends with a rehook to the check, then the closing `Cta` |

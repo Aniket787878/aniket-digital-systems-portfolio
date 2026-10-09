@@ -10,6 +10,7 @@ import ProjectsPage from './pages/ProjectsPage.jsx'
 import ProjectDetailPage from './pages/ProjectDetailPage.jsx'
 import AboutPage from './pages/AboutPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
+import AiCheckPage from './pages/AiCheckPage.jsx'
 import PrivacyPage from './pages/PrivacyPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import ConceptPage from './concepts/ConceptPage.jsx'
@@ -52,6 +53,7 @@ export default function App() {
             would update a text node that is no longer in the document. */}
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/ai-check" element={<AiCheckPage />} />
           <Route path="/websites" element={<ServicePage key="websites" slug="websites" />} />
           <Route path="/software" element={<ServicePage key="software" slug="software" />} />
           <Route path="/ai" element={<ServicePage key="ai" slug="ai" />} />

@@ -253,6 +253,18 @@ export const heroReel = {
   caption: 'A shared inbox, a consent signer and a lead research tool, real screens from the running apps.'
 }
 
+/* The home hero's two lines (site.headline). Pick pending: Aniket is
+   choosing between these four, so they live side by side and the hero
+   reads whichever one site.headline points at. Picked 2026-10-09: option C,
+   worded "Hand the repeated work to AI." with "AI" set in the serif
+   (site.headlineAccent). */
+export const heroOptions = [
+  ['Your enquiries answered. Bookings confirmed. Follow-ups sent.', 'By AI, with a person checking what matters.'],
+  ['AI that answers, books and follows up.', 'Websites and software that bring the work in.'],
+  ['Hand the repeated work to AI.', 'Keep the decisions.'],
+  ['Find out what AI can take off your plate.', 'Then we build it, live by a fixed date.']
+]
+
 export const site = {
   name: 'Digital Systems Builder',
 
@@ -271,20 +283,26 @@ export const site = {
   bookingUrl: '',
 
   /* Positioning, in one place (docs/system/05-icp-positioning.md,
-     2026-09-30): three service areas, one system underneath. The website
-     brings the work in; the software and the AI run the rest. Buyers are
-     still service businesses broadly (clinics, studios, agencies, growing
-     teams). The hero, the meta description, the JSON-LD and the OG card
-     (scripts/render-og.mjs) all read from here. */
-  headline: ['Websites that bring the work in.', 'Software and AI that run the rest.'],
+     2026-09-30; AI-first hero 2026-10-09, docs/outreach/2026-10-09-ai-
+     consultancy-funnel-audit.md). AI leads the first line, but websites,
+     software and AI stay three equal service areas: one system underneath.
+     Buyers are service businesses broadly (clinics, studios, agencies,
+     consultancies, growing teams). The hero, the meta description, the
+     JSON-LD and the OG card (scripts/render-og.mjs) all read from here. */
+  headline: heroOptions[2],
+  /* The one word of the headline set in the serif accent. */
+  headlineAccent: 'AI',
   subtitle:
-    'Websites, custom software and AI workflows for clinics, studios, agencies and growing teams. Built as one system, live in weeks.',
+    'AI, websites and custom software for service businesses: clinics, studios, agencies, consultancies and growing teams. Built as one system, live by a fixed date.',
   /* The home hero's lede: says what the headline doesn't (who it is for,
-     what the system does, how fast), instead of repeating it. */
+     where to start, how the three parts fit), instead of repeating it. */
   heroLede:
-    'One system for clinics, studios, agencies and growing teams: the site that brings enquiries in, and the software and AI that answer, book and follow up. Live in weeks.',
+    'AI for service businesses: clinics, studios, agencies, consultancies and growing teams. Find the repeat work AI can take on, then get it built into one system with your website and software, live by a fixed date.',
   tagline:
-    'Websites that bring the work in, and software and AI that run the rest. Built as one system for clinics, studios, agencies and growing teams, live in weeks.',
+    'AI that answers, books and follows up, with the website and software around it. Built as one system for clinics, studios, agencies, consultancies and growing teams, live by a fixed date.',
+  /* The reply promise, said once. Shown with `guarantee` under the hero
+     button and on the free AI check. */
+  replyPromise: 'A reply within 24 hours, usually sooner.',
 
   /* Shown beside the prices. A promise, so it lives with the data it
      qualifies rather than in a component. */
@@ -304,13 +322,13 @@ export const site = {
 /* Title, description and share card for index.html. vite.config.js writes
    these into the <head> at build time, together with site.origin. */
 export const seo = {
-  title: 'Websites, software and AI for service businesses · Aniket',
+  title: 'AI for service businesses, with websites and software built in · Aniket',
   description:
-    'Websites that bring the work in, and software and AI that run the rest. Built as one system for clinics, studios, agencies and growing teams, live in weeks.',
-  ogTitle: 'Websites that bring the work in. Software and AI that run the rest.',
+    'Find out what AI can take off your plate, then get it built: AI, websites and software as one system for clinics, studios, agencies, consultancies and growing teams. Fixed price, fixed date.',
+  ogTitle: site.headline.join(' '),
   ogImage: '/og.png',
   ogImageAlt:
-    'Websites that bring the work in. Software and AI that run the rest. Built as one system by Aniket.'
+    'Your enquiries answered, bookings confirmed and follow-ups sent by AI, with a person checking what matters. Built as one system by Aniket.'
 }
 
 /*
@@ -465,6 +483,8 @@ export const whatsappPrefill = {
   software: 'Hi Aniket, I saw your software page. I’d like to talk about a tool for my business.',
   ai: 'Hi Aniket, I saw your AI page. I’d like to talk about using AI in my business.',
   footer: 'Hi Aniket, quick question about the systems you build.',
+  /* The AI check's result. `{jobs}` is replaced with the top three. */
+  aiCheck: 'Hi Aniket, I just did the free AI check on your site. I’d like to talk about the AI Roadmap. My top three were: {jobs}.',
   nav: 'Hi Aniket, I’m on your site and would like to talk about a project for my business.'
 }
 
@@ -1394,6 +1414,9 @@ export const packages = [
     lane: 'ai',
     name: 'AI Roadmap Session',
     explainer: null,
+    /* Shown on the card: the Roadmap is step 2 of the path (funnelPath),
+       after the free AI check, and its CTA starts that check. */
+    step: 'Step 2 of 4 · after the free AI check',
     price: {
       usd: '$490',
       inr: '₹20,000'
@@ -1471,6 +1494,44 @@ export const carePlan = {
   blurb:
     'Once a system is live: I keep an eye on it, fix anything that breaks within 24 hours, spend a few hours a month improving it, and you get first call on new builds.'
 }
+
+/*
+  The path every client takes (docs/outreach/2026-10-09-ai-consultancy-
+  funnel-audit.md, section 5): free AI check, then the AI Roadmap as the
+  paid first step (its fee taken off the build), then the build by a
+  fixed date, then the Care Plan. Shown on the home page's "How it works"
+  loop, on the /ai prices and on the AI check's result. Prices are read
+  from `packages` and `carePlan`, never restated, so they cannot drift.
+*/
+const roadmapPackage = packages.find((pkg) => pkg.name === 'AI Roadmap Session')
+const inBoth = (fn) => ({ usd: fn('usd'), inr: fn('inr') })
+
+export const funnelPath = [
+  {
+    key: 'check',
+    name: 'Free AI check',
+    text: 'A few plain questions about your week. You get, on the spot, the three jobs worth handing to AI first and what each would look like.',
+    note: 'Free · about 3 minutes'
+  },
+  {
+    key: 'roadmap',
+    name: 'AI Roadmap',
+    text: 'A 60-minute session on how your week really runs, then a short written plan: every idea ranked by time saved against cost, and a fixed quote for the first build.',
+    note: inBoth((c) => `${roadmapPackage.price[c]} · taken off your build`)
+  },
+  {
+    key: 'build',
+    name: 'Build by a fixed date',
+    text: 'The first job built on the tools you already use, tested with you and handed over with a walkthrough. Live by the date in writing, or you don’t pay the second half.',
+    note: 'Fixed price, fixed date'
+  },
+  {
+    key: 'care',
+    name: 'Care plan',
+    text: 'Once it is live, I keep an eye on it, fix anything that breaks within 24 hours and improve it a few hours a month. Then we find the next job.',
+    note: inBoth((c) => `${carePlan.price[c]} · optional`)
+  }
+]
 
 /*
   The three service areas, each with its own page (/websites, /software,
@@ -1632,7 +1693,7 @@ export const services = [
       },
       {
         q: 'What happens in the AI Roadmap Session?',
-        a: 'We walk through how your week really runs, then you get a short written plan: where AI and automation would save the most time, ranked by payoff against cost, and a fixed quote for the first build if you want one.'
+        a: 'It is the second step, after the free AI check. We walk through how your week really runs, then you get a short written plan: where AI and automation would save the most time, ranked by payoff against cost, and a fixed quote for the first build if you want one. The fee is taken off that build if you go ahead.'
       },
       {
         q: 'Do we need to change the tools we use?',
@@ -1778,3 +1839,128 @@ export const social = [
   { label: 'GitHub', href: 'https://github.com/Aniket787878', icon: 'github' },
   { label: 'Email', href: '', icon: 'mail' }
 ]
+
+/*
+  The free AI check (/ai-check, pages/AiCheckPage.jsx): the questions,
+  in the buyer's words, and the jobs the result can recommend. The rules
+  that pick the top three and the rough hours live in
+  pages/aicheck/rules.js. Every hours figure is a rule of thumb from the
+  answers, shown as a rough estimate, never as a measured result.
+*/
+export const aiCheck = {
+  steps: [
+    {
+      id: 'business',
+      kind: 'one',
+      question: 'What kind of business do you run?',
+      options: [
+        { value: 'clinic', label: 'Clinic or health practice' },
+        { value: 'studio', label: 'Studio, salon or fitness' },
+        { value: 'agency', label: 'Agency or creative studio' },
+        { value: 'consultancy', label: 'Consultancy or professional services' },
+        { value: 'education', label: 'Coaching, training or education' },
+        { value: 'other', label: 'Another kind of service business' }
+      ]
+    },
+    {
+      id: 'enquiries',
+      kind: 'one',
+      question: 'How many new enquiries do you get in a week?',
+      hint: 'Messages, calls, emails and website forms, all together. A rough guess is fine.',
+      options: [
+        { value: 'lt10', label: 'Fewer than 10' },
+        { value: '10-30', label: '10 to 30' },
+        { value: '30-100', label: '30 to 100' },
+        { value: '100+', label: 'More than 100' }
+      ]
+    },
+    {
+      id: 'speed',
+      kind: 'one',
+      question: 'How fast does a new enquiry get a reply today?',
+      options: [
+        { value: 'minutes', label: 'Within minutes' },
+        { value: 'hours', label: 'Within a few hours' },
+        { value: 'day', label: 'The same day' },
+        { value: 'later', label: 'The next day or later' },
+        { value: 'missed', label: 'Some never get one' }
+      ]
+    },
+    {
+      id: 'time',
+      kind: 'many',
+      question: 'Where does the time go each week?',
+      hint: 'Pick every one that eats into your week or your team’s.',
+      options: [
+        { value: 'replying', label: 'Replying to enquiries' },
+        { value: 'booking', label: 'Booking and rescheduling' },
+        { value: 'followups', label: 'Follow-ups and reminders' },
+        { value: 'invoices', label: 'Invoices and payments' },
+        { value: 'reports', label: 'Putting reports together' },
+        { value: 'dataentry', label: 'Typing the same details into different places' },
+        { value: 'faqs', label: 'Answering the same questions' }
+      ]
+    },
+    {
+      id: 'tools',
+      kind: 'many',
+      optional: true,
+      question: 'What do you use to run things today?',
+      hint: 'Pick any that apply, or skip this one.',
+      options: [
+        { value: 'whatsapp', label: 'WhatsApp' },
+        { value: 'email', label: 'Email' },
+        { value: 'phone', label: 'Phone calls' },
+        { value: 'sheets', label: 'Spreadsheets' },
+        { value: 'calendar', label: 'A booking app or shared calendar' },
+        { value: 'accounts', label: 'Accounting or invoicing software' },
+        { value: 'clientlist', label: 'A client database' },
+        { value: 'paper', label: 'Paper or a notebook' }
+      ]
+    },
+    {
+      id: 'team',
+      kind: 'one',
+      question: 'How many people are on the team?',
+      options: [
+        { value: '1-2', label: '1 or 2 people' },
+        { value: '3-10', label: '3 to 10 people' },
+        { value: '11-30', label: '11 to 30 people' },
+        { value: '30+', label: 'More than 30' }
+      ]
+    }
+  ],
+
+  /* One per "where does the time go" answer: what handing it to AI would
+     look like, in plain words. */
+  jobs: {
+    replying: {
+      name: 'Answering new enquiries',
+      looks: 'Every message on WhatsApp, email or your website gets a clear reply within a minute, day or night, from your own prices and policies. Anything unusual goes to a person with a short summary.'
+    },
+    booking: {
+      name: 'Booking and rescheduling',
+      looks: 'Clients pick a free slot themselves and get a confirmation straight away. Moving or cancelling takes a tap, not a phone call, and your calendar stays the one place it all lives.'
+    },
+    followups: {
+      name: 'Reminders and follow-ups',
+      looks: 'A reminder goes out before every appointment, and people who went quiet after an enquiry get a polite nudge, without anyone having to remember to send it.'
+    },
+    invoices: {
+      name: 'Invoices and payment reminders',
+      looks: 'The invoice goes out when the work is done, with a link to pay. Late ones get a friendly reminder, and you see who has paid in one place.'
+    },
+    reports: {
+      name: 'Weekly reports',
+      looks: 'The numbers you now pull together by hand arrive on their own each Monday: new enquiries, bookings, money in and anything that needs a look.'
+    },
+    dataentry: {
+      name: 'Typing the same details twice',
+      looks: 'Details entered once are filled in everywhere else: your client list, your calendar, your spreadsheet. No copying across, and no typos from doing it.'
+    },
+    faqs: {
+      name: 'Answering the same questions',
+      looks: 'An assistant that answers the questions you hear every day from your own information, for clients or for your team, and says where each answer came from. A person checks anything that matters.'
+    }
+  }
+}

@@ -1,0 +1,461 @@
+/* ---------------------------------------------------------------
+   The free AI check (prefix ac-), on the stage ground (stage.css):
+   near-black, one saffron glow, a glass card holding one question at
+   a time, then the result as glass rows and the next step.
+   --------------------------------------------------------------- */
+
+.ac {
+  --glow-x: 72%;
+  --glow-y: 18%;
+  overflow: clip;
+  padding: calc(var(--nav-h) + clamp(2.5rem, 6vw, 5rem)) 0 clamp(4rem, 8vw, 7rem);
+  min-height: 100vh;
+}
+
+.ac-inner {
+  max-width: calc(46rem + var(--container-pad) * 2);
+}
+
+.ac-head .stage-pill {
+  margin: 0;
+}
+
+.ac-stakes {
+  margin: 1.5rem 0 0;
+  color: var(--peach);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.ac-title {
+  margin: 0.6rem 0 0;
+}
+
+.ac-lede {
+  margin: 1.1rem 0 0;
+}
+
+/* ---------- the card ---------- */
+
+.ac-card,
+.ac-result {
+  scroll-margin-top: calc(var(--nav-h) + 1rem);
+}
+
+.ac-card {
+  margin-top: 2.25rem;
+  padding: clamp(1.25rem, 3.5vw, 2.25rem);
+}
+
+.ac-progress {
+  display: grid;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.ac-count {
+  margin: 0;
+}
+
+.ac-bar {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.ac-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ac-fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.ac-question {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.35rem, 2.4vw, 1.7rem);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.ac-question:focus,
+.ac-result-title:focus {
+  outline: none;
+}
+
+.ac-question:focus-visible,
+.ac-result-title:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+.ac-hint {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.ac-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-top: 1.4rem;
+}
+
+.ac-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 52px;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--ink);
+  font-size: 0.9875rem;
+  line-height: 1.35;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.ac-option:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.ac-option.is-on {
+  border-color: rgba(245, 135, 30, 0.7);
+  background: rgba(245, 135, 30, 0.08);
+}
+
+/* The real input stays in place for keyboard and screen readers, made
+   invisible; .ac-mark draws it. */
+.ac-option input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ac-option:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.ac-mark {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ac-options.is-many .ac-mark {
+  border-radius: 5px;
+}
+
+.ac-option.is-on .ac-mark {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: inset 0 0 0 3px #1a120b;
+}
+
+.ac-options.is-many .ac-option.is-on .ac-mark {
+  box-shadow: none;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%231f0d00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      center / 14px no-repeat,
+    var(--accent);
+}
+
+.ac-error {
+  margin: 1rem 0 0;
+  color: #ffb27a;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.ac-error .u-link {
+  color: inherit;
+}
+
+.ac-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+
+.ac-back {
+  padding: 0.6rem 0.25rem;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: 500 0.9375rem/1 var(--font-sans);
+  cursor: pointer;
+}
+
+.ac-back:hover {
+  color: var(--ink);
+}
+
+.ac-back:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ---------- the contact step ---------- */
+
+.ac-fields {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.4rem;
+}
+
+.ac-field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.ac-field label {
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.ac-optional {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.ac-input {
+  height: 50px;
+  padding: 0 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--ink);
+  font: 400 1rem/1.2 var(--font-sans);
+}
+
+.ac-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.ac-input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.ac-hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.ac-privacy {
+  margin: 1.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.ac-privacy .u-link {
+  color: var(--ink);
+}
+
+/* ---------- the result ---------- */
+
+.ac-result {
+  margin-top: 2.75rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ac-result > .stage-pill {
+  margin: 0;
+}
+
+.ac-result-title {
+  margin: 0.9rem 0 0;
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+}
+
+.ac-headfake {
+  margin: 0.8rem 0 0;
+  color: var(--muted);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+
+.ac-send {
+  min-height: 1.4em;
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.ac-jobs {
+  display: grid;
+  gap: 0.9rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ac-job {
+  padding: 1.35rem 1.5rem;
+}
+
+.ac-job-count {
+  margin: 0;
+}
+
+.ac-job-count span {
+  color: var(--accent);
+}
+
+.ac-job-name {
+  margin: 0.55rem 0 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.3125rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.ac-job-looks {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+  font-size: 0.96875rem;
+  line-height: 1.6;
+}
+
+.ac-job-hours {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.9rem 0 0;
+  color: var(--peach);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.ac-est {
+  padding: 0.15rem 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+}
+
+.ac-total {
+  margin-top: 1.25rem;
+  padding: 1.1rem 1.25rem;
+  border: 1px dashed rgba(245, 135, 30, 0.35);
+  border-radius: 14px;
+}
+
+.ac-total-line {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.0625rem;
+}
+
+.ac-total-line strong {
+  color: var(--peach);
+  font-weight: 500;
+}
+
+.ac-total-note {
+  margin: 0.4rem 0 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.ac-next-step {
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+}
+
+.ac-next-title {
+  margin: 0;
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+}
+
+.ac-next-step .stage-lede {
+  margin: 0.9rem 0 1.5rem;
+}
+
+.ac-price {
+  margin: 1.4rem 0 0;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.ac-price strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.ac-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.ac-guarantee {
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.ac-restart {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .ac-options {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ac-job {
+    padding: 1.15rem 1.15rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ac-bar span,
+  .ac-option,
+  .ac-mark {
+    transition: none;
+  }
+}

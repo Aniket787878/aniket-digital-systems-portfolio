@@ -233,6 +233,11 @@
   line-height: 1.55;
 }
 
+.hl-card-note {
+  margin: 0.7rem 0 0;
+  color: var(--peach);
+}
+
 .hl-rehook {
   margin: 1.6rem 0 0;
   opacity: 0.62;

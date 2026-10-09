@@ -8,6 +8,7 @@ import Icon from '../../components/icons.jsx'
 import VideoDialog from '../../components/VideoDialog.jsx'
 import { PriceCard, CurrencyToggle, CarePlanCard } from '../../components/Pricing.jsx'
 import { PillLabel } from '../../components/ui.jsx'
+import PathStrip from '../../components/PathStrip.jsx'
 
 /* ---------------------------------------------------------------
    3 — The area's offers, on the light ground: the same price cards
@@ -39,6 +40,14 @@ export default function Offers({ area }) {
           </p>
           <CurrencyToggle currency={currency} />
         </m.header>
+
+        {/* On /ai the Roadmap is sold here, so the path it sits in is
+            shown first: it is step 2 of 4, never a standalone product. */}
+        {area.slug === 'ai' && (
+          <m.div className="svc-path" {...reveal}>
+            <PathStrip />
+          </m.div>
+        )}
 
         <m.ul className="price-grid svc-price-grid" data-count={offers.length} {...revealStagger}>
           {offers.map((pkg) => (

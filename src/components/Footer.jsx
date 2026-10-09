@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom'
 import { m } from 'motion/react'
-import { site, footerMenu, social, whatsappPrefill } from '../data.js'
-import WhatsAppCta from './WhatsAppCta.jsx'
-import { hasWhatsApp } from '../whatsapp.js'
+import { site, footerMenu, social } from '../data.js'
+import { CheckCta } from './FunnelCta.jsx'
 import { reveal } from '../motion/variants.js'
 
 /*
@@ -24,39 +23,19 @@ export default function Footer() {
             Good systems should feel like less work, not more software.
           </p>
           <p className="footer-desc">
-            I build websites, software and AI for service businesses: the
-            site that brings the enquiry in, the system that keeps track of
-            it, and the automations that do the repeat work.
+            AI, websites and software for service businesses: the AI that
+            does the repeat work, the site that brings the enquiry in, and
+            the system that keeps track of it.
           </p>
           <div className="footer-actions">
-            <WhatsAppCta
-              message={whatsappPrefill.footer}
-              label="Message me on WhatsApp"
-              className="btn-saffron"
-            />
-            {hasWhatsApp ? (
-              <Link to="/contact" className="arrow-link footer-alt-cta">
-                Or send a message
-                <span className="arrow" aria-hidden="true">
-                  &rarr;
-                </span>
-              </Link>
-            ) : (
-              <Link to="/contact" className="btn-pill">
-                Get in touch
-                <span className="btn-pill-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M5 12h14m0 0-6-6m6 6-6 6"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-              </Link>
-            )}
+            {/* The one primary, then the form (the footer may keep it). */}
+            <CheckCta placement="footer" />
+            <Link to="/contact" className="arrow-link footer-alt-cta">
+              Or send a message
+              <span className="arrow" aria-hidden="true">
+                &rarr;
+              </span>
+            </Link>
           </div>
           <p className="footer-copy">
             &copy; {year} Aniket. {site.location}

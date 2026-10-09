@@ -73,7 +73,7 @@ export default function Doors() {
         </ul>
 
         <p className="sd-rehook">
-          So how does a project actually run?
+          So where do you start, and what does it cost to find out?
           <span className="sd-rehook-arrow" aria-hidden="true">
             ↓
           </span>

@@ -1,13 +1,8 @@
 import { useEffect, useRef, useSyncExternalStore } from 'react'
-import { fx } from '../../interactions/attrs.js'
-import { Link } from 'react-router-dom'
 import { m, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react'
 import Icon from '../../components/icons.jsx'
-import WhatsAppCta from '../../components/WhatsAppCta.jsx'
-import BookingCta from '../../components/BookingCta.jsx'
+import { CheckCta, TalkCta } from '../../components/FunnelCta.jsx'
 import { whatsappPrefill } from '../../data.js'
-import { hasWhatsApp } from '../../whatsapp.js'
-import { hasBooking } from '../../booking.js'
 import { useCurrency, inCurrency } from '../../currency.js'
 import SitesScene from './hero/SitesScene.jsx'
 import InboxScene from './hero/InboxScene.jsx'
@@ -157,28 +152,11 @@ export default function ServiceHero({ area }) {
             </m.p>
 
             <m.div className="sv-actions" variants={settle}>
-              {hasBooking ? (
-                <>
-                  <BookingCta className="btn-saffron" magnet />
-                  <WhatsAppCta message={prefill} label="WhatsApp me" className="btn-light" />
-                </>
-              ) : (
-                <>
-                  {hasWhatsApp ? (
-                    <WhatsAppCta message={prefill} label="Book a free call" className="btn-saffron" magnet />
-                  ) : (
-                    <Link to={`/contact?service=${area.slug}#write`} className="btn-saffron" {...fx('magnet')}>
-                      Book a free call
-                    </Link>
-                  )}
-                  <a href="#prices" className="btn-light">
-                    See the prices
-                  </a>
-                </>
-              )}
+              <CheckCta placement={`${area.slug}-hero`} magnet />
+              <TalkCta message={prefill} contact={`/contact?service=${area.slug}#write`} />
             </m.div>
             <m.p className="stage-mono sv-foot" variants={settle}>
-              From {inCurrency(area.from, currency)}. Free 15-minute call first, no obligation.
+              From {inCurrency(area.from, currency)}. Free AI check first, no obligation.
             </m.p>
           </div>
 

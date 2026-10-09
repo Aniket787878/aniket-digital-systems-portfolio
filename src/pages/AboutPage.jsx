@@ -1,11 +1,6 @@
-import { Link } from 'react-router-dom'
-import { fx } from '../interactions/attrs.js'
 import { m } from 'motion/react'
-import WhatsAppCta from '../components/WhatsAppCta.jsx'
-import BookingCta from '../components/BookingCta.jsx'
-import Icon from '../components/icons.jsx'
+import { CheckCta, TalkCta } from '../components/FunnelCta.jsx'
 import { PillLabel } from '../components/ui.jsx'
-import { hasBooking } from '../booking.js'
 import { founder, whatsappPrefill } from '../data.js'
 import { heroContainer, heroItem, fadeIn } from '../motion/variants.js'
 import { useDocumentTitle } from '../useDocumentTitle.js'
@@ -57,17 +52,8 @@ export default function AboutPage() {
               </m.p>
             )}
             <m.div className="about-hero-actions" variants={heroItem}>
-              {hasBooking ? (
-                <BookingCta className="btn-saffron" magnet />
-              ) : (
-                <Link to="/contact" className="btn-saffron" {...fx('magnet')}>
-                  Tell me what is breaking
-                  <span className="btn-pill-icon" aria-hidden="true">
-                    <Icon name="arrow" size={16} />
-                  </span>
-                </Link>
-              )}
-              <WhatsAppCta message={whatsappPrefill.contact} label="WhatsApp me" className="btn-light" />
+              <CheckCta placement="about-hero" magnet />
+              <TalkCta message={whatsappPrefill.contact} />
             </m.div>
             <m.dl className="about-facts" variants={heroItem}>
               {founder.quickFacts.map((fact) => (

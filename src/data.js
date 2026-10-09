@@ -55,6 +55,13 @@ export const images = {
    output is committed. */
 export const FILM_V = '?v=2026-10-04c'
 
+/* Project covers: one designed picture per project card, rendered from
+   scripts/covers/ by scripts/render-covers.mjs into public/covers/. Each
+   says what it is in its corner tag (words from a real test run, an
+   illustration with no client data, or a made-up business). Bump this
+   after a re-render. */
+export const COVER_V = '?v=2026-10-09'
+
 /* ------------------------------------------------------------------
    PRODUCT FILMS — rendered from remotion/ by scripts/render-videos.sh.
 
@@ -534,6 +541,7 @@ export const projects = [
   {
     index: '01',
     slug: 'therapist-pwa',
+    cover: { src: `/covers/therapist-pwa.png${COVER_V}`, alt: 'Illustration with no client data: a recorded session becomes a draft session note, and the therapist approves it before it is saved.' },
     highlights: [
       'Session recordings become a draft clinical note shortly after the session',
       'A booking desk linked to Google Calendar and WhatsApp',
@@ -638,6 +646,7 @@ export const projects = [
   {
     index: '02',
     slug: 'care-journey',
+    cover: { src: `/covers/care-journey.png${COVER_V}`, alt: 'Illustration with no client data: a screening checklist, then the rule that nobody pays until a clinician says yes.' },
     highlights: [
       'A ten-step journey from first enquiry to enrolled client',
       'Check-points that pause the course until a real therapy session happens',
@@ -763,6 +772,7 @@ export const projects = [
   {
     index: '03',
     slug: 'consent-signer',
+    cover: { src: `/covers/consent-signer.png${COVER_V}`, alt: 'Drawn from the working demo: a consent form signed on a phone, and the public check page saying Authentic, seal intact.' },
     highlights: [
       'Clinic, studio and agency templates, signed on any phone',
       'A digital seal over the wording and every signature',
@@ -852,6 +862,7 @@ export const projects = [
   {
     index: '04',
     slug: 'shared-inbox',
+    cover: { src: `/covers/shared-inbox.png${COVER_V}`, alt: 'Drawn from the working demo: WhatsApp, email and web form enquiries arriving in one shared inbox.' },
     highlights: [
       'WhatsApp, email and website enquiries in one shared inbox',
       'Reply, leave a team note or hand it to a colleague in one place',
@@ -936,6 +947,7 @@ export const projects = [
   {
     index: '05',
     slug: 'lead-research',
+    cover: { src: `/covers/lead-research.png${COVER_V}`, alt: 'Drawn from the working demo: a pasted website becomes a lead with an email address and a score of 90 out of 100.' },
     highlights: [
       'Reads a business website and picks out the contact details',
       'Scores every lead by how easy it is to reach',
@@ -1025,6 +1037,7 @@ export const projects = [
   {
     index: '06',
     slug: 'appointment-desk',
+    cover: { src: `/covers/appointment-desk.png${COVER_V}`, alt: 'Words from a real test run: a patient asks to book an initial assessment and the assistant books Monday 5 October, 11:00.' },
     highlights: [
       'Answers fees, hours and policies from the clinic’s own FAQ',
       'Checks the calendar and offers free slots',
@@ -1109,6 +1122,7 @@ export const projects = [
   {
     index: '07',
     slug: 'knowledge-assistant',
+    cover: { src: `/covers/knowledge-assistant.png${COVER_V}`, alt: 'Words from a real test run: a patient asks the price of a 45-minute session and gets the prices with the source named.' },
     highlights: [
       'Answers from the clinic’s own documents, with the source named',
       'Reads prices from the services table instead of guessing',
@@ -1192,6 +1206,7 @@ export const projects = [
   {
     index: '08',
     slug: 'website-answer-widget',
+    cover: { src: `/covers/website-answer-widget.png${COVER_V}`, alt: 'Words from a real test run: a visitor asks about acupuncture, the assistant says it does not know, and the front desk takes a callback.' },
     highlights: [
       'A chat bubble on the clinic’s website',
       'Answers from the clinic’s own documents, with the source named',
@@ -1280,6 +1295,7 @@ export const projects = [
   {
     index: '09',
     slug: 'missed-enquiry-rescue',
+    cover: { src: `/covers/missed-enquiry-rescue.png${COVER_V}`, alt: 'Demo screens of a made-up business: a buyer asks a price at 21:40 and a site visit is booked for Sunday, 11:00.' },
     title: 'Enquiry Rescue',
     subtitle: 'An after-hours enquiry assistant for a property agency',
     tagline: 'Answers a late-night enquiry from the agency’s own listings, asks what the buyer needs and books a site visit. Price talks go to a person.',
@@ -1327,6 +1343,7 @@ export const projects = [
   {
     index: '10',
     slug: 'proposal-drafter',
+    cover: { src: `/covers/proposal-drafter.png${COVER_V}`, alt: 'Demo screens of a made-up business: a draft priced from the rate card, and nothing is sent until the owner approves.' },
     title: 'Proposal Drafter',
     subtitle: 'From a client’s brief to a checked proposal',
     tagline: 'Turns a client’s brief into a draft proposal priced from the studio’s own rate card. Nothing is sent until the owner approves it.',
@@ -1370,6 +1387,7 @@ export const projects = [
   {
     index: '11',
     slug: 'trial-class-desk',
+    cover: { src: `/covers/trial-class-desk.png${COVER_V}`, alt: 'Demo screens of a made-up business: a person asks for a trial class and a free trial is booked for Wednesday 14 October, 18:30.' },
     title: 'Trial Class Desk',
     subtitle: 'Trial bookings, reminders and follow-ups for a studio',
     tagline: 'Books free trial classes, reminds people the evening before, and follows up with whoever came and whoever did not.',
@@ -1760,6 +1778,8 @@ export const services = [
         subtitle: 'Designed and built end to end',
         note: 'The pages, the films and the form. Every enquiry is saved to a sheet, I get an alert, you get a reply straight away, and anything unanswered after a day comes back to me the next morning.',
         image: '/this-site.jpg',
+        cover: `/covers/this-site.png${COVER_V}`,
+        coverAlt: 'This site, live: the contact form, and what happens the moment it is sent: saved to a sheet, Aniket gets an alert, you get a reply.',
         badge: 'Real screens',
         to: '/contact',
         cta: 'Try the form'

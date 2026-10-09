@@ -117,8 +117,8 @@
   padding-top: clamp(2rem, 5vw, 4rem);
 }
 
-/* The project cards are white on either ground; only the hover shadow
-   needs a night version. */
+/* The service doors (OtherAreas) are white on either ground; only the
+   hover shadow needs a night version. The proof cards are ProjectCards. */
 .svc-cards {
   margin-top: 0;
 }
@@ -142,126 +142,118 @@
   margin-inline: auto;
 }
 
-/* Five cards in three columns: centre the last two instead of leaving a
-   hole at the end of the row (6-track grid, each card spans 2). */
-@media (min-width: 1000.02px) {
-  .svc-cards[data-count='5'] {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-  }
-
-  .svc-cards[data-count='5'] > li {
-    grid-column: span 2;
-  }
-
-  .svc-cards[data-count='5'] > li:nth-child(4) {
-    grid-column: 2 / span 2;
-  }
+/* The proof grid (Proof.jsx): ProjectCard cards (components/
+   ProjectCard.css), laid out for however many there are so no row ends
+   on a lone card. */
+.pc-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 1.6vw, 1.5rem);
 }
 
-/* Subtitle on its own line under the title, so a short title ("Clinic
-   Staff App") doesn't pull its subtitle up beside it while longer ones wrap. */
-.svc-cards .card-title {
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-/* One proof card (the websites area: this site; the five concept sites
-   are the showcase band just above, so they are not repeated here). One
-   wide card, picture beside the words, instead of a lone third-width
-   card. */
-.svc-cards[data-count='1'] {
+.pc-grid[data-count='1'] {
   grid-template-columns: minmax(0, 1fr);
+}
+
+/* A lone card outside a group (the websites area) is not stretched to
+   the full band: it would be a banner, not a card. */
+.svc-proof .container > .pc-grid[data-count='1'] {
   max-width: 64rem;
   margin-inline: auto;
 }
 
-@media (min-width: 761px) {
-  .svc-cards[data-count='1'] .card {
-    flex-direction: row;
-    align-items: stretch;
+.pc-grid[data-count='2'],
+.pc-grid[data-count='4'] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Five in three columns: centre the last two (6-track grid, each card
+   spans 2) instead of leaving a hole at the end of the row. */
+@media (min-width: 1000.02px) {
+  .pc-grid[data-count='5'] {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
-  .svc-cards[data-count='1'] .card-media {
-    flex: 0 0 58%;
+  .pc-grid[data-count='5'] > li {
+    grid-column: span 2;
   }
 
-  .svc-cards[data-count='1'] .card-body {
-    justify-content: center;
-    padding: 1.5rem 1.75rem;
+  .pc-grid[data-count='5'] > li:nth-child(4) {
+    grid-column: 2 / span 2;
   }
 }
 
-/* Mixed proof (software, AI): one small plain heading per kind (client
-   platforms, working demos, demo screens), each group sized to its own
-   count so no row ends on a lone card. All groups share the full content
-   width, so their edges line up down the band. */
-.svc-groups {
-  display: grid;
-  gap: clamp(2.5rem, 5vw, 3.75rem);
-}
-
-.svc-group-head {
-  margin-bottom: 1rem;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.56);
-}
-
-.svc-group-head span {
-  margin-right: 0.35rem;
-  color: #fff;
-}
-
-.svc-groups .svc-cards[data-count] {
-  max-width: none;
-}
-
-/* A group of one is the wide card: picture beside the words. Phones keep
-   the one-card-a-row grid from below. */
-@media (min-width: 641px) {
-  .svc-groups .svc-cards[data-count='2'] {
+/* Between phone and desktop, three or five cards in two columns, the
+   first going wide above the rest so the last is never alone. */
+@media (min-width: 641px) and (max-width: 1000px) {
+  .pc-grid[data-count='3'],
+  .pc-grid[data-count='5'] {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .svc-groups .svc-cards[data-count='1'] .card,
-  .svc-groups .svc-cards[data-count='3'] > li:first-child .card {
-    flex-direction: row;
-    align-items: stretch;
-  }
-
-  .svc-groups .svc-cards[data-count='1'] .card-media,
-  .svc-groups .svc-cards[data-count='3'] > li:first-child .card-media {
-    flex: 0 0 56%;
-  }
-
-  .svc-groups .svc-cards[data-count='1'] .card-body,
-  .svc-groups .svc-cards[data-count='3'] > li:first-child .card-body {
-    justify-content: center;
-    padding: 1.5rem 1.75rem;
-  }
-}
-
-/* Three in a row on a wide screen; between phone and desktop, two columns
-   would leave the third alone, so the first goes wide above the other two. */
-@media (min-width: 1000.02px) {
-  .svc-groups .svc-cards[data-count='3'] > li:first-child .card {
-    flex-direction: column;
-  }
-
-  .svc-groups .svc-cards[data-count='3'] > li:first-child .card-media {
-    flex: none;
-  }
-
-  .svc-groups .svc-cards[data-count='3'] > li:first-child .card-body {
-    justify-content: flex-start;
-    padding: 1.1rem 0.9rem 0.8rem;
-  }
-}
-
-@media (min-width: 641px) and (max-width: 1000px) {
-  .svc-groups .svc-cards[data-count='3'] > li:first-child {
+  .pc-grid[data-count='3'] > li:first-child,
+  .pc-grid[data-count='5'] > li:first-child {
     grid-column: 1 / -1;
   }
+}
+
+/* ...and that wide first card puts its picture beside its words, like a
+   group of one (the .pc-wide layout in ProjectCard.css). */
+@media (min-width: 761px) and (max-width: 1000px) {
+  .pc-grid[data-count='3'] > li:first-child > .pc,
+  .pc-grid[data-count='5'] > li:first-child > .pc {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  }
+
+  .pc-grid[data-count='3'] > li:first-child .pc-media,
+  .pc-grid[data-count='5'] > li:first-child .pc-media {
+    align-self: center;
+  }
+
+  .pc-grid[data-count='3'] > li:first-child .pc-body,
+  .pc-grid[data-count='5'] > li:first-child .pc-body {
+    justify-content: center;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .pc-grid[data-count='3'] > li:first-child .pc-cta,
+  .pc-grid[data-count='5'] > li:first-child .pc-cta {
+    margin-top: 0;
+  }
+}
+
+/* Mixed proof (software, AI): one heading per kind (client platforms,
+   working demos, demo screens), set on a hairline the width of the grid,
+   so each group reads as a deliberate section and all edges line up down
+   the band. */
+.svc-groups {
+  display: grid;
+  gap: clamp(3rem, 6vw, 4.5rem);
+}
+
+.svc-group-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 1rem;
+  margin-bottom: clamp(1.25rem, 2vw, 1.5rem);
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.svc-group-name {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.svc-group-note {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--muted);
 }
 
 /* ---------- 3. Offers (paper) ---------- */
@@ -309,7 +301,8 @@
   /* Every proof grid is one card per row on phones. Two columns (tried
      for the six website cards) left each card about 170px wide: the badge
      wrapped over half the picture and the copy ran a word or two a line. */
-  .svc-cards[data-count] {
+  .svc-cards[data-count],
+  .pc-grid[data-count] {
     grid-template-columns: minmax(0, 1fr);
   }
 }

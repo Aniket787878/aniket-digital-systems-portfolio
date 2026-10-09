@@ -1,12 +1,8 @@
-import { Link } from 'react-router-dom'
-import { fx } from '../interactions/attrs.js'
-import { projects, films, stills, mediaKind, labelFor, whatsappPrefill } from '../data.js'
-import LoopVideo from '../components/LoopVideo.jsx'
-import ScreenStill from '../components/ScreenStill.jsx'
+import { projects, whatsappPrefill } from '../data.js'
+import ProjectCard from '../components/ProjectCard.jsx'
+import { projectCard } from '../components/projectCard.js'
 import { CheckCta, TalkCta, Rehook } from '../components/FunnelCta.jsx'
 import { useDocumentTitle } from '../useDocumentTitle.js'
-
-const toText = (value) => (typeof value === 'string' && value.trim() ? value.trim() : '')
 
 export default function ProjectsPage() {
   useDocumentTitle('Projects · Aniket')
@@ -32,74 +28,24 @@ export default function ProjectsPage() {
         label="See which one fits, in three minutes"
         placement="projects-top"
       />
-      {/* A showcase, not a list: every project leads with its film. The
-          working demos play real captures on hover; the client platforms
-          play a schematic, and the badge on the media says which. A demo
-          with real screens but no film yet shows one still, cropped to the
-          reply that matters, with its own badge. */}
-      <ul className="showcase">
-        {projects.map((project, i) => {
-          const summary = toText(project.summary)
-          const index = toText(project.index)
-          const film = films[project.slug]
-          const still = !film && stills[project.slug]
-          const kind = mediaKind(project.slug)
-          /* Demo screens are drawn by me, not client records: they take the
-             plain (not schematic) frame, with their own badge and kind. */
-          const real = kind === 'real' || kind === 'demo'
-          const metrics = (project.metrics || []).slice(0, 2)
-
-          return (
-            <li key={project.slug} className={`showcase-item${i % 2 ? ' showcase-item-alt' : ''}`}>
-              <Link to={`/projects/${project.slug}`} className="showcase-card loop-video-host" {...fx('lerp', 'view')}>
-                <div className={`showcase-media${real ? '' : ' is-schematic'}`}>
-                  {film && (
-                    <LoopVideo
-                      mode="hover"
-                      src={real ? film.framed : film.src}
-                      poster={real ? film.framedPoster : film.poster}
-                      className="showcase-video"
-                    />
-                  )}
-                  {still && (
-                    <ScreenStill
-                      src={still.cover.file}
-                      focus={still.cover.focus}
-                      className="showcase-video"
-                    />
-                  )}
-                  <span className={`showcase-badge${real ? ' is-real' : ''}`}>
-                    {still ? labelFor(project.slug).badge : real ? 'Real screens' : 'Illustrated · client records never shown'}
-                  </span>
-                </div>
-                <div className="showcase-body">
-                  <div className="showcase-meta">
-                    {index && <span className="showcase-index">{index}</span>}
-                    <span className="showcase-kind">
-                      {kind === 'demo' ? labelFor(project.slug).kind : real ? 'Working demo' : 'Production platform'}
-                    </span>
-                  </div>
-                  <h2 className="showcase-title">{toText(project.title) || 'Untitled project'}</h2>
-                  {summary && <p className="showcase-summary">{summary}</p>}
-                  {metrics.length > 0 && (
-                    <div className="showcase-metrics">
-                      {metrics.map((metric) => (
-                        <div key={metric.label}>
-                          <span className="showcase-metric-n">{metric.n}</span>
-                          <span className="showcase-metric-label">{metric.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  <span className="arrow-link showcase-link">
-                    Read the case study
-                    <span className="arrow" aria-hidden="true">&rarr;</span>
-                  </span>
-                </div>
-              </Link>
-            </li>
-          )
-        })}
+      {/* The same card as the service-page proof grids (components/
+          ProjectCard.jsx), so a project looks the same wherever it is
+          met. The lead project goes wide; the rest pair up beneath it.
+          Each card's meta row carries its number and its truth label
+          (illustrated, real screens, recorded test run or made-up
+          business); the label never sits on the picture. */}
+      <ul className="pc-showcase">
+        {projects.map((project, i) => (
+          <li key={project.slug}>
+            <ProjectCard
+              card={projectCard(project.slug)}
+              as="h2"
+              layout={i === 0 ? 'wide' : undefined}
+              showIndex
+              metrics={(project.metrics || []).slice(0, 2)}
+            />
+          </li>
+        ))}
       </ul>
 
       {/* After the proof, the rehook with context: no dead end at the

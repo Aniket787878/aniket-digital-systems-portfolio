@@ -159,12 +159,16 @@ with itself.
 
 ### `stills`, `stillLabel`, `mediaKind` (2026-09-30)
 
-- `stills[slug]`: `{ kind, cover: { file, focus } }` for a demo with real
+- `stills[slug]`: `{ kind, cover: { file, focus }, card? }` for a demo with real
   screens but no film yet: Appointment Desk, Practice Knowledge Assistant,
   Website Answer Widget (captured by `scripts/capture-demos.mjs`: n8n's real
   chat UI, replies recorded from real test executions and replayed). The
-  `/projects` showcase and the service-page proof cards show `cover`,
-  cropped to `focus` by `components/ScreenStill.jsx`; the case page steps
+  `/projects` grid and the service-page proof cards (both
+  `components/ProjectCard.jsx`, data from `components/projectCard.js`,
+  since 2026-10-09) show `cover`, cropped to `card` (else `focus`) by
+  `components/ScreenStill.jsx`; the light captures sit in a window frame on
+  the dark well, and the truth label is in the card's meta row, never on
+  the picture; the case page steps
   through every shot in `public/walkthroughs/<slug>/steps.json` (read by
   `src/walkthroughs.js`). A film in `films` always wins.
 - `stillLabel`: the one badge and caption every still surface uses.

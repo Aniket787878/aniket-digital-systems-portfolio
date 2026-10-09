@@ -40,10 +40,16 @@ function whenIdle(fn) {
    chunk is ever requested, and start() in the chunk is idempotent. */
 export function enableInteractions() {
   const reduce = window.matchMedia(REDUCED)
+  const fine = window.matchMedia(FINE_POINTER)
   let dead = false
 
   const boot = () => {
     if (dead || reduce.matches || current) return
+    // Phones/touch devices never run these effects, so never fetch the chunk
+    // for them either — only load it once a fine pointer + hover + wide
+    // viewport is actually present (same gate that decides whether the
+    // effects start once the module lands).
+    if (!fine.matches) return
     import('./stringtune.js')
       .then((mod) => {
         if (dead || reduce.matches) return
@@ -67,10 +73,20 @@ export function enableInteractions() {
   }
   reduce.addEventListener('change', onReduceChange)
 
+  // A device that starts without a fine pointer (a phone) never matches
+  // FINE_POINTER on load, so boot() above returns early and the chunk is
+  // never fetched. If it later does match — a mouse plugged into a
+  // tablet/foldable, or the window resized past 1024px — fetch it then.
+  const onFineChange = () => {
+    if (fine.matches) boot()
+  }
+  fine.addEventListener('change', onFineChange)
+
   return () => {
     dead = true
     cancelIdle()
     reduce.removeEventListener('change', onReduceChange)
+    fine.removeEventListener('change', onFineChange)
     current?.stop()
     current = null
   }

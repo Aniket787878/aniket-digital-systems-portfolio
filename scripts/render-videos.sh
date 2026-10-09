@@ -29,6 +29,11 @@ ONLY="${1:-}"
 # and encodes it once as 128 kb/s stereo AAC, with the video stream copied.
 # The card loops and the hero reel are rendered --muted: no audio track.
 SOUND=(--audio-codec=aac --audio-bitrate=320k)
+# Since 2026-10-09 the site plays every film silent and ships no audio track
+# (Aniket: the generated score and effects did not sound good). So by
+# default the films and explainers render --muted and are not mastered.
+# SITE_AUDIO=1 brings the sound back, for a sample he has approved first.
+if [ "${SITE_AUDIO:-0}" != 1 ]; then SOUND=(--muted); fi
 
 # Rebuild the scores if a voice or the score script is newer than them
 # (python3 with numpy + scipy; see scripts/make-music.py).
@@ -73,7 +78,7 @@ fi
 film() { # composition, output name, poster frame
   npx remotion render "$ENTRY" "$1" "$OUT/$2.mp4" --codec=h264 --crf=28 --x264-preset=slow \
     --pixel-format=yuv420p "${SOUND[@]}" "${PAR[@]}" "${BROWSER[@]}" --log=error
-  master "$OUT/$2.mp4"
+  [ "${SITE_AUDIO:-0}" = 1 ] && master "$OUT/$2.mp4"
   npx remotion still "$ENTRY" "$1" "$OUT/posters/$2.jpg" --frame="$3" \
     --image-format=jpeg --jpeg-quality=82 "${BROWSER[@]}" --log=error
 }
@@ -84,7 +89,7 @@ loop() { # composition, output path, scale: a silent card loop
 explainer() { # composition, output name, poster frame, crf
   npx remotion render "$ENTRY" "$1" "$OUT/explainers/$2.mp4" --codec=h264 --crf="$4" --x264-preset=slow \
     --pixel-format=yuv420p "${SOUND[@]}" "${PAR[@]}" "${BROWSER[@]}" --log=error
-  master "$OUT/explainers/$2.mp4"
+  [ "${SITE_AUDIO:-0}" = 1 ] && master "$OUT/explainers/$2.mp4"
   npx remotion still "$ENTRY" "$1" "$OUT/posters/$2.jpg" --frame="$3" \
     --image-format=jpeg --jpeg-quality=82 "${BROWSER[@]}" --log=error
 }

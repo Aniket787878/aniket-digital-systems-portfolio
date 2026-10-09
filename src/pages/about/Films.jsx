@@ -7,20 +7,32 @@ import { revealStagger, reveal, fadeUp } from '../../motion/variants.js'
 import Icon from '../../components/icons.jsx'
 import VideoDialog from '../../components/VideoDialog.jsx'
 import { PillLabel } from '../../components/ui.jsx'
+import '../../components/ProjectCard.css'
 
 /* ---------------------------------------------------------------
-   The five project films, one tap each. The poster opens the film in
-   the site's <dialog> player; the text link goes to the case study.
-   Every card says which kind of film it is (data.js `films[slug].kind`):
-   real captures of the working demos, schematics of the two client
-   platforms whose real screens hold client records.
+   The five project films, one tap each, drawn like the project cards
+   (ProjectCard.css) on the paper ground: the poster is the project's
+   designed cover (data.js `projects[].cover`) in a framed 16:9 well,
+   with nothing laid over it (a play button on the picture covered the
+   cover's own words at phone size), and the kind of film (data.js
+   `films[slug].kind`) is a label in the card body. One "Watch the film"
+   button in the body opens the film in the site's <dialog> player
+   (muted, like every film on the site); the poster opens it too, as a
+   mouse shortcut, so it stays out of the tab order. The text link goes
+   to the case study.
 
    Phones get a swipeable row (scroll-snap inside its own box, so the
    page itself never scrolls sideways) instead of five stacked posters.
    --------------------------------------------------------------- */
+const KIND = {
+  real: { label: 'Working demo · real build', tone: 'real' },
+  schematic: { label: 'Client platform · illustrated', tone: 'schematic' }
+}
+
 export default function Films() {
   const [film, setFilm] = useState(null)
   const withFilm = projects.filter((p) => films[p.slug])
+  const play = (p, f, kind) => setFilm({ title: `${p.title} · ${kind.label}`, src: f.src, poster: f.poster })
 
   return (
     <section className="paper about-films" aria-labelledby="about-films-title">
@@ -28,7 +40,7 @@ export default function Films() {
         <m.header className="about-band-head" {...reveal}>
           <PillLabel icon="play">The work</PillLabel>
           <h2 className="h2" {...fx('split')} id="about-films-title">
-            Five builds, on film.
+            Five builds, each with a short film.
             <span className="soft">Real screens, or drawings where client records are private.</span>
           </h2>
         </m.header>
@@ -36,29 +48,44 @@ export default function Films() {
         <m.ul className="about-films-row" {...revealStagger}>
           {withFilm.map((p) => {
             const f = films[p.slug]
-            const kind = f.kind === 'real' ? 'Real screens' : 'Illustrated film'
+            const kind = KIND[f.kind] || KIND.schematic
+            const poster = p.cover?.src || f.poster
             return (
-              <m.li key={p.slug} className="about-film" variants={fadeUp}>
+              <m.li key={p.slug} className="about-film pc pc-paper" variants={fadeUp}>
                 <button
                   type="button"
-                  className="about-film-media"
-                  onClick={() => setFilm({ title: `${p.title} · ${kind}`, src: f.src, poster: f.poster })}
-                  aria-label={`Play the ${p.title} film (${kind.toLowerCase()})`}
+                  className="pc-media about-film-media"
+                  onClick={() => play(p, f, kind)}
+                  tabIndex={-1}
+                  aria-hidden="true"
                 >
-                  <img src={f.poster} alt="" loading="lazy" />
-                  <span className="about-film-play" aria-hidden="true">
-                    <Icon name="play" size={16} />
-                  </span>
-                  <span className={`about-film-kind is-${f.kind}`} aria-hidden="true">
-                    {kind}
+                  <span className="pc-media-inner">
+                    <img src={poster} alt="" className="pc-fill" width="1600" height="900" loading="lazy" decoding="async" />
                   </span>
                 </button>
-                <div className="about-film-body">
-                  <h3>{p.title}</h3>
-                  <p>{p.subtitle}</p>
-                  <Link to={`/projects/${p.slug}`} className="text-link">
-                    Case study <Icon name="arrow" size={16} />
-                  </Link>
+                <div className="pc-body">
+                  <p className="pc-meta">
+                    <span className={`pc-label is-${kind.tone}`}>{kind.label}</span>
+                  </p>
+                  <h3 className="pc-title">{p.title}</h3>
+                  <p className="pc-sub">{p.subtitle}</p>
+                  <div className="about-film-actions">
+                    <button
+                      type="button"
+                      className="about-film-watch"
+                      onClick={() => play(p, f, kind)}
+                      aria-label={`Watch the ${p.title} film (${kind.label.toLowerCase()})`}
+                    >
+                      <span className="about-film-watch-icon" aria-hidden="true">
+                        <Icon name="play" size={10} />
+                      </span>
+                      Watch the film
+                    </button>
+                    <Link to={`/projects/${p.slug}`} className="pc-cta">
+                      Case study
+                      <span className="pc-arrow" aria-hidden="true">&rarr;</span>
+                    </Link>
+                  </div>
                 </div>
               </m.li>
             )

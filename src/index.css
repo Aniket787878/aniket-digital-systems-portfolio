@@ -2465,28 +2465,13 @@ a:hover {
   box-shadow: 0 50px 100px -40px rgba(0, 0, 0, 0.85), 0 0 80px -30px rgba(245, 135, 30, 0.25);
 }
 
-/* The film's sound toggle sits under the frame, not on it: every corner of
-   the picture carries the film's own wordmark, tag or caption, and the
-   native controls take the bottom edge under reduced motion. */
+/* The film is silent (no sound toggle since 2026-10-09); the wrapper
+   stays as the frame's column. */
 .case-video-wrap {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 0.75rem;
-}
-
-.case-sound {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  border: 1px solid var(--line-strong);
-  background: none;
-  color: var(--ink);
-  border-radius: 999px;
-  padding: 0.35rem 0.9rem;
-  font: inherit;
-  font-size: 0.875rem;
-  cursor: pointer;
 }
 
 /* ============================================================
@@ -3278,8 +3263,6 @@ a:hover .text-link svg {
   gap: 0.5rem;
 }
 
-/* The sound toggle wears the Close button's pill, plus its icon. */
-.video-dialog-sound,
 .video-dialog-close {
   display: inline-flex;
   align-items: center;
@@ -3670,14 +3653,12 @@ dd {
 
   .sh-watch,
   .ac-restart,
-  .case-sound,
   .watch-link {
     position: relative;
   }
 
   .sh-watch::after,
   .ac-restart::after,
-  .case-sound::after,
   .watch-link::after {
     content: '';
     position: absolute;

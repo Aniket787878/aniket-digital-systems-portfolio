@@ -754,9 +754,6 @@
 
 .about-film {
   grid-column: span 2;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
   min-width: 0;
 }
 
@@ -764,28 +761,13 @@
   grid-column: span 3;
 }
 
+/* The poster is a button: reset it to the well ProjectCard.css draws. */
 .about-film-media {
-  position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
   padding: 0;
   border: 0;
-  border-radius: 16px;
-  overflow: hidden;
-  background: var(--paper-2);
   cursor: pointer;
-}
-
-.about-film-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.7s var(--ease-out);
-}
-
-.about-film-media:hover img {
-  transform: scale(1.03);
 }
 
 .about-film-media:focus-visible {
@@ -793,51 +775,121 @@
   outline-offset: 3px;
 }
 
-.about-film-play {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
+.about-film-media:hover .pc-media-inner {
+  scale: 1.03;
+}
+
+/* The card's foot: the one play affordance, then the case study. */
+.about-film-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem 1.5rem;
+  margin-top: auto;
+  padding-top: 1.25rem;
+}
+
+.about-film-actions .pc-cta {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.about-film-watch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem 0.4rem 0.45rem;
+  border: 1px solid rgba(22, 20, 18, 0.14);
+  border-radius: 999px;
+  background: none;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink-dark);
+  cursor: pointer;
+  transition: border-color var(--dur-mid) ease;
+}
+
+.about-film-watch-icon {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
+  background: var(--ink-dark);
+  color: #fff;
+  transition:
+    background-color var(--dur-mid) ease,
+    color var(--dur-mid) ease;
+}
+
+.about-film-watch:hover {
+  border-color: rgba(22, 20, 18, 0.32);
+}
+
+.about-film-watch:hover .about-film-watch-icon,
+.about-film-media:hover ~ .pc-body .about-film-watch-icon {
   background: var(--accent);
   color: var(--accent-ink-strong);
-  transition: transform var(--dur-mid) var(--ease-out);
 }
 
-.about-film-media:hover .about-film-play {
-  transform: scale(1.08);
+.about-film-watch:focus-visible {
+  outline: 2px solid var(--accent-deep);
+  outline-offset: 3px;
 }
 
-.about-film-kind {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  padding: 0.3rem 0.65rem;
-  border-radius: 999px;
-  background: rgba(11, 11, 12, 0.72);
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: #fff;
+/* The project card, on the paper ground: a white surface with a
+   hairline, dark ink; the picture well stays dark like everywhere else. */
+.pc.pc-paper {
+  background: #fff;
+  border-color: rgba(22, 20, 18, 0.08);
+  box-shadow: 0 1px 2px rgba(22, 20, 18, 0.04);
+  color: var(--ink-dark);
 }
 
-.about-film-body h3 {
-  font-size: 1.1875rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+.pc.pc-paper:hover {
+  background: #fff;
+  border-color: rgba(22, 20, 18, 0.16);
 }
 
-.about-film-body p {
-  margin: 0.2rem 0 0.6rem;
-  font-size: 0.9375rem;
+.pc-paper .pc-title {
+  color: var(--ink-dark);
+}
+
+.pc-paper .pc-sub,
+.pc-paper .pc-meta {
   color: var(--muted-dark);
 }
 
-.paper .about-film-body .text-link {
+.pc-paper .pc-label.is-real::before {
+  background: var(--accent-deep);
+}
+
+.pc-paper .pc-cta {
+  align-self: flex-start;
   color: var(--accent-deep);
 }
+
+/* Beats ProjectCard.css's whole-card hover, which lights the cue in the
+   night ink (white on this white card). */
+.pc.pc-paper:hover .pc-cta {
+  color: var(--accent-deep);
+}
+
+.pc.pc-paper .pc-cta:hover {
+  color: var(--ink-dark);
+}
+
+.pc-paper .pc-cta:focus-visible {
+  outline: 2px solid var(--accent-deep);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.pc-paper .pc-arrow {
+  color: inherit;
+}
+
 
 /* ---------- Responsive ---------- */
 

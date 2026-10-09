@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { fx } from '../../interactions/attrs.js'
 import { m } from 'motion/react'
-import { projects, films, stills } from '../../data.js'
+import { projects, films, stills, labelFor } from '../../data.js'
 import { reveal, revealStagger, fadeUp } from '../../motion/variants.js'
 import LoopVideo from '../../components/LoopVideo.jsx'
 import ScreenStill from '../../components/ScreenStill.jsx'
@@ -30,7 +30,7 @@ function toCard(entry) {
       note: item.note || project.tagline,
       to: `/projects/${item.slug}`,
       cta: 'Read the case study',
-      badge: 'Working demo · recorded test run',
+      badge: stills[item.slug].kind === 'demo' ? labelFor(item.slug).badge : 'Working demo · recorded test run',
       still: stills[item.slug].cover
     }
   }

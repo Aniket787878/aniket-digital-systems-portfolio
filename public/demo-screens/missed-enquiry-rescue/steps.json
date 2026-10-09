@@ -1,0 +1,72 @@
+[
+  {
+    "file": "01-enquiry.png",
+    "caption": "A buyer writes at 21:40, after the office has closed, and gets the price at once from the agency’s own listings",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "02-questions.png",
+    "caption": "Four short questions, one per message: flat size, budget, when they plan to buy, and area",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "03-slots.png",
+    "caption": "It reads the calendar and offers free site-visit times",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "04-booked.png",
+    "caption": "The visit is booked and logged, and a strong lead is passed to a sales person",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "05-handover.png",
+    "caption": "Asked for a better price or about a loan, it does not haggle or advise: a person will call",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "06-leads.png",
+    "caption": "What the sales team sees in the morning: each lead marked hot, warm or cold by a fixed rule, with the reason",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "07-reminder.png",
+    "caption": "A reminder the day before the visit, and one friendly nudge for a buyer who went quiet",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  }
+]

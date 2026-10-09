@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { films, projects, site, images, proofTools, whatsappPrefill, mediaKind } from '../data.js'
+import { films, projects, site, images, proofTools, whatsappPrefill, mediaKind, labelFor } from '../data.js'
 import { walkthroughs } from '../walkthroughs.js'
 import { CheckCta, TalkCta } from '../components/FunnelCta.jsx'
 import SystemDiagram from '../components/SystemDiagram.jsx'
@@ -97,7 +97,8 @@ export default function ProjectDetailPage() {
     : []
   const availability = toText(site && site.availability)
 
-  const eyebrow = [toText(project.subtitle), mediaKind(project.slug) === 'real' ? 'Working demo' : 'Client project']
+  const kind = mediaKind(project.slug)
+  const eyebrow = [toText(project.subtitle), kind === 'real' ? 'Working demo' : kind === 'demo' ? labelFor(project.slug).kind : 'Client project']
     .filter(Boolean)
     .join(' · ')
 
@@ -150,7 +151,7 @@ export default function ProjectDetailPage() {
           </figcaption>
         </figure>
       ) : steps.length > 0 ? (
-        <Walkthrough steps={steps} title={title} />
+        <Walkthrough steps={steps} title={title} label={labelFor(project.slug)} />
       ) : (
         flow.length >= 2 && (
           <figure className="case-flow-figure">

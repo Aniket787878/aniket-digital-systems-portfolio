@@ -21,7 +21,9 @@ import { stillLabel } from '../data.js'
 */
 const pad = (n) => String(n).padStart(2, '0')
 
-export default function Walkthrough({ steps, title }) {
+/* `label` (badge + caption) defaults to the recorded-test-run wording;
+   demo screens pass their own (data.js labelFor). */
+export default function Walkthrough({ steps, title, label = stillLabel }) {
   const [active, setActive] = useState(0)
   /* MotionConfig's reducedMotion="user" stops movement but keeps opacity
      fades; a screen swap should simply be instant for those readers. */
@@ -81,7 +83,7 @@ export default function Walkthrough({ steps, title }) {
                 alt={`${title}, step ${active + 1} of ${count}: ${step.caption}`}
               />
             </m.div>
-            <span className="walk-badge">{stillLabel.badge}</span>
+            <span className="walk-badge">{label.badge}</span>
           </div>
 
           <div className="walk-controls">
@@ -111,7 +113,7 @@ export default function Walkthrough({ steps, title }) {
       </div>
 
       <figcaption className="case-caption">
-        {stillLabel.caption}{' '}
+        {label.caption}{' '}
         <a href={step.src} target="_blank" rel="noopener noreferrer">
           Open this screen full size
         </a>

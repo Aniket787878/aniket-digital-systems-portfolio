@@ -3448,6 +3448,21 @@ a:hover .text-link svg {
   height: 44px;
 }
 
+/* Nav CTA, quiet state (Nav.jsx): the page's own saffron button is in
+   view, so the nav's copy becomes an outline. Same size and place, so
+   nothing shifts; the transition is colour only. */
+.nav-actions.is-quiet .btn-saffron {
+  background: transparent;
+  color: var(--peach);
+  border-color: rgba(245, 135, 30, 0.55);
+  box-shadow: none;
+}
+
+.nav-actions.is-quiet .btn-saffron:hover {
+  color: #1f0d00;
+  background: var(--accent);
+}
+
 /* Phones: the media badge ("Illustrated · client records never shown")
    covered half of a ~280px-wide film. It becomes a caption strip under
    the picture, inside the same rounded frame, so the label stays whole

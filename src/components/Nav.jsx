@@ -11,6 +11,7 @@ import { whatsappPrefill } from '../data.js'
 export default function Nav() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [quiet, setQuiet] = useState(false)
   const { pathname } = useLocation()
 
   useEffect(() => {
@@ -19,6 +20,44 @@ export default function Nav() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  /* One primary per view: while a page's own "Get your free AI check"
+     button is on screen, the nav's copy steps back to an outline so two
+     saffron buttons never compete. Checked once per frame at most, on
+     scroll, resize and route change (the page's buttons are found fresh
+     each time, so new routes need no wiring). */
+  useEffect(() => {
+    let raf = 0
+    const check = () => {
+      raf = 0
+      const h = window.innerHeight
+      const own = document.querySelectorAll('main a[href="/ai-check"].btn-saffron, main a[href="/ai-check"].btn-pill-accent')
+      let seen = false
+      for (const el of own) {
+        const r = el.getBoundingClientRect()
+        if (r.width > 0 && r.bottom > 0 && r.top < h) {
+          seen = true
+          break
+        }
+      }
+      // On the check itself the nav's button leads nowhere new.
+      setQuiet(seen || window.location.pathname === '/ai-check')
+    }
+    const queue = () => {
+      if (!raf) raf = requestAnimationFrame(check)
+    }
+    // After the route's first paint, and again once entrances settle.
+    queue()
+    const late = setTimeout(queue, 900)
+    window.addEventListener('scroll', queue, { passive: true })
+    window.addEventListener('resize', queue)
+    return () => {
+      cancelAnimationFrame(raf)
+      clearTimeout(late)
+      window.removeEventListener('scroll', queue)
+      window.removeEventListener('resize', queue)
+    }
+  }, [pathname])
 
   // Escape closes the mobile panel — the standard exit for a disclosure
   // menu. Only bound while it is open, so it never swallows Escape
@@ -82,7 +121,7 @@ export default function Nav() {
 
         {/* One primary everywhere: the free AI check. The bar is tight,
             so the label is short here. */}
-        <div className="nav-actions">
+        <div className={`nav-actions${quiet ? ' is-quiet' : ''}`}>
           <CheckCta placement="nav" label="Free AI check" />
         </div>
 

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { m } from 'motion/react'
 import { site, footerMenu, social } from '../data.js'
 import { CheckCta } from './FunnelCta.jsx'
@@ -11,6 +11,8 @@ import { reveal } from '../motion/variants.js'
 */
 export default function Footer() {
   const year = new Date().getFullYear()
+  // On the check itself the footer's button would point at this page.
+  const onCheck = useLocation().pathname === '/ai-check'
   // Social entries without an href are placeholders, not dead links.
   const links = social.filter((s) => s.href)
 
@@ -29,7 +31,7 @@ export default function Footer() {
           </p>
           <div className="footer-actions">
             {/* The one primary, then the form (the footer may keep it). */}
-            <CheckCta placement="footer" />
+            {!onCheck && <CheckCta placement="footer" />}
             <Link to="/contact" className="arrow-link footer-alt-cta">
               Or send a message
               <span className="arrow" aria-hidden="true">

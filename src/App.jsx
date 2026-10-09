@@ -6,6 +6,7 @@ import Interactions from './interactions/Interactions.jsx'
 import SmoothScroll from './scroll/SmoothScroll.jsx'
 import Nav from './components/Nav.jsx'
 import Footer from './components/Footer.jsx'
+import ActionDock from './components/ActionDock.jsx'
 // Home stays eager: it's the main landing page, almost every visit touches it.
 import HomePage from './pages/HomePage.jsx'
 
@@ -121,6 +122,7 @@ export default function App() {
         </Suspense>
       </main>
       {!concept && <Footer />}
+      {!concept && <ActionDock />}
     </div>
     </MotionConfig>
     </LazyMotion>

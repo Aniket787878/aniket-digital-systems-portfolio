@@ -535,6 +535,10 @@ export const whatsappPrefill = {
   /* The AI check's result. `{jobs}` is replaced with the top three. */
   aiCheck: 'Hi Aniket, I just did the free AI check on your site. I’d like to talk about the AI Roadmap. My top three were: {jobs}.',
   nav: 'Hi Aniket, I’m on your site and would like to talk about a project for my business.',
+  /* The phone action dock (components/ActionDock.jsx). `{page}` is the
+     current page's name, so the chat still says which part of the site
+     did the convincing even though the dock is the same on every page. */
+  dock: 'Hi Aniket, I’m on your {page} page and would like the free 15-minute call. What I need help with is:',
   /* The end of the website / software plans (pages/start/). {pkg} is the
      package the plan suggested. */
   startWebsite: 'Hi Aniket, I just planned my website on your site. The plan suggested the {pkg}. Can we talk it through?',
@@ -1929,6 +1933,24 @@ export const services = [
     ]
   }
 ]
+
+/* Turns a `from` price string ("₹35,000", "₹1.5L", "$490") into a plain
+   number of rupees-equivalent, just for comparing sizes — never shown.
+   "L" (lakh) means *100,000; the site has no crore prices yet. */
+function magnitude(str) {
+  const n = parseFloat(String(str).replace(/[^0-9.]/g, '')) || 0
+  return /l$/i.test(str) ? n * 100000 : n
+}
+
+/* The smallest `from` price across every service area (home hero, Move
+   5): read live from `services` so it can never drift from the pages
+   themselves if a price changes. Compared on the INR figure, since every
+   `from` carries one, then the matching `{ usd, inr }` object is used so
+   `inCurrency` still follows the visitor's toggle. */
+export const lowestFrom = services.reduce(
+  (min, s) => (magnitude(s.from.inr) < magnitude(min.inr) ? s.from : min),
+  services[0].from
+)
 
 /* Budget bands on the contact form, per currency, lined up with the
    offers above. The INR values are the ones the n8n workflow and

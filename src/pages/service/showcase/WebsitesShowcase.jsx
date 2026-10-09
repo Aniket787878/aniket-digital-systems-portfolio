@@ -97,8 +97,9 @@ export default function WebsitesShowcase() {
       <div className="container">
         <p className="stage-note ws-note">
           <span className="stage-dot" aria-hidden="true" />
-          <Link to="/contact" className="ws-rehook">
-            Want one like this for your business? Let&rsquo;s talk.
+          {/* Into the one primary action, not the contact page. */}
+          <Link to="/ai-check" className="ws-rehook">
+            Want one like this for your business? Start with the free AI check.
             <span aria-hidden="true"> →</span>
           </Link>
         </p>

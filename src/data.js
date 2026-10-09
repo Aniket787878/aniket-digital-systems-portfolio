@@ -146,7 +146,34 @@ export const stills = {
        headline beside the chat panel: the point is that it sits on a
        website. */
     cover: { file: '/walkthroughs/website-answer-widget/04.png', focus: { x: 260, y: 150, w: 1180, h: 664 } }
+  },
+  /* Demo screens: designed mock-ups of a flow for a made-up business,
+     drawn from the plan's dummy data (scripts/demo-screens/, rendered by
+     scripts/render-demo-screens.mjs). Not captures of a running system and
+     not client work, so they carry their own `label` instead of the
+     "recorded test run" one above, on every surface. If one of these is
+     later built and captured for real, replace the entry with a 'real' one
+     and drop the label. */
+  'missed-enquiry-rescue': {
+    kind: 'demo',
+    cover: { file: '/demo-screens/missed-enquiry-rescue/01-enquiry.png', focus: { x: 120, y: 60, w: 1200, h: 790 } }
+  },
+  'proposal-drafter': {
+    kind: 'demo',
+    cover: { file: '/demo-screens/proposal-drafter/04-price.png', focus: { x: 120, y: 60, w: 1200, h: 790 } }
+  },
+  'trial-class-desk': {
+    kind: 'demo',
+    cover: { file: '/demo-screens/trial-class-desk/02-booked.png', focus: { x: 120, y: 60, w: 1200, h: 790 } }
   }
+}
+
+/* What a demo-screen set is, said the same way everywhere it appears. */
+export const demoScreenLabel = {
+  badge: 'Demo screens · made-up business',
+  kind: 'Demo screens',
+  caption:
+    'Designed demo screens of a made-up business, showing the flow step by step. Not a live system and not a client project: every name, price and message is invented.'
 }
 
 /* The badge and caption for a still, in one place so every surface says
@@ -157,9 +184,13 @@ export const stillLabel = {
     'Real n8n chat screens from a recorded test run on dummy data: each reply was recorded from a real execution and replayed for the capture. Not live traffic, not real patients.'
 }
 
-/* 'real' (a working demo) or 'schematic' (a client platform), from the
-   film if there is one, else from the still. */
+/* 'real' (a working demo), 'schematic' (a client platform) or 'demo'
+   (designed demo screens), from the film if there is one, else from the
+   still. */
 export const mediaKind = (slug) => films[slug]?.kind || stills[slug]?.kind || ''
+
+/* The badge and caption for a still: demo screens get their own words. */
+export const labelFor = (slug) => (stills[slug]?.kind === 'demo' ? demoScreenLabel : stillLabel)
 
 /* Explainer films (remotion/explainers, rendered by
    scripts/render-videos.sh explainers). Illustrative motion design, not
@@ -1228,6 +1259,145 @@ export const projects = [
     ],
     outcomeNote:
       'This is a working demo on dummy data for a fictional clinic, not a client project, and none of this is client results. The screens are the real chat widget from a recorded test run: each reply was recorded from a real execution and replayed for the capture, and the callback in the screens was answered locally. A separate real test saved a callback to the sheet.'
+  },
+  /* Demo screens, not systems (Aniket, 2026-10-09: "do not build, make it
+     demo screens, that's it"). Three made-up businesses outside clinics,
+     each shown as a set of designed screens (`stills` kind 'demo', steps in
+     public/demo-screens/<slug>/steps.json). Nothing here is built, run or
+     tested, so there are no `metrics`, no `outcome` and no `stack`: the
+     copy says what the flow does, never what it achieved. */
+  {
+    index: '09',
+    slug: 'missed-enquiry-rescue',
+    title: 'Enquiry Rescue',
+    subtitle: 'An after-hours enquiry assistant for a property agency',
+    tagline: 'Answers a late-night enquiry from the agency’s own listings, asks what the buyer needs and books a site visit. Price talks go to a person.',
+    year: '2026',
+    highlights: [
+      'Answers price and size questions from the agency’s own listings',
+      'Asks four short questions and books a free site visit',
+      'Discounts, loans and strong leads go to a sales person'
+    ],
+    summary:
+      'Demo screens for a made-up property agency in Pune, showing how an enquiry that arrives after hours could be answered, qualified and booked for a site visit, with a person stepping in wherever money or advice is involved. These are designed screens of the flow, not a live system and not a client project.',
+    role: 'Demo screens I designed to show the flow: the conversation, the lead rule, the handoffs and the follow-ups. Every name, price and message is made up.',
+    flow: ['Enquiry', 'Answer', 'Qualify', 'Book visit', 'Hand over'],
+    problem:
+      'Property enquiries come in from ads late at night and at weekends. By the time someone calls back the next morning, the buyer has often spoken to other agents. Answering fast is the easy part. The hard part is staying honest: no made-up prices, no discount promised by a machine, and a person stepping in at the right moment.',
+    features: [
+      {
+        title: 'Answers from the listings',
+        text: 'Price range, size, possession date and parking come only from the agency’s own listings. Anything else, it checks with the team.'
+      },
+      {
+        title: 'Four short questions',
+        text: 'Flat size, budget, when they plan to buy and preferred area, one question per message.'
+      },
+      {
+        title: 'A site visit, booked',
+        text: 'It offers free times from the calendar, checks the chosen time again and books it, with a note to carry a photo ID.'
+      },
+      {
+        title: 'A person for the hard parts',
+        text: 'Discounts, loans, legal questions, complaints and every strong lead go to a sales executive, who calls in office hours.'
+      }
+    ],
+    decisions: [
+      {
+        title: 'A fixed rule marks the lead, not the AI',
+        text: 'Hot means the budget fits a listing and they plan to buy within 3 months; warm, within 6 months or they asked for a visit; cold, everything else. The reason sits beside every lead, and the buyer never sees it.'
+      },
+      {
+        title: 'Follow up once, then stop',
+        text: 'A reminder the day before each visit, one nudge for a buyer who went quiet half-way, and STOP ends every message.'
+      }
+    ]
+  },
+  {
+    index: '10',
+    slug: 'proposal-drafter',
+    title: 'Proposal Drafter',
+    subtitle: 'From a client’s brief to a checked proposal',
+    tagline: 'Turns a client’s brief into a draft proposal priced from the studio’s own rate card. Nothing is sent until the owner approves it.',
+    year: '2026',
+    highlights: [
+      'Reads a client’s brief and drafts the wording',
+      'Every price comes from the rate card, never from the AI',
+      'The owner approves, changes or stops it before anything is sent'
+    ],
+    summary:
+      'Demo screens for a made-up design studio in Bengaluru, showing how a client’s brief could become a draft proposal: the AI writes the words, the prices come only from the studio’s rate card, and the owner decides before anything is sent. These are designed screens of the flow, not a live system and not a client project.',
+    role: 'Demo screens I designed to show the flow: the brief form, the draft, the pricing rules, the owner’s review and the follow-up. Every name, price and message is made up.',
+    flow: ['Brief', 'Draft', 'Price', 'Your call', 'Send'],
+    problem:
+      'Writing a proposal can take an evening for each enquiry, so proposals go out late or not at all. A proposal is also a promise about money, so it should never be written or sent by a machine on its own. The idea: a draft ready soon after the brief arrives, priced only from the studio’s own rates, with a person making the final call.',
+    features: [
+      {
+        title: 'A short brief form',
+        text: 'The client says what they need in their own words and gets a reference straight away. No price and no promise yet.'
+      },
+      {
+        title: 'The AI writes the words',
+        text: 'What we heard, what we will make, and the questions to ask before starting. It never writes a price.'
+      },
+      {
+        title: 'Prices from the rate card',
+        text: 'Fixed rules add up the rate card: a rush charge only when the deadline is shorter than the work, and GST as its own line. Anything not on the card is left for a person to price.'
+      },
+      {
+        title: 'The owner decides',
+        text: 'Approve and send, approve with changes (the reason is kept beside the new total), or do not send. The review link expires after two days.'
+      }
+    ],
+    decisions: [
+      {
+        title: 'A person between the draft and the client',
+        text: 'Nothing reaches the client without the owner’s yes, including the follow-up: after three working days with no reply, a follow-up draft waits for the owner to send.'
+      }
+    ]
+  },
+  {
+    index: '11',
+    slug: 'trial-class-desk',
+    title: 'Trial Class Desk',
+    subtitle: 'Trial bookings, reminders and follow-ups for a studio',
+    tagline: 'Books free trial classes, reminds people the evening before, and follows up with whoever came and whoever did not.',
+    year: '2026',
+    highlights: [
+      'Answers class and price questions from the timetable',
+      'Checks a trial seat, books it and sends a reminder',
+      'The coach marks who came; each person gets the right follow-up'
+    ],
+    summary:
+      'Demo screens for a made-up fitness studio in Mumbai, showing how free trial classes could be booked, reminded and followed up, with health questions handed straight to a coach. These are designed screens of the flow, not a live system and not a client project.',
+    role: 'Demo screens I designed to show the flow: the conversation, the seat check, the health screen, the coach’s register and the follow-ups. Every name, price and message is made up.',
+    flow: ['Ask', 'Book', 'Remind', 'Register', 'Follow up'],
+    problem:
+      'Studios offer free trial classes to win new members. People ask questions late at night, book, and then some do not turn up, and nobody has time to chase each one or thank the ones who came. The idea: a desk that books trials properly and follows up with each person, without ever guessing who came.',
+    features: [
+      {
+        title: 'Answers from the timetable',
+        text: 'Class times and membership prices come only from the studio’s own timetable and price list.'
+      },
+      {
+        title: 'A seat checked, then booked',
+        text: 'Fixed rules check there is a trial seat in the class and that this number has not had a free trial before. If the class is full, it offers the next one.'
+      },
+      {
+        title: 'Health questions go to a coach',
+        text: 'An injury, surgery, pregnancy or health condition gets a fixed reply before any AI runs: a coach calls first, and no advice is given.'
+      },
+      {
+        title: 'The right follow-up for each person',
+        text: 'After the coach marks the register, whoever came gets a thank-you with the membership options and whoever missed it gets one try-again invite.'
+      }
+    ],
+    decisions: [
+      {
+        title: 'The coach marks the register, the system never guesses',
+        text: 'If the register is not marked, nothing goes to the member; the coach gets a reminder instead. STOP ends every message.'
+      }
+    ]
   }
 ]
 
@@ -1618,7 +1788,7 @@ export const services = [
     ],
     from: { usd: '$4,000', inr: '₹1.5L' },
     media: { kind: 'clip', slug: 'shared-inbox', badge: 'Real screens' },
-    proofHead: ['Two platforms in real use.', 'Three working tools, running now.'],
+    proofHead: ['Two platforms in real use.', 'Three working tools, plus demo screens.'],
     proof: [
       {
         slug: 'therapist-pwa',
@@ -1627,7 +1797,8 @@ export const services = [
       'care-journey',
       'consent-signer',
       'shared-inbox',
-      'lead-research'
+      'lead-research',
+      'proposal-drafter'
     ],
     faq: [
       {
@@ -1666,7 +1837,7 @@ export const services = [
     ],
     from: { usd: '$490', inr: '₹20,000' },
     media: { kind: 'explainer', key: 'ai-assistant', badge: 'Illustrated' },
-    proofHead: ['AI already at work.', 'In a clinic, and in three working demos.'],
+    proofHead: ['AI already at work.', 'In a clinic, in working demos, and in demo screens.'],
     proof: [
       {
         slug: 'therapist-pwa',
@@ -1680,7 +1851,10 @@ export const services = [
         slug: 'knowledge-assistant',
         note: 'Answers staff and patients from the clinic’s own documents with the source named, and says “I don’t know, please ask the front desk.” rather than guess.'
       },
-      'website-answer-widget'
+      'website-answer-widget',
+      'missed-enquiry-rescue',
+      'proposal-drafter',
+      'trial-class-desk'
     ],
     faq: [
       {

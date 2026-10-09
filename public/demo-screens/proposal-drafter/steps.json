@@ -1,0 +1,72 @@
+[
+  {
+    "file": "01-brief.png",
+    "caption": "A new client fills in a short brief on the studio’s website, in their own words",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "02-received.png",
+    "caption": "They get a reference straight away. Behind the scenes, the assistant lists the work asked for, without any prices",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "03-draft.png",
+    "caption": "The assistant drafts the wording: what we heard, what we will make, and questions before we start",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "04-price.png",
+    "caption": "Every price comes from the studio’s own rate card by fixed rules. What is not on the card is left for a person",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "05-decision.png",
+    "caption": "The owner decides: approve and send, approve with changes, or do not send",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "06-log.png",
+    "caption": "Every proposal is logged with the owner’s decision. A vague brief stops with the owner and nothing goes out",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  },
+  {
+    "file": "07-follow-up.png",
+    "caption": "Three working days without a reply, a follow-up draft waits for the owner. It never goes out by itself",
+    "focus": {
+      "x": 120,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    }
+  }
+]

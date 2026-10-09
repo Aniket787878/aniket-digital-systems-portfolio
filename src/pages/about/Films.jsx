@@ -17,7 +17,7 @@ import '../../components/ProjectCard.css'
    cover's own words at phone size), and the kind of film (data.js
    `films[slug].kind`) is a label in the card body. One "Watch the film"
    button in the body opens the film in the site's <dialog> player
-   (muted, like every film on the site); the poster opens it too, as a
+   (starts muted, with a sound button for films that have music); the poster opens it too, as a
    mouse shortcut, so it stays out of the tab order. The text link goes
    to the case study.
 
@@ -32,7 +32,7 @@ const KIND = {
 export default function Films() {
   const [film, setFilm] = useState(null)
   const withFilm = projects.filter((p) => films[p.slug])
-  const play = (p, f, kind) => setFilm({ title: `${p.title} · ${kind.label}`, src: f.src, poster: f.poster })
+  const play = (p, f, kind) => setFilm({ title: `${p.title} · ${kind.label}`, src: f.src, poster: f.poster, sound: f.sound })
 
   return (
     <section className="paper about-films" aria-labelledby="about-films-title">

@@ -114,14 +114,18 @@ an empty player. Remotion is a dev
 dependency only; nothing from it ships in the site bundle. Renders need a
 scale giving even pixel sizes (H.264), hence 0.8 for the card loops.
 
-**Film sound: off on the site since 2026-10-09, at Aniket's request** ("the
-videos sound and sound SFX are so bad"). Every player is muted with no sound
-UI (the lightbox `VideoDialog`, the case-page film, the loops), and the mp4s
-in `public/videos/` carry no audio track (stripped with `ffmpeg -an -c:v
-copy`). `scripts/render-videos.sh` now renders the films and explainers
-`--muted` and skips mastering unless `SITE_AUDIO=1`. **Any future sound needs
-Aniket's approval of a sample first**, and never downloaded or copyrighted
-music. The audio tooling stays in the repo for that: the score
+**Film sound: muted everywhere inline, a tap-to-unmute toggle in the pop-up,
+since case-film-sound (2026-10-09).** Every film plays muted and looping on
+the page itself — the case-study film, the home/about loops — because that is
+what lets it autoplay; clicking or tapping it opens the film in the lightbox
+(`VideoDialog`). The pop-up also opens muted every time, with a "Sound off" /
+"Sound on" toggle in its top bar next to Close — but only for a film whose
+`films[slug].sound` or `explainers[key].sound` is `true` in `data.js`, and
+only once that film's mp4 actually carries an audio track. A film with no
+`sound` flag shows no toggle and stays silent, same as before. Music is
+always generated in code, never downloaded or copyrighted, and **any change
+to a film's music or the sound flag needs Aniket's approval of a sample
+first**. The audio tooling stays in the repo for that: the score
 `remotion/audio/score-<film>.mp3` from `python3 scripts/make-music.py` (voice
 over a music bed generated in code), effects from `python3 scripts/make-sfx.py`
 -> `remotion/sfx/*.wav` placed by `remotion/sound.jsx` (`cue()`,

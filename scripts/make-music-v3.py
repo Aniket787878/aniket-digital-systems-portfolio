@@ -37,6 +37,7 @@ spec.loader.exec_module(mm)
 SR, FPS = mm.SR, mm.FPS
 BEAT_F, BAR_F = 15, 60
 OUT = ROOT / "remotion" / "audio"
+WAV_OUT = pathlib.Path("/tmp/case-scores")
 SEED = 20261009
 BED_LUFS = -14.8
 TP = -1.5
@@ -50,6 +51,29 @@ FILMS = {
     "ai-assistant-v3": dict(frames=1080, key="E", riser=120, drop=195, lift=300, breaks=[(600, 660)], cta=870, open=750, trim=4.2),
     # ExplainerInternalToolV3: headfake 270-330 (in the intro), riser 330, drop 420, paper/lift 510, break 690-735, cta 870
     "internal-tool-v3": dict(frames=1080, key="B", riser=330, drop=420, lift=510, breaks=[(270, 330), (690, 735)], cta=870, open=510, trim=5.2),
+}
+
+# The five case-study films (Platform-<slug>, remotion/stage/StageFilm.jsx:
+# A0 96, STEP_LEN 78, HF 50, the end card at 690, 818 frames). Their scene
+# changes are not on a 120 BPM grid, so the score is built with a 9-frame
+# pre-roll that puts the first step (frame 96) on a beat, then the pre-roll
+# is cut off. Calm: soft kick on 1 and 3, offbeat hats only, a sparse pluck,
+# gentle hits, no claps and no effects. Mastered as optional background
+# music for the site's pop-up: -16 LUFS as ffmpeg measures it (this script's gate reads it 1.5 dB lower), true peak under -1.5 dBTP.
+PRE = 9
+def case(key, k):
+    hf = 96 + 78 * k
+    sh = lambda x: x + PRE
+    return dict(frames=818 + PRE, key=key, riser=sh(44), drop=sh(96), lift=sh(hf + 50), breaks=[(sh(hf), sh(hf + 50)), (sh(614), sh(690))],
+                cta=sh(690), open=None, calm=True, pre=PRE, fade_out=0.5, master=-14.5, tp=-2.0, wav=True)
+
+CASES = {
+    # headfakeAt from remotion/stage/schematics.jsx and stories.js
+    "case-therapist-pwa": case("F#", 3),
+    "case-care-journey": case("B", 4),
+    "case-consent-signer": case("E", 4),
+    "case-shared-inbox": case("F#", 3),
+    "case-lead-research": case("B", 4),
 }
 
 # a motif per 4-bar phrase: indexes into the chord's arpeggio (0..3), -1 rest, 16ths
@@ -116,6 +140,11 @@ def build(name, cfg):
             # bass: eighths, octave on the last
             for e in range(2):
                 mm.place(B["bass"], mm.stereo(mm.bass_note(br + (12 if (q == 3 and e == 1) else 0), beat / 2 / SR * 0.9, 0.9 if e == 0 else 0.7)), bt + e * beat / 2)
+            if cfg.get("calm"):
+                if q in (0, 2):
+                    mm.place(B["drums"], mm.kick(vel=0.7), bt)
+                mm.place(B["drums"], mm.hat(vel=0.28, pan=0.2), bt + beat / 2)
+                continue
             if q in (0, 2) or full:
                 mm.place(B["drums"], mm.kick(vel=1.0 if q in (0, 2) else 0.8), bt)
             if full and q in (1, 3):
@@ -137,7 +166,7 @@ def build(name, cfg):
                 fk = fb + k16 * BEAT_F / 4
                 if idx < 0 or fk >= cta or in_break(fk):
                     continue
-                if fk < lift and k16 % 2:
+                if (fk < lift or cfg.get("calm")) and k16 % 2:
                     continue
                 mm.place(B["arp"], mm.pluck(arp[idx], vel=0.55 if k16 % 4 == 0 else 0.38, pan=-0.4 if k16 % 2 else 0.4), at + k16 * beat / 4)
         # the paper moment: a high shimmer pad an octave up
@@ -160,11 +189,12 @@ def build(name, cfg):
             continue
         L = min(b - a, 30)
         mm.place(B["fx"], mm.riser(L / FPS) * 0.35, fr2s(b - L))
-    mm.place(B["fx"], mm.riser(BAR_F / FPS) * 0.45, fr2s(cta - BAR_F))
+    if not any(b == cta for _, b in breaks):
+        mm.place(B["fx"], mm.riser(BAR_F / FPS) * 0.45, fr2s(cta - BAR_F))
     # impacts: drop, re-entries after the drop, CTA
     hits = [(drop, 1.0), (cta, 0.9)] + [(b, 0.8) for a, b in breaks if b > drop]
     for fh, v in hits:
-        im = mm.impact(v)
+        im = mm.impact(v * (0.45 if cfg.get("calm") else 1))
         mm.place(B["fx"], im, fr2s(fh))
         mm.place(B["verb"], im * 0.5, fr2s(fh))
 
@@ -212,23 +242,36 @@ def build(name, cfg):
 
     wet = mm.convolve(B["verb"], mm.reverb_ir())
     mix = pad * 0.55 + bass * 0.55 + mm.filt(B["drums"], "high", 30) + mm.filt(B["arp"], "high", 300) * 0.4 + air * 0.35 + B["fx"] * 0.6 + mm.filt(wet, "high", 200) * 0.25
-    mix *= mm.fade(N, 0.3)[:, None] * mm.fade(N, 1.0, out=True)[:, None]
+    if cfg.get("pre"):  # cut the pre-roll that put the scene changes on the grid
+        cut = fr2s(cfg["pre"])
+        mix, groove_g = mix[cut:], groove_g[cut:]
+        N = len(mix)
+    mix *= mm.fade(N, 0.3)[:, None] * mm.fade(N, cfg.get("fade_out", 1.0), out=True)[:, None]
     sel = groove_g > 0.5
     # trim: measured on the rendered film (bed + effects through Remotion) so it lands near -14 LUFS
-    mix *= 10 ** ((BED_LUFS + cfg.get('trim', 0) - mm.lufs(mix[sel])) / 20)
-    mix = mm.limit(mix, TP)
+    if cfg.get("master") is not None:  # the whole score to a target (the case films play it alone)
+        for _ in range(3):
+            mix = mm.limit(mix * 10 ** ((cfg["master"] - mm.lufs(mix)) / 20), cfg.get("tp", TP))
+    else:
+        mix *= 10 ** ((BED_LUFS + cfg.get('trim', 0) - mm.lufs(mix[sel])) / 20)
+        mix = mm.limit(mix, TP)
     OUT.mkdir(parents=True, exist_ok=True)
-    path = OUT / f"score-{name}.mp3"
     pcm = (np.clip(mix, -1, 1) * 32767).astype("<i2")
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "s16le", "-ar", str(SR), "-ac", "2", "-i", "-", "-c:a", "libmp3lame", "-b:a", "192k", str(path)], input=pcm.tobytes(), check=True)
-    print(f"  {name:18s} {cfg['key']:>2} minor 120 BPM  bed {mm.lufs(mix):5.1f} LUFS  TP {mm.true_peak_db(mix):5.1f} dB -> {path.relative_to(ROOT)}")
+    if cfg.get("wav"):  # kept out of the repo: muxed straight into public/videos/<slug>-v3.mp4
+        path = WAV_OUT / f"score-{name}.wav"
+        WAV_OUT.mkdir(parents=True, exist_ok=True)
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "s16le", "-ar", str(SR), "-ac", "2", "-i", "-", str(path)], input=pcm.tobytes(), check=True)
+    else:
+        path = OUT / f"score-{name}.mp3"
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "s16le", "-ar", str(SR), "-ac", "2", "-i", "-", "-c:a", "libmp3lame", "-b:a", "192k", str(path)], input=pcm.tobytes(), check=True)
+    print(f"  {name:18s} {cfg['key']:>2} minor 120 BPM  bed {mm.lufs(mix):5.1f} LUFS  TP {mm.true_peak_db(mix):5.1f} dB -> {path}")
 
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("only", nargs="?")
     a = ap.parse_args()
-    for n, c in FILMS.items():
+    for n, c in {**FILMS, **CASES}.items():
         if a.only and a.only not in n:
             continue
         build(n, c)

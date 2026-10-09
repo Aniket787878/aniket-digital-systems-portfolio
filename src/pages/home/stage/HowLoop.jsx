@@ -2,12 +2,14 @@ import { Component, Suspense, lazy, useEffect, useMemo, useRef, useState, useSyn
 import { m, useInView, useMotionValueEvent, useReducedMotion, useScroll } from 'motion/react'
 import { AGAIN, LEDE, REHOOK, STOPS, TITLE } from './loop/content.js'
 import { STOP_TOP, STOP_U, headAt, stopAt, svgPath, svgPoint } from './loop/lemniscate.js'
+import { useCurrency, inCurrency } from '../../../currency.js'
 import '../../service/showcase/stage.css'
 import './loop/loop.css'
 
 /*
-  "How I work" as the site's signature: the loop every project runs (find
-  the leak, map it, build it, measure it), drawn as a glowing ∞.
+  "How it works" as the site's signature: the path every client takes
+  (free AI check, AI Roadmap, build by a fixed date, Care Plan, then the
+  next job), drawn as a glowing ∞. Steps are `funnelPath` in data.js.
 
   - Desktop (1024px+), motion allowed, WebGL: a pinned section where a
     light travels once around a glass ∞ as you scroll, lighting each stop
@@ -88,9 +90,15 @@ function Eyebrow() {
   return (
     <p className="stage-pill stage-mono hl-eyebrow">
       <span className="stage-dot" aria-hidden="true" />
-      How I work
+      How it works
     </p>
   )
+}
+
+/* The step's price or time, in the visitor's currency. */
+function Note({ stop }) {
+  const currency = useCurrency()
+  return <p className="stage-mono hl-card-note">{inCurrency(stop.note, currency)}</p>
 }
 
 function Rehook({ on = true }) {
@@ -235,7 +243,7 @@ function Pinned({ onFail }) {
             <ol className="sr-only">
               {STOPS.map((s, i) => (
                 <li key={s.key}>
-                  {pad2(i + 1)} {s.name}: {s.text}
+                  {pad2(i + 1)} {s.name}: {s.text} <Note stop={s} />
                 </li>
               ))}
             </ol>
@@ -248,6 +256,7 @@ function Pinned({ onFail }) {
                   </p>
                   <h3 className="hl-card-title">{s.name}</h3>
                   <p className="hl-card-text">{s.text}</p>
+                  <Note stop={s} />
                 </div>
               ))}
             </div>
@@ -346,6 +355,7 @@ function Flat({ reduced }) {
             </p>
             <h3 className="hl-card-title">{s.name}</h3>
             <p className="hl-card-text">{s.text}</p>
+            <Note stop={s} />
           </m.li>
         ))}
       </ol>

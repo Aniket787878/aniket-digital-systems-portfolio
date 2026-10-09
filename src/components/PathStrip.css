@@ -1,0 +1,92 @@
+/* PathStrip (prefix path-): the four-step path as a row of small
+   numbered steps joined by a hairline. Light on paper, dark on stage. */
+.path-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.path-step {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  border: 1px solid var(--path-line);
+  background: var(--path-bg);
+}
+
+.path-num {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--path-line);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--path-muted);
+}
+
+.path-body {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.path-name {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--path-ink);
+}
+
+.path-note {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--path-muted);
+}
+
+.path-step.is-current {
+  border-color: rgba(245, 135, 30, 0.55);
+}
+
+.path-step.is-current .path-num,
+.path-step.is-done .path-num {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #1a0f06;
+}
+
+.path-strip-light {
+  --path-line: rgba(20, 16, 12, 0.12);
+  --path-bg: #fff;
+  --path-ink: var(--ink-dark);
+  --path-muted: var(--muted-dark);
+}
+
+.path-strip-dark {
+  --path-line: rgba(255, 255, 255, 0.1);
+  --path-bg: rgba(255, 255, 255, 0.02);
+  --path-ink: var(--ink);
+  --path-muted: var(--muted);
+}
+
+@media (max-width: 860px) {
+  .path-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .path-strip {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+}

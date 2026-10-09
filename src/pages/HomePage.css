@@ -1507,6 +1507,14 @@
   white-space: nowrap;
 }
 
+/* The AI Roadmap card's place in the path (packages[].step). */
+.price-step {
+  margin-top: 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--accent-deep);
+}
+
 .price-for {
   min-height: 3em;
   margin-top: 0.5rem;

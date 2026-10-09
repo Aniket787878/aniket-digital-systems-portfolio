@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import WhatsAppCta from './WhatsAppCta.jsx'
-import BookingCta from './BookingCta.jsx'
-import { hasWhatsApp } from '../whatsapp.js'
-import { hasBooking } from '../booking.js'
+import { CheckCta, TalkCta } from './FunnelCta.jsx'
 import { whatsappPrefill } from '../data.js'
 
 /*
@@ -83,25 +80,10 @@ export default function Nav() {
           <NavLink to="/contact">Contact</NavLink>
         </nav>
 
-        {/* The bar is tight, so the label is just "WhatsApp" here rather
-            than the full sentence used further down the page. */}
+        {/* One primary everywhere: the free AI check. The bar is tight,
+            so the label is short here. */}
         <div className="nav-actions">
-          {hasBooking ? (
-            <BookingCta className="btn-saffron" />
-          ) : hasWhatsApp ? (
-            <WhatsAppCta
-              message={whatsappPrefill.nav}
-              label="Let’s talk"
-              className="btn-saffron"
-            />
-          ) : (
-            <Link to="/contact" className="btn-pill">
-              Get in touch
-              <span className="btn-pill-icon" aria-hidden="true">
-                <ArrowIcon />
-              </span>
-            </Link>
-          )}
+          <CheckCta placement="nav" label="Free AI check" />
         </div>
 
         <button
@@ -148,36 +130,12 @@ export default function Nav() {
           <NavLink to="/projects">Projects</NavLink>
           <NavLink to="/about">About</NavLink>
           <NavLink to="/contact">Contact</NavLink>
-          {/* Room to breathe here, so the panel offers every route: the
-              call first once it exists, then WhatsApp, then the page. */}
-          <BookingCta className="btn-saffron nav-panel-cta" />
-          <WhatsAppCta
-            message={whatsappPrefill.nav}
-            label="Message me on WhatsApp"
-            className={`${hasBooking ? 'btn-light' : 'btn-saffron'} nav-panel-cta`}
-          />
-          <Link to="/contact" className="btn-pill nav-panel-cta">
-            Get in touch
-            <span className="btn-pill-icon" aria-hidden="true">
-              <ArrowIcon />
-            </span>
-          </Link>
+          {/* Room to breathe here: the free AI check first, then the
+              call (booking link, else WhatsApp). Contact is in the list. */}
+          <CheckCta placement="nav-panel" className="btn-saffron nav-panel-cta" />
+          <TalkCta className="btn-light nav-panel-cta" message={whatsappPrefill.nav} />
         </nav>
       )}
     </header>
-  )
-}
-
-function ArrowIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M5 12h14m0 0-6-6m6 6-6 6"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   )
 }

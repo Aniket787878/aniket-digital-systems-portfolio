@@ -1,5 +1,4 @@
 import { useLayoutEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import {
   m,
   useInView,
@@ -12,14 +11,9 @@ import {
 } from 'motion/react'
 import '../../service/showcase/stage.css'
 import './hero/hero.css'
-import { site, services, whatsappPrefill, explainers, explainersReady } from '../../../data.js'
-import WhatsAppCta from '../../../components/WhatsAppCta.jsx'
-import BookingCta from '../../../components/BookingCta.jsx'
+import { site, explainers, explainersReady } from '../../../data.js'
 import VideoDialog from '../../../components/VideoDialog.jsx'
-import { hasWhatsApp } from '../../../whatsapp.js'
-import { hasBooking } from '../../../booking.js'
-import { useCurrency, inCurrency } from '../../../currency.js'
-import { fx } from '../../../interactions/attrs.js'
+import { CheckCta, TalkCta } from '../../../components/FunnelCta.jsx'
 import FlowWindow from './hero/FlowWindow.jsx'
 import FlowList from './hero/FlowList.jsx'
 import Glyph from './hero/glyphs.jsx'
@@ -27,39 +21,17 @@ import { FINAL, T } from './hero/flow.js'
 import { useLoopClock, usePageVisible, useWide } from './hero/useStage.js'
 
 const EASE = [0.22, 1, 0.36, 1]
-const [LINE_1, LINE_2] = site.headline
-/* "Software and AI that run the rest." closes on its one serif word. */
+/* Hyphens become non-breaking in the display type, so "Follow-ups" never
+   splits across two lines of a 4rem heading. */
+const [LINE_1, LINE_2] = site.headline.map((line) => line.replace(/-/g, '\u2011'))
+const LONG = site.headline.join(' ').length > 55
+/* The second line (site.headline, picked from heroOptions) closes on its
+   one serif word. */
 const LAST = LINE_2.lastIndexOf(' ')
 const LINE_2_HEAD = LINE_2.slice(0, LAST)
 const LINE_2_TAIL = LINE_2.slice(LAST + 1)
 
 const FILM = explainers.brand
-
-/* Parses a Doors-style price string ("$490", "₹20,000", "₹1.5L") into a
-   plain number, so the price anchor below can find the cheapest service
-   instead of a hardcoded figure. Lakh ("L") suffix only appears on INR. */
-function parseAmount(formatted) {
-  if (!formatted) return Infinity
-  const cleaned = formatted.replace(/[₹$,\s]/g, '')
-  const n = parseFloat(cleaned)
-  if (Number.isNaN(n)) return Infinity
-  return /l$/i.test(cleaned) ? n * 100000 : n
-}
-
-/* The cheapest of the three service areas' "from" prices, in the
-   visitor's currency, formatted exactly as the Doors band formats it
-   (same inCurrency hook) so the hero anchor and the Doors cards always
-   agree and the toggle updates both. */
-function lowestFrom(currency) {
-  return services.reduce(
-    (min, area) => {
-      const formatted = inCurrency(area.from, currency)
-      const amount = parseAmount(formatted)
-      return amount < min.amount ? { amount, formatted } : min
-    },
-    { amount: Infinity, formatted: null }
-  ).formatted
-}
 
 const settle = (delay) => ({
   initial: { opacity: 0, y: 12, filter: 'blur(10px)' },
@@ -81,8 +53,6 @@ export default function StageHero() {
   const visible = usePageVisible()
   const inView = useInView(ref, { amount: 0.15 })
   const [film, setFilm] = useState(null)
-  const currency = useCurrency()
-  const anchor = lowestFrom(currency)
 
   // Wide screens: the window plays on its own clock beside the claim.
   // Phones: the list sits below the fold, so the scroll plays it instead,
@@ -109,7 +79,7 @@ export default function StageHero() {
             taking on projects
           </m.p>
 
-          <h1 className="stage-title sh-title" id="sh-title">
+          <h1 className={`stage-title sh-title${LONG ? ' is-long' : ''}`} id="sh-title">
             <m.span className="sh-line" {...(reduce ? {} : settle(0.1))}>
               {LINE_1}
             </m.span>{' '}
@@ -123,30 +93,26 @@ export default function StageHero() {
           </m.p>
 
           <m.div className="sh-actions" {...(reduce ? {} : settle(0.5))}>
-            {/* Same rule as every primary button on the site: the booking
-                link once it exists, else the free call on WhatsApp, else
-                the contact page. */}
-            {hasBooking ? (
-              <BookingCta className="btn-saffron" magnet />
-            ) : hasWhatsApp ? (
-              <WhatsAppCta message={whatsappPrefill.audit} label="Book a free call" className="btn-saffron" magnet />
-            ) : (
-              <Link to="/contact" className="btn-saffron" {...fx('magnet')}>
-                Book a free call
-              </Link>
-            )}
-            {explainersReady && (
+            {/* One primary per view: the free AI check. The call (booking
+                link, else WhatsApp, else the contact page) sits second. */}
+            <CheckCta placement="home-hero" magnet />
+            <TalkCta />
+          </m.div>
+          {/* The trust line: the reply promise and the guarantee, both
+              said in data.js once and quoted here word for word. */}
+          <m.p className="sh-trust" {...(reduce ? {} : settle(0.6))}>
+            {site.replyPromise} {site.guarantee}
+          </m.p>
+          {explainersReady && (
+            <m.p className="sh-watch-row" {...(reduce ? {} : settle(0.65))}>
               <button type="button" className="sh-watch" onClick={() => setFilm(FILM)}>
                 <span className="sh-watch-icon" aria-hidden="true">
                   <Glyph name="play" size={12} />
                 </span>
                 Watch a build &middot; 1 minute
               </button>
-            )}
-          </m.div>
-          <m.p className="stage-mono sh-foot" {...(reduce ? {} : settle(0.6))}>
-            {anchor && <><span className="sh-foot-part">from {anchor}</span> &middot; </>}<span className="sh-foot-part">free 15-minute call</span> &middot; <span className="sh-foot-part">no obligation</span>
-          </m.p>
+            </m.p>
+          )}
         </div>
 
         <figure className="sh-figure">

@@ -2,10 +2,7 @@ import { useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { films, projects, site, images, proofTools, whatsappPrefill, mediaKind } from '../data.js'
 import { walkthroughs } from '../walkthroughs.js'
-import BookingCta from '../components/BookingCta.jsx'
-import WhatsAppCta from '../components/WhatsAppCta.jsx'
-import { hasBooking } from '../booking.js'
-import { hasWhatsApp } from '../whatsapp.js'
+import { CheckCta, TalkCta } from '../components/FunnelCta.jsx'
 import SystemDiagram from '../components/SystemDiagram.jsx'
 import AnimatedFlow from '../components/AnimatedFlow.jsx'
 import Media from '../components/Media.jsx'
@@ -407,37 +404,17 @@ export default function ProjectDetailPage() {
       <section className="case-cta">
         <h2 className="case-cta-title">Want this running in your business?</h2>
         <p className="case-cta-body">
-          Tell me which part of your week is still on WhatsApp threads and
-          spreadsheets: bookings, intake, follow-ups or payments. In 15 minutes I will
-          tell you what automating it would take, what it costs and the date it goes
-          live.
+          Which part of your week is still on WhatsApp threads and spreadsheets:
+          bookings, intake, follow-ups or payments? The free AI check shows you in a
+          few minutes which of them AI could take on first. Then we can talk about
+          what it costs and the date it goes live.
         </p>
         {availability && <p className="case-cta-note">{availability}</p>}
-        {/* Booking link set: the call first, WhatsApp second. Not set:
-            WhatsApp if there is a number, and the contact page as before. */}
+        {/* One primary (the free AI check), the call second
+            (components/FunnelCta.jsx). */}
         <div className="case-cta-actions">
-          <BookingCta className="btn-pill btn-pill-accent" />
-          {hasBooking ? (
-            <WhatsAppCta
-              message={whatsappPrefill.contact}
-              label="Message me on WhatsApp"
-              className="btn-pill"
-            />
-          ) : (
-            <>
-              {hasWhatsApp && (
-                <WhatsAppCta
-                  message={whatsappPrefill.contact}
-                  label="Message me on WhatsApp"
-                  className="btn-pill btn-pill-accent"
-                />
-              )}
-              <Link to="/contact" className="btn btn-primary">
-                Start a conversation
-                <span aria-hidden="true">&rarr;</span>
-              </Link>
-            </>
-          )}
+          <CheckCta placement="case-study" className="btn-pill btn-pill-accent" />
+          <TalkCta className="btn-pill" message={whatsappPrefill.contact} whatsappLabel="Message me on WhatsApp" contactLabel="Start a conversation" />
         </div>
       </section>
     </article>

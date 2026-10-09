@@ -6,6 +6,7 @@ import { setCurrency, inCurrency } from '../currency.js'
 import { fadeUp } from '../motion/variants.js'
 import Icon from './icons.jsx'
 import BookingCta from './BookingCta.jsx'
+import { CheckCta } from './FunnelCta.jsx'
 import { TickList } from './ui.jsx'
 
 /* ---------------------------------------------------------------
@@ -25,13 +26,14 @@ export function PriceCard({ pkg, currency, onWatch }) {
         <h3>{pkg.name}</h3>
         {pkg.featured && <span className="price-badge">Start here</span>}
       </div>
+      {pkg.step && <p className="price-step">{pkg.step}</p>}
       <p className="price-for">{pkg.forWho}</p>
       <p className="price-amount">{inCurrency(pkg.price, currency)}</p>
       <p className="price-time">{pkg.timeline}</p>
       <p className="price-deliverable">{pkg.deliverable}</p>
       <TickList items={pkg.includes} />
       <div className="price-actions">
-        <OfferCta pkg={pkg} primary={pkg.featured} />
+        <OfferCta pkg={pkg} />
         {ex && onWatch && (
           <button type="button" className="watch-link" onClick={() => onWatch(ex)}>
             <span className="watch-icon" aria-hidden="true">
@@ -45,14 +47,30 @@ export function PriceCard({ pkg, currency, onWatch }) {
   )
 }
 
-/* The card's button. With a booking link: the call (saffron on the entry
-   offer, dark on the rest) plus WhatsApp as a quiet text link. Without
-   one: WhatsApp, prefilled with the offer name. */
-export function OfferCta({ pkg, primary = false }) {
-  const tone = primary ? 'btn-saffron' : 'btn-dark'
+/* The card's button. Always dark: the one saffron button in any view is
+   the free AI check (components/FunnelCta.jsx), so a grid of offers
+   never shows three competing primaries. With a booking link: the call
+   plus WhatsApp as a quiet text link. Without one: WhatsApp, prefilled
+   with the offer name. The AI Roadmap card (the one with a `step`) is
+   step 2 of the path, so its button starts step 1, the free AI check. */
+export function OfferCta({ pkg }) {
+  const tone = 'btn-dark'
   const wa = hasWhatsApp
     ? whatsappHref(whatsappPrefill.pricing.replace('{offer}', pkg.name))
     : ''
+
+  if (pkg.step) {
+    return (
+      <>
+        <CheckCta placement="roadmap-card" className={tone} label="Start with the free AI check" />
+        {wa && (
+          <a className="watch-link" href={wa} target="_blank" rel="noreferrer noopener">
+            Or ask about the Roadmap on WhatsApp
+          </a>
+        )}
+      </>
+    )
+  }
 
   if (hasBooking) {
     return (

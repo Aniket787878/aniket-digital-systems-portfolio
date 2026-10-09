@@ -82,6 +82,13 @@
   letter-spacing: -0.045em;
 }
 
+/* A long headline option (site.headline from heroOptions, StageHero
+   adds .is-long past ~55 characters) steps down a size, so the buttons
+   and the trust line still sit inside the first screen. */
+.sh-title.is-long {
+  font-size: clamp(2.4rem, 3.7vw, 4.1rem);
+}
+
 .sh-line {
   display: block;
 }
@@ -150,6 +157,38 @@
 
 .sh-foot {
   margin: 1.1rem 0 0;
+}
+
+/* The trust line under the buttons: the reply promise and the guarantee,
+   in plain small type (a sentence this long reads badly in mono). */
+.sh-trust {
+  margin: 1.1rem 0 0;
+  max-width: 34rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+/* The film moved under the trust line (2026-10-09) so the button row
+   holds one primary and one secondary only: here it is a quiet text
+   link, not a third button. */
+.sh-watch-row {
+  margin: 0.9rem 0 0;
+}
+
+.sh-watch-row .sh-watch {
+  height: auto;
+  padding: 0.25rem 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.sh-watch-row .sh-watch:hover {
+  background: none;
+  color: var(--ink);
 }
 
 /* ---------------- the window ---------------- */
@@ -705,6 +744,10 @@
 
   .sh-title {
     font-size: clamp(2.3rem, 9vw, 3rem);
+  }
+
+  .sh-title.is-long {
+    font-size: clamp(2rem, 7.6vw, 2.6rem);
   }
 
   .sh-lede {

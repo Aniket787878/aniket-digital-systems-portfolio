@@ -1,35 +1,16 @@
-/* "How I work", told as one loop. Wording follows `process` in data.js
-   (map where it breaks, plan then build, watch it run and fix what
-   breaks); the names are the loop's own. No timeframes here on purpose:
-   the only ones that exist live in the FAQ. */
+import { funnelPath } from '../../../../data.js'
 
-export const TITLE = { lead: 'Find it. Fix it. Then do it', serif: 'again' }
+/* "How it works", told as one loop: the path every client takes, from
+   the free AI check to the Care Plan, and around again for the next job
+   (funnelPath in data.js, 2026-10-09). Each stop says what the client
+   gets at that step; `note` (price or time) follows the USD / INR choice. */
+
+export const TITLE = { lead: 'Check it. Plan it. Build it. Then keep it', serif: 'running' }
 
 export const LEDE =
-  'Every project runs the same loop: find where the work leaks, map the fix, build it, then measure it on real days. And the loop keeps running after launch.'
+  'Four steps, and you can stop after any of them. The first is free, the second is credited to the third, and the price and the live date are fixed before anything is built.'
 
-export const STOPS = [
-  {
-    key: 'find',
-    name: 'Find the leak',
-    text: 'Sit with how the work happens today, and find where enquiries, time or money actually slip away.'
-  },
-  {
-    key: 'map',
-    name: 'Map it',
-    text: 'Draw out the fix and price it before anything is built, with a fixed price and a live date in writing.'
-  },
-  {
-    key: 'build',
-    name: 'Build it',
-    text: 'Built in small pieces you can see and use early, with your tools connected as it goes.'
-  },
-  {
-    key: 'measure',
-    name: 'Measure it',
-    text: 'Watch it run on real days and fix what breaks. Then find the next leak.'
-  }
-]
+export const STOPS = funnelPath
 
-export const REHOOK = 'The first loop starts with a call.'
-export const AGAIN = 'and around again'
+export const REHOOK = 'Step one takes about three minutes.'
+export const AGAIN = 'then the next job'

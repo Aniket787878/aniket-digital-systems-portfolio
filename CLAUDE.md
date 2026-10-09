@@ -279,6 +279,14 @@ Prices: from-price on pages, package price only on flow results, since
 the package and its price only on the result screens of the two plans (with
 the Care Plan price) and the AI check (the AI Roadmap price), after the visitor
 has left their details).
+Leads (2026-10-09, funnel strategy): every lead keeps the original fields and
+adds `phone` (normalised), `timing`, `package` (name + price shown),
+`lead_temp` (hot / warm / cold, rules in `src/leadExtras.js`), `utm_source`,
+`utm_medium`, `utm_campaign`, `landing_page` (first page of the session,
+`?src=` counts as utm_source). Results have their own URLs
+(`/start/website/result`, `/start/software/result`, `/ai-check/result`; a
+refresh there goes back to the start) and their buttons follow `lead_temp`
+(`pages/flow/NextStep.jsx`). n8n v2 reference: `n8n/UPGRADE-2026-10.md`.
 
 Resolved 2026-09-11: real email (`aniket.html@gmail.com`) and WhatsApp number
 (`+91 9136582842`) are set, so every WhatsApp CTA is live.

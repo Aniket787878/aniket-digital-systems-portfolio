@@ -7,6 +7,7 @@ import { hasBooking } from '../booking.js'
 import BookingCta from './BookingCta.jsx'
 import WhatsAppCta from './WhatsAppCta.jsx'
 import Icon from './icons.jsx'
+import { landingFields } from '../leadExtras.js'
 import { WEBHOOK_URL, formConnected } from '../leadWebhook.js'
 
 
@@ -194,7 +195,15 @@ function LeadForm() {
       service: service || 'not_sure',
       budget_band: budgetBand,
       source: document.referrer || 'direct',
-      submitted_at: new Date().toISOString()
+      submitted_at: new Date().toISOString(),
+      /* The structured fields every lead carries (leadExtras.js). The form
+         asks no phone, date or package; a hand-written message gets a
+         personal reply the same day, which is the strategy's "warm". */
+      phone: '',
+      timing: '',
+      package: '',
+      lead_temp: 'warm',
+      ...landingFields()
     }
 
     inFlight.current = true

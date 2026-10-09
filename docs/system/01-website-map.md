@@ -155,6 +155,24 @@ Roadmap price, step 2), after the visitor has answered and left their details.
 `funnelPath` / `servicePaths` notes are price-free ("Fixed fee", "Optional").
 `PriceCard` / `CarePlanCard` in `components/Pricing.jsx` are no longer rendered.
 
+**Lead fields and result URLs (2026-10-09, `docs/outreach/2026-10-09-funnel-strategy.md`).**
+All three flows and the contact form keep the original payload and add
+`phone`, `timing`, `package`, `lead_temp`, `utm_source`, `utm_medium`,
+`utm_campaign`, `landing_page` (`src/leadExtras.js`; landing captured in
+`main.jsx` into sessionStorage). Temperature: plans are cold when the budget is
+below the package's start (Custom Platform uses the Internal Tool's floor) or
+"no fixed date yet", hot when the budget fits, it is wanted within a month and
+a WhatsApp number was given, else warm; the AI check (no budget or date asked)
+is cold for 1 to 2 people with under 10 enquiries a week, hot with a number and
+30+ enquiries or 3+ people, else warm; the contact form sends warm. Routes are
+`/start/website/:view?`, `/start/software/:view?`, `/ai-check/:view?`: `result`
+is the result screen, a refresh there (nothing in memory) returns to the start,
+the back button returns to the contact step, anything else redirects. Result
+buttons (`pages/flow/NextStep.jsx`): hot "WhatsApp me now" (Aniket's number,
+answers prefilled) + call or message; warm the call buttons as before; cold
+"Here's what to read next" (website-answer-widget / therapist-pwa /
+appointment-desk) + the call as a light button.
+
 ### `films`, `heroReel`, `stackMarquee` (2026-09-27)
 
 - `films[slug]` — `{ kind, src, poster, clip?, clipPoster? }`. `kind` is

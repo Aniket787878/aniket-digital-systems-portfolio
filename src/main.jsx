@@ -19,6 +19,11 @@ import '@fontsource/instrument-serif/latin-400-italic.css'
    its own orange band.) */
 import './index.css'
 import App from './App.jsx'
+import { captureLanding } from './leadExtras.js'
+
+/* Before the first render, so the landing page and its UTM tags are
+   the ones the visit arrived with (sent with any lead, leadExtras.js). */
+captureLanding()
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -45,7 +45,7 @@ export default function Nav() {
       // Inside a plan (or the chooser) the page's own Next button is the
       // primary, and the nav's would only lead back to the start.
       const path = window.location.pathname
-      setQuiet(seen || path === '/ai-check' || path === '/start' || path.startsWith('/start/'))
+      setQuiet(seen || path === '/ai-check' || path.startsWith('/ai-check/') || path === '/start' || path.startsWith('/start/'))
     }
     const queue = () => {
       if (!raf) raf = requestAnimationFrame(check)

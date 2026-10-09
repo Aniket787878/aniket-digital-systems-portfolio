@@ -434,6 +434,26 @@
   margin-top: 1.25rem;
 }
 
+/* A cold lead's next step (flow/NextStep.jsx): one case study to read,
+   then the call as a quiet second. */
+.nx-read {
+  margin-top: 1.25rem;
+  padding: 1.35rem 1.5rem;
+}
+
+.nx-read-kicker {
+  margin: 0;
+  color: var(--peach);
+}
+
+.nx-read-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.9rem;
+  font-size: 0.9375rem;
+}
+
 .ac-guarantee {
   margin: 1rem 0 0;
   color: var(--muted);

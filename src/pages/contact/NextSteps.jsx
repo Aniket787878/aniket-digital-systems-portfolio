@@ -113,10 +113,10 @@ export default function NextSteps() {
           </div>
         </m.div>
 
-        {/* The page's last stop is the check, never a dead end. */}
+        {/* The page's last stop is /start, never a dead end. */}
         <Rehook
           question="Not ready to write yet?"
-          label="Take the free AI check first"
+          label="Answer a few plain questions instead"
           placement="contact-next"
         />
       </div>

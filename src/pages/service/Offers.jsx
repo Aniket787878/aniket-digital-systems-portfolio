@@ -10,15 +10,16 @@ import { PriceCard, CurrencyToggle, CarePlanCard } from '../../components/Pricin
 import { PillLabel } from '../../components/ui.jsx'
 import PathStrip from '../../components/PathStrip.jsx'
 import { Rehook } from '../../components/FunnelCta.jsx'
+import { FLOW } from '../../flows.js'
 
-/* How this area connects to the one primary action: every service,
-   not only AI, starts with the free AI check (the hero's foot says so
-   too), and the build itself is step 3 of the same four-step path. */
+/* How this area connects to its primary action: each area starts with
+   its own free plan (the hero's foot says so too), shown as step 1 of
+   the area's own path (servicePaths in data.js). */
 const PATH_INTRO = {
   websites:
-    'A website starts where everything here starts: the free AI check. It shows which jobs in your week are worth handing over first. If the website is one of them, it is step 3, built by a fixed date.',
+    'A website starts with the free website plan: a few plain questions about your business and what the site must do, and you see on the spot which package fits. Then a free call and a written proposal with a fixed price, and the build by a fixed date.',
   software:
-    'A tool for your team starts with the free AI check too. It shows where your week loses the most time. If a tool is the fix, it is step 3, built by a fixed date.',
+    'Software starts with the free software plan: a few plain questions about how the work runs today, and you see on the spot the scope that fits and its first screens. Then a free call and a written proposal with a fixed price, and the build by a fixed date.',
   ai: 'The Roadmap below is step 2, never a standalone product. Step 1 is the free AI check: a few plain questions, and you see on the spot which jobs to hand over first.'
 }
 
@@ -54,15 +55,16 @@ export default function Offers({ area }) {
         </m.header>
 
         {/* The path these prices sit in, shown first on all three areas
-            (they stay equal): the check is step 1, the build step 3. */}
+            (they stay equal): the area's own free plan is step 1. */}
         <m.div className="svc-path" {...reveal}>
           <p className="svc-path-intro">{PATH_INTRO[area.slug]}</p>
-          <PathStrip />
+          <PathStrip service={area.slug} />
           <Rehook
             tone="paper"
             className="svc-path-rehook"
             question="Step 1 is free and takes about three minutes."
-            label="Take the free AI check"
+            label={area.slug === 'ai' ? 'Take the free AI check' : FLOW[area.slug].label}
+            to={FLOW[area.slug].to}
             placement={`${area.slug}-path`}
           />
         </m.div>

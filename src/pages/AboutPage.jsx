@@ -1,5 +1,5 @@
 import { m } from 'motion/react'
-import { CheckCta, TalkCta } from '../components/FunnelCta.jsx'
+import { StartCta, TalkCta } from '../components/FunnelCta.jsx'
 import { PillLabel } from '../components/ui.jsx'
 import { founder, whatsappPrefill } from '../data.js'
 import { heroContainer, heroItem, fadeIn } from '../motion/variants.js'
@@ -52,7 +52,7 @@ export default function AboutPage() {
               </m.p>
             )}
             <m.div className="about-hero-actions" variants={heroItem}>
-              <CheckCta placement="about-hero" magnet />
+              <StartCta placement="about-hero" magnet />
               <TalkCta message={whatsappPrefill.contact} />
             </m.div>
             <m.dl className="about-facts" variants={heroItem}>

@@ -13,7 +13,7 @@ import '../../service/showcase/stage.css'
 import './hero/hero.css'
 import { site, explainers, explainersReady } from '../../../data.js'
 import VideoDialog from '../../../components/VideoDialog.jsx'
-import { CheckCta, TalkCta } from '../../../components/FunnelCta.jsx'
+import { StartCta, TalkCta } from '../../../components/FunnelCta.jsx'
 import FlowWindow from './hero/FlowWindow.jsx'
 import FlowList from './hero/FlowList.jsx'
 import Glyph from './hero/glyphs.jsx'
@@ -101,9 +101,10 @@ export default function StageHero() {
           </m.p>
 
           <m.div className="sh-actions" {...(reduce ? {} : settle(0.5))}>
-            {/* One primary per view: the free AI check. The call (booking
-                link, else WhatsApp, else the contact page) sits second. */}
-            <CheckCta placement="home-hero" magnet />
+            {/* One primary per view: "Get started", to the chooser
+                (website, software or AI). The call (booking link, else
+                WhatsApp, else the contact page) sits second. */}
+            <StartCta placement="home-hero" magnet />
             <TalkCta />
           </m.div>
           {/* The trust line: the reply promise and the guarantee, both

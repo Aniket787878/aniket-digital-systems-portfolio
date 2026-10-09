@@ -57,6 +57,7 @@ const paths = {
     </>
   ),
   check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
+  plus: <path d="M12 5v14M5 12h14" />,
   search: (
     <>
       <circle cx="11" cy="11" r="6.5" />

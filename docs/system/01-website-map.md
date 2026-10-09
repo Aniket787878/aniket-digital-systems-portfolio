@@ -263,6 +263,29 @@ that order fixed. The reasoning is repeated in a comment in `HomePage.jsx`.
 The full price cards moved to the service pages on 2026-09-30; the home page
 only says what the three areas are and where each starts.
 
+### Funnel: every page ends on the free AI check (2026-10-09)
+
+One primary action, `/ai-check`, from `components/FunnelCta.jsx`:
+`CheckCta` (the only saffron button in a view), `TalkCta` (the call,
+second) and `Rehook` (a muted question plus an underlined link that ends a
+band and points onward; defaults to the check, never a button). The nav's
+"Free AI check" turns to an outline while a page's own check button is on
+screen, and is always quiet on `/ai-check`, where the footer drops its
+button.
+
+| Route | Funnel beats |
+|---|---|
+| `/` | Unchanged: hero ask, story loop down the page, "Step one takes about three minutes", close |
+| `/websites`, `/software`, `/ai` | Offers band opens with how this area starts (`PATH_INTRO` in `service/Offers.jsx`), the 4-step `PathStrip` on all three (was /ai only) and a rehook to the check; OtherAreas ends "Not sure which of the three comes first?"; then the closing `Cta` |
+| `/projects` | Rehook under the lede, and a closing "Want one of these for your business?" box (check + call) |
+| `/projects/:slug` | Closing box names the project ("Want something like the X in your business?") |
+| `/about` | Steps band ends with a rehook to the check, then the closing `Cta` |
+| `/contact` | Hero rehook for visitors not sure what they need; NextSteps ends on the check. Form and email unchanged |
+| `/privacy` | Ends on a rehook to the check |
+
+No sticky mobile bar: the nav is fixed on phones and already carries the
+check button at every scroll position, so a bottom bar would duplicate it.
+
 ## Layout contract
 
 Two rules in `src/index.css` and `src/main.jsx` that are easy to break by accident.

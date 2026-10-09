@@ -249,8 +249,23 @@
   text-overflow: ellipsis;
 }
 
-/* /ai only: the four-step path above the price cards (Offers.jsx). */
+/* The four-step path above the price cards (Offers.jsx), on all three
+   areas; as wide as the two-column price grid under it. */
 .svc-path {
   margin: 2.5rem auto 2.75rem;
-  max-width: 60rem;
+  max-width: 56rem;
+}
+
+.svc-path-intro {
+  max-width: 40rem;
+  margin: 0 auto 1.5rem;
+  text-align: center;
+  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
+  line-height: 1.6;
+  color: var(--muted-dark);
+  text-wrap: pretty;
+}
+
+.svc-path .svc-path-rehook {
+  margin-top: 1rem;
 }

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { site } from '../data.js'
 import { useDocumentTitle } from '../useDocumentTitle.js'
+import { Rehook } from '../components/FunnelCta.jsx'
 
 /*
   Privacy: short and plain on purpose. It states only what the site
@@ -71,6 +72,12 @@ export default function PrivacyPage() {
           Back to contact
         </Link>
       </p>
+      <Rehook
+        className="rehook-start"
+        question="Ready when you are:"
+        label="take the free AI check, about three minutes"
+        placement="privacy"
+      />
     </section>
   )
 }

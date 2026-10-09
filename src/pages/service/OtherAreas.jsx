@@ -5,6 +5,7 @@ import { useCurrency } from '../../currency.js'
 import { reveal, revealStagger, fadeUp } from '../../motion/variants.js'
 import ServiceDoor from '../../components/ServiceDoor.jsx'
 import { PillLabel } from '../../components/ui.jsx'
+import { Rehook } from '../../components/FunnelCta.jsx'
 
 /* ---------------------------------------------------------------
    5 — The other two areas, on the night ground before the closing
@@ -35,6 +36,14 @@ export default function OtherAreas({ area }) {
             </m.li>
           ))}
         </m.ul>
+
+        {/* The band's rehook: three doors can stall a visitor who does
+            not know which comes first, so it hands them to the check. */}
+        <Rehook
+          question="Not sure which of the three comes first?"
+          label="The free AI check tells you"
+          placement={`${area.slug}-others`}
+        />
       </div>
     </section>
   )

@@ -402,7 +402,9 @@ export default function ProjectDetailPage() {
       )}
 
       <section className="case-cta">
-        <h2 className="case-cta-title">Want this running in your business?</h2>
+        {/* The rehook after the proof, with this project's name as the
+            context, into the one primary action. */}
+        <h2 className="case-cta-title">Want something like the {title} in your business?</h2>
         <p className="case-cta-body">
           Which part of your week is still on WhatsApp threads and spreadsheets:
           bookings, intake, follow-ups or payments? The free AI check shows you in a
@@ -413,8 +415,8 @@ export default function ProjectDetailPage() {
         {/* One primary (the free AI check), the call second
             (components/FunnelCta.jsx). */}
         <div className="case-cta-actions">
-          <CheckCta placement="case-study" className="btn-pill btn-pill-accent" />
-          <TalkCta className="btn-pill" message={whatsappPrefill.contact} whatsappLabel="Message me on WhatsApp" contactLabel="Start a conversation" />
+          <CheckCta placement="case-study" />
+          <TalkCta message={whatsappPrefill.contact} whatsappLabel="Message me on WhatsApp" contactLabel="Start a conversation" />
         </div>
       </section>
     </article>

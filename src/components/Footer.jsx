@@ -1,7 +1,8 @@
 import { Link, useLocation } from 'react-router-dom'
 import { m } from 'motion/react'
-import { site, footerMenu, social } from '../data.js'
+import { site, footerMenu, social, whatsappPrefill } from '../data.js'
 import { StartCta } from './FunnelCta.jsx'
+import WhatsAppCta from './WhatsAppCta.jsx'
 import { reveal } from '../motion/variants.js'
 
 /*
@@ -11,10 +12,17 @@ import { reveal } from '../motion/variants.js'
 */
 export default function Footer() {
   const year = new Date().getFullYear()
-  // On the chooser or inside a plan the footer's button would only lead
-  // back to where the visitor already is.
+  // On the chooser the footer's button would only lead back to where the
+  // visitor already is. Inside a plan or the AI check (Spec 2,
+  // 2026-10-09) it swaps for the call instead, since "Get started" would
+  // send someone who just finished straight back to /start.
   const { pathname } = useLocation()
-  const onStart = pathname === '/start' || pathname.startsWith('/start/')
+  const onStart = pathname === '/start'
+  const onFlow =
+    pathname === '/start' ||
+    pathname.startsWith('/start/') ||
+    pathname === '/ai-check' ||
+    pathname.startsWith('/ai-check/')
   // Social entries without an href are placeholders, not dead links.
   const links = social.filter((s) => s.href)
 
@@ -33,7 +41,13 @@ export default function Footer() {
           </p>
           <div className="footer-actions">
             {/* The one primary, then the form (the footer may keep it). */}
-            {!onStart && <StartCta placement="footer" />}
+            {onFlow ? (
+              !onStart && (
+                <WhatsAppCta message={whatsappPrefill.audit} label="Book a free call" className="btn-saffron" />
+              )
+            ) : (
+              <StartCta placement="footer" />
+            )}
             <Link to="/contact" className="arrow-link footer-alt-cta">
               Or send a message
               <span className="arrow" aria-hidden="true">

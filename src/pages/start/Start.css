@@ -245,6 +245,39 @@
   margin-top: 0.9rem;
 }
 
+/* Spec 2 (2026-10-09): the hand-off right under the price. */
+.ac-handoff {
+  margin-top: 1.25rem;
+}
+
+.ac-actions-solo {
+  margin-top: 0;
+}
+
+.ac-handoff-btn {
+  height: 56px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.ac-handoff-note {
+  margin: 0.6rem 0 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .ac-handoff-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ac-handoff-note {
+    text-align: center;
+  }
+}
+
 .sf-notes {
   display: grid;
   gap: 0.5rem;

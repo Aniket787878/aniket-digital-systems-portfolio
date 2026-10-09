@@ -17,6 +17,7 @@ import { stepIn, EMAIL_OK } from '../flow/shared.js'
 import { websiteResult, softwareResult, summary, labelOf, belowStart, INTERNAL_TOOL, PLATFORM } from './rules.js'
 import { normalisePhone, planTemp, landingFields } from '../../leadExtras.js'
 import { NextStepActions } from '../flow/NextStep.jsx'
+import { setResultHandoff, clearResultHandoff } from '../../resultHandoff.js'
 import '../service/showcase/stage.css'
 import '../AiCheckPage.css'
 import './Start.css'
@@ -224,7 +225,7 @@ export default function FlowPage({ flowKey }) {
     <section className="stage ac" aria-labelledby="ac-title">
       <div className="stage-glow ac-glow" aria-hidden="true" />
       <div className="container ac-inner">
-        <header className="ac-head">
+        <header className={`ac-head${res ? ' is-result' : step >= 1 ? ' is-compact' : ''}`}>
           <Link to="/start" className="sf-back">
             <span aria-hidden="true">&larr;</span> Website, software or AI
           </Link>
@@ -233,7 +234,7 @@ export default function FlowPage({ flowKey }) {
             {flow.pill}
           </p>
           <p className="ac-stakes">{flow.stakes}</p>
-          <h1 className="stage-title ac-title" id="ac-title">
+          <h1 className={`stage-title ac-title${res || step >= 1 ? ' sr-only-phone' : ''}`} id="ac-title">
             {flow.title[0]}
             <span className="stage-serif">{flow.title[1]}</span>
           </h1>
@@ -310,6 +311,22 @@ function Result({ flowKey, res, temp, send, text, name, email, resultRef, onRest
   const onActions = (event) => {
     if (event.target.closest('a')) track('cta_click', { placement: `${flow.source}-result` })
   }
+  const handoffText = `Hi Aniket, I just did the ${label.toLowerCase()} on your site.\n\nName: ${name}\n\n${text}`
+  const topActions = (event) => {
+    onActions(event)
+    if (event.target.closest('a,button')) track('result_cta', { position: 'top', temp })
+  }
+  const bottomActions = (event) => {
+    onActions(event)
+    if (event.target.closest('a,button')) track('result_cta', { position: 'bottom', temp })
+  }
+
+  /* Tells the phone action dock (Spec 1) which message to send once the
+     in-page hand-off above has scrolled out of view. */
+  useEffect(() => {
+    setResultHandoff({ text: handoffText, label: 'Send my plan on WhatsApp' })
+    return clearResultHandoff
+  }, [handoffText])
 
   return (
     <m.div className="ac-result" {...stepIn}>
@@ -363,6 +380,37 @@ function Result({ flowKey, res, temp, send, text, name, email, resultRef, onRest
         </ul>
       </div>
 
+      {/* Spec 2 (2026-10-09): the hand-off sits right under the price, the
+          hottest moment on the result. Same temperature logic as the
+          repeated block at the bottom, compact so it shows one button. */}
+      <div className="ac-handoff">
+        <NextStepActions
+          compact
+          temp={temp}
+          service={flowKey}
+          waText={handoffText}
+          contact={`/contact?service=${flowKey}#write`}
+          onActions={topActions}
+          warm={
+            <div className="ac-actions ac-actions-solo" onClick={topActions}>
+              {hasBooking ? (
+                <BookingCta className="btn-saffron ac-handoff-btn" label="Book a free call" />
+              ) : hasWhatsApp ? (
+                <WhatsAppCta message={prefill} label="Book a free call on WhatsApp" className="btn-saffron ac-handoff-btn" />
+              ) : (
+                <Link to={`/contact?service=${flowKey}#write`} className="btn-saffron ac-handoff-btn">
+                  Ask for a free call
+                </Link>
+              )}
+            </div>
+          }
+        />
+        <p className="ac-handoff-note">
+          Opens WhatsApp with your plan named, so you don&rsquo;t have to explain it again. Free 15-minute call, a
+          reply within 24 hours.
+        </p>
+      </div>
+
       {website ? <Covers res={res} /> : <Modules res={res} />}
 
       {res.notes.length > 0 && (
@@ -401,11 +449,11 @@ function Result({ flowKey, res, temp, send, text, name, email, resultRef, onRest
         <NextStepActions
           temp={temp}
           service={flowKey}
-          waText={`Hi Aniket, I just did the ${label.toLowerCase()} on your site.\n\nName: ${name}\n\n${text}`}
+          waText={handoffText}
           contact={`/contact?service=${flowKey}#write`}
-          onActions={onActions}
+          onActions={bottomActions}
           warm={
-            <div className="ac-actions" onClick={onActions}>
+            <div className="ac-actions" onClick={bottomActions}>
               {hasBooking ? (
                 <>
                   <BookingCta className="btn-saffron" label="Book a free call" />

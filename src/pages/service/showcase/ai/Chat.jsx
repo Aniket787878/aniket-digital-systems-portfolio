@@ -181,7 +181,7 @@ export default function Chat({ moment, sched, t, onHover, prevMoments = [] }) {
           <span className="stage-mono ai-phone-sub">{moment.header}</span>
         </span>
       </div>
-      <div className="ai-phone-log" ref={scroller} aria-hidden="true">
+      <div className="ai-phone-log" ref={scroller} aria-hidden="true" data-lenis-prevent>
         <History moments={prevMoments} />
         {items}
       </div>

@@ -352,8 +352,50 @@
   visibility: hidden;
 }
 
-.about-steps-panel.is-active {
+.about-steps-panel.is-active,
+.about-steps-panel.is-listed {
   visibility: visible;
+}
+
+/* Hidden only once its fade-out has played (Motion's 0.5s), so the
+   outgoing step cross-fades instead of vanishing. */
+.about-steps-panel:not(.is-active) {
+  transition: visibility 0s linear 0.5s;
+}
+
+/* ---- Scroll-driven build (tablet and up, motion allowed) ----
+   A tall track with a sticky, full-height frame inside: the frame holds
+   the rail and the stage while the track scrolls past (STEP_VH per step,
+   Steps.jsx), then lets go with the track's end, so the next band follows
+   on with no jump. Nothing between here and the page may set overflow
+   (it would break the sticky). */
+.about-steps-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: var(--nav-h);
+}
+
+/* The scroll drives the fill frame by frame: no easing on top of it. */
+.about-steps-fill.is-scrubbed {
+  transition: none;
+}
+
+/* ---- Phones and reduced motion: the five steps, stacked ---- */
+/* Each step its own row (the pinned build stacks all five in one cell). */
+.about-steps-list > .about-steps-panel {
+  grid-area: auto;
+}
+
+.about-steps-list {
+  display: grid;
+  gap: clamp(2.75rem, 8vw, 4rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .about-steps-copy {
@@ -385,59 +427,6 @@
 
 .about-steps-gets {
   margin-top: 0.25rem;
-}
-
-.about-steps-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 0.75rem;
-}
-
-.about-steps-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  height: 44px;
-  padding: 0 1.1rem;
-  border-radius: 12px;
-  border: 1px solid #d8d1c8;
-  background: transparent;
-  font: inherit;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--ink-dark);
-  cursor: pointer;
-  transition: background-color var(--dur-fast) ease, border-color var(--dur-fast) ease;
-}
-
-.about-steps-btn:hover:not(:disabled) {
-  border-color: var(--ink-dark);
-}
-
-.about-steps-btn.is-next {
-  background: var(--ink-dark);
-  border-color: var(--ink-dark);
-  color: #fff;
-}
-
-.about-steps-btn.is-next:hover {
-  background: #000;
-}
-
-.about-steps-btn:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-
-.about-steps-btn:focus-visible {
-  outline: 2px solid var(--accent-deep);
-  outline-offset: 2px;
-}
-
-.about-steps-back {
-  display: inline-grid;
-  transform: rotate(180deg);
 }
 
 /* The artifact: a white card floating on a saffron-tinted field, the
@@ -963,12 +952,6 @@
     padding: 1.25rem;
   }
 
-  .about-steps-btn {
-    height: 40px;
-    padding: 0 0.95rem;
-    font-size: 0.875rem;
-    border-radius: 10px;
-  }
 
   /* Films: a swipeable row inside its own box, so the page never scrolls
      sideways. It bleeds to the screen edge and snaps card by card. */

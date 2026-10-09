@@ -2,6 +2,7 @@ import { Routes, Route, useLocation } from 'react-router-dom'
 import { MotionConfig, LazyMotion, domAnimation } from 'motion/react'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import Interactions from './interactions/Interactions.jsx'
+import SmoothScroll from './scroll/SmoothScroll.jsx'
 import Nav from './components/Nav.jsx'
 import Footer from './components/Footer.jsx'
 import HomePage from './pages/HomePage.jsx'
@@ -36,6 +37,10 @@ export default function App() {
       {/* Renders nothing. Resets the scroll offset that BrowserRouter
           carries across navigations. */}
       <ScrollToTop />
+      {/* Renders nothing. Smooth wheel scrolling (src/scroll), site-wide,
+          the concept sites included; Lenis is a lazy chunk fetched after
+          first paint. */}
+      <SmoothScroll />
       {/* The StringTune layer (src/interactions). Renders only the cursor ring;
           the library itself is a lazy chunk fetched after first paint. */}
       {!concept && <Interactions />}

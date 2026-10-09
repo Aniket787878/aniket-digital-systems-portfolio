@@ -258,17 +258,19 @@ function Loop({ progress, overlay, metrics, onReady }) {
     const m = metrics.current
     if (!W || !H || !m.ready) return
 
-    // Fit: the left tip lands on the stream line, the right tip stops
-    // short of the copy column, and the loop never gets taller than the
-    // stage allows.
-    const loopPx = Math.max(320, Math.min(m.right - m.sx - 72, H * 1.2, 1040))
+    // Fit: the loop fills the layout's loop column (.hl-loopbox, already
+    // capped in CSS so loop + gap + copy sit centred in the site container),
+    // and never gets taller than the stage allows. Centred in the column if
+    // the height cap leaves it narrower.
+    const loopPx = Math.max(320, Math.min(m.lw, H * 1.2, 1040))
+    const left = m.lx + Math.max(0, (m.lw - loopPx) / 2)
     const tanH = Math.tan(THREE.MathUtils.degToRad(FOV / 2))
     const dist = ((2 * A) / loopPx) * (H / (2 * tanH))
     camera.position.set(0, 0, dist)
     camera.lookAt(0, 0, 0)
     const wpp = (2 * dist * tanH) / H
     const g = tilt.current
-    g.position.x = (m.sx + loopPx / 2 - W / 2) * wpp
+    g.position.x = (left + loopPx / 2 - W / 2) * wpp
     g.position.y = (H / 2 - m.cy) * wpp
 
     // Pointer tilt, small: the stream must still meet the tip.

@@ -48,10 +48,11 @@ primary buttons, word-by-word headings and scroll-linked depth. It lives in
   statically. It never starts under `prefers-reduced-motion` (and stops if
   that flips); cursor and magnetic only for `(hover: hover) and (pointer: fine)`
   at 1024px+.
-- **Scroll stays native.** StringTune's desktop default mode is `smooth`, which
-  `preventDefault()`s wheel and arrow/space/page/home/end keys. `stringtune.js`
-  switches both modes to `default` synchronously after `getInstance()`. Never
-  enable smooth, never `preventDefault` a scroll input.
+- **StringTune scroll stays `default`.** Its desktop default mode is `smooth`,
+  which `preventDefault()`s wheel *and* arrow/space/page/home/end keys.
+  `stringtune.js` switches both modes to `default` synchronously after
+  `getInstance()`. Never enable StringTune's smooth mode; smooth scrolling
+  comes from Lenis (below).
 - **Nothing hidden until it runs.** Effects are `data-string*` attributes from
   `fx()` (`attrs.js`), styled by `interactions.css` only under `html.st-on`;
   var() fallbacks are the resting pose.
@@ -68,6 +69,33 @@ primary buttons, word-by-word headings and scroll-linked depth. It lives in
   library keeps a reference to that exact node.
 - **Library gaps** (stuck hover after scrolling away, magnet never returning) are
   fixed by the two subclasses in `stringtune.js`; re-check them on upgrade.
+
+**Smooth scrolling.** `lenis` (a runtime dependency since 2026-10-09: Aniket
+asked for site-wide smooth scrolling so the scroll-linked bands play smoothly,
+and Lenis is the one library that smooths the wheel while leaving the real
+window scroll, keys and touch alone; ~6KB gzip, lazy) lives in `src/scroll/`:
+
+- **Lazy, one instance.** `smooth.js` (main bundle, tiny) imports `lenis.js`
+  (the chunk) after `load` plus an idle slot. Lenis is ticked from Motion's
+  frame loop (`frame.update`), not a second rAF. Settings: `lerp 0.1`,
+  `wheelMultiplier 1`, `syncTouch false`.
+- **Native where it should be.** Never under `prefers-reduced-motion` (the chunk
+  is not fetched; destroyed if it flips on, so no `html.lenis`), never on a
+  touch-only device (`(any-hover: hover)` fails). Only wheel/trackpad is
+  smoothed: keys, scrollbar, find-in-page and touch are native. Lenis moves
+  `window.scrollY` itself, so `position: sticky`, Motion's `useScroll` and
+  StringTune keep working. Never `preventDefault` a key.
+- **Programmatic scrolls go through `smooth.js`:** `jumpTo(y)` for instant
+  jumps (ScrollToTop does this on every route change), `syncScroll()` after a
+  native `scrollIntoView`, `glideTo(el|y)` for animated ones. A bare
+  `window.scrollTo` mid-glide gets overridden by Lenis on the next frame.
+  Same-page `#hash` links glide, clearing the fixed nav; the skip link stays
+  a native jump.
+- **Anything with its own scroll** gets `data-lenis-prevent` (the AI chat log,
+  the mobile nav panel, the film `<dialog>`; every `<dialog>` is also exempt
+  by default). Something that must hold the page still calls `holdScroll()`
+  and runs the release on close (VideoDialog does).
+- Lenis's base CSS is inlined at the top of `index.css` (all under `html.lenis`).
 
 **Product films.** Every video on the site is rendered from `remotion/` by
 `bash scripts/render-videos.sh [slug|hero]` into `public/videos/` (films,

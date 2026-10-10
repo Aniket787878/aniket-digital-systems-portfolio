@@ -1749,6 +1749,117 @@ a:hover {
   }
 }
 
+/* ---------- Spec 7 (mobile plan, 11 Oct 2026): "at a glance" card ---------- */
+
+/* Phones only: the skim answer before the full story. Every field comes
+   from data already rendered further down the page (tagline, problem,
+   metrics, outcomeNote) — this card restates it, nothing new. The full
+   .case-metrics band below is hidden on phones so the same numbers don't
+   show twice on one screen. */
+.case-glance {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .case-metrics {
+    display: none;
+  }
+
+  .case-glance {
+    display: block;
+    margin-top: var(--space-6);
+    padding: 20px;
+    border-radius: 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+
+  .case-glance-row + .case-glance-row {
+    margin-top: 0.85rem;
+  }
+
+  .case-glance-label {
+    margin: 0 0 0.25rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .case-glance-value {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .case-glance-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .case-glance-n {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .case-glance-metric-label {
+    margin: 0.3rem 0 0;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--muted);
+  }
+
+  .case-glance-note {
+    margin: 0.75rem 0 0;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .case-glance-watch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.1rem;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--accent);
+    cursor: pointer;
+  }
+
+  .case-glance-watch:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+/* The second "want something like this" card, phones only — the first
+   copy stays at the bottom of the page for every width. */
+.case-cta-mid {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .case-cta-mid {
+    display: block;
+  }
+}
+
 /* Feature / surface cards */
 .case-features {
   display: grid;

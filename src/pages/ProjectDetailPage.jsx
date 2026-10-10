@@ -10,6 +10,7 @@ import Walkthrough from '../components/Walkthrough.jsx'
 import VideoDialog from '../components/VideoDialog.jsx'
 import Icon from '../components/icons.jsx'
 import Counter from '../motion/Counter.jsx'
+import { firstSentence } from './home/stage/work/shared.js'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 
 /* Every field below is optional in data.js — nothing here may assume it exists. */
@@ -148,6 +149,47 @@ export default function ProjectDetailPage() {
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
       <h1 className="page-title">{title}</h1>
       {summary && <p className="page-lede">{summary}</p>}
+
+      {/* Spec 7 (mobile plan, 11 Oct 2026), phones only: the skim answer
+          before the full story, since a phone reader scans the first
+          lines of a section and skips the rest. Every field here already
+          exists elsewhere on the page (tagline, problem, metrics,
+          outcomeNote) — nothing new is written. */}
+      <div className="case-glance">
+        {problem && (
+          <div className="case-glance-row">
+            <p className="case-glance-label stage-mono">The problem</p>
+            <p className="case-glance-value">{firstSentence(problem)}</p>
+          </div>
+        )}
+        {project.tagline && (
+          <div className="case-glance-row">
+            <p className="case-glance-label stage-mono">What I built</p>
+            <p className="case-glance-value">{project.tagline}</p>
+          </div>
+        )}
+        {metrics.length > 0 && (
+          <div className="case-glance-metrics">
+            {metrics.slice(0, 2).map((m, i) => (
+              <div className="case-glance-metric" key={i}>
+                <p className="case-glance-n">{m.n}</p>
+                <p className="case-glance-metric-label">{m.label}</p>
+              </div>
+            ))}
+          </div>
+        )}
+        {metrics.length > 0 && outcomeNote && <p className="case-glance-note">{outcomeNote}</p>}
+        {film && (
+          <button
+            type="button"
+            className="case-glance-watch"
+            onClick={() => setDialogFilm({ title, src: film.src, poster: film.poster, sound: film.sound })}
+          >
+            <Icon name="play" size={10} />
+            Watch the film
+          </button>
+        )}
+      </div>
 
       {/* Outcome-first: the headline results sit above the fold, before the
           reader has to work for them. Every number here is real — a row count
@@ -422,6 +464,18 @@ export default function ProjectDetailPage() {
         </section>
       )}
 
+      {/* Spec 7, phones only: the same rehook the page ends with, moved
+          up so a reader who scanned this far meets it again right away
+          instead of several screens later. The dock (Spec 1) covers
+          everything in between. */}
+      <CaseCtaBlock
+        className="case-cta-mid"
+        title={title}
+        area={area}
+        availability={availability}
+        placement="case-study-mid"
+      />
+
       {(prev || next) && (
         <nav className="case-nav" aria-label="More projects">
           {prev && (
@@ -439,26 +493,34 @@ export default function ProjectDetailPage() {
         </nav>
       )}
 
-      <section className="case-cta">
-        {/* The rehook after the proof, with this project's name as the
-            context, into the one primary action. */}
-        <h2 className="case-cta-title">Want something like the {title} in your business?</h2>
-        <p className="case-cta-body">
-          Which part of your week is still on WhatsApp threads and spreadsheets:
-          bookings, intake, follow-ups or payments? {CLOSE_ASK[area || 'start']} Then we
-          can talk about what it costs and the date it goes live.
-        </p>
-        {availability && <p className="case-cta-note">{availability}</p>}
-        {/* One primary (the matching area's free plan, else "Get
-            started"), the call second (components/FunnelCta.jsx). */}
-        <div className="case-cta-actions">
-          <StartCta service={area} placement="case-study" />
-          <TalkCta message={whatsappPrefill.contact} whatsappLabel="Message me on WhatsApp" contactLabel="Start a conversation" />
-        </div>
-      </section>
+      <CaseCtaBlock title={title} area={area} availability={availability} placement="case-study" />
 
       <VideoDialog film={dialogFilm} onClose={closeFilmDialog} />
     </article>
+  )
+}
+
+/* The closing rehook, with this project's name as the context, into the
+   one primary action. Shared by the bottom of the page and, on phones
+   (Spec 7), a second copy right after the Outcome section — same
+   component, same copy, so there is only one place to edit it. */
+function CaseCtaBlock({ title, area, availability, placement, className = '' }) {
+  return (
+    <section className={`case-cta${className ? ` ${className}` : ''}`}>
+      <h2 className="case-cta-title">Want something like the {title} in your business?</h2>
+      <p className="case-cta-body">
+        Which part of your week is still on WhatsApp threads and spreadsheets:
+        bookings, intake, follow-ups or payments? {CLOSE_ASK[area || 'start']} Then we
+        can talk about what it costs and the date it goes live.
+      </p>
+      {availability && <p className="case-cta-note">{availability}</p>}
+      {/* One primary (the matching area's free plan, else "Get
+          started"), the call second (components/FunnelCta.jsx). */}
+      <div className="case-cta-actions">
+        <StartCta service={area} placement={placement} />
+        <TalkCta message={whatsappPrefill.contact} whatsappLabel="Message me on WhatsApp" contactLabel="Start a conversation" />
+      </div>
+    </section>
   )
 }
 

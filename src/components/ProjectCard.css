@@ -342,3 +342,113 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* --- Spec 6 (mobile plan, 11 Oct 2026): the phone-only /projects switch --- */
+
+.page-lede-phone {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .page-lede-phone {
+    display: block;
+  }
+
+  .page-lede-full {
+    display: none;
+  }
+}
+
+.proj-switch {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .proj-switch {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+    padding: 4px;
+    margin-top: 1.25rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .proj-tab {
+    height: 44px;
+    padding: 0 0.5rem;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease;
+  }
+
+  .proj-tab.is-active {
+    background: rgba(255, 255, 255, 0.12);
+    color: #f2f0ed;
+  }
+
+  .proj-tab-count {
+    color: var(--muted);
+  }
+
+  .proj-tab:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+/* The phone-only rehook card inside the project list, after the 2nd card
+   of whichever tab is showing. */
+.pc-rehook {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .pc-rehook {
+    display: block;
+    grid-column: 1 / -1;
+    padding: 20px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #1a1a1c 0%, #141416 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .pc-rehook-q {
+    margin: 0 0 0.4rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .pc-rehook-body {
+    margin: 0 0 0.9rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
+  .pc-rehook-link {
+    font-weight: 500;
+    font-size: 0.9375rem;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+    padding-bottom: 2px;
+  }
+
+  .pc-rehook-link:hover {
+    border-color: var(--accent);
+  }
+
+  .pc-rehook-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+}

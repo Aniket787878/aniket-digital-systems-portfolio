@@ -103,8 +103,19 @@
   padding-right: 0.04em;
 }
 
+/* The plain one-line summary under the headline (2026-10-11): what the
+   three service areas add up to, in words with no jargon. Peach like
+   the trust line's price, so it reads as a promise, not a caption. */
+.sh-eyebrow {
+  margin: 0.75rem 0 0;
+  max-width: 34rem;
+  font-size: clamp(1rem, 1.1vw, 1.0625rem);
+  font-weight: 500;
+  color: var(--peach);
+}
+
 .sh-lede {
-  margin: 1.75rem 0 0;
+  margin: 1.25rem 0 0;
   max-width: 34rem;
 }
 
@@ -758,12 +769,17 @@
     font-size: clamp(2rem, 7.6vw, 2.6rem);
   }
 
+  .sh-eyebrow {
+    margin-top: 0.6rem;
+    font-size: 1rem;
+  }
+
   .sh-lede {
-    margin-top: 1.25rem;
+    margin-top: 0.9rem;
   }
 
   .sh-actions {
-    margin-top: 1.75rem;
+    margin-top: 1.5rem;
   }
 
   .sh-pill {

@@ -126,8 +126,8 @@ export default function Hero() {
               Not set: the free call on WhatsApp. */}
           {hasBooking ? (
             <>
-              <BookingCta className="btn-saffron" magnet />
-              <WhatsAppCta message={whatsappPrefill.hero} label="WhatsApp me" className="btn-light" />
+              <BookingCta className="btn-saffron" magnet placement="hero" />
+              <WhatsAppCta message={whatsappPrefill.hero} label="WhatsApp me" className="btn-light" placement="hero" />
             </>
           ) : (
             <>
@@ -137,6 +137,7 @@ export default function Hero() {
                   label="Book a free call"
                   className="btn-saffron"
                   magnet
+                  placement="hero"
                 />
               ) : (
                 <Link to="/contact" className="btn-saffron" {...fx('magnet')}>

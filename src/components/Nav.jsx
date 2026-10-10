@@ -161,7 +161,7 @@ export default function Nav() {
           {/* Room to breathe here: "Get started" first, then the call
               (booking link, else WhatsApp). Contact is in the list. */}
           <StartCta placement="nav-panel" className="btn-saffron nav-panel-cta" />
-          <TalkCta className="btn-light nav-panel-cta" message={whatsappPrefill.nav} />
+          <TalkCta className="btn-light nav-panel-cta" message={whatsappPrefill.nav} placement="nav-menu" />
         </nav>
       )}
     </header>

@@ -141,7 +141,7 @@ export default function ProjectsPage() {
         </p>
         <div className="case-cta-actions">
           <StartCta placement="projects-close" />
-          <TalkCta message={whatsappPrefill.contact} whatsappLabel="Message me on WhatsApp" contactLabel="Start a conversation" />
+          <TalkCta placement="projects" message={whatsappPrefill.contact} whatsappLabel="Message me on WhatsApp" contactLabel="Start a conversation" />
         </div>
       </section>
     </section>

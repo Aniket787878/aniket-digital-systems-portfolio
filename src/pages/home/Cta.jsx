@@ -81,7 +81,11 @@ export default function Cta({ service }) {
         <p className="dusk-sub">{ask.sub}</p>
         <div className="dusk-actions">
           <StartCta service={service} placement={service ? `${service}-close` : 'close'} magnet />
-          <TalkCta message={hasBooking ? whatsappPrefill.cta : whatsappPrefill.audit} contact={contact} />
+          <TalkCta
+            message={hasBooking ? whatsappPrefill.cta : whatsappPrefill.audit}
+            contact={contact}
+            placement={service ? `${service}-close-band` : 'close-band'}
+          />
         </div>
         <p className="dusk-footnote">{anchor}</p>
       </m.div>

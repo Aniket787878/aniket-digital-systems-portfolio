@@ -2,6 +2,9 @@ import { Link } from 'react-router-dom'
 import { site } from '../data.js'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 import { Rehook } from '../components/FunnelCta.jsx'
+import { track } from '../analytics.js'
+
+const onMailto = () => track('talk_click', { channel: 'email', placement: 'privacy', path: window.location.pathname })
 
 /*
   Privacy: short and plain on purpose. It states only what the site
@@ -61,7 +64,7 @@ export default function PrivacyPage() {
       <h2 className="case-section-title">Deleting it sooner</h2>
       <p className="page-lede">
         Email{' '}
-        <a className="u-link" href={`mailto:${site.email}`}>
+        <a className="u-link" href={`mailto:${site.email}`} onClick={onMailto}>
           {site.email}
         </a>{' '}
         and ask. I will delete what I hold about you and confirm when it is

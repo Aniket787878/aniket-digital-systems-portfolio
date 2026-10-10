@@ -59,10 +59,11 @@ export function TalkCta({
   message = whatsappPrefill.audit,
   whatsappLabel = 'Book a free call',
   contact = '/contact',
-  contactLabel = 'Send a message'
+  contactLabel = 'Send a message',
+  placement
 }) {
-  if (hasBooking) return <BookingCta className={className} />
-  if (hasWhatsApp) return <WhatsAppCta message={message} label={whatsappLabel} className={className} />
+  if (hasBooking) return <BookingCta className={className} placement={placement} />
+  if (hasWhatsApp) return <WhatsAppCta message={message} label={whatsappLabel} className={className} placement={placement} />
   return (
     <Link to={contact} className={className}>
       {contactLabel}

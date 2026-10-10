@@ -518,7 +518,7 @@ function CaseCtaBlock({ title, area, availability, placement, className = '' }) 
           started"), the call second (components/FunnelCta.jsx). */}
       <div className="case-cta-actions">
         <StartCta service={area} placement={placement} />
-        <TalkCta message={whatsappPrefill.contact} whatsappLabel="Message me on WhatsApp" contactLabel="Start a conversation" />
+        <TalkCta placement="case-study" message={whatsappPrefill.contact} whatsappLabel="Message me on WhatsApp" contactLabel="Start a conversation" />
       </div>
     </section>
   )

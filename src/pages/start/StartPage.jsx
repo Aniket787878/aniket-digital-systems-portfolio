@@ -93,7 +93,14 @@ export default function StartPage() {
                 href={talk.href}
                 target="_blank"
                 rel="noreferrer noopener"
-                onClick={() => track('start_choose', { choice: 'talk' })}
+                onClick={() => {
+                  track('start_choose', { choice: 'talk' })
+                  track('talk_click', {
+                    channel: hasBooking ? 'booking' : 'whatsapp',
+                    placement: 'start',
+                    path: window.location.pathname
+                  })
+                }}
               >
                 {talk.label}
               </a>
@@ -105,7 +112,15 @@ export default function StartPage() {
             {hasBooking && hasWhatsApp && (
               <>
                 {' '}or{' '}
-                <a className="u-link" href={whatsappHref(whatsappPrefill.start)} target="_blank" rel="noreferrer noopener">
+                <a
+                  className="u-link"
+                  href={whatsappHref(whatsappPrefill.start)}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  onClick={() =>
+                    track('talk_click', { channel: 'whatsapp', placement: 'start', path: window.location.pathname })
+                  }
+                >
                   message me on WhatsApp
                 </a>
               </>

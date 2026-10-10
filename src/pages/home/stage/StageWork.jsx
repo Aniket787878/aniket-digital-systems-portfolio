@@ -6,8 +6,15 @@ import { concepts } from '../../../concepts/registry.js'
 import LoopVideo from '../../../components/LoopVideo.jsx'
 import Stream from './work/Stream.jsx'
 import { settle, useMedia } from './work/shared.js'
+import { track } from '../../../analytics.js'
 import '../../service/showcase/stage.css'
 import './work/work.css'
+
+/* Phones (<=767px, Spec 3): the pinned deck above becomes a horizontal
+   swipe deck, one card per screen, built with plain CSS scroll-snap
+   (work/work.css `.sw-deck` under this query). No extra motion library:
+   the "Next" rehook calls scrollBy on the native scroll container. */
+const PHONE = '(max-width: 767px)'
 
 /* ---------------------------------------------------------------
    The second story loop: the real work, as a deck. On a wide screen
@@ -29,17 +36,6 @@ const TOP = 96
 const STEP = 14
 
 const DECK = '(min-width: 1024px) and (min-height: 680px)'
-
-/* Phones (<768px) show only the first N outcome bullets per card (CSS
-   hides the rest with display:none, so the DOM and the reading order
-   match). Default is 2; a card goes to 3 when its outcomeNote refers to
-   something only the third bullet says ("the screens are from the
-   running app" names the real-screens bullet on these two cards), so the
-   note still makes sense with only the shown bullets. */
-const PHONE_BULLETS = {
-  'consent-signer': 3,
-  'shared-inbox': 3
-}
 
 /* What the media is, in the words the films themselves use on screen. */
 const KIND_TAG = {
@@ -83,7 +79,9 @@ function needOf(card) {
 export default function StageWork() {
   const reduce = useReducedMotion()
   const wide = useMedia(DECK)
+  const phone = useMedia(PHONE)
   const sectionRef = useRef(null)
+  const deckRef = useRef(null)
 
   const items = useMemo(() => {
     const platforms = projects.filter((p) => films[p.slug]?.kind === 'schematic')
@@ -92,6 +90,37 @@ export default function StageWork() {
   }, [])
   const total = items.length + 1
   const refs = useMemo(() => Array.from({ length: total }, () => createRef()), [total])
+  const names = useMemo(() => [...items.map((p) => p.title), 'Five concept designs'], [items])
+
+  /* Spec 3's counter and dots: which slot is mostly on screen in the
+     phone swipe deck. A second, simpler observer than LoopVideo's own
+     (which plays only the on-screen film already, for free, because the
+     deck clips anything scrolled out horizontally) — this one only
+     drives the "01 / 06" text, the dots and the live region. */
+  const [active, setActive] = useState(0)
+  const [swiped, setSwiped] = useState(false)
+  useEffect(() => {
+    if (!phone) return undefined
+    const deckEl = deckRef.current
+    if (!deckEl) return undefined
+    const slots = [...deckEl.querySelectorAll('.sw-slot')]
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          const i = slots.indexOf(entry.target)
+          if (i === -1) return
+          setActive(i)
+          /* Sticky once true: the hint should stay gone even if the
+             visitor swipes back to the first card. */
+          if (i > 0) setSwiped(true)
+        })
+      },
+      { root: deckEl, threshold: 0.6 }
+    )
+    slots.forEach((s) => obs.observe(s))
+    return () => obs.disconnect()
+  }, [phone, total])
 
   /* Every card in the deck shares one height (~70vh), so a covering card
      always hides the one under it completely. If the copy needs more than
@@ -148,13 +177,32 @@ export default function StageWork() {
         </p>
       </m.header>
 
-      <ol className="sw-deck">
+      {phone && (
+        <div className="sw-counter">
+          <span className="sw-counter-n stage-mono">
+            <span className="sw-counter-cur">{pad(active + 1)}</span> / {pad(total)}
+            {!swiped && <span className="sw-counter-hint"> · swipe for the next build</span>}
+          </span>
+          <span className="sw-dots" aria-hidden="true">
+            {Array.from({ length: total }).map((_, i) => (
+              <span key={i} className={`sw-dot${i === active ? ' is-active' : ''}`} />
+            ))}
+          </span>
+        </div>
+      )}
+      <p className="sr-only" role="status" aria-live="polite">
+        {phone ? `Project ${active + 1} of ${total}: ${names[active]}` : ''}
+      </p>
+
+      <ol className="sw-deck" ref={deckRef} aria-label={phone ? 'Projects, swipe sideways' : undefined}>
         {items.map((project, i) => (
           <Slot
             key={project.slug}
             index={i}
             total={total}
             deck={deck}
+            phone={phone}
+            reduce={reduce}
             slotRef={refs[i]}
             nextRef={refs[i + 1]}
             next={items[i + 1]?.title ?? 'Five concept websites'}
@@ -162,10 +210,27 @@ export default function StageWork() {
             <ProjectCard project={project} index={i} total={total} />
           </Slot>
         ))}
-        <Slot index={items.length} total={total} deck={deck} slotRef={refs[items.length]} next="Three ways to work together" nextHref="#services">
+        <Slot
+          index={items.length}
+          total={total}
+          deck={deck}
+          phone={phone}
+          reduce={reduce}
+          slotRef={refs[items.length]}
+          next="Three ways to work together"
+          nextHref="#services"
+        >
           <ConceptsCard deck={deck} />
         </Slot>
       </ol>
+
+      {phone && (
+        <p className="sw-seeall">
+          <Link to="/projects" className="sw-seeall-link">
+            See all {projects.length} projects <span aria-hidden="true">&rarr;</span>
+          </Link>
+        </p>
+      )}
     </section>
   )
 }
@@ -173,7 +238,7 @@ export default function StageWork() {
 /* One pinned position in the deck. Owns the scroll maths: how far the
    NEXT card has slid over this one (scale + shade), and whether this
    card has reached the top (its node on the stream lights). */
-function Slot({ index, total, deck, slotRef, nextRef, next, nextHref, children }) {
+function Slot({ index, total, deck, phone, reduce, slotRef, nextRef, next, nextHref, children }) {
   const top = TOP + index * STEP
   const { scrollYProgress: covered } = useScroll({
     target: nextRef ?? slotRef,
@@ -195,8 +260,25 @@ function Slot({ index, total, deck, slotRef, nextRef, next, nextHref, children }
   })
 
   const last = index === total - 1
+
+  /* Spec 3's swipe control: on phones, the "Next" rehook of every card but
+     the last becomes the button that advances the deck by one slot. The
+     last card keeps its down-the-page link (nextHref), same as before. */
+  const onSwipeNext = () => {
+    const slotEl = slotRef.current
+    const deckEl = slotEl?.closest('.sw-deck')
+    if (!slotEl || !deckEl) return
+    deckEl.scrollBy({ left: slotEl.offsetWidth + 12, behavior: reduce ? 'auto' : 'smooth' })
+    track('sw_next', { index })
+  }
+
   return (
-    <li className="sw-slot" ref={slotRef} style={deck ? { top } : undefined}>
+    <li
+      className="sw-slot"
+      ref={slotRef}
+      style={deck ? { top } : undefined}
+      aria-label={phone ? `${index + 1} of ${total}` : undefined}
+    >
       {deck && <m.span className="sw-node" style={{ opacity: lit }} aria-hidden="true" />}
       <m.article
         className="sw-card stage-glass"
@@ -213,6 +295,10 @@ function Slot({ index, total, deck, slotRef, nextRef, next, nextHref, children }
             <a href={nextHref} className="sw-rehook-name">
               {next}
             </a>
+          ) : phone ? (
+            <button type="button" className="sw-rehook-name sw-rehook-btn" onClick={onSwipeNext}>
+              {next}
+            </button>
           ) : (
             <span className="sw-rehook-name">{next}</span>
           )}
@@ -281,7 +367,7 @@ function ProjectCard({ project, index, total }) {
         <p className="sw-tagline">{project.tagline}</p>
         {project.outcome?.length > 0 && (
           <>
-            <ul className="sw-outcome" data-phone-bullets={PHONE_BULLETS[project.slug] ?? 2}>
+            <ul className="sw-outcome">
               {project.outcome.map((line) => (
                 <li key={line}>{line}</li>
               ))}

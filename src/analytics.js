@@ -21,6 +21,9 @@
      flow_submit      { service }    a plan or the AI check sent
      ai_check_start   {}             the first answer on /ai-check
      ai_check_submit  { business, enquiries }  the check sent
+     sw_next          { index }      home swipe-deck "Next" rehook tapped (phones)
+     proj_tab         { tab }        the /projects tab switch (phones)
+     case_rehook      { placement }  a case-study "want one like this" card
    ------------------------------------------------------------------ */
 export function track(name, data) {
   try {

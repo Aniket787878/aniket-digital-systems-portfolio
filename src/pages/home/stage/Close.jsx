@@ -139,7 +139,7 @@ export default function Close() {
           <span className="cl-primary" ref={primary}>
             <StartCta placement="home-close" magnet />
           </span>
-          <TalkCta />
+          <TalkCta placement="close-band" />
         </div>
       </m.div>
     </section>

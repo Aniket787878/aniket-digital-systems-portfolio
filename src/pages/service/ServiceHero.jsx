@@ -157,7 +157,7 @@ export default function ServiceHero({ area }) {
               {/* The area's own free first step: the website plan, the
                   software plan or the AI check (FLOW in FunnelCta.jsx). */}
               <StartCta service={area.slug} placement={`${area.slug}-hero`} magnet />
-              <TalkCta message={prefill} contact={`/contact?service=${area.slug}#write`} />
+              <TalkCta message={prefill} contact={`/contact?service=${area.slug}#write`} placement="service-hero" />
             </m.div>
             <m.p className="stage-mono sv-foot" variants={settle}>
               From {inCurrency(area.from, currency)}. {FLOW[area.slug].name} first, no obligation.

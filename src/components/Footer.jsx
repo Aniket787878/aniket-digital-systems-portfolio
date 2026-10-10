@@ -4,6 +4,9 @@ import { site, footerMenu, social, whatsappPrefill } from '../data.js'
 import { StartCta } from './FunnelCta.jsx'
 import WhatsAppCta from './WhatsAppCta.jsx'
 import { reveal } from '../motion/variants.js'
+import { track } from '../analytics.js'
+
+const onMailto = () => track('talk_click', { channel: 'email', placement: 'footer', path: window.location.pathname })
 
 /*
   Footer: intro column (brand, promise, one-line description, CTA,
@@ -43,7 +46,12 @@ export default function Footer() {
             {/* The one primary, then the form (the footer may keep it). */}
             {onFlow ? (
               !onStart && (
-                <WhatsAppCta message={whatsappPrefill.audit} label="Book a free call" className="btn-saffron" />
+                <WhatsAppCta
+                  message={whatsappPrefill.audit}
+                  label="Book a free call"
+                  className="btn-saffron"
+                  placement="footer"
+                />
               )
             ) : (
               <StartCta placement="footer" />
@@ -69,7 +77,7 @@ export default function Footer() {
               </li>
             ))}
             <li>
-              <a href={`mailto:${site.email}`}>{site.email}</a>
+              <a href={`mailto:${site.email}`} onClick={onMailto}>{site.email}</a>
             </li>
           </ul>
         </div>

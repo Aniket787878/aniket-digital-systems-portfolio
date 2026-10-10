@@ -537,14 +537,162 @@ a.sw-rehook-name:hover {
   }
 }
 
-/* Phones: lighter cards. Only the first `data-phone-bullets` outcome
-   lines show; the rest are display:none (not just visually hidden), so
-   a screen reader's reading order matches what's on screen. Desktop
-   (>=768px) is untouched, and the full list stays for every wider
-   layout. */
-@media (max-width: 767.98px) {
-  .sw-outcome[data-phone-bullets='2'] li:nth-child(n + 3),
-  .sw-outcome[data-phone-bullets='3'] li:nth-child(n + 4) {
+/* ---------------------------------------------------------------
+   Phones (<=767px, Spec 3, "next level" mobile plan, 11 Oct 2026): the
+   pinned deck above never applies here (it needs a 1024px+/680px+
+   viewport in JS), so these cards are always the plain stacked list.
+   They become a horizontal swipe deck instead: one card per screen,
+   the next one peeking in, scroll-snap only (no JS scroller, no new
+   dependency). Desktop and tablet are untouched.
+   --------------------------------------------------------------- */
+@media (max-width: 767px) {
+  .sw-deck {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    padding-inline: var(--container-pad);
+    scroll-padding-inline: var(--container-pad);
+    margin-inline: calc(var(--container-pad) * -1);
+    scrollbar-width: none;
+  }
+
+  .sw-deck::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sw-slot {
+    flex: 0 0 calc(100% - 24px);
+  }
+
+  .sw-slot,
+  .sw-card {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  .sw-card {
+    width: 100%;
+    height: 100%;
+  }
+
+  .sw-head {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* The counter + dots row above the deck (hidden on tablet/desktop,
+   where the deck does not swipe). */
+.sw-counter {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .sw-counter {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: calc(100% - 2 * var(--container-pad));
+    margin: 0 auto 0.75rem;
+  }
+
+  .sw-counter-n {
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .sw-counter-cur {
+    color: var(--accent);
+  }
+
+  .sw-counter-hint {
+    color: var(--muted);
+  }
+
+  .sw-dots {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: none;
+  }
+
+  .sw-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+    transition: width 0.2s ease, background-color 0.2s ease;
+  }
+
+  .sw-dot.is-active {
+    width: 18px;
+    background: var(--accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sw-dot {
+      transition: none;
+    }
+  }
+}
+
+/* The rehook, turned into the swipe control on phones: reset the button
+   back to the plain-text look .sw-rehook-name already has. */
+.sw-rehook-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* "See all N projects" under the deck, phones only. */
+.sw-seeall {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .sw-seeall {
+    display: block;
+    width: calc(100% - 2 * var(--container-pad));
+    margin: 1.25rem auto 0;
+    font-size: 0.875rem;
+  }
+
+  .sw-seeall-link {
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+    padding-bottom: 2px;
+    transition: border-color var(--dur-fast) ease, color var(--dur-fast) ease;
+  }
+
+  .sw-seeall-link:hover {
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+
+  .sw-seeall-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+}
+
+/* Phones: the outcome bullets and their note are hidden together (house
+   rule: a number never shows without its note), not truncated — the
+   deck's "at a glance" already carries the proof. display:none, not a
+   visual-only hide, so a screen reader's reading order matches what's
+   on screen. Desktop and tablet (>=768px) are untouched. */
+@media (max-width: 767px) {
+  .sw-outcome,
+  .sw-note {
     display: none;
   }
 }

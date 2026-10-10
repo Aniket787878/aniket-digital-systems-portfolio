@@ -165,6 +165,7 @@ export default function ActionDock() {
           message={handoff?.text || whatsappPrefill.audit}
           label={handoff?.label || 'Send my plan on WhatsApp'}
           className="btn-saffron dock-solo"
+          placement="dock"
         />
       ) : (
         <>
@@ -172,6 +173,7 @@ export default function ActionDock() {
             message={whatsappPrefill.dock.replace('{page}', pageName(pathname))}
             label="Free call"
             className="dock-call"
+            placement="dock"
           />
           {info.label && (
             <Link to={info.to} className="btn-saffron dock-next">

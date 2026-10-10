@@ -8,6 +8,9 @@ import Icon from './icons.jsx'
 import BookingCta from './BookingCta.jsx'
 import { CheckCta } from './FunnelCta.jsx'
 import { TickList } from './ui.jsx'
+import { track } from '../analytics.js'
+
+const onWhatsapp = () => track('talk_click', { channel: 'whatsapp', placement: 'pricing', path: window.location.pathname })
 
 /* ---------------------------------------------------------------
    The price pieces shared by the home page's Services band and the
@@ -64,7 +67,7 @@ export function OfferCta({ pkg }) {
       <>
         <CheckCta placement="roadmap-card" className={tone} label="Start with the free AI check" />
         {wa && (
-          <a className="watch-link" href={wa} target="_blank" rel="noreferrer noopener">
+          <a className="watch-link" href={wa} target="_blank" rel="noreferrer noopener" onClick={onWhatsapp}>
             Or ask about the Roadmap on WhatsApp
           </a>
         )}
@@ -75,9 +78,9 @@ export function OfferCta({ pkg }) {
   if (hasBooking) {
     return (
       <>
-        <BookingCta className={tone} />
+        <BookingCta className={tone} placement="pricing" />
         {wa && (
-          <a className="watch-link" href={wa} target="_blank" rel="noreferrer noopener">
+          <a className="watch-link" href={wa} target="_blank" rel="noreferrer noopener" onClick={onWhatsapp}>
             Or ask on WhatsApp
           </a>
         )}
@@ -87,7 +90,7 @@ export function OfferCta({ pkg }) {
 
   if (!wa) return null
   return (
-    <a className={tone} href={wa} target="_blank" rel="noreferrer noopener">
+    <a className={tone} href={wa} target="_blank" rel="noreferrer noopener" onClick={onWhatsapp}>
       Ask about this
     </a>
   )

@@ -9,6 +9,12 @@ import WhatsAppCta from './WhatsAppCta.jsx'
 import Icon from './icons.jsx'
 import { landingFields } from '../leadExtras.js'
 import { WEBHOOK_URL, formConnected } from '../leadWebhook.js'
+import { track } from '../analytics.js'
+
+const onMailto = (placement) => () =>
+  track('talk_click', { channel: 'email', placement, path: window.location.pathname })
+const onWhatsapp = (placement) => () =>
+  track('talk_click', { channel: 'whatsapp', placement, path: window.location.pathname })
 
 
 /* Announced to screen readers via the polite live region below.
@@ -74,16 +80,17 @@ function DirectContact() {
           : 'WhatsApp is the quickest way to reach me. Tell me which part of the week is eating the most time. That is enough to start.'}
       </p>
       <div className="contact-direct-actions">
-        <BookingCta className="btn-pill btn-pill-accent" />
+        <BookingCta className="btn-pill btn-pill-accent" placement="contact" />
         <WhatsAppCta
           message={whatsappPrefill.contact}
           label="Message me on WhatsApp"
           className={hasBooking ? 'btn-pill' : 'btn-pill btn-pill-accent'}
+          placement="contact"
         />
       </div>
       <p>
         Or email{' '}
-        <a className="u-link" href={`mailto:${site.email}`}>
+        <a className="u-link" href={`mailto:${site.email}`} onClick={onMailto('contact')}>
           {site.email}
         </a>
         . I reply within 24 hours.
@@ -239,6 +246,7 @@ function LeadForm() {
               href={whatsappHref}
               target="_blank"
               rel="noreferrer"
+              onClick={onWhatsapp('contact-success')}
             >
               {whatsappLabel}
             </a>
@@ -400,7 +408,7 @@ function LeadForm() {
         {status === 'error' && (
           <p className="contact-error" role="alert">
             That didn&rsquo;t send.{' '}
-            <a className="u-link" href={mailtoHref}>
+            <a className="u-link" href={mailtoHref} onClick={onMailto('contact-error')}>
               Open it as an email
             </a>
             {whatsappLeadHref && (
@@ -411,6 +419,7 @@ function LeadForm() {
                   href={whatsappLeadHref}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={onWhatsapp('contact-error')}
                 >
                   send it on WhatsApp
                 </a>

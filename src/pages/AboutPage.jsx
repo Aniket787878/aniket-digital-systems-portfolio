@@ -53,7 +53,7 @@ export default function AboutPage() {
             )}
             <m.div className="about-hero-actions" variants={heroItem}>
               <StartCta placement="about-hero" magnet />
-              <TalkCta message={whatsappPrefill.contact} />
+              <TalkCta message={whatsappPrefill.contact} placement="about" />
             </m.div>
             <m.dl className="about-facts" variants={heroItem}>
               {founder.quickFacts.map((fact) => (

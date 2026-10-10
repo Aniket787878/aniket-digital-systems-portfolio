@@ -98,6 +98,10 @@ export default function StageHero() {
             </m.span>
           </h1>
 
+          <m.p className="sh-eyebrow" {...(reduce ? {} : settle(0.32))}>
+            Websites, software and AI for service businesses.
+          </m.p>
+
           <m.p className="stage-lede sh-lede" {...(reduce ? {} : settle(0.4))}>
             {site.heroLede}
           </m.p>
@@ -107,7 +111,7 @@ export default function StageHero() {
                 (website, software or AI). The call (booking link, else
                 WhatsApp, else the contact page) sits second. */}
             <StartCta placement="home-hero" magnet />
-            <TalkCta />
+            <TalkCta placement="home-hero" />
           </m.div>
           {/* The trust line (Move 5, 2026-10-09): the from-price, read
               live from `services` so it tracks the toggle and can never

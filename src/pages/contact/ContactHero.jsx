@@ -8,6 +8,11 @@ import { hasWhatsApp, whatsappHref } from '../../whatsapp.js'
 import { hasBooking, bookingUrl } from '../../booking.js'
 import { heroContainer, heroItem } from '../../motion/variants.js'
 import { Rehook } from '../../components/FunnelCta.jsx'
+import { track } from '../../analytics.js'
+
+/* channel for talk_click, per route key. 'form' is a same-page jump, not
+   a WhatsApp / booking / email tap, so it is not in this map. */
+const CHANNEL = { call: 'booking', whatsapp: 'whatsapp', email: 'email' }
 
 /* Seeded once: the same range on every visit, and not the home hero's. */
 const FAR = ridge({ seed: 37, base: 200, amp: 60, detail: 0.8 })
@@ -139,6 +144,16 @@ export default function ContactHero() {
               <a
                 className={`contact-route${i === 0 ? ' is-primary' : ''}`}
                 href={route.href}
+                onClick={
+                  CHANNEL[route.key]
+                    ? () =>
+                        track('talk_click', {
+                          channel: CHANNEL[route.key],
+                          placement: 'contact-hero',
+                          path: window.location.pathname
+                        })
+                    : undefined
+                }
                 {...(route.external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
               >
                 <span className="contact-route-top">

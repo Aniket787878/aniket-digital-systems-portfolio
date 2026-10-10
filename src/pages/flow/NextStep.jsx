@@ -33,14 +33,14 @@ const READ_NEXT = {
    the one primary button in every temperature branch, no secondary link
    and no "read next" card — those stay in the lower, repeated block,
    where this component is rendered a second time with compact unset. */
-export function NextStepActions({ temp, service, waText, warm, contact, onActions, compact = false }) {
+export function NextStepActions({ temp, service, waText, warm, contact, onActions, compact = false, placement }) {
   if (temp === 'hot' && hasWhatsApp) {
     return (
       <div className="ac-actions" onClick={onActions}>
-        <WhatsAppCta message={waText} label="WhatsApp me now" className="btn-saffron" />
+        <WhatsAppCta message={waText} label="WhatsApp me now" className="btn-saffron" placement={placement} />
         {!compact &&
           (hasBooking ? (
-            <BookingCta className="btn-light" label="Or book a free call" />
+            <BookingCta className="btn-light" label="Or book a free call" placement={placement} />
           ) : (
             <Link to={contact} className="btn-light">
               Or send a message
@@ -66,9 +66,14 @@ export function NextStepActions({ temp, service, waText, warm, contact, onAction
         )}
         <div className="ac-actions" onClick={onActions}>
           {hasBooking ? (
-            <BookingCta className={compact ? 'btn-saffron' : 'btn-light'} label="Book a free call" />
+            <BookingCta className={compact ? 'btn-saffron' : 'btn-light'} label="Book a free call" placement={placement} />
           ) : hasWhatsApp ? (
-            <WhatsAppCta message={waText} label="Book a free call on WhatsApp" className={compact ? 'btn-saffron' : 'btn-light'} />
+            <WhatsAppCta
+              message={waText}
+              label="Book a free call on WhatsApp"
+              className={compact ? 'btn-saffron' : 'btn-light'}
+              placement={placement}
+            />
           ) : (
             <Link to={contact} className={compact ? 'btn-saffron' : 'btn-light'}>
               Ask for a free call

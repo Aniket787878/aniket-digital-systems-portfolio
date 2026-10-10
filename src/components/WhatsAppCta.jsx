@@ -1,5 +1,6 @@
 import { hasWhatsApp, whatsappHref } from '../whatsapp.js'
 import { fx } from '../interactions/attrs.js'
+import { track } from '../analytics.js'
 
 /* ---------------------------------------------------------------
    The WhatsApp button: pill body, glyph in the trailing circle.
@@ -7,9 +8,16 @@ import { fx } from '../interactions/attrs.js'
    Renders nothing at all until a number exists — see whatsapp.js for
    why, and check `hasWhatsApp` from there before laying out a row that
    would otherwise be left with one button in it.
+
+   Every tap sends talk_click (analytics.js): the one "total get in
+   touch taps" number across the site. `placement` names where this one
+   is rendered (e.g. 'hero', 'footer', 'dock'); pass it from every
+   caller. Fire-and-forget: never blocks the wa.me navigation.
    --------------------------------------------------------------- */
-export default function WhatsAppCta({ message, label, className = '', magnet = false }) {
+export default function WhatsAppCta({ message, label, className = '', magnet = false, placement }) {
   if (!hasWhatsApp) return null
+
+  const onClick = () => track('talk_click', { channel: 'whatsapp', placement, path: window.location.pathname })
 
   return (
     <a
@@ -17,6 +25,7 @@ export default function WhatsAppCta({ message, label, className = '', magnet = f
       className={className}
       target="_blank"
       rel="noreferrer noopener"
+      onClick={onClick}
       {...(magnet ? fx('magnet') : null)}
     >
       {label}

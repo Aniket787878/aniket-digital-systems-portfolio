@@ -347,13 +347,25 @@ function Result({ flowKey, res, temp, send, text, name, email, resultRef, onRest
       {send === 'error' && (
         <p className="ac-error" role="alert">
           Your plan is below, but your answers didn&rsquo;t reach me.{' '}
-          <a className="u-link" href={mailto}>
+          <a
+            className="u-link"
+            href={mailto}
+            onClick={() => track('talk_click', { channel: 'email', placement: 'result-error', path: window.location.pathname })}
+          >
             Send them as an email
           </a>
           {waFallback && (
             <>
               {' '}or{' '}
-              <a className="u-link" href={waFallback} target="_blank" rel="noreferrer">
+              <a
+                className="u-link"
+                href={waFallback}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() =>
+                  track('talk_click', { channel: 'whatsapp', placement: 'result-error', path: window.location.pathname })
+                }
+              >
                 on WhatsApp
               </a>
             </>
@@ -392,12 +404,18 @@ function Result({ flowKey, res, temp, send, text, name, email, resultRef, onRest
           waText={handoffText}
           contact={`/contact?service=${flowKey}#write`}
           onActions={topActions}
+          placement="result-top"
           warm={
             <div className="ac-actions ac-actions-solo" onClick={topActions}>
               {hasBooking ? (
-                <BookingCta className="btn-saffron ac-handoff-btn" label="Book a free call" />
+                <BookingCta className="btn-saffron ac-handoff-btn" label="Book a free call" placement="result-top" />
               ) : hasWhatsApp ? (
-                <WhatsAppCta message={prefill} label="Book a free call on WhatsApp" className="btn-saffron ac-handoff-btn" />
+                <WhatsAppCta
+                  message={prefill}
+                  label="Book a free call on WhatsApp"
+                  className="btn-saffron ac-handoff-btn"
+                  placement="result-top"
+                />
               ) : (
                 <Link to={`/contact?service=${flowKey}#write`} className="btn-saffron ac-handoff-btn">
                   Ask for a free call
@@ -453,16 +471,22 @@ function Result({ flowKey, res, temp, send, text, name, email, resultRef, onRest
           waText={handoffText}
           contact={`/contact?service=${flowKey}#write`}
           onActions={bottomActions}
+          placement="result-bottom"
           warm={
             <div className="ac-actions" onClick={bottomActions}>
               {hasBooking ? (
                 <>
-                  <BookingCta className="btn-saffron" label="Book a free call" />
-                  <WhatsAppCta message={prefill} label="Ask on WhatsApp" className="btn-light" />
+                  <BookingCta className="btn-saffron" label="Book a free call" placement="result-bottom" />
+                  <WhatsAppCta message={prefill} label="Ask on WhatsApp" className="btn-light" placement="result-bottom" />
                 </>
               ) : hasWhatsApp ? (
                 <>
-                  <WhatsAppCta message={prefill} label="Book a free call on WhatsApp" className="btn-saffron" />
+                  <WhatsAppCta
+                    message={prefill}
+                    label="Book a free call on WhatsApp"
+                    className="btn-saffron"
+                    placement="result-bottom"
+                  />
                   <Link to={`/${flowKey}#prices`} className="btn-light">
                     What every build includes
                   </Link>

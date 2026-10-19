@@ -1,5 +1,18 @@
 # 01 — Website Map
 
+## Contents
+
+- Stack
+- Repo layout
+- Routes
+- Data source
+- Home page composition
+- Layout contract
+- Gap list
+- What genuinely REMAINS
+- Deploy — live on Vercel
+- Contact form → n8n wiring (shape)
+
 **Code state verified: 2026-08-27.** Every claim below was re-checked against the
 working tree on that date; the *In flight* items from the 2026-08-25 pass have been
 resolved to Done or restated with what is actually in the code.

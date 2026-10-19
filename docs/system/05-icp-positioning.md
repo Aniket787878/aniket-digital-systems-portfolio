@@ -1,5 +1,17 @@
 # 05 — ICP & Positioning
 
+## Contents
+
+- Decision (current — 2026-09-30)
+- Superseded (2026-09-27)
+- Superseded (2026-09-13)
+- History — the 2026-08-25 decision (superseded)
+- Decision (locked)
+- Decision framework — kept
+- Scores
+- Positioning statement (2026-08-25, no longer live)
+- Next steps now the ICP is locked
+
 **Status: REPOSITIONED (2026-09-30).** Supersedes the 2026-09-27 decision below
 (result-led, automation only), which itself superseded 2026-09-13 ("complete
 production systems, built solo"). All are kept for history.

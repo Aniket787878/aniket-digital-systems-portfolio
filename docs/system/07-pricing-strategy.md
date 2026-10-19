@@ -1,5 +1,16 @@
 # 07 — Pricing strategy (2026-10-01)
 
+## Contents
+
+- 1. Pricing model
+- 2. Tiers per area
+- 3. The prices
+- 4. Unit economics (estimates, not confirmed)
+- 5. Price psychology (three tactics)
+- 6. Launch pricing, then scale pricing
+- Open for Aniket
+- Sources (checked 2026-10-01)
+
 Method: the `pricing-strategy` skill from emotixco/claude-skills-founder
 (`skills/pricing-strategy/SKILL.md`), adapted from SaaS subscriptions to a
 project studio. Competitor prices were checked on 2026-10-01 and are listed

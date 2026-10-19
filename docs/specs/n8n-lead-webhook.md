@@ -1,5 +1,16 @@
 # SPEC — n8n lead-intake workflow
 
+## Contents
+
+- Budget & scope (hard rules — do NOT exceed)
+- Goal
+- Trigger
+- Expected input (from `docs/specs/contact-form.md`)
+- Nodes (in order)
+- Error handling
+- Optional (v2 — do not build now, note only)
+- Deliverable
+
 > **Updated 2026-09-27:** Airtable is replaced by a Google Sheet (`Portfolio leads` → `Leads`) on aniket.html@gmail.com, alerts go to aniket.html@gmail.com, and the webhook replies from a Respond node. `n8n/README.md` and `n8n/lead-intake-workflow.json` are current; where this spec disagrees, they win.
 
 **Audience:** MonkeyCode task. Output must be an n8n workflow JSON that imports cleanly (n8n → Workflows → Import from File).

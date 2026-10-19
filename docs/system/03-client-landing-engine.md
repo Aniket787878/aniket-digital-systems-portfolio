@@ -1,5 +1,14 @@
 # 03 — Client Landing Engine
 
+## Contents
+
+- Weekly target
+- Pipeline stages (single source of truth: Airtable or Notion)
+- System A — Cold outbound (n8n)
+- System B — LinkedIn + X content
+- Feeding both channels into one intake
+- KPIs to review weekly (Sunday, 30 min)
+
 Cold outbound + LinkedIn/X content, both feeding into the same intake form.
 
 ## Weekly target

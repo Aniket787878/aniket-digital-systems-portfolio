@@ -1,5 +1,17 @@
 # Deploy — Vercel
 
+## Contents
+
+- SPA routing — `vercel.json`
+- Current setup — done
+- Recreating the project from scratch
+- Deploying from the CLI instead
+- Environment variables
+- Custom domain
+- Deploys
+- Health check
+- Troubleshooting
+
 Production lives on Vercel. There is no Cloudflare Pages project any more, and
 `public/_redirects` has been deleted — it was a Cloudflare-only file that Vercel
 silently ignores.

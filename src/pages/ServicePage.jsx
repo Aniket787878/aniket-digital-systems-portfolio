@@ -1,6 +1,9 @@
 import { services } from '../data.js'
 import { useDocumentTitle } from '../useDocumentTitle.js'
 import ServiceHero from './service/ServiceHero.jsx'
+import BrandHero from './service/BrandHero.jsx'
+import Method from './service/Method.jsx'
+import OwnIt from './service/OwnIt.jsx'
 import Proof from './service/Proof.jsx'
 import Offers from './service/Offers.jsx'
 import OtherAreas from './service/OtherAreas.jsx'
@@ -25,6 +28,11 @@ import './ServicePage.css'
     5. OtherAreas (night)  the two areas this page is not
     6. Cta (dusk)          the home page's closing band, reused
 
+  /ai is the AI brand's home (docs/work/ai-brand/spec.md): in place of
+  ServiceHero it opens on BrandHero (stage), then Method (night, the
+  four steps) and OwnIt (paper, "You own everything"), then the same
+  showcase and bands as the other two pages.
+
   These are the pages outreach links point at, so each has to stand on
   its own for a buyer who never sees the home page.
 */
@@ -39,7 +47,15 @@ export default function ServicePage({ slug }) {
 
   return (
     <div className="svc">
-      <ServiceHero area={area} />
+      {slug === 'ai' ? (
+        <>
+          <BrandHero />
+          <Method />
+          <OwnIt />
+        </>
+      ) : (
+        <ServiceHero area={area} />
+      )}
       {Showcase && <Showcase />}
       <Proof area={area} />
       <Offers area={area} />

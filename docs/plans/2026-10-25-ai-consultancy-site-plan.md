@@ -108,18 +108,20 @@ Before buying: run an Indian trademark search (ipindiaonline.gov.in, class 42) a
 
 ## 5. The site (what to build, in order)
 
-### Stack
-Same as the portfolio: React + Vite on Vercel, Lenis scroll, the existing design system, the existing n8n lead intake (v2, dUHbHJPBhHFB79qu) with a `source=<newsite>` field. No new backend. Cal.com link required before launch (still on him).
+Update 25 Oct 2026 (Aniket's decisions): the brand lives INSIDE the portfolio repo, taking over the `/ai` area with its own pages, nav entry, OG image, WhatsApp number and Cal.com. Launch verticals: clinics and wellness, studios, coaching and tuition, agencies and consultancies. The "How it works" band is his real four-step method: Map > Build > Train and stay > Hand over (you own everything). Full plan sheet: `AI-CONSULTANCY-PLAN.md`.
 
-### Pages (launch set)
-1. **Home**: hero promise + one button ("Get your free AI check"), reply-time and guarantee line, the cost-of-slow-replies calculator (3 inputs), "what AI takes off your plate" (4 jobs, each with a try-it demo), proof (clinic system with one hard number + Admin Desk demo), how it works (Free check > Roadmap, credited > Build by a date > Care), prices, questions to ask any AI vendor, FAQ, final CTA.
-2. **Free AI check** (/check): 6 to 8 plain questions, instant on-screen result (top 3 jobs to hand to AI + rough hours saved, labelled an estimate), answers posted to n8n.
-3. **Try it** (/try): the three demo tools on the dummy clinic, each with a one-line "what you are seeing".
-4. **For clinics / studios / agencies / coaching** (/for/<type>): one worked example each, same template, honest demo labels.
-5. **Pricing** (/pricing): Roadmap, Quick Win, Sprint, Assistant, Care; running costs stated; guarantee; 50/50 terms.
-6. **Proof** (/work): the anonymised real projects + labelled demos (reuse portfolio cards and covers).
+### Stack
+Same as the portfolio: React + Vite on Vercel, Lenis scroll, the existing design system, the existing n8n lead intake (v2, dUHbHJPBhHFB79qu) with a `source=ai-brand` field. No new backend. Cal.com link required before launch (still on him).
+
+### Pages (launch set, all under /ai)
+1. **/ai (brand home)**: hero promise + one button ("Get your free AI check"), reply-time and guarantee line, the cost-of-slow-replies calculator (3 inputs), "what AI takes off your plate" (4 jobs, each with a try-it demo), proof (clinic system with one hard number + Admin Desk demo), how it works (Free check > Roadmap, credited > Build by a date > Care), prices, questions to ask any AI vendor, FAQ, final CTA.
+2. **Free Enquiry Leak Check** (/ai/check): 6 to 8 plain questions, instant on-screen result (top 3 jobs to hand to AI + rough hours saved, labelled an estimate), answers posted to n8n.
+3. **Try it** (/ai/try): the three demo tools on the dummy clinic, each with a one-line "what you are seeing".
+4. **For clinics / studios / coaching / agencies** (/ai/for/<type>): one worked example each, same template, honest demo labels.
+5. **Pricing** (/ai/pricing): adds the "you own everything" band, running-cost line, handover pack;: Roadmap, Quick Win, Sprint, Assistant, Care; running costs stated; guarantee; 50/50 terms.
+6. **Proof** (/ai/work): the anonymised real projects + labelled demos (reuse portfolio cards and covers).
 7. **About**: Aniket + how the clinic system came to be. No "solo" framing.
-8. **Book** (/book): Cal.com embed, WhatsApp as the one backup.
+8. **Every enquiry** (/ai/every-enquiry, the ad landing page) and **Book** (/ai/book): Cal.com embed, WhatsApp as the one backup.
 
 ### Later (after 2 to 3 paid engagements)
 Testimonials, case studies with numbers, blog for the "AI for <vertical>" searches, Hindi copy toggle.
@@ -128,7 +130,7 @@ Testimonials, case studies with numbers, blog for the "AI for <vertical>" search
 `build` skill: spec + slices approved by him > Sonnet builder per slice in a worktree > gate (lint, typecheck, tests, Playwright click-through, screenshots) > one review > merge on "merge". Design through the `design` skill: audit, one named direction, proof on `review-shots`.
 
 Suggested slices (each one PR):
-1. Repo + brand tokens + home hero + nav + footer + n8n hookup (source tag).
+1. Brand tokens + /ai brand home (hero, four steps, you-own-it band) + nav entry + n8n source tag.
 2. Free AI check page with instant result.
 3. Try-it page reusing the demo tools.
 4. Vertical pages (4) from one template.
@@ -145,9 +147,9 @@ Rough effort: 6 PRs, about 2 to 3 weeks of sessions at the usual pace, cloud ses
 - Approve slices; then "go".
 
 ## 7. Open questions for him
-1. Separate GitHub repo (recommended, public for Vercel free plan) or a folder in the portfolio repo?
-2. Keep the portfolio's prices as-is on the new site, or new site only shows "from" prices until a call?
-3. Does the portfolio's AI section then link out to the new brand, or stay as is until the new site has proof?
+1. DECIDED 25 Oct: inside the portfolio repo.
+2. Keep the portfolio's prices as-is on the brand pages, or only "from" prices until a call?
+3. Name (see AI-CONSULTANCY-PLAN.md section 4).
 
 ## Sources
 Sarvam AI: en.wikipedia.org/wiki/Sarvam_AI, dealroom.co/companies/sarvam-ai. Pricing: marketlube.in, mayankdigitallabs.in, neogenmedia.com, hexagondigital.in, upbusinessco.com, taskip.net (vendor blogs; indicative only). Domains: Vercel registry availability check, 25 Oct 2026. Name conflicts: web search per name, 25 Oct 2026 (noisy; registry check still needed).

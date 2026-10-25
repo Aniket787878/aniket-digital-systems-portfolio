@@ -89,7 +89,7 @@ const fail = (msg) => failures.push(msg)
    must carry, and whether its primary button (data-primary) must lead to
    /ai-check. */
 const PAGES = [
-  { name: 'ai', path: '/ai', ready: '#svc-brand-title', want: ['Map', 'Build', 'Train and stay', 'Hand over', 'You own everything'], primary: true },
+  { name: 'ai', path: '/ai', ready: '#svc-brand-title', want: ['Map', 'Build', 'Train and stay', 'Hand over', 'You own everything', 'Try it', 'For clinics', 'For agencies', 'Pricing'], primary: true },
   { name: 'ai-check', path: '/ai-check', ready: '#ac-title', want: ['Free enquiry leak check', 'Two minutes. Where enquiries, bookings and follow-ups leak'] },
   {
     name: 'ai-try',

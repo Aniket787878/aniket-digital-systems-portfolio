@@ -517,3 +517,64 @@
     margin-inline: auto;
   }
 }
+
+/* ---- /ai hero: the link strip to the brand's own pages ---- */
+.aip-strip {
+  margin-top: 2rem;
+}
+
+.aip-strip ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 0.25rem;
+  margin: 0;
+  padding: 0;
+}
+
+.aip-strip li + li::before {
+  content: '·';
+  margin-right: 0.25rem;
+  color: var(--muted);
+}
+
+.aip-strip a {
+  display: inline-block;
+  padding: 0.6rem 0.5rem;
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.2);
+  text-underline-offset: 0.25em;
+}
+
+.aip-strip a:hover {
+  color: var(--ink);
+  text-decoration-color: var(--accent);
+}
+
+/* ---- Contrast (slice 6 audit) ----
+   On the /ai/* pages only: the soft second line of a paper heading, the
+   guarantee chip and the "Start here" badge, one step darker so they
+   pass WCAG AA (the site-wide values in HomePage.css fall just short;
+   see docs/work/ai-brand-2/audit.md). */
+.aip .paper .h2 .soft {
+  color: #857d74;
+}
+
+.aip .guarantee,
+.aip .price-badge {
+  color: #8a3f05;
+}
+
+@media (max-width: 640px) {
+  /* On a phone the strip wraps: no dots, a little more room instead. */
+  .aip-strip ul {
+    gap: 0 0.75rem;
+  }
+
+  .aip-strip li + li::before {
+    content: none;
+  }
+}

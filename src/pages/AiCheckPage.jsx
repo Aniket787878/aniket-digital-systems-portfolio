@@ -19,9 +19,10 @@ import { Progress, Question, Contact } from './flow/Steps.jsx'
 import { stepIn, EMAIL_OK } from './flow/shared.js'
 import './service/showcase/stage.css'
 import './AiCheckPage.css'
+import './ai/AiPages.css'
 
 /*
-  The free AI check (/ai-check): step 1 of the path (funnelPath in
+  The free enquiry leak check (/ai-check, once the free AI check): step 1 of the path (funnelPath in
   data.js). Six plain questions and a contact step, one per screen; then
   an instant result worked out in the browser (aicheck/rules.js) and the
   next step, the AI Roadmap.
@@ -42,14 +43,14 @@ const STEPS = aiCheck.steps
 const CONTACT = STEPS.length // index of the last (contact) step
 const ROADMAP = packages.find((pkg) => pkg.name === 'AI Roadmap Session')
 
-const EMPTY = { business: '', enquiries: '', speed: '', time: [], tools: [], team: '' }
+const EMPTY = { business: '', enquiries: '', speed: '', time: [], tools: [], team: '', report: '' }
 
 /* The check's own address, and its result's (/ai-check/result), so a
    page view counts a finished check (strategy item 11). */
 const BASE = '/ai-check'
 
 export default function AiCheckPage() {
-  useDocumentTitle('Free AI check · Aniket')
+  useDocumentTitle(aiCheck.docTitle)
   const { view } = useParams()
   const navigate = useNavigate()
   const onResultUrl = view === 'result'
@@ -146,7 +147,9 @@ export default function AiCheckPage() {
     }
 
     const outcome = result(answers)
-    const message = summary(answers, outcome, clean.phone)
+    /* The 48-hour report answer rides inside the message, so the intake
+       needs no new column. */
+    const message = `${summary(answers, outcome, clean.phone)}\nWants 48h leak report: ${answers.report === 'yes' ? 'yes' : 'no'}`
     const phoneNorm = normalisePhone(clean.phone)
     const leadTemp = aiTemp({ enquiries: answers.enquiries, team: answers.team, phone: phoneNorm })
     setText(message)
@@ -173,7 +176,7 @@ export default function AiCheckPage() {
       workflow_broken: message,
       service: 'ai',
       budget_band: 'not_sure',
-      source: `ai-check · ${document.referrer || 'direct'}`,
+      source: `ai-brand-check · ${document.referrer || 'direct'}`,
       submitted_at: new Date().toISOString(),
       /* The structured fields (leadExtras.js). The check asks no date, so
          timing stays empty; the package is step 2, the AI Roadmap, at the
@@ -222,20 +225,19 @@ export default function AiCheckPage() {
         <header className={`ac-head${res ? ' is-result' : step >= 1 ? ' is-compact' : ''}`}>
           <p className="stage-pill stage-mono">
             <span className="stage-dot" aria-hidden="true" />
-            Free AI check · about 3 minutes
+            {aiCheck.pill}
           </p>
-          <p className="ac-stakes">The repeat work in a week is easy to miss. It arrives a few minutes at a time.</p>
+          <p className="ac-stakes">{aiCheck.stakes}</p>
           <h1 className={`stage-title ac-title${res || step >= 1 ? ' sr-only-phone' : ''}`} id="ac-title">
-            What could AI take off your <span className="stage-serif">plate?</span>
+            {aiCheck.title[0]}
+            <span className="stage-serif">{aiCheck.title[1]}</span>
+            {aiCheck.title[2]}
           </h1>
-          <p className="stage-lede ac-lede">
-            Six plain questions about how your week runs. You get an answer on screen straight away: the three
-            jobs worth handing to AI first, what each would look like, and a rough idea of the hours they take.
-          </p>
+          <p className="stage-lede ac-lede">{aiCheck.intro}</p>
         </header>
 
         {res ? (
-          <Result res={res} temp={temp} send={send} text={text} name={name} email={email} resultRef={resultRef} onRestart={restart} />
+          <Result res={res} report={answers.report === 'yes'} temp={temp} send={send} text={text} name={name} email={email} resultRef={resultRef} onRestart={restart} />
         ) : (
           <div className="stage-glass ac-card">
             <Progress step={step} questions={STEPS.length} />
@@ -281,7 +283,7 @@ export default function AiCheckPage() {
 
 const range = ([low, high]) => `${low} to ${high} hours a week`
 
-function Result({ res, temp, send, text, name, email, resultRef, onRestart }) {
+function Result({ res, report, temp, send, text, name, email, resultRef, onRestart }) {
   const currency = useCurrency()
   const jobs = res.top.map((j) => j.name.toLowerCase()).join(', ')
   const prefill = whatsappPrefill.aiCheck.replace('{jobs}', jobs)
@@ -289,16 +291,16 @@ function Result({ res, temp, send, text, name, email, resultRef, onRestart }) {
   /* If the send failed, nothing typed is lost: the same summary goes
      into an email draft or a WhatsApp chat, like the contact form. */
   const mailto = `mailto:${site.email}?subject=${encodeURIComponent(
-    `Free AI check: ${name}`
+    `Free enquiry leak check: ${name}`
   )}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${text}`)}`
-  const waFallback = hasWhatsApp ? whatsappHref(`Hi Aniket, I did the free AI check on your site.\n\nName: ${name}\n\n${text}`) : ''
+  const waFallback = hasWhatsApp ? whatsappHref(`Hi Aniket, I did the free enquiry leak check on your site.\n\nName: ${name}\n\n${text}`) : ''
 
   /* cta_click for the Roadmap buttons. BookingCta / WhatsAppCta take no
      onClick, so the row listens for any link click inside it. */
   const onActions = (event) => {
     if (event.target.closest('a')) track('cta_click', { placement: 'ai-check-result' })
   }
-  const handoffText = `Hi Aniket, I just did the free AI check on your site.\n\nName: ${name}\n\n${text}`
+  const handoffText = `Hi Aniket, I just did the free enquiry leak check on your site.\n\nName: ${name}\n\n${text}`
   const topActions = (event) => {
     onActions(event)
     if (event.target.closest('a,button')) track('result_cta', { position: 'top', temp })
@@ -408,6 +410,26 @@ function Result({ res, temp, send, text, name, email, resultRef, onRestart }) {
           reply within 24 hours.
         </p>
       </div>
+
+      {/* Said yes to the 48-hour leak report: how to send last month's
+          enquiries. */}
+      {report && (
+        <div className="aip-report">
+          <p>{aiCheck.report.line}</p>
+          {hasWhatsApp ? (
+            <WhatsAppCta
+              message={aiCheck.report.prefill}
+              label={aiCheck.report.button}
+              className="btn-light aip-glass-btn"
+              placement="result-report"
+            />
+          ) : (
+            <Link to="/contact?service=ai#write" className="btn-light aip-glass-btn">
+              {aiCheck.report.contactButton}
+            </Link>
+          )}
+        </div>
+      )}
 
       <ol className="ac-jobs">
         {res.top.map((job, i) => (

@@ -2143,6 +2143,21 @@ export const social = [
   answers, shown as a rough estimate, never as a measured result.
 */
 export const aiCheck = {
+  /* The page's own words (/ai-check, AI brand slice 2, 2026-10-25):
+     the free enquiry leak check. `title` is [before, serif word, after]. */
+  docTitle: 'Free enquiry leak check · Aniket',
+  pill: 'Free enquiry leak check · about 2 minutes',
+  stakes: 'Enquiries rarely go missing all at once. They leak a few at a time.',
+  title: ['Free enquiry ', 'leak', ' check'],
+  intro: 'Two minutes. Where enquiries, bookings and follow-ups leak, and what to hand to AI first.',
+  /* The last question's yes: shown on the result with the WhatsApp
+     button. `prefill` opens the chat. */
+  report: {
+    line: 'Send a screenshot of last month’s enquiries (names hidden) on WhatsApp. One page back within 48 hours.',
+    button: 'Send it on WhatsApp',
+    contactButton: 'Send it as a message',
+    prefill: 'Hi Aniket, I did the free enquiry leak check and want the one-page leak report. Here is a screenshot of last month’s enquiries, names hidden:'
+  },
   steps: [
     {
       id: 'business',
@@ -2223,6 +2238,16 @@ export const aiCheck = {
         { value: '11-30', label: '11 to 30 people' },
         { value: '30+', label: 'More than 30' }
       ]
+    },
+    {
+      id: 'report',
+      kind: 'one',
+      question: 'Want a one-page leak report in 48 hours?',
+      hint: 'Send last month’s enquiries with names hidden and we read them by hand.',
+      options: [
+        { value: 'yes', label: 'Yes' },
+        { value: 'no', label: 'Not now' }
+      ]
     }
   ],
 
@@ -2274,7 +2299,7 @@ export const aiCheck = {
 export const startChoices = [
   { slug: 'websites', to: '/start/website', label: 'Plan your website' },
   { slug: 'software', to: '/start/software', label: 'Plan your software' },
-  { slug: 'ai', to: '/ai-check', label: 'Get your free AI check' }
+  { slug: 'ai', to: '/ai-check', label: 'Free enquiry leak check' }
 ]
 
 /* The answers both new flows share: the kind of business is the AI

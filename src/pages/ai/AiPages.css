@@ -1,0 +1,46 @@
+/* ------------------------------------------------------------------
+   The AI brand pages under /ai (docs/work/ai-brand-2/spec.md): /ai/try,
+   /ai/for/:vertical, /ai/pricing, /ai/every-enquiry, plus the 48-hour
+   report box on the /ai-check result. Prefix `aip-`. Built on the Dusk
+   grounds (.stage, .night, .paper) and the slice 1 bands in
+   ServicePage.css; nothing here overrides index.css or HomePage.css.
+   ------------------------------------------------------------------ */
+
+/* Dark glass for the second button on a stage or night ground, as in the
+   /ai hero. */
+.aip-glass-btn.btn-light,
+.aip-hero .btn-light {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.aip-glass-btn.btn-light:hover,
+.aip-hero .btn-light:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* /ai-check result: the 48-hour leak report, after a yes. */
+.aip-report {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.aip-report p {
+  flex: 1 1 22rem;
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}

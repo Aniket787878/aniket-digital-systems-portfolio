@@ -428,6 +428,122 @@ export const brand = {
     closeTitle: ['Seen enough to ', 'ask', '?'],
     closeLede: 'Two minutes on how enquiries reach you today, and you see where they leak and what to hand to AI first.'
   },
+  /* /ai/for/:vertical (slice 4): one page per kind of business. `slug`
+     is the address, `link` the label in the /ai link strip, `demo` the
+     project shown under "See it working". The leaks are in the owner's
+     own words, written from discovery calls, not quotes from clients. */
+  verticals: [
+    {
+      slug: 'clinics',
+      link: 'For clinics',
+      who: 'For clinics and health practices',
+      docTitle: 'AI front desk for clinics · Aniket',
+      description: 'An AI front desk for clinics: patient enquiries answered, appointments booked and reminders sent, checked by a person, on accounts you own.',
+      title: ['Every patient enquiry ', 'answered', '.'],
+      lede: 'Questions answered from your own fees and hours, appointments booked into your calendar, and anything clinical handed to a person.',
+      leaks: [
+        'Patients message after we close and book somewhere else by morning.',
+        'Reception spends the day answering the same questions about fees and timings.',
+        'No-shows, because nobody had time to send the reminder.'
+      ],
+      jobs: [
+        { title: 'Answering enquiries', text: 'Fees, hours and services answered from your own information, on WhatsApp or your website, day or night.' },
+        { title: 'Booking appointments', text: 'Patients pick a free slot and get a confirmation. Your calendar stays the one place it all lives.' },
+        { title: 'Reminders and follow-ups', text: 'A reminder before every appointment, and a polite nudge to anyone who went quiet after asking.' },
+        { title: 'Handing over to a person', text: 'Anything clinical or unusual goes to your team with a short summary. Emergency wording gets a fixed safety reply.' }
+      ],
+      demo: 'appointment-desk',
+      faq: [
+        { q: 'Will it give medical advice?', a: 'No. It answers fees, hours and bookings from your own information. Anything clinical goes to a person, and emergency wording gets a fixed safety reply before any AI runs.' },
+        { q: 'What about patient privacy?', a: 'Consent is handled, your data stays in your own tools and accounts, and the setup is written for the DPDP Act. You own every account it runs on.' }
+      ]
+    },
+    {
+      slug: 'studios',
+      link: 'For studios',
+      who: 'For studios, salons and fitness',
+      docTitle: 'AI front desk for studios · Aniket',
+      description: 'An AI front desk for studios, salons and fitness: enquiries answered, trial classes booked, reminders and follow-ups sent, checked by a person.',
+      title: ['Every trial class ', 'booked', '.'],
+      lede: 'Enquiries answered, trials and appointments booked, reminders sent, and the people who did not come back followed up.',
+      leaks: [
+        'People ask about a trial late at night and never hear back.',
+        'Too many trial bookings never turn up.',
+        'We mean to follow up after a trial, and then the week gets busy.'
+      ],
+      jobs: [
+        { title: 'Answering enquiries', text: 'Prices, timings and classes answered from your own information, on WhatsApp or your website, at any hour.' },
+        { title: 'Booking trials', text: 'People pick a free trial slot themselves and get a confirmation straight away.' },
+        { title: 'Reminders', text: 'A reminder the evening before, so more of the people who booked actually come.' },
+        { title: 'Follow-up after the class', text: 'A message to whoever came and whoever did not, so a trial turns into a membership conversation.' }
+      ],
+      demo: 'trial-class-desk',
+      faq: [
+        { q: 'Which channels does it answer on?', a: 'WhatsApp and your website. Other channels depend on what they allow; we check yours in the first session and say plainly what is possible.' },
+        { q: 'Can my team still reply themselves?', a: 'Yes. Your team sees every conversation and can step in at any point. The AI takes the routine ones and hands the rest over.' }
+      ]
+    },
+    {
+      slug: 'coaching',
+      link: 'For coaching',
+      who: 'For coaching, tutoring and training',
+      docTitle: 'AI front desk for coaching · Aniket',
+      description: 'An AI front desk for coaching and training businesses: course questions answered, demo classes booked and follow-ups sent, checked by a person.',
+      title: ['Every student question ', 'answered', '.'],
+      lede: 'Course and fee questions answered from your own information, demo classes and calls booked, and follow-ups sent to the people who went quiet.',
+      leaks: [
+        'Parents ask the same questions about fees and batches every day.',
+        'Enquiries come in during class, and by the time we reply they have joined somewhere else.',
+        'We never follow up after a demo class.'
+      ],
+      jobs: [
+        { title: 'Answering course questions', text: 'Fees, batches and timings answered from your own information, with the source behind every answer.' },
+        { title: 'Booking demo classes', text: 'Students and parents pick a demo class or a call and get a confirmation straight away.' },
+        { title: 'Follow-ups after a demo', text: 'A polite message after every demo class, so nobody who was interested is left waiting.' },
+        { title: 'Fee and session reminders', text: 'Reminders before sessions and when fees are due, sent without anyone having to remember.' }
+      ],
+      demo: 'website-answer-widget',
+      faq: [
+        { q: 'What if someone asks something it does not know?', a: 'It answers only from the information you give it. When it does not know, it says so and passes the question to your team, rather than guess.' },
+        { q: 'How long does it take to set up?', a: 'One working session to map how enquiries reach you, then a build date in writing on your quote. If it is not live by that date, you do not pay the second half.' }
+      ]
+    },
+    {
+      slug: 'agencies',
+      link: 'For agencies',
+      who: 'For agencies and creative studios',
+      docTitle: 'AI front desk for agencies · Aniket',
+      description: 'AI for agencies and creative studios: new briefs answered, proposals drafted from your rate card for you to approve, and follow-ups sent.',
+      title: ['Every new brief ', 'followed up', '.'],
+      lede: 'New briefs acknowledged straight away, first proposals drafted from your own rate card for you to approve, and follow-ups sent so no lead goes cold.',
+      leaks: [
+        'A good brief sits in the inbox while we are busy on client work.',
+        'Writing a proposal from scratch takes an evening every time.',
+        'We send the proposal and then forget to chase it.'
+      ],
+      jobs: [
+        { title: 'Answering new briefs', text: 'Every new enquiry gets a clear reply straight away, with the questions you would ask anyway.' },
+        { title: 'Drafting proposals', text: 'A first draft priced from your own rate card. Nothing is sent until you approve it.' },
+        { title: 'Follow-ups', text: 'A polite chase when a proposal has gone quiet, sent on time without anyone remembering.' },
+        { title: 'A weekly view', text: 'New briefs, proposals out and replies in, in one short note each week.' }
+      ],
+      demo: 'proposal-drafter',
+      faq: [
+        { q: 'Will it send proposals without me?', a: 'No. It drafts from your own rate card and nothing goes out until you approve it.' },
+        { q: 'Does it fit the tools we already use?', a: 'Yes. It runs on the tools you already pay for, on your own accounts, so you keep everything if you ever leave.' }
+      ]
+    }
+  ],
+  /* The shared headings of the vertical pages. */
+  verticalPage: {
+    leaksHead: ['Where it leaks.', 'In your words, not ours.'],
+    jobsHead: ['What we hand to AI first.', 'Four jobs, each checked by a person.'],
+    demoHead: ['See it working.', 'A labelled demo, not a client project.'],
+    faqHead: ['Before you ask.', 'Two plain answers.'],
+    closeTitle: ['Find your own ', 'leaks', '.'],
+    closeLede: 'Two minutes on how enquiries reach you today, and you see where they leak and what to hand to AI first.'
+  },
+
   /* What you are seeing on each /ai/try card, one line per demo. */
   tryIntro: {
     'appointment-desk': 'A clinic’s WhatsApp desk: fees answered, a slot booked, clinical questions passed to a person.',

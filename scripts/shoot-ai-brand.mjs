@@ -103,7 +103,19 @@ const PAGES = [
       const first = await page.locator('.aip-cards .pc').first().getAttribute('href')
       if (first !== '/projects/appointment-desk') fail(`ai-try ${size.name}: first card goes to ${first}`)
     }
-  }
+  },
+  ...brand.verticals.map((v) => ({
+    name: `ai-for-${v.slug}`,
+    path: `/ai/for/${v.slug}`,
+    ready: '#aip-vertical-title',
+    want: [v.title.join(''), 'Where it leaks.', 'What we hand to AI first.', 'See it working.', 'Train and stay', ...v.leaks, ...v.jobs.map((j) => j.title), v.faq[0].q],
+    primary: true,
+    extra: async (page, size) => {
+      const href = await page.locator('.aip-demo .pc').getAttribute('href')
+      if (href !== `/projects/${v.demo}`) fail(`ai-for-${v.slug} ${size.name}: demo card goes to ${href}`)
+    }
+  })),
+  { name: 'ai-for-unknown', path: '/ai/for/plumbers', ready: '.error-page', want: ['This page doesn'] }
 ]
 
 const sizes = [
@@ -111,14 +123,17 @@ const sizes = [
   { name: 'phone', width: 390, height: 844 }
 ]
 
+/* Scroll through with the wheel (the smooth-scroll layer ignores a bare
+   window.scrollTo), so every whileInView band reveals before the
+   full-page shot. */
 async function revealAll(page) {
-  await page.evaluate(async () => {
-    for (let y = 0; y < document.body.scrollHeight; y += 600) {
-      window.scrollTo(0, y)
-      await new Promise((r) => setTimeout(r, 120))
-    }
-    window.scrollTo(0, 0)
-  })
+  const height = await page.evaluate(() => document.body.scrollHeight)
+  for (let y = 0; y < height; y += 400) {
+    await page.mouse.wheel(0, 400)
+    await page.waitForTimeout(120)
+  }
+  await page.waitForTimeout(600)
+  await page.evaluate(() => window.scrollTo(0, 0))
   await page.waitForTimeout(800)
 }
 

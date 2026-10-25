@@ -186,3 +186,105 @@
     max-width: 22rem;
   }
 }
+
+/* ---- /ai/for/:vertical ---- */
+.aip-brand-name {
+  color: var(--peach);
+  font-weight: 600;
+}
+
+.aip-hero .stage-pill {
+  flex-wrap: wrap;
+  justify-content: center;
+  color: var(--ink);
+}
+
+/* Where it leaks: three lines in the owner's words, as quiet quote cards. */
+.aip-leak-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.6vw, 1.25rem);
+  margin: 0;
+  padding: 0;
+}
+
+.aip-leak {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: clamp(1.5rem, 2.4vw, 2rem);
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid var(--paper-2);
+  color: var(--ink-dark);
+}
+
+.aip-leak-mark {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 3rem;
+  line-height: 0.8;
+  color: var(--accent);
+}
+
+.aip-leak p {
+  font-size: clamp(1.0625rem, 1.4vw, 1.1875rem);
+  line-height: 1.5;
+}
+
+/* What we hand to AI first: the Method step cards, numbered per job. */
+.aip-jobs {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* See it working: one wide demo card. */
+.aip-demo {
+  padding-block: clamp(4.5rem, 9vw, 7rem);
+}
+
+.aip-demo-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.aip-demo-head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
+.aip-demo-title {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+}
+
+.aip-demo-card {
+  width: 100%;
+  max-width: 64rem;
+}
+
+@media (max-width: 1023px) {
+  .aip-leak-list {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  /* The brand and who it is for on two short lines, not one wrapped pill. */
+  .aip-hero .stage-pill {
+    flex-direction: column;
+    gap: 0.15rem;
+    border-radius: 14px;
+    padding: 0.5rem 0.9rem;
+  }
+
+  .aip-hero .stage-pill > [aria-hidden='true'] {
+    display: none;
+  }
+}

@@ -16,6 +16,7 @@
 - `scripts/audit-ai.mjs` (new: axe-core via Playwright if `axe-core` resolves from node_modules or the npx cache, else skip with a printed reason; Lighthouse via `npx lighthouse` only if already cached, never install; writes `docs/work/ai-brand-2/audit.md`)
 - `docs/system/01-website-map.md`, `docs/MAP.md`, `docs/work/ai-brand-2/audit.md`
 - `.gitignore` (already ignores `docs/work/*/shots/`)
+- `src/flows.js` (CHECK_LABEL reads "Start the free leak check" so every check button on the site matches)
 
 ## Other side
 - n8n lead intake (dUHbHJPBhHFB79qu) reads `source` as free text → new value `ai-brand-check · …` needs no workflow change; "Wants 48h leak report" rides inside `workflow_broken` so no new column. Checked, no change.

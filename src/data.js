@@ -787,7 +787,7 @@ export const whatsappPrefill = {
   ai: 'Hi Aniket, I saw your AI page. I’d like to talk about using AI in my business.',
   footer: 'Hi Aniket, quick question about the systems you build.',
   /* The AI check's result. `{jobs}` is replaced with the top three. */
-  aiCheck: 'Hi Aniket, I just did the free AI check on your site. I’d like to talk about the AI Roadmap. My top three were: {jobs}.',
+  aiCheck: 'Hi Aniket, I just did the free leak check on your site. I’d like to talk about the AI Roadmap. My top three were: {jobs}.',
   nav: 'Hi Aniket, I’m on your site and would like to talk about a project for my business.',
   /* The phone action dock (components/ActionDock.jsx). `{page}` is the
      current page's name, so the chat still says which part of the site
@@ -1979,7 +1979,7 @@ export const carePlan = {
 export const funnelPath = [
   {
     key: 'check',
-    name: 'Free AI check',
+    name: 'Free leak check',
     text: 'A few plain questions about your week. You get, on the spot, the three jobs worth handing to AI first and what each would look like.',
     note: 'Free · about 3 minutes'
   },

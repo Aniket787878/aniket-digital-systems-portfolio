@@ -544,6 +544,73 @@ export const brand = {
     closeLede: 'Two minutes on how enquiries reach you today, and you see where they leak and what to hand to AI first.'
   },
 
+  /* /ai/pricing (slice 5). Prices are never written here: the cards read
+     `packages` (lane 'ai') and `carePlan`. */
+  pricingExtras: {
+    docTitle: 'Pricing · AI front desk · Aniket',
+    description: 'Fixed prices for the AI front desk: the Roadmap, a quick win, an automation sprint and an assistant build, then the Care Plan. Running costs passed through at cost.',
+    pill: 'Prices',
+    title: ['Fixed prices, ', 'in writing', '.'],
+    lede: 'Four ways to start, each at a fixed price with a fixed date. Then the Care Plan keeps it running.',
+    pricesHead: ['Four ways to start.', 'Most begin with the free check, then the Roadmap.'],
+    care: 'On the Care Plan a person checks the AI’s replies every day, you get a weekly proof note, and fixes land within 24 hours.',
+    running: {
+      title: 'What runs it each month',
+      text: 'Passed through at cost, on accounts in your name, and stated on every quote so nothing arrives as a surprise.',
+      items: ['The AI model', 'The WhatsApp Business API', 'Hosting']
+    },
+    handover: {
+      title: 'Handover pack, included',
+      text: 'With every build, so your team can run it without us.',
+      items: ['A training session for your team', 'A written playbook your team keeps', 'Every account in your name']
+    },
+    terms: 'Half to start, half when it is live.',
+    termsNote: 'The price and the date are fixed in writing before you agree to anything.',
+    closeTitle: ['Not sure where to ', 'start', '?'],
+    closeLede: 'Take the free leak check. Two minutes, and you see which of the four fits.'
+  },
+
+  /* /ai/every-enquiry (slice 5): the one-page landing for ads and
+     outreach. The price signal is read from `packages`, never typed. */
+  landing: {
+    docTitle: 'Every enquiry answered · AI front desk · Aniket',
+    description: 'Every enquiry answered, every booking confirmed, every follow-up sent. By AI, checked by a person. Owned by you.',
+    title: ['It is 10:40 pm. You are ', 'still', ' replying to enquiries.'],
+    sub: 'Every enquiry answered, every booking confirmed, every follow-up sent. By AI, checked by a person. Owned by you.',
+    whatsappLabel: 'Ask on WhatsApp',
+    whatsappMessage: 'Hi Aniket, I saw your Every enquiry answered page. I’d like to talk about an AI front desk for my business.',
+    person: {
+      title: 'The person who checks.',
+      photoLabel: 'Photo coming soon',
+      lines: [
+        'I am Aniket. I map your day, build the system and hand it over in your name.',
+        'Then I read what the AI said to your customers, and fix what it got wrong.'
+      ]
+    },
+    privacy: 'Consent handled. Your data stays in your tools. Written for the DPDP Act.',
+    closeTitle: ['Find out where your enquiries ', 'leak', '.'],
+    closeLede: 'Two minutes, free. You see where enquiries, bookings and follow-ups leak, and what to hand to AI first.'
+  },
+
+  /* The weekly proof note (components: pages/ai/ProofNote.jsx). DUMMY
+     DATA for a made-up business, shown labelled "Sample"; never a real
+     client's numbers. */
+  proofNote: {
+    label: 'Sample',
+    caption: 'A sample weekly note, made-up business and dummy numbers. Care Plan clients get one like it every Monday.',
+    business: 'A made-up physio studio',
+    week: 'Week 3',
+    rows: [
+      { label: 'Enquiries answered', value: '46' },
+      { label: 'Bookings confirmed', value: '19' },
+      { label: 'Follow-ups sent', value: '23' },
+      { label: 'Handed to a person', value: '5' },
+      { label: 'Replies a person corrected', value: '2' }
+    ],
+    fixed: 'Fixed: the assistant quoted last month’s package price. Updated from the new price list on Tuesday.',
+    next: 'Next week: Sunday enquiries get the studio’s holiday hours.'
+  },
+
   /* What you are seeing on each /ai/try card, one line per demo. */
   tryIntro: {
     'appointment-desk': 'A clinic’s WhatsApp desk: fees answered, a slot booked, clinical questions passed to a person.',
@@ -2116,6 +2183,14 @@ export const services = [
       {
         q: 'Do we need to change the tools we use?',
         a: 'No. The automations run on the tools you already pay for, on your own accounts, so you own them.'
+      },
+      {
+        q: 'What does it cost to run each month?',
+        a: 'The AI model, the WhatsApp Business API and hosting are passed through at cost, on accounts in your name. The figure for your setup is written on the quote before you agree to anything.'
+      },
+      {
+        q: 'How do I pay?',
+        a: 'Half to start and half when it is live, at the fixed price on your quote. If it is not live by the date in writing, you do not pay the second half.'
       }
     ]
   }

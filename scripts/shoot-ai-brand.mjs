@@ -22,7 +22,7 @@ import { createServer } from 'node:net'
 import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { brand } from '../src/data.js'
+import { brand, packages, carePlan, site } from '../src/data.js'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const out = join(root, 'docs/work/ai-brand-2/shots')
@@ -115,6 +115,49 @@ const PAGES = [
       if (href !== `/projects/${v.demo}`) fail(`ai-for-${v.slug} ${size.name}: demo card goes to ${href}`)
     }
   })),
+  {
+    name: 'ai-pricing',
+    path: '/ai/pricing',
+    ready: '#aip-pricing-title',
+    want: [
+      ...packages.filter((p) => p.lane === 'ai').map((p) => p.name),
+      carePlan.name,
+      'a person checks the AI’s replies every day',
+      'What runs it each month',
+      'Handover pack, included',
+      'Half to start, half when it is live.',
+      site.guarantee,
+      'You own everything',
+      'What does it cost to run each month?'
+    ],
+    primary: true,
+    extra: async (page, size) => {
+      const n = await page.locator('.aip-price-grid .price').count()
+      if (n !== 4) fail(`ai-pricing ${size.name}: ${n} price cards, not 4`)
+    }
+  },
+  {
+    name: 'ai-every-enquiry',
+    path: '/ai/every-enquiry',
+    ready: '#aip-landing-title',
+    want: [
+      'It is 10:40 pm. You are still replying to enquiries.',
+      'Every enquiry answered, every booking confirmed, every follow-up sent. By AI, checked by a person. Owned by you.',
+      'The person who checks.',
+      'Photo coming soon',
+      'SAMPLE',
+      'Train and stay',
+      'From ₹20,000 / $490',
+      'Consent handled. Your data stays in your tools. Written for the DPDP Act.'
+    ],
+    primary: true,
+    extra: async (page, size) => {
+      // Click the primary button: it must land on the leak check.
+      await page.locator('main [data-primary]').first().click()
+      await page.waitForURL('**/ai-check')
+      await page.waitForSelector('#ac-title')
+    }
+  },
   { name: 'ai-for-unknown', path: '/ai/for/plumbers', ready: '.error-page', want: ['This page doesn'] }
 ]
 

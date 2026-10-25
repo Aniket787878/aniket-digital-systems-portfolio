@@ -288,3 +288,232 @@
     display: none;
   }
 }
+
+/* ---- /ai/pricing ---- */
+.aip-prices .center-head .currency-toggle {
+  margin-top: 1.25rem;
+}
+
+.aip-price-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+}
+
+.aip-care {
+  max-width: 56rem;
+  margin: clamp(2rem, 4vw, 3rem) auto 0;
+}
+
+.aip-care-extra {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-top: 0.875rem;
+  padding-inline: 0.25rem;
+  color: var(--ink-dark);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.aip-care-extra svg {
+  flex: none;
+  margin-top: 0.2rem;
+  color: var(--accent-ink-strong, var(--accent));
+}
+
+.aip-included {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.aip-included-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.aip-included-card h3 {
+  margin-top: 0;
+}
+
+.aip-ticks {
+  margin-top: 1.25rem;
+  color: var(--ink);
+}
+
+.aip-terms {
+  max-width: 44rem;
+  margin: clamp(2rem, 4vw, 3rem) auto 0;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.aip-terms strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---- /ai/every-enquiry ---- */
+.aip-landing-title {
+  max-width: 20ch;
+}
+
+.aip-person-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4rem);
+  max-width: 60rem;
+  margin-inline: auto;
+}
+
+/* The photo slot: left empty on purpose until a real photo is supplied. */
+.aip-photo {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 5;
+  border-radius: 20px;
+  border: 1.5px dashed var(--paper-2);
+  background: #fff;
+}
+
+.aip-photo .stage-mono {
+  color: var(--muted-dark);
+}
+
+.aip-person-text .h2 {
+  margin-top: 1rem;
+}
+
+.aip-person-line {
+  margin-top: 1rem;
+  max-width: 44ch;
+  color: var(--ink-dark);
+  font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+  line-height: 1.55;
+}
+
+.aip-proof {
+  overflow: clip;
+  padding-block: clamp(4.5rem, 9vw, 7rem);
+}
+
+.aip-proof-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The sample weekly note. */
+.aip-note {
+  width: 100%;
+  max-width: 34rem;
+  margin: 0;
+}
+
+.aip-note-card {
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+}
+
+.aip-note-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.aip-note-week {
+  color: var(--ink-soft);
+}
+
+.aip-note-badge {
+  flex: none;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 135, 30, 0.45);
+  color: var(--peach);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.aip-note-rows {
+  margin: 0.5rem 0 0;
+}
+
+.aip-note-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.7rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.aip-note-row dt {
+  color: var(--ink-soft);
+}
+
+.aip-note-row dd {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.aip-note-line {
+  margin-top: 1rem;
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.aip-note-caption {
+  margin-top: 0.875rem;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.aip-price-signal {
+  margin-top: 1.5rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+}
+
+.aip-privacy {
+  margin-top: 0.5rem;
+  max-width: 46ch;
+  line-height: 1.5;
+}
+
+@media (max-width: 1023px) {
+  .aip-price-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .aip-price-grid,
+  .aip-included-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .aip-person-inner {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+
+  .aip-photo {
+    width: min(14rem, 70%);
+  }
+
+  .aip-person-line {
+    margin-inline: auto;
+  }
+}

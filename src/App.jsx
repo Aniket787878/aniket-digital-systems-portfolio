@@ -22,6 +22,8 @@ const ContactPage = lazy(() => import('./pages/ContactPage.jsx'))
 const AiCheckPage = lazy(() => import('./pages/AiCheckPage.jsx'))
 const TryPage = lazy(() => import('./pages/ai/TryPage.jsx'))
 const VerticalPage = lazy(() => import('./pages/ai/VerticalPage.jsx'))
+const PricingPage = lazy(() => import('./pages/ai/PricingPage.jsx'))
+const LandingPage = lazy(() => import('./pages/ai/LandingPage.jsx'))
 const StartPage = lazy(() => import('./pages/start/StartPage.jsx'))
 const FlowPage = lazy(() => import('./pages/start/FlowPage.jsx'))
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage.jsx'))
@@ -116,6 +118,8 @@ export default function App() {
             {/* The AI brand's own pages (docs/work/ai-brand-2/spec.md). */}
             <Route path="/ai/try" element={<TryPage />} />
             <Route path="/ai/for/:vertical" element={<VerticalPage />} />
+            <Route path="/ai/pricing" element={<PricingPage />} />
+            <Route path="/ai/every-enquiry" element={<LandingPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/projects/:slug" element={<ProjectDetailPage />} />
             <Route path="/about" element={<AboutPage />} />

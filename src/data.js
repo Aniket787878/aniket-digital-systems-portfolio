@@ -1926,7 +1926,7 @@ export const services = [
     icon: 'spark',
     docTitle: `${brand.name} · ${brand.line}`,
     title: ['Every enquiry answered.', 'Every booking confirmed. Every follow-up sent.'],
-    sub: 'By AI, checked by a person, on accounts you own. For clinics, studios, coaching and agencies with 2 to 30 staff.',
+    sub: 'An AI front desk that answers, books and follows up. By AI, checked by a person, on accounts you own. For clinics, studios, coaching and agencies with 2 to 30 staff.',
     promise: 'An AI front desk that answers, books and follows up, checked by a person, on accounts you own.',
     points: [
       { icon: 'chart', title: 'Map first', text: 'One working session on your real day, so we fix where time and money actually leak.' },

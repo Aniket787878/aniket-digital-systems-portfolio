@@ -1,7 +1,9 @@
 import { m } from 'motion/react'
+import { Link } from 'react-router-dom'
 import { CheckCta, TalkCta } from '../../components/FunnelCta.jsx'
 import { brand, site, whatsappPrefill } from '../../data.js'
 import './showcase/stage.css'
+import '../ai/AiPages.css'
 
 /* ---------------------------------------------------------------
    /ai's opening screen: the brand home (docs/work/ai-brand/spec.md).
@@ -20,6 +22,15 @@ const settle = {
   show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.75, ease: EASE } }
 }
 const group = { hidden: {}, show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } } }
+
+/* The quiet strip under the hero's promises: the brand's own pages
+   (docs/work/ai-brand-2/spec.md). The vertical labels come from
+   `brand.verticals`, so a new vertical joins the strip by itself. */
+const LINKS = [
+  { to: '/ai/try', label: 'Try it' },
+  ...brand.verticals.map((v) => ({ to: `/ai/for/${v.slug}`, label: v.link })),
+  { to: '/ai/pricing', label: 'Pricing' }
+]
 
 export default function BrandHero() {
   return (
@@ -49,7 +60,7 @@ export default function BrandHero() {
         </m.p>
 
         <m.div className="svc-brand-actions" variants={settle}>
-          <CheckCta placement="ai-brand-hero" magnet />
+          <CheckCta placement="ai-brand-hero" label={brand.checkLabel} magnet />
           <TalkCta message={whatsappPrefill.ai} contact="/contact?service=ai#write" placement="ai-brand-hero" />
         </m.div>
 
@@ -57,6 +68,16 @@ export default function BrandHero() {
           <p className="stage-mono">{site.replyPromise}</p>
           <p className="stage-mono">{site.guarantee}</p>
         </m.div>
+
+        <m.nav className="aip-strip" aria-label={`More about ${brand.name}`} variants={settle}>
+          <ul>
+            {LINKS.map((link) => (
+              <li key={link.to}>
+                <Link to={link.to}>{link.label}</Link>
+              </li>
+            ))}
+          </ul>
+        </m.nav>
       </m.div>
     </section>
   )

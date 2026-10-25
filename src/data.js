@@ -409,6 +409,216 @@ export const brand = {
       'A written playbook your team keeps',
       'No lock-in. Leave any time and it keeps running'
     ]
+  },
+
+  /* The free check's button on the /ai/* pages (/ai-check). */
+  checkLabel: 'Start the free leak check',
+
+  /* /ai/try (slice 3): every demo on one page, working demos first. */
+  tryPage: {
+    docTitle: 'Try it · AI demos · Aniket',
+    description: 'Try the AI front desk before you talk to anyone: three working demos and three demo screens, each labelled for what it is.',
+    pill: 'Demos, labelled',
+    title: ['Try it before you ', 'talk', ' to anyone.'],
+    lede: 'Three working demos, tested on dummy data, then three demo screens of made-up businesses. Each card says what you are looking at. Open any of them for the full walk-through.',
+    groups: [
+      { kind: 'real', head: 'Working demos', note: 'Built and tested for real, on dummy data for a made-up clinic.', slugs: ['appointment-desk', 'knowledge-assistant', 'website-answer-widget'] },
+      { kind: 'demo', head: 'Demo screens', note: 'Designed screens for made-up businesses. Not built yet.', slugs: ['missed-enquiry-rescue', 'proposal-drafter', 'trial-class-desk'] }
+    ],
+    closeTitle: ['Seen enough to ', 'ask', '?'],
+    closeLede: 'Two minutes on how enquiries reach you today, and you see where they leak and what to hand to AI first.'
+  },
+  /* /ai/for/:vertical (slice 4): one page per kind of business. `slug`
+     is the address, `link` the label in the /ai link strip, `demo` the
+     project shown under "See it working". The leaks are in the owner's
+     own words, written from discovery calls, not quotes from clients. */
+  verticals: [
+    {
+      slug: 'clinics',
+      link: 'For clinics',
+      who: 'For clinics and health practices',
+      docTitle: 'AI front desk for clinics · Aniket',
+      description: 'An AI front desk for clinics: patient enquiries answered, appointments booked and reminders sent, checked by a person, on accounts you own.',
+      title: ['Every patient enquiry ', 'answered', '.'],
+      lede: 'Questions answered from your own fees and hours, appointments booked into your calendar, and anything clinical handed to a person.',
+      leaks: [
+        'Patients message after we close and book somewhere else by morning.',
+        'Reception spends the day answering the same questions about fees and timings.',
+        'No-shows, because nobody had time to send the reminder.'
+      ],
+      jobs: [
+        { title: 'Answering enquiries', text: 'Fees, hours and services answered from your own information, on WhatsApp or your website, day or night.' },
+        { title: 'Booking appointments', text: 'Patients pick a free slot and get a confirmation. Your calendar stays the one place it all lives.' },
+        { title: 'Reminders and follow-ups', text: 'A reminder before every appointment, and a polite nudge to anyone who went quiet after asking.' },
+        { title: 'Handing over to a person', text: 'Anything clinical or unusual goes to your team with a short summary. Emergency wording gets a fixed safety reply.' }
+      ],
+      demo: 'appointment-desk',
+      faq: [
+        { q: 'Will it give medical advice?', a: 'No. It answers fees, hours and bookings from your own information. Anything clinical goes to a person, and emergency wording gets a fixed safety reply before any AI runs.' },
+        { q: 'What about patient privacy?', a: 'Consent is handled, your data stays in your own tools and accounts, and the setup is written for the DPDP Act. You own every account it runs on.' }
+      ]
+    },
+    {
+      slug: 'studios',
+      link: 'For studios',
+      who: 'For studios, salons and fitness',
+      docTitle: 'AI front desk for studios · Aniket',
+      description: 'An AI front desk for studios, salons and fitness: enquiries answered, trial classes booked, reminders and follow-ups sent, checked by a person.',
+      title: ['Every trial class ', 'booked', '.'],
+      lede: 'Enquiries answered, trials and appointments booked, reminders sent, and the people who did not come back followed up.',
+      leaks: [
+        'People ask about a trial late at night and never hear back.',
+        'Too many trial bookings never turn up.',
+        'We mean to follow up after a trial, and then the week gets busy.'
+      ],
+      jobs: [
+        { title: 'Answering enquiries', text: 'Prices, timings and classes answered from your own information, on WhatsApp or your website, at any hour.' },
+        { title: 'Booking trials', text: 'People pick a free trial slot themselves and get a confirmation straight away.' },
+        { title: 'Reminders', text: 'A reminder the evening before, with the address and what to bring.' },
+        { title: 'Follow-up after the class', text: 'A message to whoever came and whoever did not, with the next step and the price list.' }
+      ],
+      demo: 'trial-class-desk',
+      faq: [
+        { q: 'Which channels does it answer on?', a: 'WhatsApp and your website. Other channels depend on what they allow; we check yours in the first session and say plainly what is possible.' },
+        { q: 'Can my team still reply themselves?', a: 'Yes. Your team sees every conversation and can step in at any point. The AI takes the routine ones and hands the rest over.' }
+      ]
+    },
+    {
+      slug: 'coaching',
+      link: 'For coaching',
+      who: 'For coaching, tutoring and training',
+      docTitle: 'AI front desk for coaching · Aniket',
+      description: 'An AI front desk for coaching and training businesses: course questions answered, demo classes booked and follow-ups sent, checked by a person.',
+      title: ['Every student question ', 'answered', '.'],
+      lede: 'Course and fee questions answered from your own information, demo classes and calls booked, and follow-ups sent to the people who went quiet.',
+      leaks: [
+        'Parents ask the same questions about fees and batches every day.',
+        'Enquiries come in during class, and by the time we reply they have joined somewhere else.',
+        'We never follow up after a demo class.'
+      ],
+      jobs: [
+        { title: 'Answering course questions', text: 'Fees, batches and timings answered from your own information, with the source behind every answer.' },
+        { title: 'Booking demo classes', text: 'Students and parents pick a demo class or a call and get a confirmation straight away.' },
+        { title: 'Follow-ups after a demo', text: 'A polite message after every demo class, so nobody who was interested is left waiting.' },
+        { title: 'Fee and session reminders', text: 'Reminders before sessions and when fees are due, sent without anyone having to remember.' }
+      ],
+      demo: 'website-answer-widget',
+      faq: [
+        { q: 'What if someone asks something it does not know?', a: 'It answers only from the information you give it. When it does not know, it says so and passes the question to your team, rather than guess.' },
+        { q: 'How long does it take to set up?', a: 'One working session to map how enquiries reach you, then a build date in writing on your quote. If it is not live by that date, you do not pay the second half.' }
+      ]
+    },
+    {
+      slug: 'agencies',
+      link: 'For agencies',
+      who: 'For agencies and creative studios',
+      docTitle: 'AI front desk for agencies · Aniket',
+      description: 'AI for agencies and creative studios: new briefs answered, proposals drafted from your rate card for you to approve, and follow-ups sent.',
+      title: ['Every new brief ', 'followed up', '.'],
+      lede: 'New briefs acknowledged straight away, first proposals drafted from your own rate card for you to approve, and follow-ups sent so no lead goes cold.',
+      leaks: [
+        'A good brief sits in the inbox while we are busy on client work.',
+        'Writing a proposal from scratch takes an evening every time.',
+        'We send the proposal and then forget to chase it.'
+      ],
+      jobs: [
+        { title: 'Answering new briefs', text: 'Every new enquiry gets a clear reply straight away, with the questions you would ask anyway.' },
+        { title: 'Drafting proposals', text: 'A first draft priced from your own rate card. Nothing is sent until you approve it.' },
+        { title: 'Follow-ups', text: 'A polite chase when a proposal has gone quiet, sent on time without anyone remembering.' },
+        { title: 'A weekly view', text: 'New briefs, proposals out and replies in, in one short note each week.' }
+      ],
+      demo: 'proposal-drafter',
+      faq: [
+        { q: 'Will it send proposals without me?', a: 'No. It drafts from your own rate card and nothing goes out until you approve it.' },
+        { q: 'Does it fit the tools we already use?', a: 'Yes. It runs on the tools you already pay for, on your own accounts, so you keep everything if you ever leave.' }
+      ]
+    }
+  ],
+  /* The shared headings of the vertical pages. */
+  verticalPage: {
+    leaksHead: ['Where it leaks.', 'In your words, not ours.'],
+    jobsHead: ['What we hand to AI first.', 'Four jobs, each checked by a person.'],
+    demoHead: ['See it working.', 'A labelled demo, not a client project.'],
+    faqHead: ['Before you ask.', 'Two plain answers.'],
+    closeTitle: ['Find your own ', 'leaks', '.'],
+    closeLede: 'Two minutes on how enquiries reach you today, and you see where they leak and what to hand to AI first.'
+  },
+
+  /* /ai/pricing (slice 5). Prices are never written here: the cards read
+     `packages` (lane 'ai') and `carePlan`. */
+  pricingExtras: {
+    docTitle: 'Pricing · AI front desk · Aniket',
+    description: 'Fixed prices for the AI front desk: the Roadmap, a quick win, an automation sprint and an assistant build, then the Care Plan. Running costs passed through at cost.',
+    pill: 'Prices',
+    title: ['Fixed prices, ', 'in writing', '.'],
+    lede: 'Four ways to start, each at a fixed price with a fixed date. Then the Care Plan keeps it running.',
+    pricesHead: ['Four ways to start.', 'Most begin with the free check, then the Roadmap.'],
+    care: 'On the Care Plan a person checks the AI’s replies every day, you get a weekly proof note, and fixes land within 24 hours.',
+    running: {
+      title: 'What runs it each month',
+      text: 'Passed through at cost, on accounts in your name, and stated on every quote so nothing arrives as a surprise.',
+      items: ['The AI model', 'The WhatsApp Business API', 'Hosting']
+    },
+    handover: {
+      title: 'Handover pack, included',
+      text: 'With every build, so your team can run it without us.',
+      items: ['A training session for your team', 'A written playbook your team keeps', 'Every account in your name']
+    },
+    terms: 'Half to start, half when it is live.',
+    termsNote: 'The price and the date are fixed in writing before you agree to anything.',
+    closeTitle: ['Not sure where to ', 'start', '?'],
+    closeLede: 'Take the free leak check. Two minutes, and you see which of the four fits.'
+  },
+
+  /* /ai/every-enquiry (slice 5): the one-page landing for ads and
+     outreach. The price signal is read from `packages`, never typed. */
+  landing: {
+    docTitle: 'Every enquiry answered · AI front desk · Aniket',
+    description: 'Every enquiry answered, every booking confirmed, every follow-up sent. By AI, checked by a person. Owned by you.',
+    title: ['It is 10:40 pm. You are ', 'still', ' replying to enquiries.'],
+    sub: 'Every enquiry answered, every booking confirmed, every follow-up sent. By AI, checked by a person. Owned by you.',
+    whatsappLabel: 'Ask on WhatsApp',
+    whatsappMessage: 'Hi Aniket, I saw your Every enquiry answered page. I’d like to talk about an AI front desk for my business.',
+    person: {
+      title: 'The person who checks.',
+      photoLabel: 'Photo coming soon',
+      lines: [
+        'I am Aniket. I map your day, build the system and hand it over in your name.',
+        'Then I read what the AI said to your customers, and fix what it got wrong.'
+      ]
+    },
+    privacy: 'Consent handled. Your data stays in your tools. Written for the DPDP Act.',
+    closeTitle: ['Find out where your enquiries ', 'leak', '.'],
+    closeLede: 'Two minutes, free. You see where enquiries, bookings and follow-ups leak, and what to hand to AI first.'
+  },
+
+  /* The weekly proof note (components: pages/ai/ProofNote.jsx). DUMMY
+     DATA for a made-up business, shown labelled "Sample"; never a real
+     client's numbers. */
+  proofNote: {
+    label: 'Sample',
+    caption: 'A sample weekly note, made-up business and dummy numbers. Care Plan clients get one like it every week.',
+    business: 'A made-up physio studio',
+    week: 'Week 3',
+    rows: [
+      { label: 'Enquiries answered', value: '46' },
+      { label: 'Bookings confirmed', value: '19' },
+      { label: 'Follow-ups sent', value: '23' },
+      { label: 'Handed to a person', value: '5' },
+      { label: 'Replies a person corrected', value: '2' }
+    ],
+    fixed: 'Fixed: the assistant quoted last month’s package price. Updated from the new price list on Tuesday.',
+    next: 'Next week: Sunday enquiries get the studio’s holiday hours.'
+  },
+
+  /* What you are seeing on each /ai/try card, one line per demo. */
+  tryIntro: {
+    'appointment-desk': 'A clinic’s WhatsApp desk: fees answered, a slot booked, clinical questions passed to a person.',
+    'knowledge-assistant': 'Staff and patients asking questions, answered from the clinic’s own documents with the source named.',
+    'website-answer-widget': 'A chat panel on a clinic’s website that answers from the page, or takes a callback request.',
+    'missed-enquiry-rescue': 'A late-night property enquiry answered from the agency’s own listings, with a site visit booked.',
+    'proposal-drafter': 'A client’s brief turned into a draft proposal from the studio’s rate card, waiting for the owner to approve it.',
+    'trial-class-desk': 'A free trial class booked, a reminder the evening before, and a follow-up afterwards.'
   }
 }
 
@@ -577,7 +787,7 @@ export const whatsappPrefill = {
   ai: 'Hi Aniket, I saw your AI page. I’d like to talk about using AI in my business.',
   footer: 'Hi Aniket, quick question about the systems you build.',
   /* The AI check's result. `{jobs}` is replaced with the top three. */
-  aiCheck: 'Hi Aniket, I just did the free AI check on your site. I’d like to talk about the AI Roadmap. My top three were: {jobs}.',
+  aiCheck: 'Hi Aniket, I just did the free leak check on your site. I’d like to talk about the AI Roadmap. My top three were: {jobs}.',
   nav: 'Hi Aniket, I’m on your site and would like to talk about a project for my business.',
   /* The phone action dock (components/ActionDock.jsx). `{page}` is the
      current page's name, so the chat still says which part of the site
@@ -1769,7 +1979,7 @@ export const carePlan = {
 export const funnelPath = [
   {
     key: 'check',
-    name: 'Free AI check',
+    name: 'Free leak check',
     text: 'A few plain questions about your week. You get, on the spot, the three jobs worth handing to AI first and what each would look like.',
     note: 'Free · about 3 minutes'
   },
@@ -1973,6 +2183,14 @@ export const services = [
       {
         q: 'Do we need to change the tools we use?',
         a: 'No. The automations run on the tools you already pay for, on your own accounts, so you own them.'
+      },
+      {
+        q: 'What does it cost to run each month?',
+        a: 'The AI model, the WhatsApp Business API and hosting are passed through at cost, on accounts in your name. The figure for your setup is written on the quote before you agree to anything.'
+      },
+      {
+        q: 'How do I pay?',
+        a: 'Half to start and half when it is live, at the fixed price on your quote. If it is not live by the date in writing, you do not pay the second half.'
       }
     ]
   }
@@ -2143,6 +2361,21 @@ export const social = [
   answers, shown as a rough estimate, never as a measured result.
 */
 export const aiCheck = {
+  /* The page's own words (/ai-check, AI brand slice 2, 2026-10-25):
+     the free enquiry leak check. `title` is [before, serif word, after]. */
+  docTitle: 'Free enquiry leak check · Aniket',
+  pill: 'Free enquiry leak check · about 2 minutes',
+  stakes: 'Enquiries rarely go missing all at once. They leak a few at a time.',
+  title: ['Free enquiry ', 'leak', ' check'],
+  intro: 'Two minutes. Where enquiries, bookings and follow-ups leak, and what to hand to AI first.',
+  /* The last question's yes: shown on the result with the WhatsApp
+     button. `prefill` opens the chat. */
+  report: {
+    line: 'Send a screenshot of last month’s enquiries (names hidden) on WhatsApp. One page back within 48 hours.',
+    button: 'Send it on WhatsApp',
+    contactButton: 'Send it as a message',
+    prefill: 'Hi Aniket, I did the free enquiry leak check and want the one-page leak report. Here is a screenshot of last month’s enquiries, names hidden:'
+  },
   steps: [
     {
       id: 'business',
@@ -2223,6 +2456,16 @@ export const aiCheck = {
         { value: '11-30', label: '11 to 30 people' },
         { value: '30+', label: 'More than 30' }
       ]
+    },
+    {
+      id: 'report',
+      kind: 'one',
+      question: 'Want a one-page leak report in 48 hours?',
+      hint: 'Send last month’s enquiries with names hidden and we read them by hand.',
+      options: [
+        { value: 'yes', label: 'Yes' },
+        { value: 'no', label: 'Not now' }
+      ]
     }
   ],
 
@@ -2274,7 +2517,7 @@ export const aiCheck = {
 export const startChoices = [
   { slug: 'websites', to: '/start/website', label: 'Plan your website' },
   { slug: 'software', to: '/start/software', label: 'Plan your software' },
-  { slug: 'ai', to: '/ai-check', label: 'Get your free AI check' }
+  { slug: 'ai', to: '/ai-check', label: 'Free enquiry leak check' }
 ]
 
 /* The answers both new flows share: the kind of business is the AI

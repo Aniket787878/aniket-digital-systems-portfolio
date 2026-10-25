@@ -1,13 +1,16 @@
 /*
-  Screenshots of /ai, the AI brand home (docs/work/ai-brand/spec.md,
-  slice 1), plus text checks. Run after `npm run build`:
+  Screenshots and text checks of the AI brand pages (docs/work/ai-brand/
+  spec.md slice 1, docs/work/ai-brand-2/spec.md slices 2 to 6). Run after
+  `npm run build`:
 
     node scripts/shoot-ai-brand.mjs
 
-  Serves dist/ with `vite preview` on a free port, opens /ai at 1440x900
-  and 390x844, saves a viewport shot at the hero and a full-page shot of
-  each to docs/work/ai-brand/shots/, and exits 1 if the page is missing
-  the four steps, the own-it band, or the brand name in the nav.
+  Serves dist/ with `vite preview` on a free port, opens every page in
+  PAGES at 1440x900 and 390x844, saves a viewport shot at the top and a
+  full-page shot of each to docs/work/ai-brand-2/shots/, and exits 1 if a
+  page is missing its key text or its primary button does not reach
+  /ai-check. It also walks the leak check end to end with the lead POST
+  stubbed (nothing is sent) and prints the JSON body it would have sent.
 
   Playwright is not a project dependency: it is required from wherever
   Node can find it, else from the npx cache. Browsers are never installed.
@@ -19,10 +22,10 @@ import { createServer } from 'node:net'
 import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { brand } from '../src/data.js'
+import { brand, packages, carePlan, site } from '../src/data.js'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const out = join(root, 'docs/work/ai-brand/shots')
+const out = join(root, 'docs/work/ai-brand-2/shots')
 const require = createRequire(import.meta.url)
 
 function loadPlaywright() {
@@ -80,56 +83,209 @@ const server = spawn('npx', ['vite', 'preview', '--host', '127.0.0.1', '--port',
 })
 
 const failures = []
+const fail = (msg) => failures.push(msg)
+
+/* Each page: its path, a selector that means it has rendered, the text it
+   must carry, and whether its primary button (data-primary) must lead to
+   /ai-check. */
+const PAGES = [
+  { name: 'ai', path: '/ai', ready: '#svc-brand-title', want: ['Map', 'Build', 'Train and stay', 'Hand over', 'You own everything', 'Try it', 'For clinics', 'For agencies', 'Pricing'], primary: true },
+  { name: 'ai-check', path: '/ai-check', ready: '#ac-title', want: ['Free enquiry leak check', 'Two minutes. Where enquiries, bookings and follow-ups leak'] },
+  {
+    name: 'ai-try',
+    path: '/ai/try',
+    ready: '#aip-try-title',
+    want: ['Try it before you talk to anyone.', 'Working demos', 'Demo screens', 'What you are seeing', 'Appointment Desk', 'Trial Class Desk'],
+    primary: true,
+    extra: async (page, size) => {
+      const n = await page.locator('.aip-cards .pc').count()
+      if (n !== 6) fail(`ai-try ${size.name}: ${n} demo cards, not 6`)
+      const first = await page.locator('.aip-cards .pc').first().getAttribute('href')
+      if (first !== '/projects/appointment-desk') fail(`ai-try ${size.name}: first card goes to ${first}`)
+    }
+  },
+  ...brand.verticals.map((v) => ({
+    name: `ai-for-${v.slug}`,
+    path: `/ai/for/${v.slug}`,
+    ready: '#aip-vertical-title',
+    want: [v.title.join(''), 'Where it leaks.', 'What we hand to AI first.', 'See it working.', 'Train and stay', ...v.leaks, ...v.jobs.map((j) => j.title), v.faq[0].q],
+    primary: true,
+    extra: async (page, size) => {
+      const href = await page.locator('.aip-demo .pc').getAttribute('href')
+      if (href !== `/projects/${v.demo}`) fail(`ai-for-${v.slug} ${size.name}: demo card goes to ${href}`)
+    }
+  })),
+  {
+    name: 'ai-pricing',
+    path: '/ai/pricing',
+    ready: '#aip-pricing-title',
+    want: [
+      ...packages.filter((p) => p.lane === 'ai').map((p) => p.name),
+      carePlan.name,
+      'a person checks the AI’s replies every day',
+      'What runs it each month',
+      'Handover pack, included',
+      'Half to start, half when it is live.',
+      site.guarantee,
+      'You own everything',
+      'What does it cost to run each month?'
+    ],
+    primary: true,
+    extra: async (page, size) => {
+      const n = await page.locator('.aip-price-grid .price').count()
+      if (n !== 4) fail(`ai-pricing ${size.name}: ${n} price cards, not 4`)
+    }
+  },
+  {
+    name: 'ai-every-enquiry',
+    path: '/ai/every-enquiry',
+    ready: '#aip-landing-title',
+    want: [
+      'It is 10:40 pm. You are still replying to enquiries.',
+      'Every enquiry answered, every booking confirmed, every follow-up sent. By AI, checked by a person. Owned by you.',
+      'The person who checks.',
+      'Photo coming soon',
+      'SAMPLE',
+      'Train and stay',
+      'From ₹20,000 / $490',
+      'Consent handled. Your data stays in your tools. Written for the DPDP Act.'
+    ],
+    primary: true,
+    extra: async (page, size) => {
+      // Click the primary button: it must land on the leak check.
+      await page.locator('main [data-primary]').first().click()
+      await page.waitForURL('**/ai-check')
+      await page.waitForSelector('#ac-title')
+    }
+  },
+  { name: 'ai-for-unknown', path: '/ai/for/plumbers', ready: '.error-page', want: ['This page doesn'] }
+]
+
+const sizes = [
+  { name: 'desktop', width: 1440, height: 900 },
+  { name: 'phone', width: 390, height: 844 }
+]
+
+/* Scroll through with the wheel (the smooth-scroll layer ignores a bare
+   window.scrollTo), so every whileInView band reveals before the
+   full-page shot. */
+async function revealAll(page) {
+  const height = await page.evaluate(() => document.body.scrollHeight)
+  for (let y = 0; y < height; y += 400) {
+    await page.mouse.wheel(0, 400)
+    await page.waitForTimeout(120)
+  }
+  await page.waitForTimeout(600)
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await page.waitForTimeout(800)
+}
+
+async function shootPage(browser, size, spec) {
+  const page = await browser.newPage({ viewport: { width: size.width, height: size.height } })
+  await page.goto(base + spec.path, { waitUntil: 'networkidle' })
+  await page.waitForSelector(spec.ready, { state: 'visible' })
+  await page.waitForTimeout(1500) // entrances settle
+  await page.screenshot({ path: join(out, `${spec.name}-${size.name}-top.png`) })
+  await revealAll(page)
+  await page.screenshot({ path: join(out, `${spec.name}-${size.name}-full.png`), fullPage: true })
+
+  const text = await page.locator('main').innerText()
+  for (const want of spec.want) if (!text.includes(want)) fail(`${spec.name} ${size.name}: missing "${want}"`)
+  if (/\u2014/.test(text)) fail(`${spec.name} ${size.name}: an em dash in visible text`)
+  const wide = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)
+  if (wide) fail(`${spec.name} ${size.name}: page scrolls sideways`)
+
+  if (spec.primary) {
+    const href = await page.locator('main [data-primary]').first().getAttribute('href')
+    if (href !== '/ai-check') fail(`${spec.name} ${size.name}: first primary button goes to ${href}`)
+  }
+  if (spec.extra) await spec.extra(page, size)
+  await page.close()
+}
+
+/* The leak check, end to end, with the lead POST caught before it leaves. */
+async function walkCheck(browser) {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+  let body = null
+  await page.route('**/*', (route) => {
+    const req = route.request()
+    if (req.method() === 'POST' && (req.postData() || '').includes('workflow_broken')) {
+      body = JSON.parse(req.postData())
+      return route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' })
+    }
+    return route.continue()
+  })
+  await page.goto(base + '/ai-check', { waitUntil: 'networkidle' })
+  const pick = async (label) => {
+    await page.locator('.ac-option', { hasText: label }).first().click()
+  }
+  const next = () => page.click('.ac-next')
+  await pick('Clinic or health practice')
+  await page.waitForSelector('text=How many new enquiries')
+  await pick('10 to 30')
+  await page.waitForSelector('text=How fast does a new enquiry')
+  await pick('The same day')
+  await page.waitForSelector('text=Where does the time go')
+  await pick('Replying to enquiries')
+  await pick('Booking and rescheduling')
+  await next()
+  await page.waitForSelector('text=What do you use to run things')
+  await pick('WhatsApp')
+  await next()
+  await page.waitForSelector('text=How many people are on the team')
+  await pick('3 to 10 people')
+  await page.waitForSelector('text=Want a one-page leak report in 48 hours?')
+  await page.screenshot({ path: join(out, 'ai-check-desktop-report-question.png') })
+  await pick('Yes')
+  await page.waitForSelector('#ac-name')
+  await page.fill('#ac-name', 'Test Visitor')
+  await page.fill('#ac-email', 'test@example.com')
+  await next()
+  await page.waitForSelector('.ac-result-title')
+  await page.waitForTimeout(1200)
+  await page.screenshot({ path: join(out, 'ai-check-desktop-result.png'), fullPage: true })
+  const text = await page.locator('main').innerText()
+  if (!text.includes('One page back within 48 hours')) fail('ai-check: result is missing the 48h report line after a yes')
+  if (!body) fail('ai-check: no lead POST was made')
+  else {
+    console.log('POST body:\n' + JSON.stringify(body, null, 2))
+    if (!String(body.source).startsWith('ai-brand-check · ')) fail(`ai-check: source is "${body.source}"`)
+    if (!/Wants 48h leak report: yes/.test(body.workflow_broken)) fail('ai-check: workflow_broken is missing "Wants 48h leak report: yes"')
+  }
+  await page.close()
+}
+
 let browser
 try {
   await waitFor(base + '/')
   mkdirSync(out, { recursive: true })
   browser = await chromium.launch()
 
-  const sizes = [
-    { name: 'desktop', width: 1440, height: 900 },
-    { name: 'phone', width: 390, height: 844 }
-  ]
   for (const size of sizes) {
+    for (const spec of PAGES) await shootPage(browser, size, spec)
+
+    // /ai: hero must-sees above the fold, the four steps, the own-it points, the nav name.
     const page = await browser.newPage({ viewport: { width: size.width, height: size.height } })
     await page.goto(base + '/ai', { waitUntil: 'networkidle' })
     await page.waitForSelector('#svc-brand-title', { state: 'visible' })
-    await page.waitForTimeout(1500) // the hero's entrance settles
-    await page.screenshot({ path: join(out, `ai-${size.name}-hero.png`) })
-
-    // Hero must-sees above the fold on the desktop size.
+    await page.waitForTimeout(1500)
     if (size.name === 'desktop') {
       for (const sel of ['.svc-brand-actions', '.svc-brand-promise']) {
         const box = await page.locator(sel).boundingBox()
-        if (!box || box.y + box.height > size.height) failures.push(`${size.name}: ${sel} is below the fold`)
+        if (!box || box.y + box.height > size.height) fail(`ai ${size.name}: ${sel} is below the fold`)
       }
     }
-
-    // Scroll through so every whileInView band reveals, then shoot it all.
-    await page.evaluate(async () => {
-      for (let y = 0; y < document.body.scrollHeight; y += 600) {
-        window.scrollTo(0, y)
-        await new Promise((r) => setTimeout(r, 120))
-      }
-      window.scrollTo(0, 0)
-    })
-    await page.waitForTimeout(800)
-    await page.screenshot({ path: join(out, `ai-${size.name}-full.png`), fullPage: true })
-
-    const text = await page.locator('main, body').first().innerText()
-    for (const want of ['Map', 'Build', 'Train and stay', 'Hand over', 'You own everything']) {
-      if (!text.includes(want)) failures.push(`${size.name}: page text is missing "${want}"`)
-    }
+    await revealAll(page)
     const steps = await page.locator('.svc-method-step h3').allInnerTexts()
-    if (steps.join('|') !== 'Map|Build|Train and stay|Hand over') failures.push(`${size.name}: steps read ${steps.join(', ')}`)
+    if (steps.join('|') !== 'Map|Build|Train and stay|Hand over') fail(`ai ${size.name}: steps read ${steps.join(', ')}`)
     const points = await page.locator('.svc-own-point').count()
-    if (points !== 4) failures.push(`${size.name}: own-it band has ${points} points, not 4`)
-
+    if (points !== 4) fail(`ai ${size.name}: own-it band has ${points} points, not 4`)
     if (size.name === 'phone') await page.click('.nav-toggle')
     const nav = await page.locator(size.name === 'phone' ? '.nav-panel' : '.nav-links').innerText()
-    if (!nav.includes(brand.name)) failures.push(`${size.name}: nav is missing "${brand.name}"`)
+    if (!nav.includes(brand.name)) fail(`ai ${size.name}: nav is missing "${brand.name}"`)
     await page.close()
   }
+  await walkCheck(browser)
 } finally {
   if (browser) await browser.close()
   server.kill()

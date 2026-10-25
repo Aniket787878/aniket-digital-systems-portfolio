@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { site, seo, services, projects } from './src/data.js'
+import { site, seo, services, projects, brand } from './src/data.js'
 
 /* ------------------------------------------------------------------
    siteMeta: writes everything that depends on the site's address or its
@@ -83,7 +83,7 @@ function jsonLd() {
   return JSON.stringify(graph).replace(/</g, '\\u003c')
 }
 
-const routes = ['/', '/start', '/start/website', '/start/software', '/ai-check', '/websites', '/software', '/ai', '/projects', '/about', '/contact', '/privacy', ...projects.map((p) => `/projects/${p.slug}`)]
+const routes = ['/', '/start', '/start/website', '/start/software', '/ai-check', '/websites', '/software', '/ai', '/ai/try', ...brand.verticals.map((v) => `/ai/for/${v.slug}`), '/ai/pricing', '/ai/every-enquiry', '/projects', '/about', '/contact', '/privacy', ...projects.map((p) => `/projects/${p.slug}`)]
 
 function sitemap() {
   const today = new Date().toISOString().slice(0, 10)

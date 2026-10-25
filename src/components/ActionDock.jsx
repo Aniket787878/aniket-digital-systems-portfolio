@@ -67,7 +67,7 @@ function routeInfo(pathname) {
 
   if (pathname === '/websites') return { excluded: false, label: 'Plan your website →', to: '/start/website' }
   if (pathname === '/software') return { excluded: false, label: 'Plan your software →', to: '/start/software' }
-  if (pathname === '/ai') return { excluded: false, label: 'Free AI check →', to: '/ai-check' }
+  if (pathname === '/ai') return { excluded: false, label: 'Free leak check →', to: '/ai-check' }
   return { excluded: false, label: 'See what it costs →', to: '/start' }
 }
 

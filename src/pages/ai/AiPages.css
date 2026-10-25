@@ -1,0 +1,580 @@
+/* ------------------------------------------------------------------
+   The AI brand pages under /ai (docs/work/ai-brand-2/spec.md): /ai/try,
+   /ai/for/:vertical, /ai/pricing, /ai/every-enquiry, plus the 48-hour
+   report box on the /ai-check result. Prefix `aip-`. Built on the Dusk
+   grounds (.stage, .night, .paper) and the slice 1 bands in
+   ServicePage.css; nothing here overrides index.css or HomePage.css.
+   ------------------------------------------------------------------ */
+
+/* Dark glass for a second button on the stage ground, as in the /ai
+   hero. */
+.aip-glass-btn.btn-light {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.aip-glass-btn.btn-light:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* /ai-check result: the 48-hour leak report, after a yes. */
+.aip-report {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.aip-report p {
+  flex: 1 1 22rem;
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+
+/* ---- Shared: the stage hero and the closing band of every /ai/* page ---- */
+.aip-hero {
+  --glow-x: 50%;
+  --glow-y: 50%;
+  overflow: clip;
+  padding-top: calc(var(--nav-h) + clamp(2.5rem, 6vw, 5rem));
+  padding-bottom: clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.aip-close {
+  --glow-x: 50%;
+  --glow-y: 60%;
+  overflow: clip;
+  padding-block: clamp(4.5rem, 9vw, 7rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.aip-hero-glow {
+  width: min(62rem, 110vw);
+}
+
+.aip-hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.aip-hero-title {
+  margin-top: 1.5rem;
+  max-width: 18ch;
+  font-size: clamp(2.3rem, 5vw, 4.25rem);
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.aip-close-title {
+  margin-top: 1.25rem;
+  max-width: 20ch;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  text-wrap: balance;
+}
+
+.aip-hero-title .stage-serif,
+.aip-close-title .stage-serif {
+  padding-right: 0.04em;
+}
+
+.aip-hero-lede {
+  margin-top: 1.25rem;
+  max-width: 50ch;
+  text-wrap: pretty;
+}
+
+.aip-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.aip-hero .btn-light,
+.aip-close .btn-light {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.aip-hero .btn-light:hover,
+.aip-close .btn-light:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* ---- /ai/try: the demo cards, in two labelled groups ---- */
+.aip-try {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.aip-try-group + .aip-try-group {
+  margin-top: clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.aip-group-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.aip-group-title {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.aip-group-note {
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.aip-cards {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin: 0;
+  padding: 0;
+}
+
+.aip-cards > li {
+  display: flex;
+}
+
+.aip-cards > li > * {
+  flex: 1;
+}
+
+@media (max-width: 1023px) {
+  .aip-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .aip-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .aip-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 22rem;
+  }
+}
+
+/* ---- /ai/for/:vertical ---- */
+.aip-brand-name {
+  color: var(--peach);
+  font-weight: 600;
+}
+
+.aip-hero .stage-pill {
+  flex-wrap: wrap;
+  justify-content: center;
+  color: var(--ink);
+}
+
+/* Where it leaks: three lines in the owner's words, as quiet quote cards. */
+.aip-leak-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.6vw, 1.25rem);
+  margin: 0;
+  padding: 0;
+}
+
+.aip-leak {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: clamp(1.5rem, 2.4vw, 2rem);
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid var(--paper-2);
+  color: var(--ink-dark);
+}
+
+.aip-leak-mark {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 3rem;
+  line-height: 0.8;
+  color: var(--accent);
+}
+
+.aip-leak p {
+  font-size: clamp(1.0625rem, 1.4vw, 1.1875rem);
+  line-height: 1.5;
+}
+
+/* What we hand to AI first: the Method step cards, numbered per job. */
+.aip-jobs {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* See it working: one wide demo card. */
+.aip-demo {
+  padding-block: clamp(4.5rem, 9vw, 7rem);
+}
+
+.aip-demo-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.aip-demo-head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
+.aip-demo-title {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+}
+
+.aip-demo-card {
+  width: 100%;
+  max-width: 64rem;
+}
+
+@media (max-width: 1023px) {
+  .aip-leak-list {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  /* The brand and who it is for on two short lines, not one wrapped pill. */
+  .aip-hero .stage-pill {
+    flex-direction: column;
+    gap: 0.15rem;
+    border-radius: 14px;
+    padding: 0.5rem 0.9rem;
+  }
+
+  .aip-hero .stage-pill > [aria-hidden='true'] {
+    display: none;
+  }
+}
+
+/* ---- /ai/pricing ---- */
+.aip-prices .center-head .currency-toggle {
+  margin-top: 1.25rem;
+}
+
+.aip-price-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+}
+
+.aip-care {
+  max-width: 56rem;
+  margin: clamp(2rem, 4vw, 3rem) auto 0;
+}
+
+.aip-care-extra {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-top: 0.875rem;
+  padding-inline: 0.25rem;
+  color: var(--ink-dark);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.aip-care-extra svg {
+  flex: none;
+  margin-top: 0.2rem;
+  color: var(--accent-ink-strong, var(--accent));
+}
+
+.aip-included {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.aip-included-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.aip-included-card h3 {
+  margin-top: 0;
+}
+
+.aip-ticks {
+  margin-top: 1.25rem;
+  color: var(--ink);
+}
+
+.aip-terms {
+  max-width: 44rem;
+  margin: clamp(2rem, 4vw, 3rem) auto 0;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.aip-terms strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---- /ai/every-enquiry ---- */
+.aip-landing-title {
+  max-width: 20ch;
+}
+
+.aip-person-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4rem);
+  max-width: 60rem;
+  margin-inline: auto;
+}
+
+/* The photo slot: left empty on purpose until a real photo is supplied. */
+.aip-photo {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 5;
+  border-radius: 20px;
+  border: 1.5px dashed var(--paper-2);
+  background: #fff;
+}
+
+.aip-photo .stage-mono {
+  color: var(--muted-dark);
+}
+
+.aip-person-text .h2 {
+  margin-top: 1rem;
+}
+
+.aip-person-line {
+  margin-top: 1rem;
+  max-width: 44ch;
+  color: var(--ink-dark);
+  font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+  line-height: 1.55;
+}
+
+.aip-proof {
+  overflow: clip;
+  padding-block: clamp(4.5rem, 9vw, 7rem);
+}
+
+.aip-proof-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The sample weekly note. */
+.aip-note {
+  width: 100%;
+  max-width: 34rem;
+  margin: 0;
+}
+
+.aip-note-card {
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+}
+
+.aip-note-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.aip-note-week {
+  color: var(--ink-soft);
+}
+
+.aip-note-badge {
+  flex: none;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 135, 30, 0.45);
+  color: var(--peach);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.aip-note-rows {
+  margin: 0.5rem 0 0;
+}
+
+.aip-note-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.7rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.aip-note-row dt {
+  color: var(--ink-soft);
+}
+
+.aip-note-row dd {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.aip-note-line {
+  margin-top: 1rem;
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.aip-note-caption {
+  margin-top: 0.875rem;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.aip-price-signal {
+  margin-top: 1.5rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+}
+
+.aip-privacy {
+  margin-top: 0.5rem;
+  max-width: 46ch;
+  line-height: 1.5;
+}
+
+@media (max-width: 1023px) {
+  .aip-price-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .aip-price-grid,
+  .aip-included-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .aip-person-inner {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+
+  .aip-photo {
+    width: min(14rem, 70%);
+  }
+
+  .aip-person-line {
+    margin-inline: auto;
+  }
+}
+
+/* ---- /ai hero: the link strip to the brand's own pages ---- */
+.aip-strip {
+  margin-top: 2rem;
+}
+
+.aip-strip ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 0.25rem;
+  margin: 0;
+  padding: 0;
+}
+
+.aip-strip li + li::before {
+  content: '·';
+  margin-right: 0.25rem;
+  color: var(--muted);
+}
+
+.aip-strip a {
+  display: inline-block;
+  padding: 0.6rem 0.5rem;
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.2);
+  text-underline-offset: 0.25em;
+}
+
+.aip-strip a:hover {
+  color: var(--ink);
+  text-decoration-color: var(--accent);
+}
+
+/* ---- Contrast (slice 6 audit) ----
+   On the /ai/* pages only: the soft second line of a paper heading, the
+   guarantee chip and the "Start here" badge, one step darker so they
+   pass WCAG AA (the site-wide values in HomePage.css fall just short;
+   see docs/work/ai-brand-2/audit.md). */
+.aip .paper .h2 .soft {
+  color: #857d74;
+}
+
+.aip .guarantee,
+.aip .price-badge {
+  color: #8a3f05;
+}
+
+@media (max-width: 640px) {
+  /* On a phone the strip wraps: no dots, a little more room instead. */
+  .aip-strip ul {
+    gap: 0 0.75rem;
+  }
+
+  .aip-strip li + li::before {
+    content: none;
+  }
+}

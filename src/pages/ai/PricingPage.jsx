@@ -1,7 +1,6 @@
-import { useEffect } from 'react'
 import { m } from 'motion/react'
 import { brand, packages, services, whatsappPrefill } from '../../data.js'
-import { useDocumentTitle } from '../../useDocumentTitle.js'
+import { usePageMeta } from './usePageMeta.js'
 import { useCurrency } from '../../currency.js'
 import { reveal, revealStagger, fadeUp } from '../../motion/variants.js'
 import { CheckCta, TalkCta } from '../../components/FunnelCta.jsx'
@@ -29,18 +28,6 @@ const page = brand.pricingExtras
 const AI_PACKAGES = packages.filter((pkg) => pkg.lane === 'ai')
 const AREA = services.find((s) => s.slug === 'ai')
 
-function usePageMeta(title, description) {
-  useDocumentTitle(title)
-  useEffect(() => {
-    const tag = document.querySelector('meta[name="description"]')
-    if (!tag) return undefined
-    const before = tag.content
-    tag.content = description
-    return () => {
-      tag.content = before
-    }
-  }, [description])
-}
 
 export default function PricingPage() {
   usePageMeta(page.docTitle, page.description)

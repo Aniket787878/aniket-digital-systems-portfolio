@@ -474,8 +474,8 @@ export const brand = {
       jobs: [
         { title: 'Answering enquiries', text: 'Prices, timings and classes answered from your own information, on WhatsApp or your website, at any hour.' },
         { title: 'Booking trials', text: 'People pick a free trial slot themselves and get a confirmation straight away.' },
-        { title: 'Reminders', text: 'A reminder the evening before, so more of the people who booked actually come.' },
-        { title: 'Follow-up after the class', text: 'A message to whoever came and whoever did not, so a trial turns into a membership conversation.' }
+        { title: 'Reminders', text: 'A reminder the evening before, with the address and what to bring.' },
+        { title: 'Follow-up after the class', text: 'A message to whoever came and whoever did not, with the next step and the price list.' }
       ],
       demo: 'trial-class-desk',
       faq: [
@@ -597,7 +597,7 @@ export const brand = {
      client's numbers. */
   proofNote: {
     label: 'Sample',
-    caption: 'A sample weekly note, made-up business and dummy numbers. Care Plan clients get one like it every Monday.',
+    caption: 'A sample weekly note, made-up business and dummy numbers. Care Plan clients get one like it every week.',
     business: 'A made-up physio studio',
     week: 'Week 3',
     rows: [

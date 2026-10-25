@@ -1,7 +1,6 @@
-import { useEffect } from 'react'
 import { m } from 'motion/react'
 import { brand, whatsappPrefill } from '../../data.js'
-import { useDocumentTitle } from '../../useDocumentTitle.js'
+import { usePageMeta } from './usePageMeta.js'
 import { reveal, revealStagger, fadeUp } from '../../motion/variants.js'
 import { CheckCta, TalkCta } from '../../components/FunnelCta.jsx'
 import ProjectCard from '../../components/ProjectCard.jsx'
@@ -20,18 +19,6 @@ import './AiPages.css'
 
 const page = brand.tryPage
 
-function usePageMeta(title, description) {
-  useDocumentTitle(title)
-  useEffect(() => {
-    const tag = document.querySelector('meta[name="description"]')
-    if (!tag) return undefined
-    const before = tag.content
-    tag.content = description
-    return () => {
-      tag.content = before
-    }
-  }, [description])
-}
 
 export default function TryPage() {
   usePageMeta(page.docTitle, page.description)

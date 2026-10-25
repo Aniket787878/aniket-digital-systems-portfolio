@@ -23,7 +23,7 @@ import './ai/AiPages.css'
 
 /*
   The free enquiry leak check (/ai-check, once the free AI check): step 1 of the path (funnelPath in
-  data.js). Six plain questions and a contact step, one per screen; then
+  data.js). Seven plain questions and a contact step, one per screen; then
   an instant result worked out in the browser (aicheck/rules.js) and the
   next step, the AI Roadmap.
 

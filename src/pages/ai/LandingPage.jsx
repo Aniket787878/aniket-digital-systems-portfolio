@@ -1,7 +1,6 @@
-import { useEffect } from 'react'
 import { m } from 'motion/react'
 import { brand, packages } from '../../data.js'
-import { useDocumentTitle } from '../../useDocumentTitle.js'
+import { usePageMeta } from './usePageMeta.js'
 import { reveal } from '../../motion/variants.js'
 import { CheckCta } from '../../components/FunnelCta.jsx'
 import WhatsAppCta from '../../components/WhatsAppCta.jsx'
@@ -26,18 +25,6 @@ const page = brand.landing
 /* The lowest AI price is the Roadmap, step 2 of the path. */
 const START = packages.find((pkg) => pkg.lane === 'ai' && pkg.step)
 
-function usePageMeta(title, description) {
-  useDocumentTitle(title)
-  useEffect(() => {
-    const tag = document.querySelector('meta[name="description"]')
-    if (!tag) return undefined
-    const before = tag.content
-    tag.content = description
-    return () => {
-      tag.content = before
-    }
-  }, [description])
-}
 
 function Actions({ placement, magnet = false }) {
   return (

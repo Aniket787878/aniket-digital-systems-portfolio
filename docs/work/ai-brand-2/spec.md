@@ -16,6 +16,8 @@
 - `scripts/audit-ai.mjs` (new: axe-core via Playwright if `axe-core` resolves from node_modules or the npx cache, else skip with a printed reason; Lighthouse via `npx lighthouse` only if already cached, never install; writes `docs/work/ai-brand-2/audit.md`)
 - `docs/system/01-website-map.md`, `docs/MAP.md`, `docs/work/ai-brand-2/audit.md`
 - `.gitignore` (already ignores `docs/work/*/shots/`)
+- `src/pages/ai/usePageMeta.js` (shared title + meta description hook)
+- `src/components/ActionDock.jsx` (the /ai dock label says leak check)
 - `src/flows.js` (CHECK_LABEL reads "Start the free leak check" so every check button on the site matches)
 
 ## Other side

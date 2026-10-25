@@ -1,8 +1,7 @@
-import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { m } from 'motion/react'
 import { brand, whatsappPrefill } from '../../data.js'
-import { useDocumentTitle } from '../../useDocumentTitle.js'
+import { usePageMeta } from './usePageMeta.js'
 import { reveal, revealStagger, fadeUp } from '../../motion/variants.js'
 import { CheckCta, TalkCta } from '../../components/FunnelCta.jsx'
 import ProjectCard from '../../components/ProjectCard.jsx'
@@ -28,23 +27,11 @@ import './AiPages.css'
 
 const shared = brand.verticalPage
 
-function usePageMeta(title, description) {
-  useDocumentTitle(title)
-  useEffect(() => {
-    const tag = document.querySelector('meta[name="description"]')
-    if (!tag || !description) return undefined
-    const before = tag.content
-    tag.content = description
-    return () => {
-      tag.content = before
-    }
-  }, [description])
-}
 
 export default function VerticalPage() {
   const { vertical } = useParams()
   const v = brand.verticals.find((item) => item.slug === vertical)
-  usePageMeta(v?.docTitle, v?.description)
+  usePageMeta(v ? v.docTitle : 'Page not found · Aniket', v ? v.description : '')
   if (!v) return <NotFoundPage />
 
   const [head, word, tail] = v.title

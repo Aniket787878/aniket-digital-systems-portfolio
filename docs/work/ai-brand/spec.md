@@ -15,6 +15,7 @@ Working brand name: **Befikr** (not bought, not final). It lives in ONE place, `
 - `src/components/Nav.jsx` (the "AI" link label reads `brand.name`, desktop and mobile)
 - `docs/system/01-website-map.md` (the /ai row and data.js schema: `brand`)
 - `docs/MAP.md` (status board row "AI brand under /ai: slice 1 live")
+- `.gitignore` (ignore `docs/work/*/shots/`; proof lives on the `review-shots` branch)
 - `scripts/shoot-ai-brand.mjs` (new: Playwright shots and text checks of /ai)
 - `docs/work/ai-brand/shots/` (the screenshots)
 

@@ -377,6 +377,41 @@ export const site = {
   pricingAnchor: 'Websites from {websites}. AI and automation from {ai}. Custom software from {software}.'
 }
 
+/* The AI brand that lives under /ai (docs/work/ai-brand/spec.md). The
+   name is a working name, not bought and not final: it lives HERE ONLY,
+   and every render (nav, /ai hero, method, own-it band, the /ai tab
+   title) reads `brand.name`, so a rename is this one line. */
+export const brand = {
+  name: 'Befikr',
+  sayIt: 'beh-fikr',
+  meaning: 'Hindi and Urdu for without a worry',
+  line: 'AI front desk for service businesses',
+  /* The /ai hero headline: [before, serif word, after] per line. */
+  headline: [
+    ['Every enquiry ', 'answered', '.'],
+    ['Every booking ', 'confirmed', '.'],
+    ['Every follow-up ', 'sent', '.']
+  ],
+  lede: 'By AI, checked by a person, on accounts you own. For clinics, studios, coaching and agencies with 2 to 30 staff.',
+  methodTitle: ['How it works.', 'The way it really went for our first clients.'],
+  method: [
+    { index: '01', title: 'Map', text: 'One working session. We walk your day from the first message to the last invoice and write down where time and money leak.' },
+    { index: '02', title: 'Build', text: 'The whole flow, not one tool. Bookings, replies, reminders, notes and invoices in one system. Live by a date in writing.' },
+    { index: '03', title: 'Train and stay', text: 'Your team learns it in an afternoon. We fix in days and keep improving for months.' },
+    { index: '04', title: 'Hand over', text: 'Your accounts, your data, your playbook. You own every part of it.' }
+  ],
+  /* The closing line under the points is `site.guarantee`, said once. */
+  ownIt: {
+    title: 'You own everything.',
+    points: [
+      'Every account is in your name',
+      'Your data stays in your tools, and leaves when you say',
+      'A written playbook your team keeps',
+      'No lock-in. Leave any time and it keeps running'
+    ]
+  }
+}
+
 /* Title, description and share card for index.html. vite.config.js writes
    these into the <head> at build time, together with site.origin. */
 export const seo = {
@@ -1889,14 +1924,14 @@ export const services = [
     formLabel: 'AI or automation',
     example: 'For example: we answer the same booking questions on WhatsApp all day, then copy every booking into a spreadsheet by hand.',
     icon: 'spark',
-    docTitle: 'AI and automation · Aniket',
-    title: ['AI that does the repeat work.', 'With a person checking what matters.'],
-    sub: 'Enquiries answered, notes drafted, follow-ups sent and leads sorted, on the tools you already use. Start with a plan of where AI pays off, or with one task fully automated in five days.',
-    promise: 'Assistants and automations that answer, draft and follow up, on the tools you already pay for.',
+    docTitle: `${brand.name} · ${brand.line}`,
+    title: ['Every enquiry answered.', 'Every booking confirmed. Every follow-up sent.'],
+    sub: 'An AI front desk that answers, books and follows up. By AI, checked by a person, on accounts you own. For clinics, studios, coaching and agencies with 2 to 30 staff.',
+    promise: 'An AI front desk that answers, books and follows up, checked by a person, on accounts you own.',
     points: [
-      { icon: 'chart', title: 'Start with a plan', text: 'Where AI would save your team the most time, ranked, before you spend on a build.' },
-      { icon: 'flow', title: 'The repeat work runs itself', text: 'Enquiries saved and answered, reminders sent, forms filed, on your own accounts.' },
-      { icon: 'check', title: 'A person checks what matters', text: 'The AI drafts, a person approves wherever a wrong answer would cost you.' }
+      { icon: 'chart', title: 'Map first', text: 'One working session on your real day, so we fix where time and money actually leak.' },
+      { icon: 'flow', title: 'The whole flow, not one tool', text: 'Bookings, replies, reminders, notes and invoices in one system, live by a date in writing.' },
+      { icon: 'lock', title: 'You own everything', text: 'Your accounts, your data and a written playbook. No lock-in.' }
     ],
     from: { usd: '$490', inr: '₹20,000' },
     media: { kind: 'explainer', key: 'ai-assistant', badge: 'Illustrated' },

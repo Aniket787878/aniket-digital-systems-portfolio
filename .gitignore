@@ -179,3 +179,4 @@
 
 # Remotion: the normalised music bed is built from remotion/audio/music.* by scripts/render-videos.sh
 remotion/audio/music-bed.wav
+docs/work/*/shots/

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { StartCta, TalkCta } from './FunnelCta.jsx'
-import { whatsappPrefill } from '../data.js'
+import { brand, whatsappPrefill } from '../data.js'
 import { usePrimaryInView } from '../usePrimaryInView.js'
 
 /*
@@ -101,7 +101,7 @@ export default function Nav() {
           </NavLink>
           <NavLink to="/websites">Websites</NavLink>
           <NavLink to="/software">Software</NavLink>
-          <NavLink to="/ai">AI</NavLink>
+          <NavLink to="/ai">{brand.name}</NavLink>
           <NavLink to="/projects">Projects</NavLink>
           <NavLink to="/about">About</NavLink>
           <NavLink to="/contact">Contact</NavLink>
@@ -154,7 +154,7 @@ export default function Nav() {
           </NavLink>
           <NavLink to="/websites">Websites</NavLink>
           <NavLink to="/software">Software</NavLink>
-          <NavLink to="/ai">AI</NavLink>
+          <NavLink to="/ai">{brand.name}</NavLink>
           <NavLink to="/projects">Projects</NavLink>
           <NavLink to="/about">About</NavLink>
           <NavLink to="/contact">Contact</NavLink>

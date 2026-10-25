@@ -23,6 +23,7 @@ flowchart LR
 | Site, three service pages, Dusk design | Live | `docs/design-system.md`, `docs/system/01-website-map.md` |
 | Contact form + lead intake | Live (n8n) | `n8n/README.md`, `docs/specs/n8n-lead-webhook.md` |
 | Start flows + AI check funnel | Live | `docs/system/01-website-map.md`, `n8n/UPGRADE-2026-10.md` |
+| AI brand under /ai: slice 1 (brand hero, four-step method, own-it band, nav label from `brand.name`) | Built on `feat/ai-brand`, not merged yet (goes live on merge) | `docs/work/ai-brand/spec.md`, `docs/system/01-website-map.md` |
 | Product films, sound toggle | Live | `docs/films.md` |
 | Hosting | Vercel team `aniket-s1`, project `aniket-portfolio`, deploys from `main` | `docs/deploy.md` |
 | Deploy runbook | Current | `docs/deploy.md` |

@@ -24,7 +24,7 @@ flowchart LR
 | Contact form + lead intake | Live (n8n) | `n8n/README.md`, `docs/specs/n8n-lead-webhook.md` |
 | Start flows + AI check funnel | Live | `docs/system/01-website-map.md`, `n8n/UPGRADE-2026-10.md` |
 | AI brand under /ai: slice 1 (brand hero, four-step method, own-it band, nav label from `brand.name`) | Live (PR #81) | `docs/work/ai-brand/spec.md`, `docs/system/01-website-map.md` |
-| AI brand slices 2 to 6: `/ai-check` as the free enquiry leak check (source `ai-brand-check`, 48h leak report question), `/ai/try`, `/ai/for/clinics\|studios\|coaching\|agencies`, `/ai/pricing`, `/ai/every-enquiry`, link strip on `/ai`, sitemap, audit | Built on `feat/ai-brand-2`, not merged (goes live on merge) | `docs/work/ai-brand-2/spec.md`, `docs/work/ai-brand-2/audit.md`, `docs/system/01-website-map.md` |
+| AI brand slices 2 to 6: `/ai-check` as the free enquiry leak check (source `ai-brand-check`, 48h leak report question), `/ai/try`, `/ai/for/clinics\|studios\|coaching\|agencies`, `/ai/pricing`, `/ai/every-enquiry`, link strip on `/ai`, sitemap, audit | Live 2026-10-25 (PR #83) | `docs/work/ai-brand-2/spec.md`, `docs/work/ai-brand-2/audit.md`, `docs/system/01-website-map.md` |
 | Product films, sound toggle | Live | `docs/films.md` |
 | Hosting | Vercel team `aniket-s1`, project `aniket-portfolio`, deploys from `main` | `docs/deploy.md` |
 | Deploy runbook | Current | `docs/deploy.md` |
@@ -43,7 +43,7 @@ flowchart LR
 
 Everything under "Blocked on Aniket" below is open, plus:
 
-- AI brand slices 2 to 6 (`feat/ai-brand-2`): review the screenshots and merge on his word.
+- AI brand (live, PRs #81 and #83): brand name still a working name (`brand.name` = Befikr, nothing bought); real photo for "the person who checks" on `/ai/every-enquiry`; Cal.com link; plan sheet PR #80 to merge.
 - Site-wide contrast fix (`HomePage.css`: `.paper .soft`, `.guarantee`, `.price-badge`), found by the slice 6 audit on `/ai`, home and the service pages; needs his OK as its own change (`docs/work/ai-brand-2/audit.md`).
 - A real photo for "The person who checks" on `/ai/every-enquiry` (the slot is empty and labelled).
 

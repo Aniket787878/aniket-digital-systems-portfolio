@@ -20,6 +20,7 @@ const ProjectDetailPage = lazy(() => import('./pages/ProjectDetailPage.jsx'))
 const AboutPage = lazy(() => import('./pages/AboutPage.jsx'))
 const ContactPage = lazy(() => import('./pages/ContactPage.jsx'))
 const AiCheckPage = lazy(() => import('./pages/AiCheckPage.jsx'))
+const TryPage = lazy(() => import('./pages/ai/TryPage.jsx'))
 const StartPage = lazy(() => import('./pages/start/StartPage.jsx'))
 const FlowPage = lazy(() => import('./pages/start/FlowPage.jsx'))
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage.jsx'))
@@ -111,6 +112,8 @@ export default function App() {
             <Route path="/websites" element={<ServicePage key="websites" slug="websites" />} />
             <Route path="/software" element={<ServicePage key="software" slug="software" />} />
             <Route path="/ai" element={<ServicePage key="ai" slug="ai" />} />
+            {/* The AI brand's own pages (docs/work/ai-brand-2/spec.md). */}
+            <Route path="/ai/try" element={<TryPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/projects/:slug" element={<ProjectDetailPage />} />
             <Route path="/about" element={<AboutPage />} />

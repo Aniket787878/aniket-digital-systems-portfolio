@@ -90,7 +90,20 @@ const fail = (msg) => failures.push(msg)
    /ai-check. */
 const PAGES = [
   { name: 'ai', path: '/ai', ready: '#svc-brand-title', want: ['Map', 'Build', 'Train and stay', 'Hand over', 'You own everything'], primary: true },
-  { name: 'ai-check', path: '/ai-check', ready: '#ac-title', want: ['Free enquiry leak check', 'Two minutes. Where enquiries, bookings and follow-ups leak'] }
+  { name: 'ai-check', path: '/ai-check', ready: '#ac-title', want: ['Free enquiry leak check', 'Two minutes. Where enquiries, bookings and follow-ups leak'] },
+  {
+    name: 'ai-try',
+    path: '/ai/try',
+    ready: '#aip-try-title',
+    want: ['Try it before you talk to anyone.', 'Working demos', 'Demo screens', 'What you are seeing', 'Appointment Desk', 'Trial Class Desk'],
+    primary: true,
+    extra: async (page, size) => {
+      const n = await page.locator('.aip-cards .pc').count()
+      if (n !== 6) fail(`ai-try ${size.name}: ${n} demo cards, not 6`)
+      const first = await page.locator('.aip-cards .pc').first().getAttribute('href')
+      if (first !== '/projects/appointment-desk') fail(`ai-try ${size.name}: first card goes to ${first}`)
+    }
+  }
 ]
 
 const sizes = [

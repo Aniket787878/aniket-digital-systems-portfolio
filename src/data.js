@@ -409,6 +409,33 @@ export const brand = {
       'A written playbook your team keeps',
       'No lock-in. Leave any time and it keeps running'
     ]
+  },
+
+  /* The free check's button on the /ai/* pages (/ai-check). */
+  checkLabel: 'Start the free leak check',
+
+  /* /ai/try (slice 3): every demo on one page, working demos first. */
+  tryPage: {
+    docTitle: 'Try it · AI demos · Aniket',
+    description: 'Try the AI front desk before you talk to anyone: three working demos and three demo screens, each labelled for what it is.',
+    pill: 'Demos, labelled',
+    title: ['Try it before you ', 'talk', ' to anyone.'],
+    lede: 'Three working demos, tested on dummy data, then three demo screens of made-up businesses. Each card says what you are looking at. Open any of them for the full walk-through.',
+    groups: [
+      { kind: 'real', head: 'Working demos', note: 'Built and tested for real, on dummy data for a made-up clinic.', slugs: ['appointment-desk', 'knowledge-assistant', 'website-answer-widget'] },
+      { kind: 'demo', head: 'Demo screens', note: 'Designed screens for made-up businesses. Not built yet.', slugs: ['missed-enquiry-rescue', 'proposal-drafter', 'trial-class-desk'] }
+    ],
+    closeTitle: ['Seen enough to ', 'ask', '?'],
+    closeLede: 'Two minutes on how enquiries reach you today, and you see where they leak and what to hand to AI first.'
+  },
+  /* What you are seeing on each /ai/try card, one line per demo. */
+  tryIntro: {
+    'appointment-desk': 'A clinic’s WhatsApp desk: fees answered, a slot booked, clinical questions passed to a person.',
+    'knowledge-assistant': 'Staff and patients asking questions, answered from the clinic’s own documents with the source named.',
+    'website-answer-widget': 'A chat panel on a clinic’s website that answers from the page, or takes a callback request.',
+    'missed-enquiry-rescue': 'A late-night property enquiry answered from the agency’s own listings, with a site visit booked.',
+    'proposal-drafter': 'A client’s brief turned into a draft proposal from the studio’s rate card, waiting for the owner to approve it.',
+    'trial-class-desk': 'A free trial class booked, a reminder the evening before, and a follow-up afterwards.'
   }
 }
 

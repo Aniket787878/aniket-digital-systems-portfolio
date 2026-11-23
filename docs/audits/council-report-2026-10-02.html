@@ -1,0 +1,154 @@
+<!doctype html><meta charset=utf-8><title>Council report: portfolio UX fixes</title><style>body{font:15px/1.55 system-ui,-apple-system,Segoe UI,sans-serif;max-width:880px;margin:40px auto;padding:0 20px;color:#1d2330}h1{font-size:26px}h2{font-size:19px;margin-top:28px;border-bottom:1px solid #e4e7ec;padding-bottom:4px}.q{background:#f6f7f9;border:1px solid #e4e7ec;border-radius:10px;padding:14px 16px}.v{border:1px solid #f0c48a;background:#fffaf3;border-radius:10px;padding:4px 20px 14px}table{border-collapse:collapse;width:100%;font-size:13px}td,th{border:1px solid #e4e7ec;padding:6px 8px;text-align:left}details{border:1px solid #e4e7ec;border-radius:8px;padding:8px 14px;margin:8px 0}summary{cursor:pointer;font-weight:600}code{background:#f1f3f6;padding:1px 4px;border-radius:4px}footer{color:#6b7280;font-size:12px;margin-top:40px}</style><h1>Council report: portfolio UX fixes</h1><div class=q><b>Question.</b> Which UX-audit findings on the portfolio are real problems to fix now, which belong to the vision and stay, and what did the audit miss?</div><h2>Chairman's verdict</h2><div class=v><p>Five advisors (Contrarian, First Principles, Expansionist, Outsider, Executor), each reviewing as a site/UX designer from the live screenshots. Then five anonymous peer reviews. The main session chaired. The full transcript is in <code>council-transcript-2026-10-02.md</code>.</p>
+<h2>Where the council agrees (5 of 5)</h2>
+<li><b>Keep the vision.</b> The dark Stage look, the story loop and the WhatsApp-first CTA all read as intentional and well made. &quot;It looks like a studio built it, not a freelancer.&quot;</li>
+<li><b>Keep WhatsApp as the main CTA (P1-2: LEAVE).</b> It is the channel the outreach arrives on. A booking link is already planned: <code>site.bookingUrl</code> is waiting on Aniket&#x27;s Cal.com link.</li>
+<li><b>Fix now, no effect on the vision:</b></li>
+<li>the contrast token (P1-4);</li>
+<li>the &quot;aprice&quot; heading bug (P2-5);</li>
+<li>the tool chips on /projects (P1-3), which sit right under &quot;11 therapists on one system&quot; and undercut the strongest stat on the page;</li>
+<li>small tap targets (P2-9);</li>
+<li>unreadable text in the hero flow (P2-8).</li>
+<li><b>Home length (P1-1) is a sequencing problem, not a length problem.</b> Keep the story. Show the price sooner, and make the cards lighter.</li>
+<h2>Where the council clashes</h2>
+<li><b>How bad P1-1 is.</b> The Contrarian said visitors are warm (they come from outreach), so length matters less. The Outsider said: &quot;If I hadn&#x27;t been sent this link by someone I trust, I leave at screen 4.&quot; The chair sides with the Outsider. A warm link still opens on a phone between appointments.</li>
+<li><b>Desktop nav duplicate (P3-11).</b> First Principles: merge. The others: leave. <b>Leave it</b>, since it&#x27;s desktop only and costs a phone visitor nothing.</li>
+<h2>Corrections (verified by the chair)</h2>
+<li><b>The first price on home is at screen ~12 of 19 on a phone.</b> The audit said 14. One advisor said 6–7, which was a misread.</li>
+<li><b>P2-6 was wrong.</b> The contact budget options already switch to USD (<code>budgetBands[currency]</code>). Withdrawn.</li>
+<li><b>P3-10 (repeated card notes) stays.</b> Repo rule: &quot;every outcome number renders with its outcomeNote.&quot;</li>
+<li><b>The footer is not a dead end.</b> It already has a WhatsApp button.</li>
+<li><b>Reduced motion is already respected</b> site-wide (<code>MotionConfig reducedMotion=&quot;user&quot;</code>, StringTune off).</li>
+<h2>Blind spots the peer review caught</h2>
+<li><b>No CTA on screen while scrolling on phones.</b> Desktop has &quot;Let&#x27;s talk&quot; in the floating nav, but phones only get the logo and a menu button through 19 screens.</li>
+<li><b>P1-1 and P2-7 touch the same home files</b>, so they go to one builder.</li>
+<li><b>Measure the change.</b> Record time-to-first-price before and after.</li>
+<li>The contact page&#x27;s WhatsApp prefill asks &quot;Do you have 20 minutes?&quot; while every other page offers a 15-minute call.</li>
+<h2>The recommendation: what gets fixed</h2>
+<li><b>Contrast:</b> saffron pill text on cream goes to #a04a08 (4.99 : 1).</li>
+<li><b>Split headings:</b> no lost spaces at any width.</li>
+<li><b>/projects:</b> remove the tool chips from the cards. Tool names live in the closed developer panel.</li>
+<li><b>Phone tap targets:</b> at least 44 px hit area with no visual change.</li>
+<li><b>Phone header:</b> a compact saffron &quot;Let&#x27;s talk&quot; (WhatsApp) beside the menu, matching desktop.</li>
+<li><b>Home hero:</b> the reassurance line gets a price anchor, e.g. &quot;from ₹20,000 · free 15-minute call&quot;, and follows the currency toggle.</li>
+<li><b>Home work cards on phones:</b> fewer bullets per card. The outcome note stays and must still match what&#x27;s shown. Target: first price by screen 8 or sooner.</li>
+<li><b>Hero flow on phones:</b> text that carries meaning at 13 px or more. The &quot;Booked&quot; moment is the brightest line.</li>
+<li><b>Desktop story beats:</b> text sharp early in each beat, less dead scroll. Keep the beats.</li>
+<li><b>Contact prefill:</b> &quot;20 minutes&quot; becomes &quot;15 minutes&quot;.</li>
+<p><b>Left alone on purpose:</b> the WhatsApp CTA, the dark look, the story loop, the outcome notes, the desktop nav, concept-site labelling (already labelled).</p>
+<h2>The one thing to do first</h2>
+<p>Ship 1–5 (pure fixes, zero vision risk). Then 6–9 together, as one pass on the home page.</p></div><h2>Who voted what</h2><table><tr><th>Finding</th><th>Contrarian</th><th>First Principles</th><th>Expansionist</th><th>Outsider</th><th>Executor</th><th>Chair</th></tr><tr><td><b>P1-1</b></td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#fff6e0">SOFTEN</td><td><b>FIX (reorder)</b></td></tr><tr><td><b>P1-2</b></td><td style="background:#eef1f5">LEAVE</td><td style="background:#eef1f5">LEAVE</td><td style="background:#eef1f5">LEAVE</td><td style="background:#eef1f5">LEAVE</td><td style="background:#eef1f5">LEAVE</td><td><b>LEAVE</b></td></tr><tr><td><b>P1-3</b></td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td><b>FIX</b></td></tr><tr><td><b>P1-4</b></td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td><b>FIX</b></td></tr><tr><td><b>P2-5</b></td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td><b>FIX</b></td></tr><tr><td><b>P2-6</b></td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#eef1f5">LEAVE (correct)</td><td><b>WITHDRAWN</b></td></tr><tr><td><b>P2-7</b></td><td style="background:#fff6e0">SOFTEN</td><td style="background:#fff6e0">SOFTEN</td><td style="background:#fff6e0">SOFTEN</td><td style="background:#fff6e0">SOFTEN</td><td style="background:#fff6e0">SOFTEN</td><td><b>SOFTEN</b></td></tr><tr><td><b>P2-8</b></td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td><b>FIX</b></td></tr><tr><td><b>P2-9</b></td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td style="background:#e7f5ec">FIX</td><td><b>FIX</b></td></tr><tr><td><b>P3-10</b></td><td style="background:#fff6e0">SOFTEN</td><td style="background:#fff6e0">SOFTEN</td><td style="background:#fff6e0">SOFTEN</td><td style="background:#fff6e0">SOFTEN</td><td style="background:#fff6e0">SOFTEN</td><td><b>LEAVE (house rule)</b></td></tr><tr><td><b>P3-11</b></td><td style="background:#eef1f5">LEAVE</td><td style="background:#e7f5ec">FIX</td><td style="background:#eef1f5">LEAVE</td><td style="background:#eef1f5">LEAVE</td><td style="background:#eef1f5">LEAVE</td><td><b>LEAVE</b></td></tr><tr><td><b>P3-12</b></td><td style="background:#eef1f5">LEAVE</td><td style="background:#eef1f5">LEAVE</td><td style="background:#eef1f5">LEAVE</td><td style="background:#eef1f5">LEAVE</td><td style="background:#eef1f5">LEAVE</td><td><b>LEAVE</b></td></tr></table><h2>Advisor responses</h2><details><summary>Contrarian</summary><p><b>Analysis</b></p>
+<p>The vision survives contact with the screenshots — dark cinematic look, saffron accent, story loop, WhatsApp-native CTA — all read as intentional and well-executed. But three things in the audit undersell real damage, and one thing in the audit is wrong on its face.</p>
+<p>First, the tool chips aren&#x27;t a minor rule break — they land immediately under &quot;11 therapists on one system,&quot; the most credible stat on the page, and replace that credibility with &quot;React 19 / Vite / Zustand&quot; jargon a clinic owner can&#x27;t parse. A trust leak at the exact moment trust was being built.</p>
+<p>Second, the contact heading typo (&quot;aprice&quot;) is visible and ugly — a five-minute fix on a page whose entire pitch is &quot;built properly.&quot; The easiest kill-shot a skeptical visitor could screenshot.</p>
+<p>Third, I&#x27;d push back on how severely P1-1 is framed. The audience is warm (outreach, WhatsApp, LinkedIn) — they already half-trust Aniket. Six project cards before price is over-explaining to people who came to confirm. The fix isn&#x27;t &quot;shorten the site,&quot; it&#x27;s &quot;let price surface earlier without gutting proof.&quot;</p>
+<p>Audit-accuracy flag: in home_mobile_0.png the ₹35,000 price card appears around screen 6-7, not screen 14 — re-measure before prioritising P1-1.</p>
+<p><b>Verdicts</b></p>
+<p>P1-1: FIX — warm leads need price sooner, not less proof overall</p>
+<p>P1-2: LEAVE — matches the actual audience and channel</p>
+<p>P1-3: FIX — chips undercut the stat right above them</p>
+<p>P1-4: FIX — objective contrast fail, brand-safe token fix</p>
+<p>P2-5: FIX — live typo, outsized risk</p>
+<p>P2-6: FIX — rupee-only budget breaks the toggle&#x27;s promise</p>
+<p>P2-7: SOFTEN — pacing is vision, but the stuck blur is a real bug</p>
+<p>P2-8: FIX — illegible on the primary device</p>
+<p>P2-9: FIX — sub-30px targets contradict phone-first</p>
+<p>P3-10: SOFTEN — vary the wording, don&#x27;t cut it</p>
+<p>P3-11: LEAVE — low stakes</p>
+<p>P3-12: LEAVE — fine</p>
+<p><b>Missed</b></p>
+<li>Chips sit directly beneath &quot;11 therapists on one system&quot; — sequencing damage.</li>
+<li>Case-study &quot;carousel&quot; uses tiny &quot;01/06&quot; indicators with no swipe affordance.</li>
+<li>Price appears ~screen 6-7, not 14 — re-measure.</li></details><details><summary>First Principles</summary><h2>Analysis</h2>
+<p>The audit treats this as a checklist of UX sins to fix. Wrong frame. The actual question is: what is this page *for*? It&#x27;s a cold-outreach landing page opened on a phone from a WhatsApp/LinkedIn message by someone who doesn&#x27;t yet trust Aniket. Its only job is to convert distrust into &quot;book a free call&quot; in under 60 seconds of thumb-scrolling.</p>
+<p>Looked at that way, the 18-screen length (P1-1) isn&#x27;t &quot;too long,&quot; it&#x27;s mis-sequenced — the page spends its first 13 screens building narrative trust before giving the one thing a skeptical buyer scans for first: what does this cost and what do I get. That&#x27;s the real P0. Cinematic storytelling is the vision and should stay — but a distrustful visitor needs proof-of-price within the first 2-3 screens, not screen 14. Move a compact price anchor up; keep the long story below.</p>
+<p>WhatsApp-as-CTA (P1-2) is not a bug, it&#x27;s the entire distribution strategy — fixing this would break the vision.</p>
+<p>The contrast failure and tool-chips leak are real &quot;vision violations&quot; — they contradict stated rules, so they&#x27;re non-negotiable fixes.</p>
+<h2>Verdicts</h2>
+<p>P1-1: FIX — reorder, not shorten: pull price proof above the fold cluster</p>
+<p>P1-2: LEAVE — WhatsApp CTA matches actual outreach channel/audience</p>
+<p>P1-3: FIX — violates the project&#x27;s own plain-language rule</p>
+<p>P1-4: FIX — objective AA contrast failure, zero vision cost</p>
+<p>P2-5: FIX — trivial copy bug, breaks polished trust signal</p>
+<p>P2-6: FIX — breaks the currency toggle&#x27;s promise</p>
+<p>P2-7: SOFTEN — desktop-only, tighten to &lt;1 screen each</p>
+<p>P2-8: FIX — illegible mock-up text is a credibility tax</p>
+<p>P2-9: FIX — pure usability, no vision tradeoff</p>
+<p>P3-10: SOFTEN — condense to one line</p>
+<p>P3-11: FIX — merge Contact/Let&#x27;s talk</p>
+<p>P3-12: LEAVE — fine</p>
+<h2>Missed</h2>
+<li>Home: ~4-5 screens of text-only narrative before any concrete artifact (no screenshot, no number) — a long silence before evidence.</li>
+<li>/websites screen 2: browser mock &quot;aura-skin-studio.example&quot; appears before the &quot;made-up businesses&quot; disclosure; for a moment it reads as a real client.</li>
+<li>Footer + nav: several duplicate routes to the same conversion action dilute single-CTA discipline.</li></details><details><summary>Expansionist</summary><p><b>Analysis</b></p>
+<p>This site already does the hard part: it looks like a ₹2L+ studio built it, not a freelancer. That&#x27;s the asset nobody should touch. The upside I see isn&#x27;t &quot;redesign,&quot; it&#x27;s &quot;unlock the asset that&#x27;s already built but buried.&quot; Three things jump out from the images.</p>
+<p>First, the hero is genuinely good — tight story, clear CTA, serif-italic &quot;rest.&quot; lands. But everything below it is a wall of near-identical dark-card screens for 14+ scrolls before price ever shows. That&#x27;s not vision, that&#x27;s undistributed weight. The fix isn&#x27;t trimming the story loop (that&#x27;s the moat), it&#x27;s moving the proof points business owners actually search for — price, timeline, &quot;fixed date or you don&#x27;t pay&quot; — up into or right after the fold, since it&#x27;s currently the single best trust signal on the whole site and it&#x27;s buried at screen 14.</p>
+<p>Second, the WhatsApp CTA is underused as a growth lever, not a liability. It&#x27;s the single highest-intent, zero-friction conversion mechanism for Indian service-business buyers — better than a calendar link. Lean into it harder: more entry points, not fewer.</p>
+<p>Third, the tool chips on /projects are a wasted signal to the wrong audience — but to technical buyers they&#x27;re a trust signal. Don&#x27;t delete, relocate into the &quot;for developers&quot; panel.</p>
+<p><b>Verdicts</b></p>
+<p>P1-1: FIX — move price/guarantee proof above the 14-screen wall, don&#x27;t cut story</p>
+<p>P1-2: LEAVE — WhatsApp is the highest-intent channel for this audience</p>
+<p>P1-3: FIX — move chips into the developers panel, don&#x27;t delete them</p>
+<p>P1-4: FIX — contrast fix is free, zero vision cost</p>
+<p>P2-5: FIX — trivial copy bug, embarrassing on the money line</p>
+<p>P2-6: FIX — USD visitors seeing INR-only budgets kills trust</p>
+<p>P2-7: SOFTEN — keep the beats, compress the empty space, desktop only</p>
+<p>P2-8: FIX — the booked-time mock is the best proof artifact, make it readable</p>
+<p>P2-9: FIX — tap targets cheap to fix, protects conversion</p>
+<p>P3-10: SOFTEN — vary the wording, not the policy</p>
+<p>P3-11: LEAVE — costs nothing</p>
+<p>P3-12: LEAVE — fine</p>
+<p><b>Missed</b></p>
+<li>&quot;Watch a build · 1 minute&quot; is a second high-trust path; send that clip directly in outreach.</li>
+<li>&quot;Care Plan ₹15k–₹30k/month&quot; retainer is buried mid-scroll on service pages; recurring revenue unpromoted.</li>
+<li>Contact footer line &quot;Good systems should feel like less work, not more software&quot; is stronger closing copy than most of the page, and nearly invisible.</li></details><details><summary>Outsider</summary><li>ANALYSIS (cold read, phone, from a WhatsApp link)</li>
+<p>Five seconds in: dark, moody, well-made — looks like an agency, not a freelancer, which is good. &quot;Websites that bring the work in&quot; is clear. I&#x27;d scroll past the WhatsApp CTA immediately — I want to see proof first.</p>
+<p>Then I scroll. And scroll. The story beats are nice copy but by screen 3-4 I&#x27;m thinking &quot;okay, what do you actually sell and what does it cost.&quot; Six project cards each with a wall of bullets and a repeated disclaimer paragraph is where I&#x27;d actually bail — it reads like a case-study blog, not a pitch to me. By screen 10-11 I still don&#x27;t know the price. If I hadn&#x27;t been sent this link by someone I trust, I leave at screen 4.</p>
+<p>&quot;From your message to aprice in writing&quot; reads as a typo/broken site, which is worse than any layout problem — it makes me doubt the &quot;fixed price, fixed date&quot; promise right next to it.</p>
+<p>What I&#x27;d need to tap &quot;Book a free call&quot;: see the price band and &quot;fixed price, fixed date&quot; guarantee within the first 2-3 screens, understand in one line that this is not just for clinics, and not hit a visible typo near the money language.</p>
+<li>VERDICTS</li>
+<p>P1-1: FIX — price buried at screen 14 loses the phone visitor</p>
+<p>P1-2: LEAVE — WhatsApp is faster trust for this buyer than a calendar</p>
+<p>P1-3: FIX — the one spot violating your own plain-language rule</p>
+<p>P1-4: FIX — cheap accessibility fix</p>
+<p>P2-5: FIX — reads as broken, kills trust by the money claim</p>
+<p>P2-6: FIX — toggle promises USD then shows ₹</p>
+<p>P2-7: SOFTEN — fine on desktop, just fix the blur glitch</p>
+<p>P2-8: FIX — unreadable proof</p>
+<p>P2-9: FIX — real thumb-miss risk</p>
+<p>P3-10: SOFTEN — six times is too many</p>
+<p>P3-11: LEAVE — costs a phone visitor nothing</p>
+<p>P3-12: LEAVE — non-issue</p>
+<li>MISSED</li>
+<li>Concept-site and demo labels have the same visual weight as real production work; skimmers will think there are 7-8 real clients.</li>
+<li>/websites pricing: ₹35,000 → ₹75,000 with no visible one-line &quot;what the jump buys&quot; until three paragraphs down; reads as unexplained inflation.</li>
+<li>Footer after a long scroll is a plain link list, no second chance at the CTA (dead end).</li></details><details><summary>Executor</summary><p>ANALYSIS (what ships Monday, in order)</p>
+<p>Ship order: P1-4 (contrast token) first — one hex value in src/index.css (--accent-deep) ripples through every pill because it&#x27;s tokenised. Next, P2-5 (contact typo) — scoped to one heading in NextSteps.jsx; drop fx(&#x27;split&#x27;) or fix the split, 10 minutes. Then P1-3 (chips) — a display change, safe same-day. P2-9 (tap targets) is a CSS padding bump on .back-link and footer links — mechanical, do it in the same pass.</p>
+<p>P2-6 is NOT a bug — src/data.js has budgetBands.usd/.inr and ContactForm.jsx uses budgetBands[currency] via useCurrency(). The audit screenshot was taken in INR mode. Don&#x27;t &quot;fix&quot; it.</p>
+<p>The two that can break the vision if rushed: P1-1 (home length) and P1-2 (WhatsApp CTA). Home length is the story-loop bet — cutting fast breaks pacing; this needs careful restructuring (move a compact price band earlier), not a quick delete. P1-2 is the intended WhatsApp-first flow — a product decision, not a UX fix.</p>
+<p>VERDICTS</p>
+<p>P1-1: SOFTEN — M — HomePage.jsx, home/stage sections — add a compact price/CTA band earlier; don&#x27;t cut the story</p>
+<p>P1-2: LEAVE — deliberate WhatsApp-first flow</p>
+<p>P1-3: FIX — S — project card chip render block — delete/move chips</p>
+<p>P1-4: FIX — S — src/index.css --accent-deep — one token, zero risk</p>
+<p>P2-5: FIX — S — contact/NextSteps.jsx — stop the split eating the space</p>
+<p>P2-6: LEAVE — already currency-aware</p>
+<p>P2-7: SOFTEN — M — home/stage + loop css — shrink per-beat height, keep rhythm</p>
+<p>P2-8: FIX — S — hero mock-up components — 13-14px minimum on phone</p>
+<p>P2-9: FIX — S — .back-link + footer link rules — 44px tap height</p>
+<p>P3-10: SOFTEN — S — data.js disclaimers — one line</p>
+<p>P3-11: LEAVE — two entry points to one CTA isn&#x27;t a bug</p>
+<p>P3-12: LEAVE — fine</p>
+<p>MISSED</p>
+<li>Check the currency toggle is wired to every price on /websites, /software, /ai, not just the package cards.</li>
+<li>Nobody checked whether findings were already fixed (P2-6 was).</li>
+<li>Compute the contrast ratio for the new token, don&#x27;t eyeball it.</li></details><details><summary>Peer reviews (A=Executor, B=Outsider, C=Contrarian, D=Expansionist, E=First Principles)</summary><h3>Review 1</h3><li>Strongest: E. Reframes the audit around the page&#x27;s actual job (cold-outreach trust conversion) rather than a checklist; that frame produces the sharpest version of P1-1 (&quot;reorder, not shorten&quot;). Missed items are concrete (narrative-before-evidence gap, demo-site disclosure timing, duplicate CTA routes). Close second: A, the only one to catch P2-6 as a non-bug and ground P1-4 in file-level specifics.</li>
+<li>Biggest blind spot: B. Marks P2-6 FIX when the toggle already works; persona-led claims unverified.</li>
+<li>All missed: no concrete, testable success metric (e.g. time-to-price-visible) to validate the P1-1 fix after shipping; &quot;don&#x27;t cut the story&quot; stays subjective.</li><h3>Review 2</h3><li>Strongest: A, the only one that verified claims against the code (P2-6), with file-level, low-risk-first order.</li>
+<li>Biggest blind spot: C, whose screen 6-7 &quot;correction&quot; is a misread (the price sits in the bottom-right cell of the 7×2 sheet) and who also got P2-6 wrong.</li>
+<li>All missed: every response designs only for the cold WhatsApp/LinkedIn referral on an Indian phone; none tests desktop, international/non-WhatsApp buyers or slow connections.</li><h3>Review 3</h3><li>Strongest: C. Ties the chips to the moment trust is built (directly under &quot;11 therapists on one system&quot;): a credibility collision, not just a rule break. [Reviewer also credited C&#x27;s screen-count challenge; note the fact-check says C&#x27;s 6-7 was itself a misread.]</li>
+<li>Biggest blind spot: B. Asserted P2-6 as broken without verifying; anchored on the old screen-14 number.</li>
+<li>All missed: what happens AFTER the tap: the prefilled WhatsApp message, the response-time expectation, whether the visitor lands in a cold DM with no context. Also no one proposed a persistent/sticky CTA for a 12–19 screen scroll, even though all agree it&#x27;s a distance problem.</li><h3>Review 4</h3><li>Strongest: A. The only one that verified rather than trusted the audit: cites the real code path to call P2-6 not a bug; adds the meta-finding &quot;nobody checked whether findings were already fixed.&quot;</li>
+<li>Biggest blind spot: B. Besides P2-6, its &quot;footer is a dead end&quot; claim is contradicted by the WhatsApp button above the footer links. C close behind (screen 6-7 misread).</li>
+<li>All missed: motion/vestibular accessibility (prefers-reduced-motion, WCAG 2.3.3) for scroll reveals, split text and blur; keyboard/screen-reader handling of the &quot;01 / 06&quot; stacked cards.</li><h3>Review 5</h3><li>Strongest: A. Only one to catch P2-6 as a non-bug; sequences by blast radius; flags &quot;check if findings were already fixed&quot;.</li>
+<li>Biggest blind spot: C. Its softer P1-1 stance rests on the misread &quot;screen 6-7&quot; price position.</li>
+<li>All missed: P1-1 (price earlier) and P2-7 (story pacing) touch the same home files: one restructuring job, not two tickets, or agents will collide. No one proposed measuring the fix (scroll depth / CTA clicks) instead of relying on a cold-read guess.</li></details><footer>LLM Council · 2026-10-02 · subject: live portfolio UX audit</footer>
